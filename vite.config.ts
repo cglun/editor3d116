@@ -12,9 +12,25 @@ export default defineConfig({
       name: "remote_app",
       filename: "remoteEntry.js",
       exposes: {
-        "./EditorIndex": "./src/component/editor/EditorIndex.tsx",
+        //"./EditorIndex": "./src/component/editor/EditorIndex.tsx",
+        "./EditorIndex": "./src/Hook.tsx",
       },
-      shared: ["react", "react-dom"],
+      shared: [
+        "react",
+        "react-dom",
+        // "@tanstack/react-router",
+        // "bootstrap",
+        // "@originjs/vite-plugin-federation",
+        // "bootstrap-icons",
+        // "react-bootstrap",
+        // "three",
+      ],
     }),
   ],
+  build: {
+    modulePreload: false,
+    target: "esnext",
+    minify: false,
+    cssCodeSplit: false,
+  },
 });
