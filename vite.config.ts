@@ -12,7 +12,8 @@ export default defineConfig({
       name: "remote_app",
       filename: "remoteEntry.js",
       exposes: {
-        "./EditorIndex": "./src/viewer/Viewer.tsx",
+        "./Viewer3d": "./src/Viewer3d/Viewer3d.tsx",
+        "./init3d116": "./src/three/init3d116.ts",
         //  "./EditorIndex": "./src/Hook.tsx",
       },
       shared: [
