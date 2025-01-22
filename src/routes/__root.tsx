@@ -1,8 +1,6 @@
 import React from "react";
 import { createRootRoute } from "@tanstack/react-router";
-
 import { initScene, initToast, MyContext } from "../app/MyContext";
-
 import reducerToast, { reducerScene } from "../app/reducer";
 import EditorIndex from "../component/Editor/EditorIndex";
 export const Route = createRootRoute({

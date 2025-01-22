@@ -12,8 +12,8 @@ export default defineConfig({
       name: "remote_app",
       filename: "remoteEntry.js",
       exposes: {
-        //"./EditorIndex": "./src/component/editor/EditorIndex.tsx",
-        "./EditorIndex": "./src/Hook.tsx",
+        "./EditorIndex": "./src/viewer/Viewer.tsx",
+        //  "./EditorIndex": "./src/Hook.tsx",
       },
       shared: [
         "react",
@@ -21,10 +21,12 @@ export default defineConfig({
         // "@tanstack/react-router",
         // "bootstrap",
         // "@originjs/vite-plugin-federation",
-        // "bootstrap-icons",
+        //"bootstrap-icons",
         // "react-bootstrap",
         // "three",
       ],
+      // import "bootstrap/dist/css/bootstrap.css";
+      // import "bootstrap-icons/font/bootstrap-icons.css";
     }),
   ],
   build: {
@@ -32,5 +34,8 @@ export default defineConfig({
     target: "esnext",
     minify: false,
     cssCodeSplit: false,
+  },
+  resolve: {
+    conditions: ["browser", "import"],
   },
 });

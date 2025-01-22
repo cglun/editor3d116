@@ -4,9 +4,12 @@
   "description": "3d场景编辑器",
   "license": "Apache-2.0",
   "version": "1.1.7",
+  "main": "main.tsx",
+  "type": "module",
   "scripts": {
     "dev": "vite --port 116 --strictPort",
     "build": "tsc -b && vite build",
+    "build2": "vite build",
     "lint": "eslint .",
     "preview": "vite preview --port 116 --strictPort"
   },
