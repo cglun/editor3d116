@@ -1,4 +1,4 @@
-import { memo, useState } from 'react';
+import { memo, useState } from "react";
 import {
   Button,
   ButtonGroup,
@@ -7,16 +7,16 @@ import {
   Form,
   InputGroup,
   Spinner,
-} from 'react-bootstrap';
-import AlertBase from './AlertBase';
-import { getThemeColor } from '../app/config';
-import { setClassName } from '../app/utils';
-import { APP_COLOR, DELAY } from '../type';
-import Toast3d, { Toast, ToastDefault } from './Toast3d';
+} from "react-bootstrap";
+import AlertBase from "./AlertBase";
+import { getThemeColor } from "../app/config";
+import { setClassName } from "../app/utils";
+import { APP_COLOR, DELAY } from "../type";
+import Toast3d, { Toast, ToastDefault } from "./Toast3d";
 import ModalConfirm3d, {
   ModalConfirm,
   ModalConfirmDefault,
-} from './Modal/ModalConfirm3d';
+} from "./Modal/ModalConfirm3d";
 export interface ItemInfo {
   id: number;
   name: string;
@@ -42,11 +42,11 @@ function ItemInfoCard(props: Props) {
   //错误
   if (error) {
     console.error(error);
-    return <AlertBase type={APP_COLOR.Danger} text={'查看控制台'} />;
+    return <AlertBase type={APP_COLOR.Danger} text={"查看控制台"} />;
   }
   //无数据
   if (list.length === 0) {
-    return <AlertBase type={APP_COLOR.Warning} text={'无数据'} />;
+    return <AlertBase type={APP_COLOR.Warning} text={"无数据"} />;
   }
   const [modalConfirm, setModalConfirm] = useState<ModalConfirm>({
     ...ModalConfirmDefault,
@@ -55,7 +55,7 @@ function ItemInfoCard(props: Props) {
   const [toast, setToast] = useState<Toast>({ ...ToastDefault });
 
   const [modalBody, setModalBody] = useState(
-    <AlertBase type={APP_COLOR.Warning} text={''} />,
+    <AlertBase type={APP_COLOR.Warning} text={""} />
   );
 
   function deleteBtn(item: ItemInfo, index: number) {
@@ -64,12 +64,12 @@ function ItemInfoCard(props: Props) {
     setModalConfirm({
       ...ModalConfirmDefault,
       title: `删除${item.type}`,
-      content: `${item.name}`,
+
       show: true,
       onOk: () => {
         setToast({
           ...ToastDefault,
-          title: '提示',
+          title: "提示",
           content: `${item.name}-删除成功`,
           type: APP_COLOR.Success,
           delay: DELAY.SHORT,
@@ -97,13 +97,12 @@ function ItemInfoCard(props: Props) {
     setModalConfirm({
       ...ModalConfirmDefault,
       title: `编辑${item.type}`,
-      content: `${item.name}`,
       type: APP_COLOR.Danger,
       show: true,
       onOk: () => {
         setToast({
           ...ToastDefault,
-          title: '提示',
+          title: "提示",
           content: `${item.name}-编辑成功`,
           type: APP_COLOR.Success,
           delay: DELAY.SHORT,
@@ -124,25 +123,25 @@ function ItemInfoCard(props: Props) {
       {list.map((item: ItemInfo, index: number) => {
         return (
           <Card className="ms-2 mt-2" key={index}>
-            <Card.Header style={{ width: '6rem' }} title={item.name}>
+            <Card.Header style={{ width: "6rem" }} title={item.name}>
               {item.name}
             </Card.Header>
             <Card.Body className="d-flex flex-column ">
-              <Card.Img src={'/assets/images/test.png'} variant="top" />
+              <Card.Img src={"/assets/images/test.png"} variant="top" />
               <ButtonGroup aria-label="Basic example" className="mt-2">
                 <Button
                   variant={getThemeColor()}
                   size="sm"
                   onClick={() => editorBtn(item)}
                 >
-                  <i className={setClassName('pencil')} title="编辑"></i>
+                  <i className={setClassName("pencil")} title="编辑"></i>
                 </Button>
                 <Button
                   variant={getThemeColor()}
                   size="sm"
                   onClick={() => deleteBtn(item, index)}
                 >
-                  <i className={setClassName('trash')} title="删除"></i>
+                  <i className={setClassName("trash")} title="删除"></i>
                 </Button>
               </ButtonGroup>
             </Card.Body>

@@ -1,8 +1,7 @@
-import { Toast } from 'react-bootstrap';
-import { initToast, MyContext } from '../app/MyContext';
-import { useContext, memo } from 'react';
-import { APP_COLOR } from '../type';
-import { setClassName } from '../app/utils';
+import { Toast } from "react-bootstrap";
+import { initToast, MyContext } from "../app/MyContext";
+import { useContext, memo } from "react";
+import { setClassName } from "../app/utils";
 /**
  * 消息提示, 全局使用
  * @returns
@@ -12,10 +11,10 @@ function ToastExample() {
   const { toast, dispatchToast } = useContext(MyContext);
   const { toastBody } = toast;
 
-  let iconClassName = setClassName('info-circle');
-  if (toastBody.type === APP_COLOR.Success) {
-    iconClassName = setClassName('check-circle');
-  }
+  // let iconClassName = setClassName('info-circle');
+  // if (toastBody.type === APP_COLOR.Success) {
+  //   iconClassName = setClassName('check-circle');
+  // }
 
   return (
     toastBody.show && (
@@ -24,11 +23,11 @@ function ToastExample() {
           className="mx-auto"
           onClose={() => {
             dispatchToast({
-              type: 'toast',
+              type: "toast",
               toastBody: {
                 ...initToast.toastBody,
-                title: 'title',
-                content: 'content',
+                title: "title",
+                content: "content",
               },
             });
           }}
@@ -38,11 +37,11 @@ function ToastExample() {
           autohide
         >
           <Toast.Header>
-            <i className={setClassName('info-circle') + ' me-1'}></i>
+            <i className={setClassName("info-circle") + " me-1"}></i>
             <strong className="me-auto ">{toastBody.title}</strong>
           </Toast.Header>
           <Toast.Body
-            className={toastBody.type.toString() === 'Dark' ? 'text-white' : ''}
+            className={toastBody.type.toString() === "Dark" ? "text-white" : ""}
           >
             {toastBody.content}
           </Toast.Body>
