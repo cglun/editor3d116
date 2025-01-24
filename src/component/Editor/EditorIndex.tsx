@@ -5,8 +5,6 @@ import Col from "react-bootstrap/esm/Col";
 import Canvas3d from "./Canvas3d";
 import BottomNav from "./BottomNav";
 import OutlineView from "./OutlineView";
-import ToastExample from "../ToastExample";
-
 export default function EditorIndex() {
   return (
     <>
@@ -38,7 +36,6 @@ export default function EditorIndex() {
           </Col>
         </Row>
       </Container>
-      <ToastExample />
     </>
   );
 }

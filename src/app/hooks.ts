@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
-import { AppConfig, HTTP_TYPE } from '../type';
-import { APP_CONFIG } from './config';
+import React, { useEffect, useState } from "react";
+import { AppConfig, HTTP_TYPE } from "../type";
+import { APP_CONFIG } from "./config";
 
 function getApp() {
-  const appStr: string | null = localStorage.getItem('persist:root');
+  const appStr: string | null = localStorage.getItem("persist:root");
   if (appStr === null) {
     return;
   }
@@ -43,4 +43,14 @@ function useFetch(url: string, type: HTTP_TYPE) {
 
   return { data, isLoading, error };
 }
+
+export function useEditorState<T>(_state: T) {
+  const [editorState, setEditorState] = useState<T>(_state);
+
+  useEffect(() => {
+    setEditorState(editorState);
+  }, []);
+  return { editorState, setEditorState };
+}
+
 export default useFetch;

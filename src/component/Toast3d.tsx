@@ -1,56 +1,68 @@
-import { Toast } from 'react-bootstrap';
-
-import { memo } from 'react';
-import { APP_COLOR, DELAY } from '../type';
-import { getClassNameByType, setClassName } from '../app/utils';
+import { useEffect, useState } from "react";
+import { Toast as BootToast } from "react-bootstrap";
+import { createRoot } from "react-dom/client";
+import { APP_COLOR, DELAY } from "../type";
+import { setClassName } from "../app/utils";
 /**
- * 消息提示，子组件
- * @returns
+ * 消息提示
+ * 用法：Toast3d("成功添加");
  */
-export interface Toast {
+interface Toast {
   title: string;
   content: string;
   type: APP_COLOR;
   delay: DELAY;
   show: boolean;
 }
-export const ToastDefault: Toast = {
-  title: '标题',
-  content: '内容',
-  type: APP_COLOR.Success,
-  delay: DELAY.SHORT,
-  show: false,
-};
-
-function Toast3d({
-  toast = ToastDefault,
-  setToast = (_toast: Toast): void => {},
-}) {
+function App116({ update, _toast }: { update: number; _toast: Toast }) {
+  const [toast, setToast] = useState<Toast>(_toast);
   const { show, delay, type, title, content } = toast;
-
+  useEffect(() => {
+    setToast({ ..._toast, show: true });
+  }, [update]);
   return (
-    show && (
-      <div className="fixed-top py-2">
-        <Toast
-          className="mx-auto"
-          onClose={() => setToast({ ...ToastDefault })}
-          show={show}
-          delay={delay}
-          bg={type}
-          autohide
-        >
-          <Toast.Header>
-            <i className={setClassName(getClassNameByType(type)) + ' me-1'}></i>
-            <strong className="me-auto ">{title}</strong>
-          </Toast.Header>
-          <Toast.Body
-            className={type.toString() === 'Dark' ? 'text-white' : ''}
-          >
-            {content}
-          </Toast.Body>
-        </Toast>
-      </div>
-    )
+    <BootToast
+      className="fixed-top mt-2 mx-auto"
+      onClose={() => {
+        setToast({ ...toast, show: false });
+      }}
+      show={show}
+      delay={delay}
+      bg={type}
+      autohide
+    >
+      <BootToast.Header>
+        <i className={setClassName("info-circle") + " me-1"}></i>
+        <strong className="me-auto ">{title}</strong>
+      </BootToast.Header>
+      <BootToast.Body
+        className={type.toString() === "Dark" ? "text-white" : ""}
+      >
+        {content}
+      </BootToast.Body>
+    </BootToast>
   );
 }
-export default memo(Toast3d);
+let container = document.getElementById("toast");
+if (container === null) {
+  container = document.createElement("div");
+  document.body.appendChild(container);
+}
+const root = createRoot(container);
+export default function Toast3d(
+  content = "内容",
+  title = "提示",
+  type = APP_COLOR.Success,
+  delay = DELAY.SHORT,
+  show = false
+) {
+  const update = new Date().getTime();
+  const toast = {
+    title,
+    content,
+    type,
+    delay,
+    show,
+  };
+  root.render(<App116 update={update} _toast={toast} />);
+}

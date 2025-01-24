@@ -11,12 +11,13 @@ import {
 import AlertBase from "./AlertBase";
 import { getThemeColor } from "../app/config";
 import { setClassName } from "../app/utils";
-import { APP_COLOR, DELAY } from "../type";
-import Toast3d, { Toast, ToastDefault } from "./Toast3d";
+import { APP_COLOR } from "../type";
+
 import ModalConfirm3d, {
   ModalConfirm,
   ModalConfirmDefault,
 } from "./Modal/ModalConfirm3d";
+import Toast3d from "./Toast3d";
 export interface ItemInfo {
   id: number;
   name: string;
@@ -52,8 +53,6 @@ function ItemInfoCard(props: Props) {
     ...ModalConfirmDefault,
   });
 
-  const [toast, setToast] = useState<Toast>({ ...ToastDefault });
-
   const [modalBody, setModalBody] = useState(
     <AlertBase type={APP_COLOR.Warning} text={""} />
   );
@@ -64,20 +63,11 @@ function ItemInfoCard(props: Props) {
     setModalConfirm({
       ...ModalConfirmDefault,
       title: `删除${item.type}`,
-
       show: true,
       onOk: () => {
-        setToast({
-          ...ToastDefault,
-          title: "提示",
-          content: `${item.name}-删除成功`,
-          type: APP_COLOR.Success,
-          delay: DELAY.SHORT,
-          show: true,
-        });
         const newList = list.filter((_, i) => i !== index);
         setList(newList);
-
+        Toast3d(`【${item.name}】已删除`);
         setModalConfirm({
           ...ModalConfirmDefault,
           show: false,
@@ -100,16 +90,8 @@ function ItemInfoCard(props: Props) {
       type: APP_COLOR.Danger,
       show: true,
       onOk: () => {
-        setToast({
-          ...ToastDefault,
-          title: "提示",
-          content: `${item.name}-编辑成功`,
-          type: APP_COLOR.Success,
-          delay: DELAY.SHORT,
-          show: true,
-        });
         console.log(_item);
-
+        Toast3d(`【${item.name}】已更新`);
         setModalConfirm({
           ...ModalConfirmDefault,
           show: false,
@@ -127,7 +109,7 @@ function ItemInfoCard(props: Props) {
               {item.name}
             </Card.Header>
             <Card.Body className="d-flex flex-column ">
-              <Card.Img src={"/assets/images/test.png"} variant="top" />
+              <Card.Img src={"/assets/images/test.jpg"} variant="top" />
               <ButtonGroup aria-label="Basic example" className="mt-2">
                 <Button
                   variant={getThemeColor()}
@@ -154,7 +136,6 @@ function ItemInfoCard(props: Props) {
       >
         {modalBody}
       </ModalConfirm3d>
-      <Toast3d toast={{ ...toast }} setToast={setToast}></Toast3d>
     </Container>
   );
 }
