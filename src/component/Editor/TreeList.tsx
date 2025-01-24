@@ -1,17 +1,15 @@
-import React, { useContext, useState } from 'react';
-import { Button, ListGroupItem } from 'react-bootstrap';
-import { setClassName } from '../../app/utils';
-import { getObjectNameByName } from '../../three/utils';
-import { SPACE } from '../../app/config';
-import ModalConfirm3d, {
-  ModalConfirm,
-  ModalConfirmDefault,
-} from '../Modal/ModalConfirm3d';
-import { APP_COLOR } from '../../type';
-import AlertBase from '../AlertBase';
-import { Object3D } from 'three';
-import { getScene } from '../../three/init3d116';
-import { MyContext } from '../../app/MyContext';
+import React, { useContext, useState } from "react";
+import { Button, ListGroupItem } from "react-bootstrap";
+import { setClassName } from "../../app/utils";
+import { getObjectNameByName } from "../../three/utils";
+import { SPACE } from "../../app/config";
+import { APP_COLOR } from "../../type";
+import { Object3D, Object3DEventMap } from "three";
+import ModalConfirm3d from "../common/ModalConfirm3d";
+import AlertBase from "../common/AlertBase";
+import Toast3d from "../common/Toast3d";
+import { getScene } from "../../three/init3d116";
+import { MyContext } from "../../app/MyContext";
 
 const TreeNode = ({
   node,
@@ -30,6 +28,7 @@ const TreeNode = ({
   const [delBtn, setDelBtn] = React.useState(false);
   const [isSelected, setIsSelected] = useState(false);
   const { dispatchScene } = useContext(MyContext);
+
   const handleToggle = () => {
     setIsExpanded(!isExpanded);
     resetTextWarning(node);
@@ -37,26 +36,22 @@ const TreeNode = ({
     setCurObj3d(node);
     onToggle(node.uuid, !isExpanded);
   };
-  const [modalConfirm, setModalConfirm] = useState<ModalConfirm>({
-    ...ModalConfirmDefault,
-  });
-  const [modalBody, setModalBody] = useState(
-    <AlertBase type={APP_COLOR.Warning} text={'删除'} />,
-  );
 
   const delMesh = (e: Event | any, item: Object3D) => {
     e.stopPropagation();
     e.preventDefault();
-    setModalBody(
-      <AlertBase type={APP_COLOR.Warning} text={getObjectNameByName(item)} />,
-    );
-    setModalConfirm({
-      ...ModalConfirmDefault,
-      title: `删除`,
-      show: true,
-      onOk: () => {
+
+    ModalConfirm3d(
+      {
+        title: "删除",
+        body: (
+          <AlertBase type={APP_COLOR.Danger} text={getObjectNameByName(item)} />
+        ),
+        show: true,
+      },
+      () => {
         const scene = getScene();
-        const targetItem = scene.getObjectByProperty('uuid', item.uuid);
+        const targetItem = scene.getObjectByProperty("uuid", item.uuid);
         if (targetItem === undefined) {
           return;
         }
@@ -65,33 +60,28 @@ const TreeNode = ({
         }
 
         targetItem.parent.remove(targetItem);
-        console.log(scene.children);
+
         dispatchScene({
-          type: 'setScene',
+          type: "setScene",
           payload: scene,
         });
-        console.log('dispatchScene');
-
-        //  [...scene.children];
-        setModalConfirm({
-          ...ModalConfirmDefault,
-          show: false,
-        });
-      },
-    });
+        Toast3d(`【${getObjectNameByName(item)}】已删除`);
+      }
+    );
+    // 删除提示
   };
-  function getLogo(item: any) {
-    let logo = 'hexagon';
-    if (item.isMesh) logo = 'box';
+  function getLogo(item: Object3D | any) {
+    let logo = "hexagon";
+    if (item.isMesh) logo = "box";
 
-    if (item.isGroup) logo = 'collection';
+    if (item.isGroup) logo = "collection";
 
-    if (item.isLight) logo = 'lightbulb';
+    if (item.isLight) logo = "lightbulb";
 
     return <i className={setClassName(logo)}></i>;
   }
 
-  const light = `d-flex justify-content-between ${node.userData.isSelected ? 'text-warning' : ''}`;
+  const light = `d-flex justify-content-between ${node.userData.isSelected ? "text-warning" : ""}`;
   return (
     <>
       <ListGroupItem>
@@ -113,19 +103,19 @@ const TreeNode = ({
                 className="me-1"
                 onClick={(e) => delMesh(e, node)}
               >
-                <i className={setClassName('trash')}></i>
+                <i className={setClassName("trash")}></i>
               </Button>
             ) : (
-              ''
+              ""
             )}
             {hasChildren ? (
               isExpanded ? (
-                <i className={setClassName('dash-square')}></i>
+                <i className={setClassName("dash-square")}></i>
               ) : (
-                <i className={setClassName('plus-square')}></i>
+                <i className={setClassName("plus-square")}></i>
               )
             ) : (
-              ''
+              ""
             )}
           </div>
         </div>
@@ -143,12 +133,6 @@ const TreeNode = ({
           </div>
         )}
       </ListGroupItem>
-      <ModalConfirm3d
-        modalConfirm={modalConfirm}
-        setModalConfirm={setModalConfirm}
-      >
-        {modalBody}
-      </ModalConfirm3d>
     </>
   );
 };
@@ -164,7 +148,7 @@ const TreeList = ({
 }) => {
   return (
     <>
-      {data.map((node) => (
+      {data.map((node: Object3D<Object3DEventMap>) => (
         <TreeNode
           key={node.uuid}
           node={node}

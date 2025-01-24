@@ -14,7 +14,7 @@ export default defineConfig({
       exposes: {
         "./Viewer3d": "./src/Viewer3d/Viewer3d.tsx",
         "./init3d116": "./src/three/init3d116.ts",
-        //  "./EditorIndex": "./src/Hook.tsx",
+        //  "./Index": "./src/Hook.tsx",
       },
       shared: [
         "react",

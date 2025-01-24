@@ -5,7 +5,7 @@ import Col from "react-bootstrap/esm/Col";
 import Canvas3d from "./Canvas3d";
 import BottomNav from "./BottomNav";
 import OutlineView from "./OutlineView";
-export default function EditorIndex() {
+export default function Index() {
   return (
     <>
       <Container fluid>

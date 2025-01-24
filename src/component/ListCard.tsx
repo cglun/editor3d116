@@ -1,23 +1,13 @@
-import { memo, useState } from "react";
-import {
-  Button,
-  ButtonGroup,
-  Card,
-  Container,
-  Form,
-  InputGroup,
-  Spinner,
-} from "react-bootstrap";
-import AlertBase from "./AlertBase";
+import { memo } from "react";
+import { Button, ButtonGroup, Card, Container, Spinner } from "react-bootstrap";
+import AlertBase from "./common/AlertBase";
 import { getThemeColor } from "../app/config";
 import { setClassName } from "../app/utils";
 import { APP_COLOR } from "../type";
+import ModalConfirm3d from "./common/ModalConfirm3d";
+import Toast3d from "./common/Toast3d";
+import EditorForm from "./common/EditorForm";
 
-import ModalConfirm3d, {
-  ModalConfirm,
-  ModalConfirmDefault,
-} from "./Modal/ModalConfirm3d";
-import Toast3d from "./Toast3d";
 export interface ItemInfo {
   id: number;
   name: string;
@@ -49,55 +39,40 @@ function ItemInfoCard(props: Props) {
   if (list.length === 0) {
     return <AlertBase type={APP_COLOR.Warning} text={"无数据"} />;
   }
-  const [modalConfirm, setModalConfirm] = useState<ModalConfirm>({
-    ...ModalConfirmDefault,
-  });
-
-  const [modalBody, setModalBody] = useState(
-    <AlertBase type={APP_COLOR.Warning} text={""} />
-  );
 
   function deleteBtn(item: ItemInfo, index: number) {
     //设为红色Danger，危险操作
-    setModalBody(<AlertBase type={APP_COLOR.Danger} text={item.name} />);
-    setModalConfirm({
-      ...ModalConfirmDefault,
-      title: `删除${item.type}`,
-      show: true,
-      onOk: () => {
+    ModalConfirm3d(
+      {
+        title: "删除",
+        body: <AlertBase type={APP_COLOR.Danger} text={item.name} />,
+        show: true,
+      },
+      () => {
         const newList = list.filter((_, i) => i !== index);
         setList(newList);
         Toast3d(`【${item.name}】已删除`);
-        setModalConfirm({
-          ...ModalConfirmDefault,
-          show: false,
-        });
-      },
-    });
+      }
+    );
   }
 
+  //doSomething(myCallbackFunction); // 传递回调函数给doSomething
+
   function editorBtn(item: ItemInfo) {
-    let _item: ItemInfo | null;
-    function getNewItem(item: ItemInfo): void {
-      _item = item;
+    let newItem = item;
+    function getNewItem(item: ItemInfo) {
+      newItem = item;
     }
-
-    setModalBody(<EditorForm item={item} getNewItem={getNewItem} />);
-
-    setModalConfirm({
-      ...ModalConfirmDefault,
-      title: `编辑${item.type}`,
-      type: APP_COLOR.Danger,
-      show: true,
-      onOk: () => {
-        console.log(_item);
-        Toast3d(`【${item.name}】已更新`);
-        setModalConfirm({
-          ...ModalConfirmDefault,
-          show: false,
-        });
+    ModalConfirm3d(
+      {
+        title: "编辑",
+        body: <EditorForm item={item} getNewItem={getNewItem} />,
+        show: true,
       },
-    });
+      () => {
+        Toast3d(`【${item.name}】已修改为【${newItem.name}】`);
+      }
+    );
   }
 
   return (
@@ -130,38 +105,7 @@ function ItemInfoCard(props: Props) {
           </Card>
         );
       })}
-      <ModalConfirm3d
-        modalConfirm={{ ...modalConfirm }}
-        setModalConfirm={setModalConfirm}
-      >
-        {modalBody}
-      </ModalConfirm3d>
     </Container>
   );
 }
 export default memo(ItemInfoCard);
-
-interface EditorFormProps {
-  item: ItemInfo;
-  getNewItem: Function;
-}
-function EditorForm(editorFormProps: EditorFormProps) {
-  const { item, getNewItem } = editorFormProps;
-  const [_item, _setItem] = useState<ItemInfo>({ ...item });
-  return (
-    <InputGroup size="sm">
-      <InputGroup.Text id="inputGroup-sizing-sm">{item.type}</InputGroup.Text>
-      <Form.Control
-        aria-label="Small"
-        aria-describedby="inputGroup-sizing-sm"
-        placeholder={item.name}
-        type="text"
-        value={_item.name}
-        onChange={(e) => {
-          _setItem({ ..._item, name: e.target.value });
-          getNewItem(e.target.value);
-        }}
-      />
-    </InputGroup>
-  );
-}

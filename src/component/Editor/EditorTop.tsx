@@ -11,10 +11,13 @@ import {
 import { setClassName } from "../../app/utils";
 import { getThemeColor, initThemeColor, setThemeColor } from "../../app/config";
 import { getCamera, getScene, setScene } from "../../three/init3d116";
-import ListCard from "../ListCard";
+import ListCard, { ItemInfo } from "../ListCard";
 import { Scene } from "three";
 import { testData1 } from "../../app/testData";
-import Toast3d from "../Toast3d";
+import Toast3d from "../common/Toast3d";
+import ModalConfirm3d from "../common/ModalConfirm3d";
+import EditorForm from "../common/EditorForm";
+
 export default function EditorTop() {
   initThemeColor();
   const themeColor = getThemeColor();
@@ -32,7 +35,7 @@ export default function EditorTop() {
     localStorage.setItem("scene", JSON.stringify(sceneJson));
     localStorage.setItem("camera", JSON.stringify(c));
 
-    Toast3d("已经保存");
+    Toast3d("保存成功");
   }
   function setTheme(color: string) {
     document.body.setAttribute("data-bs-theme", color);
@@ -41,7 +44,27 @@ export default function EditorTop() {
     setAppTheme(color);
   }
 
-  function saveAsNewScene() {}
+  function saveAsNewScene() {
+    const item: ItemInfo = {
+      id: 0,
+      name: "新场景",
+      type: "场景",
+      desc: "无",
+    };
+    const getNewItem = (newItem: ItemInfo) => {
+      item.name = newItem.name;
+    };
+    ModalConfirm3d(
+      {
+        title: "另存场景",
+        body: <EditorForm item={item} getNewItem={getNewItem} />,
+        show: true,
+      },
+      function () {
+        Toast3d("保存成功" + item.name);
+      }
+    );
+  }
 
   const [list, setList] = useState(testData1);
   return (

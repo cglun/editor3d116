@@ -24,13 +24,9 @@ export function Switch3d({
 
   return (
     curObj3d.hasOwnProperty(attr) && (
-      <Button
-        variant={getThemeColor()}
-        className=" d-flex justify-content-between flex-wrap"
-        onClick={() => {
-          setChecked(!checked);
-          curObj3d.attr = !checked;
-        }}
+      <div
+        className=" d-flex justify-content-between flex-wrap p-1"
+        style={{ width: "100vw" }}
       >
         <span>{title}</span>
         <Form>
@@ -43,7 +39,7 @@ export function Switch3d({
             }}
           />
         </Form>
-      </Button>
+      </div>
     )
   );
 }

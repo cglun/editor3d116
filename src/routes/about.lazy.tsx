@@ -1,22 +1,18 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-
 import { Button, ListGroup, ListGroupItem } from "react-bootstrap";
 import { setClassName } from "../app/utils";
 import { getThemeColor } from "../app/config";
-import AlertBase from "../component/AlertBase";
+import AlertBase from "../component/common/AlertBase";
 import { APP_COLOR } from "../type";
-
 export const Route = createLazyFileRoute("/about")({
   component: RouteComponent,
 });
-
 function RouteComponent() {
   // const handleTest = () => {
   //   const sceneJson = scene.toJSON();
 
   //   localStorage.setItem('scene', JSON.stringify(sceneJson));
   // };
-
   return (
     // <Button onClick={handleTest} variant={getThemeColor()}>
     //   测试

@@ -8,8 +8,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port 116 --strictPort",
-    "build": "tsc -b && vite build",
-    "build2": "vite build",
+    "build": "tsc -b && vite build", 
     "lint": "eslint .",
     "preview": "vite preview --port 116 --strictPort"
   },

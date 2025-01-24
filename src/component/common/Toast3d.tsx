@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { Toast as BootToast } from "react-bootstrap";
 import { createRoot } from "react-dom/client";
-import { APP_COLOR, DELAY } from "../type";
-import { setClassName } from "../app/utils";
+import { APP_COLOR, DELAY } from "../../type";
+import { setClassName } from "../../app/utils";
 /**
  * 消息提示
  * 用法：Toast3d("成功添加");
  */
 interface Toast {
   title: string;
-  content: string;
+  content: string | JSX.Element;
   type: APP_COLOR;
   delay: DELAY;
   show: boolean;
@@ -50,11 +50,11 @@ if (container === null) {
 }
 const root = createRoot(container);
 export default function Toast3d(
-  content = "内容",
-  title = "提示",
-  type = APP_COLOR.Success,
-  delay = DELAY.SHORT,
-  show = false
+  content: string = "内容",
+  title: string = "提示",
+  type: APP_COLOR = APP_COLOR.Success,
+  delay: DELAY = DELAY.SHORT,
+  show: boolean = false
 ) {
   const update = new Date().getTime();
   const toast = {
