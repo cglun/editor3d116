@@ -5,6 +5,7 @@ import {
   DirectionalLightHelper,
   GridHelper,
   Group,
+  LoadingManager,
   Mesh,
   MeshLambertMaterial,
   Object3D,
@@ -12,8 +13,11 @@ import {
   PerspectiveCamera,
   Scene,
   WebGLRenderer,
-} from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+} from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { GlbModel } from "../type";
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 
 let scene: Scene = new Scene();
 
@@ -38,27 +42,27 @@ function addCube() {
   const cubeGeometry = new BoxGeometry(1, 1, 1);
   const cubeMaterial = new MeshLambertMaterial();
   cube = new Mesh(cubeGeometry, cubeMaterial);
-  cube.name = 'cube1';
+  cube.name = "cube1";
   cube.castShadow = true; // 立方体投射阴影
 
   // 创建立方体
   const cubeGeometry2 = new BoxGeometry(1, 1, 1);
   const cubeMaterial2 = new MeshLambertMaterial();
   const cube2 = new Mesh(cubeGeometry2, cubeMaterial2);
-  cube2.name = 'cube2';
+  cube2.name = "cube2";
   cube2.castShadow = true; // 立方体投射阴影
 
   // 创建立方体
   const cubeGeometry3 = new BoxGeometry(1, 1, 1);
   const cubeMaterial3 = new MeshLambertMaterial();
   const cube3 = new Mesh(cubeGeometry3, cubeMaterial3);
-  cube3.name = 'cube3';
+  cube3.name = "cube3";
   cube3.castShadow = true; // 立方体投射阴影
 
   cube2.add(cube3);
 
   const g = new Group();
-  g.name = '立方体组';
+  g.name = "立方体组";
   g.add(cube);
   g.add(cube2);
   scene.add(g);
@@ -72,7 +76,7 @@ function addLight() {
   light.lookAt(0, 0, 0);
   scene.add(light);
   const dh = new DirectionalLightHelper(light);
-  dh.name = '灯光辅助';
+  dh.name = "灯光辅助";
   scene.add(dh);
 
   // 设置阴影参数
@@ -97,16 +101,20 @@ function createScene(node: HTMLDivElement) {
     75,
     node.offsetWidth / node.offsetHeight,
     0.1,
-    1000,
+    1000
   );
-  camera.name = '透视相机';
+  camera.name = "透视相机";
 
   renderer.setSize(node.offsetWidth, node.offsetHeight);
   camera.position.set(-5, 5, 8);
   scene.userData.isSelected = false;
+
+  const gridHelper = new GridHelper(10, 10);
+  scene.add(gridHelper);
+
   node.appendChild(renderer.domElement);
   addOrbitControls();
-  addGlb();
+
   animate();
 }
 function addOrbitControls(): void {
@@ -127,16 +135,51 @@ function getScene(): Scene {
   return scene;
 }
 function getCube() {
-  console.log(cube);
-
   return cube;
 }
 
-function addGlb() {
-  // const load = new GLTFLoader(new LoadingManager());
-  // load.load('/assets/models/blender.glb', (data) => {
-  //   scene.add(data.scene);
-  // });
+export function addGlb() {
+  const dracoLoader = new DRACOLoader();
+  dracoLoader.setDecoderPath("/assets/js/draco/gltf/");
+  //const loader = new GLTFLoader(new LoadingManager());
+  const loader = new GLTFLoader();
+  loader.setDRACOLoader(dracoLoader);
+  loader.load("/assets/models/blender.glb", (gltf) => {
+    const children = gltf.scene.children;
+    for (let i = 0; i < children.length; i++) {
+      const element = children[i];
+      element.userData.type = "GlbModel";
+      scene.children.push(element);
+    }
+    //scene.add(data.scene);
+  });
+}
+
+// 场景序列化
+export function sceneSerialization(scene: Scene, camera: Camera): string {
+  const _scene = scene.clone();
+  const models: GlbModel[] = [];
+  _scene.children.forEach((child) => {
+    if (child.userData.type === "GlbModel") {
+      const model: GlbModel = {
+        id: child.id,
+        name: child.name,
+        position: child.position,
+        rotation: child.rotation,
+        scale: child.scale,
+      };
+      models.push(model);
+      child.parent?.remove(child);
+    }
+  });
+  const sceneJson = _scene.toJSON();
+  const cameraJson = camera.toJSON();
+  const sceneJsonString = JSON.stringify(sceneJson);
+  const cameraJsonString = JSON.stringify(cameraJson);
+  const modelsJsonString2 = JSON.stringify(models);
+  return (
+    sceneJsonString + "!116!" + cameraJsonString + "!116!" + modelsJsonString2
+  );
 }
 
 export default scene;

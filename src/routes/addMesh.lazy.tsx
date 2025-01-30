@@ -1,24 +1,30 @@
-import { createLazyFileRoute } from '@tanstack/react-router';
-import Button from 'react-bootstrap/esm/Button';
-import { getThemeColor } from '../app/config';
-import { getScene } from '../three/init3d116';
+import { createLazyFileRoute } from "@tanstack/react-router";
+import Button from "react-bootstrap/esm/Button";
+import { getThemeColor } from "../app/config";
+import {
+  addGlb,
+  getCamera,
+  getScene,
+  sceneSerialization,
+} from "../three/init3d116";
 import {
   AmbientLight,
   BoxGeometry,
   DirectionalLight,
+  GridHelper,
   Group,
   Mesh,
   MeshLambertMaterial,
   Object3D,
   PlaneGeometry,
-} from 'three/src/Three.Core.js';
+} from "three/src/Three.Core.js";
 
-import { useContext } from 'react';
-import { MyContext } from '../app/MyContext';
-import { ButtonGroup, Card } from 'react-bootstrap';
-import { setClassName } from '../app/utils';
+import { useContext } from "react";
+import { MyContext } from "../app/MyContext";
+import { ButtonGroup, Card } from "react-bootstrap";
+import { setClassName } from "../app/utils";
 
-export const Route = createLazyFileRoute('/addMesh')({
+export const Route = createLazyFileRoute("/addMesh")({
   component: RouteComponent,
 });
 
@@ -34,13 +40,13 @@ function RouteComponent() {
     const cubeGeometry = new BoxGeometry(1, 1, 1);
     const cubeMaterial = new MeshLambertMaterial();
     const cube = new Mesh(cubeGeometry, cubeMaterial);
-    cube.name = 'cube1';
+    cube.name = "cube1";
     // cube.castShadow = true; // 立方体投射阴影
     cube.position.set(0, 0.5, 0);
     setSelected(cube);
     scene.add(cube);
     dispatchScene({
-      type: 'setScene',
+      type: "setScene",
       payload: scene,
     });
   }
@@ -50,7 +56,7 @@ function RouteComponent() {
 
     setSelected(light);
     dispatchScene({
-      type: 'setScene',
+      type: "setScene",
       payload: scene,
     });
   }
@@ -66,7 +72,7 @@ function RouteComponent() {
     setSelected(plane);
     scene.add(plane);
     dispatchScene({
-      type: 'setScene',
+      type: "setScene",
       payload: scene,
     });
   }
@@ -75,7 +81,7 @@ function RouteComponent() {
     setSelected(group);
     scene.add(group);
     dispatchScene({
-      type: 'setScene',
+      type: "setScene",
       payload: scene,
     });
   }
@@ -85,8 +91,9 @@ function RouteComponent() {
     setSelected(directionalLight);
     directionalLight.position.set(3, 3, 3);
     directionalLight.lookAt(0, 0, 0);
+
     dispatchScene({
-      type: 'setScene',
+      type: "setScene",
       payload: scene,
     });
   }
@@ -94,7 +101,7 @@ function RouteComponent() {
     <div className="d-flex flex-wrap pt-2">
       <Card>
         <Card.Header>
-          <i className={setClassName('box')}></i> 几何体
+          <i className={setClassName("box")}></i> 几何体
         </Card.Header>
         <Card.Body className="pt-1">
           <ButtonGroup>
@@ -127,7 +134,7 @@ function RouteComponent() {
       </Card>
       <Card className="ms-2">
         <Card.Header>
-          <i className={setClassName('lightbulb')}></i> 灯光
+          <i className={setClassName("lightbulb")}></i> 灯光
         </Card.Header>
         <Card.Body className="pt-1">
           <ButtonGroup>
@@ -148,6 +155,26 @@ function RouteComponent() {
               }}
             >
               环境光
+            </Button>
+
+            <Button
+              variant={color}
+              title="添加glb模型"
+              onClick={() => {
+                addGlb();
+              }}
+            >
+              glb模型
+            </Button>
+            <Button
+              variant={color}
+              title="序列化"
+              onClick={() => {
+                // const str = sceneSerialization(getScene(), getCamera());
+                // console.log(str);
+              }}
+            >
+              序列化
             </Button>
           </ButtonGroup>
         </Card.Body>
