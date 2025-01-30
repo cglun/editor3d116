@@ -23,6 +23,7 @@ function App116({ update, _toast }: { update: number; _toast: Toast }) {
   return (
     <BootToast
       className="fixed-top mt-2 mx-auto"
+      style={{ zIndex: 116116 }}
       onClose={() => {
         setToast({ ...toast, show: false });
       }}

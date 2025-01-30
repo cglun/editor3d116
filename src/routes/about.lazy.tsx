@@ -40,6 +40,19 @@ function RouteComponent() {
           ></AlertBase>
         </div>
       </ListGroupItem>
+      <ListGroupItem>
+        <Button
+          onClick={() => {
+            fetch("/api", (result: any): any => {
+              return result.text();
+            }).then((result) => {
+              console.log(result.body);
+            });
+          }}
+        >
+          测试
+        </Button>
+      </ListGroupItem>
     </ListGroup>
   );
 }

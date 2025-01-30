@@ -62,3 +62,15 @@ btn-group-sm > .btn,
 
   --bs-btn-font-size: 0.8rem;
 }
+.custom-file-upload {
+  display: inline-block;
+  padding: 6px 12px;
+  cursor: pointer;
+ 
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.custom-file-upload:hover {
+  background-color: #e2a64c;
+}

@@ -4,40 +4,39 @@ import { getThemeColor } from "../../app/config";
 import { setClassName } from "../../app/utils";
 import { createRoot } from "react-dom/client";
 import { useEffect, useState } from "react";
-
 export interface ModalConfirm {
-  title: string;
-  body: string | JSX.Element;
-  show: boolean;
+  show?: boolean;
+  hasButton?: boolean;
+  closeButton?: boolean;
 }
 export const modalConfirm: ModalConfirm = {
-  title: "标题",
-  body: "内容",
-  show: false,
+  show: true,
+  hasButton: true,
+  closeButton: true,
 };
-
 let container = document.getElementById("toast");
 if (container === null) {
   container = document.createElement("div");
   document.body.appendChild(container);
 }
 const root = createRoot(container);
-
 function ModalConfirm({
-  modalConfirm,
+  title,
+  body,
+  confirmButton,
   callback,
   update,
 }: {
-  modalConfirm: ModalConfirm;
-  callback: Function;
+  title: string;
+  body: JSX.Element | string;
+  confirmButton: ModalConfirm;
+  callback: () => void;
   update: number;
 }) {
   const themeColor = getThemeColor();
-  const { title, body } = modalConfirm;
-
-  const [show, setShow] = useState(modalConfirm.show);
+  const [show, setShow] = useState(confirmButton.show);
   useEffect(() => {
-    setShow(modalConfirm.show);
+    setShow(confirmButton.show);
   }, [update]);
   const onClose = () => {
     setShow(false);
@@ -50,43 +49,51 @@ function ModalConfirm({
         animation={true}
         aria-labelledby="contained-modal-title-vcenter"
       >
-        <Modal.Header closeButton>
+        <Modal.Header closeButton={confirmButton.closeButton}>
           <Modal.Title id="contained-modal-title-vcenter">
             <i className={setClassName("info-circle")}></i> {title}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>{body}</Modal.Body>
-        <Modal.Footer>
-          <Button variant={themeColor} onClick={onClose}>
-            <i className={setClassName("x-circle")}></i> 取消
-          </Button>
-          <Button
-            variant={themeColor}
-            onClick={() => {
-              callback();
-              onClose();
-            }}
-          >
-            <i className={setClassName("check-circle")}></i> 确定
-          </Button>
-        </Modal.Footer>
+        {confirmButton.hasButton && (
+          <Modal.Footer>
+            <Button variant={themeColor} onClick={onClose}>
+              <i className={setClassName("x-circle")}></i> 取消
+            </Button>
+            <Button
+              variant={themeColor}
+              onClick={() => {
+                callback();
+                onClose();
+              }}
+            >
+              <i className={setClassName("check-circle")}></i> 确定
+            </Button>
+          </Modal.Footer>
+        )}
       </Modal>
     )
   );
 }
 
 export default function ModalConfirm3d(
-  modalConfirm: ModalConfirm = {
-    title: "title",
-    body: "body",
-    show: false,
+  {
+    title = "提示",
+    body = "内容",
+    confirmButton = modalConfirm,
+  }: {
+    title: string;
+    body: JSX.Element | string;
+    confirmButton?: ModalConfirm;
   },
-  callback: Function
+  callback = () => {}
 ) {
   const update = new Date().getTime();
   root.render(
     <ModalConfirm
-      modalConfirm={modalConfirm}
+      title={title}
+      body={body}
+      confirmButton={confirmButton}
       callback={callback}
       update={update}
     />

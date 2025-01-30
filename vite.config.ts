@@ -36,6 +36,15 @@ export default defineConfig({
     minify: false,
     cssCodeSplit: false,
   },
+  server: {
+    proxy: {
+      "/api": {
+        target: "https://www.baidu.com",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+    },
+  },
   resolve: {
     conditions: ["browser", "import"],
   },

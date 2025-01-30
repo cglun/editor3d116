@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { Button, ButtonGroup, Card, Container, Spinner } from "react-bootstrap";
 import AlertBase from "./common/AlertBase";
-import { getThemeColor } from "../app/config";
+import { getButtonColor, getThemeColor } from "../app/config";
 import { setClassName } from "../app/utils";
 import { APP_COLOR } from "../type";
 import ModalConfirm3d from "./common/ModalConfirm3d";
@@ -41,12 +41,10 @@ function ItemInfoCard(props: Props) {
   }
 
   function deleteBtn(item: ItemInfo, index: number) {
-    //设为红色Danger，危险操作
     ModalConfirm3d(
       {
         title: "删除",
         body: <AlertBase type={APP_COLOR.Danger} text={item.name} />,
-        show: true,
       },
       () => {
         const newList = list.filter((_, i) => i !== index);
@@ -55,8 +53,6 @@ function ItemInfoCard(props: Props) {
       }
     );
   }
-
-  //doSomething(myCallbackFunction); // 传递回调函数给doSomething
 
   function editorBtn(item: ItemInfo) {
     let newItem = item;
@@ -67,7 +63,6 @@ function ItemInfoCard(props: Props) {
       {
         title: "编辑",
         body: <EditorForm item={item} getNewItem={getNewItem} />,
-        show: true,
       },
       () => {
         Toast3d(`【${item.name}】已修改为【${newItem.name}】`);

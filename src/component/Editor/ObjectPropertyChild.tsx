@@ -9,7 +9,8 @@ import { getObjectNameByName } from "../../three/utils";
 import ButtonGroup from "react-bootstrap/esm/ButtonGroup";
 import { getScene } from "../../three/init3d116";
 import { MyContext } from "../../app/MyContext";
-
+import AlertBase from "../common/AlertBase";
+import { APP_COLOR } from "../../type";
 const step = 0.1;
 export function Switch3d({
   title,
@@ -21,21 +22,21 @@ export function Switch3d({
   attr: string;
 }) {
   const [checked, setChecked] = useState(curObj3d[attr]);
+  useEffect(() => {
+    setChecked(curObj3d[attr]);
+  }, [curObj3d]);
 
   return (
     curObj3d.hasOwnProperty(attr) && (
-      <div
-        className=" d-flex justify-content-between flex-wrap p-1"
-        style={{ width: "100vw" }}
-      >
+      <div className=" d-flex justify-content-between flex-wrap p-1">
         <span>{title}</span>
-        <Form>
-          <Form.Check // prettier-ignore
+        <Form className="ms-2">
+          <Form.Check
             type="switch"
-            checked={curObj3d[attr]}
+            checked={checked}
             onChange={() => {
-              setChecked(!checked);
               curObj3d[attr] = !checked;
+              setChecked(!checked);
             }}
           />
         </Form>
@@ -153,7 +154,7 @@ export function AttrInputNumber({
     curObj3d &&
     curObj3d.hasOwnProperty(attr) && (
       <InputGroup size="sm">
-        <InputGroup.Text>{title}000000</InputGroup.Text>
+        <InputGroup.Text>{title}</InputGroup.Text>
         <Form.Control
           aria-label="Small"
           aria-describedby="inputGroup-sizing-sm"
@@ -336,10 +337,14 @@ export default function ObjectPropertyChild({
       return sceneProperty(curObj3d);
     }
     if (curObj3d.isCamera) {
-      return "相机";
+      return cameraProperty();
     }
     return commonProperty(curObj3d);
   }
+}
+
+function cameraProperty() {
+  return <AlertBase type={APP_COLOR.Info} text={"默认属性"} />;
 }
 
 function isScale(title: string) {

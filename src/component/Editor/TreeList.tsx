@@ -47,7 +47,6 @@ const TreeNode = ({
         body: (
           <AlertBase type={APP_COLOR.Danger} text={getObjectNameByName(item)} />
         ),
-        show: true,
       },
       () => {
         const scene = getScene();

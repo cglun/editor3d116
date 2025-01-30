@@ -58,7 +58,6 @@ export default function EditorTop() {
       {
         title: "另存场景",
         body: <EditorForm item={item} getNewItem={getNewItem} />,
-        show: true,
       },
       function () {
         Toast3d("保存成功" + item.name);

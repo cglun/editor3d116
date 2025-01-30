@@ -5,7 +5,7 @@ import Form from "react-bootstrap/esm/Form";
 
 interface EditorFormProps {
   item: ItemInfo;
-  getNewItem: Function;
+  getNewItem: (item: ItemInfo) => void;
 }
 
 export default function EditorForm(editorFormProps: EditorFormProps) {
