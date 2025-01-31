@@ -65,6 +65,13 @@ export function init3d(canvas: React.RefObject<HTMLDivElement>) {
       }
       addGridHelper();
 
+      const data = scene.children;
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].userData.type === "TransformHelper") {
+          data.splice(i, 1);
+        }
+      }
+
       if (import.meta.env.MODE === "development") {
         runScript({ camera: camera, scene: scene });
       }
@@ -84,6 +91,12 @@ export function init3d(canvas: React.RefObject<HTMLDivElement>) {
 
       addLight();
       addGridHelper();
+      const data = getScene().children;
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].userData.type === "TransformHelper") {
+          data.splice(i, 1);
+        }
+      }
     }
 
     window.addEventListener("resize", () =>
@@ -94,6 +107,8 @@ export function init3d(canvas: React.RefObject<HTMLDivElement>) {
     window.removeEventListener("resize", () =>
       onWindowResize(canvas, getCamera(), getRenderer())
     );
+
+    //canvas.current?.removeEventListener("click", onPointerClick);
   };
 }
 function onWindowResize(

@@ -5,7 +5,7 @@ import Button from "react-bootstrap/esm/Button";
 import Form from "react-bootstrap/esm/Form";
 import InputGroup from "react-bootstrap/esm/InputGroup";
 
-import { getButtonColor, getThemeColor } from "../../app/config";
+import { getButtonColor } from "../../app/config";
 
 export function Serch3d({
   list,

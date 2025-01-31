@@ -209,6 +209,7 @@ export function AttrInputText({
 
 function sceneProperty(curObj3d: Object3D | any) {
   const { dispatchScene } = useContext(MyContext);
+
   const backgroundColor = curObj3d.background?.getHexString()
     ? curObj3d.background?.getHexString()
     : "000000";
@@ -339,6 +340,15 @@ export default function ObjectPropertyChild({
     if (curObj3d.isCamera) {
       return cameraProperty();
     }
+    //currentObject.userData.type === "GridHelper" ||
+
+    if (
+      curObj3d.type === "TransformControlsPlane" ||
+      curObj3d.type === "Line"
+    ) {
+      return <AlertBase type={APP_COLOR.Warning} text={"变换控制器"} />;
+    }
+
     return commonProperty(curObj3d);
   }
 }

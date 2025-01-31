@@ -179,11 +179,7 @@ function RouteComponent() {
             <Button
               variant={color}
               onClick={() => {
-                fetch("/api", (result: any): any => {
-                  return result.text();
-                }).then((result) => {
-                  console.log(result.body);
-                });
+                fetch("/api");
               }}
             >
               测试

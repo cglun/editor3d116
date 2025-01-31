@@ -22,10 +22,6 @@ export function UploadModel() {
     }
   }
 
-  function UploadProgress() {
-    return <ProgressBar now={60} />;
-  }
-
   return (
     <div className="d-flex">
       <ListGroup.Item>

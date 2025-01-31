@@ -14,7 +14,7 @@ export const Route = createLazyFileRoute("/")({
 function ModelList() {
   // const { data, isLoading, error } = useFetch('type=Mesh', HTTP_TYPE.GET);
 
-  const [list, setList] = React.useState(testData2);
+  const [list] = React.useState(testData2);
   const [filterList, setFilterList] = React.useState(testData2);
 
   return (
@@ -25,7 +25,7 @@ function ModelList() {
       </ListGroup>
       <ListCard
         list={filterList}
-        setList={setList}
+        setList={setFilterList}
         getType={{
           isLoading: false,
           error: false,

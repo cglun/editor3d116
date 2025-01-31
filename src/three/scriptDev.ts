@@ -6,6 +6,11 @@ interface Props {
 }
 //脚本开发在这里进行调试
 export function runScript(props: Props) {
+  if (import.meta.env.MODE === "development") {
+    console.log(props);
+
+    return;
+  }
   //const { camera, scene } = props;
   //===============开始==================//
   // const cube = scene.getObjectByName('cube');

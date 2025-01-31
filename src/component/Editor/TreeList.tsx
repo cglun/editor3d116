@@ -8,7 +8,7 @@ import { Object3D, Object3DEventMap } from "three";
 import ModalConfirm3d from "../common/ModalConfirm3d";
 import AlertBase from "../common/AlertBase";
 import Toast3d from "../common/Toast3d";
-import { getScene } from "../../three/init3d116";
+import { getScene, transformControls } from "../../three/init3d116";
 import { MyContext } from "../../app/MyContext";
 
 const TreeNode = ({
@@ -23,6 +23,13 @@ const TreeNode = ({
   onToggle: (uuid: string, isExpanded: boolean) => void;
   resetTextWarning: (targetItem: Object3D) => void;
 }) => {
+  if (node.hasOwnProperty("isTransformControlsRoot")) {
+    const nodeA = node as any;
+    if (nodeA.isTransformControlsRoot) {
+      return;
+    }
+  }
+
   const hasChildren = node.children && node.children.length > 0;
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [delBtn, setDelBtn] = React.useState(false);
@@ -35,6 +42,7 @@ const TreeNode = ({
     setIsSelected(!isSelected);
     setCurObj3d(node);
     onToggle(node.uuid, !isExpanded);
+    transformControls(node);
   };
 
   const delMesh = (e: Event | any, item: Object3D) => {
@@ -81,6 +89,10 @@ const TreeNode = ({
   }
 
   const light = `d-flex justify-content-between ${node.userData.isSelected ? "text-warning" : ""}`;
+  if (node.userData.type === "TransformHelper") {
+    return;
+  }
+
   return (
     <>
       <ListGroupItem>

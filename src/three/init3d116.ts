@@ -1,15 +1,13 @@
 import {
-  BoxGeometry,
   DirectionalLight,
   DirectionalLightHelper,
   GridHelper,
-  Group,
-  Mesh,
-  MeshLambertMaterial,
   Object3D,
   Object3DEventMap,
   PerspectiveCamera,
+  Raycaster,
   Scene,
+  Vector2,
   WebGLRenderer,
 } from "three";
 
@@ -17,12 +15,18 @@ import {
   GLTFLoader,
   DRACOLoader,
   OrbitControls,
+  TransformControls,
 } from "three/examples/jsm/Addons.js";
 import { GlbModel } from "../app/type";
+
 let scene: Scene,
   camera: PerspectiveCamera,
   controls: OrbitControls,
-  renderer: WebGLRenderer;
+  renderer: WebGLRenderer,
+  divElement: HTMLDivElement,
+  transfControls: TransformControls;
+const raycaster = new Raycaster();
+const pointer = new Vector2();
 
 function animate() {
   requestAnimationFrame(animate);
@@ -32,38 +36,38 @@ function animate() {
   renderer.render(scene, camera);
 }
 
-let cube: Mesh;
+// let cube: Mesh;
 
-function addCube() {
-  // 创建立方体
-  const cubeGeometry = new BoxGeometry(1, 1, 1);
-  const cubeMaterial = new MeshLambertMaterial();
-  cube = new Mesh(cubeGeometry, cubeMaterial);
-  cube.name = "cube1";
-  cube.castShadow = true; // 立方体投射阴影
+// function addCube() {
+//   // 创建立方体
+//   const cubeGeometry = new BoxGeometry(1, 1, 1);
+//   const cubeMaterial = new MeshLambertMaterial();
+//   cube = new Mesh(cubeGeometry, cubeMaterial);
+//   cube.name = "cube1";
+//   cube.castShadow = true; // 立方体投射阴影
 
-  // 创建立方体
-  const cubeGeometry2 = new BoxGeometry(1, 1, 1);
-  const cubeMaterial2 = new MeshLambertMaterial();
-  const cube2 = new Mesh(cubeGeometry2, cubeMaterial2);
-  cube2.name = "cube2";
-  cube2.castShadow = true; // 立方体投射阴影
+//   // 创建立方体
+//   const cubeGeometry2 = new BoxGeometry(1, 1, 1);
+//   const cubeMaterial2 = new MeshLambertMaterial();
+//   const cube2 = new Mesh(cubeGeometry2, cubeMaterial2);
+//   cube2.name = "cube2";
+//   cube2.castShadow = true; // 立方体投射阴影
 
-  // 创建立方体
-  const cubeGeometry3 = new BoxGeometry(1, 1, 1);
-  const cubeMaterial3 = new MeshLambertMaterial();
-  const cube3 = new Mesh(cubeGeometry3, cubeMaterial3);
-  cube3.name = "cube3";
-  cube3.castShadow = true; // 立方体投射阴影
+//   // 创建立方体
+//   const cubeGeometry3 = new BoxGeometry(1, 1, 1);
+//   const cubeMaterial3 = new MeshLambertMaterial();
+//   const cube3 = new Mesh(cubeGeometry3, cubeMaterial3);
+//   cube3.name = "cube3";
+//   cube3.castShadow = true; // 立方体投射阴影
 
-  cube2.add(cube3);
+//   cube2.add(cube3);
 
-  const g = new Group();
-  g.name = "立方体组";
-  g.add(cube);
-  g.add(cube2);
-  scene.add(g);
-}
+//   const g = new Group();
+//   g.name = "立方体组";
+//   g.add(cube);
+//   g.add(cube2);
+//   scene.add(g);
+// }
 
 function addLight(): void {
   // 添加正交光源
@@ -84,10 +88,13 @@ function addLight(): void {
   scene.add(light);
   const dh = new DirectionalLightHelper(light);
   dh.name = "灯光辅助";
+  dh.position.copy(light.position);
   scene.add(dh);
 }
 
 function createScene(node: HTMLDivElement): void {
+  divElement = node;
+
   camera = new PerspectiveCamera(
     75,
     node.offsetWidth / node.offsetHeight,
@@ -105,13 +112,12 @@ function createScene(node: HTMLDivElement): void {
   scene.userData.isSelected = false;
 
   node.appendChild(renderer.domElement);
-  addOrbitControls();
+  controls = new OrbitControls(camera, renderer.domElement);
+  transfControls = new TransformControls(camera, renderer.domElement);
 
   animate();
 }
-function addOrbitControls(): void {
-  controls = new OrbitControls(camera, renderer.domElement);
-}
+
 function setScene(newScene: Scene) {
   scene = newScene;
 }
@@ -178,8 +184,56 @@ function sceneSerialization(scene: Scene, camera: PerspectiveCamera): string {
 
 function addGridHelper() {
   const gridHelper = new GridHelper(30, 30);
+  gridHelper.userData.type = "GridHelper";
   gridHelper.name = "网格辅助";
   scene.add(gridHelper);
+}
+
+function onPointerClick(event: MouseEvent, callBack: Function) {
+  // 将鼠标位置归一化为设备坐标。x 和 y 方向的取值范围是 (-1 to +1)
+
+  pointer.x = (event.clientX / divElement.offsetWidth) * 2 - 1;
+  pointer.y = -(event.clientY / divElement.offsetHeight) * 2 + 1;
+
+  raycaster.setFromCamera(pointer, camera);
+
+  // 计算物体和射线的焦点
+  const intersects = raycaster.intersectObjects(scene.children, true);
+
+  if (intersects.length > 0) {
+    //console.log("射线与物体相交:", getObjectNameByName(intersects[0].object));
+    // 你可以根据intersects数组中的信息来处理相交事件，比如改变相交物体的颜色等
+    callBack(intersects[0].object);
+    // return intersects[0].object;
+  }
+}
+function getDivElement() {
+  return divElement;
+}
+
+function transformControls(currentObject: Object3D) {
+  transfControls.detach();
+  if (
+    currentObject.userData.type === "GridHelper" ||
+    currentObject.type === "TransformControlsPlane" ||
+    currentObject.type === "Line"
+  ) {
+    // transfControls.detach();
+    return;
+  }
+
+  transfControls.addEventListener("dragging-changed", (event) => {
+    controls.enabled = !event.value;
+  });
+  //raycaster = transfControls.getRaycaster();
+  transfControls.attach(currentObject);
+
+  transfControls.size = 0.5;
+
+  const getHelper = transfControls.getHelper();
+  getHelper.name = "TransformHelper";
+  getHelper.userData.type = "TransformHelper";
+  scene.add(getHelper);
 }
 
 export {
@@ -192,4 +246,7 @@ export {
   addLight,
   setCamera,
   getCamera,
+  onPointerClick,
+  getDivElement,
+  transformControls,
 };

@@ -1,9 +1,12 @@
 import { Camera, Object3D } from "three";
 import {
   getCamera,
+  getDivElement,
   getScene,
+  onPointerClick,
   setCamera,
   setScene,
+  transformControls,
 } from "../../three/init3d116";
 import { setClassName } from "../../app/utils";
 
@@ -28,10 +31,32 @@ export default function OutlineView() {
     const _scene = getScene();
     _scene.children = setD2(_scene.children);
 
+    setCamera(_camera);
     dispatchScene({
       type: "setScene",
       payload: getScene(),
     });
+  }, []);
+  useEffect(() => {
+    getDivElement().addEventListener("click", function (event) {
+      onPointerClick(event, (res: Object3D) => {
+        if (res === undefined || res.userData.type === "GridHelper") {
+          return;
+        }
+        setCurObj3d(res);
+        resetTextWarning(res);
+        res.userData.isSelected = true;
+        transformControls(res);
+        dispatchScene({
+          type: "setScene",
+          payload: getScene(),
+        });
+      });
+    });
+
+    return () => {
+      getDivElement().removeEventListener("click", onPointerClick as any);
+    };
   }, []);
 
   function sceneDiv(object3D: Object3D | any) {

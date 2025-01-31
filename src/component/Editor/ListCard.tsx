@@ -48,6 +48,7 @@ function ItemInfoCard(props: Props) {
       },
       () => {
         const newList = list.filter((_, i) => i !== index);
+
         setList(newList);
         Toast3d(`【${item.name}】已删除`);
       }

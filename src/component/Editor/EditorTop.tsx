@@ -9,12 +9,7 @@ import {
   Image,
 } from "react-bootstrap";
 import { setClassName } from "../../app/utils";
-import {
-  getThemeColor,
-  initThemeColor,
-  setThemeColor,
-  SPACE,
-} from "../../app/config";
+import { getThemeColor, initThemeColor, setThemeColor } from "../../app/config";
 import { getCamera, getScene, setScene } from "../../three/init3d116";
 import ListCard, { ItemInfo } from "./ListCard";
 
