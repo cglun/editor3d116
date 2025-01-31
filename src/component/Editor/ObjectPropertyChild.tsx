@@ -10,7 +10,7 @@ import ButtonGroup from "react-bootstrap/esm/ButtonGroup";
 import { getScene } from "../../three/init3d116";
 import { MyContext } from "../../app/MyContext";
 import AlertBase from "../common/AlertBase";
-import { APP_COLOR } from "../../type";
+import { APP_COLOR } from "../../app/type";
 const step = 0.1;
 export function Switch3d({
   title,

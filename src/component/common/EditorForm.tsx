@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ItemInfo } from "../ListCard";
+import { ItemInfo } from "../Editor/ListCard";
 import InputGroup from "react-bootstrap/esm/InputGroup";
 import Form from "react-bootstrap/esm/Form";
 

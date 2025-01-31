@@ -1,4 +1,4 @@
-import { APP_COLOR, AppConfig } from "../type";
+import { APP_COLOR, AppConfig } from "./type";
 let THEME = APP_COLOR.Dark.toString();
 export const iconIsFill = false;
 export const SPACE = " ";

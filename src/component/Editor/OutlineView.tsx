@@ -1,19 +1,20 @@
+import { Camera, Object3D } from "three";
 import {
   getCamera,
   getScene,
   setCamera,
   setScene,
-} from '../../three/init3d116';
-import { setClassName } from '../../app/utils';
+} from "../../three/init3d116";
+import { setClassName } from "../../app/utils";
 
-import { SPACE } from '../../app/config';
-import { Accordion, Card, ListGroup } from 'react-bootstrap';
-import { useContext, useEffect, useState } from 'react';
-import { Camera, Object3D } from 'three';
-import ObjectProperty from './ObjectProperty';
-import { getObjectNameByName } from '../../three/utils';
-import TreeList from './TreeList';
-import { MyContext } from '../../app/MyContext';
+import { SPACE } from "../../app/config";
+import { Accordion, Card, ListGroup } from "react-bootstrap";
+import { useContext, useEffect, useState } from "react";
+
+import ObjectProperty from "./ObjectProperty";
+import { getObjectNameByName } from "../../three/utils";
+import TreeList from "./TreeList";
+import { MyContext } from "../../app/MyContext";
 
 export default function OutlineView() {
   let [curObj3d, setCurObj3d] = useState<Object3D>();
@@ -28,7 +29,7 @@ export default function OutlineView() {
     _scene.children = setD2(_scene.children);
 
     dispatchScene({
-      type: 'setScene',
+      type: "setScene",
       payload: getScene(),
     });
   }, []);
@@ -37,8 +38,8 @@ export default function OutlineView() {
     return (
       object3D && (
         <ListGroup.Item
-          as={'button'}
-          className={`d-flex justify-content-between ${object3D.userData.isSelected ? 'text-warning' : ''} `}
+          as={"button"}
+          className={`d-flex justify-content-between ${object3D.userData.isSelected ? "text-warning" : ""} `}
           onClick={() => {
             // const _object3D = { ...object3D };
             resetTextWarning(object3D);
@@ -48,7 +49,7 @@ export default function OutlineView() {
                 object3D.userData.isSelected = !object3D.userData.isSelected;
                 setScene(object3D);
                 dispatchScene({
-                  type: 'setScene',
+                  type: "setScene",
                   payload: object3D,
                 });
               }
@@ -62,9 +63,9 @@ export default function OutlineView() {
         >
           <div>
             {object3D.isCamera ? (
-              <i className={setClassName('camera-reels')}></i>
+              <i className={setClassName("camera-reels")}></i>
             ) : (
-              <i className={setClassName('box2')}></i>
+              <i className={setClassName("box2")}></i>
             )}
             {SPACE}
             {getObjectNameByName(object3D)}
@@ -76,7 +77,7 @@ export default function OutlineView() {
 
   function resetTextWarning(
     targetItem: Object3D | any,
-    _children = scene.payload.children,
+    _children = scene.payload.children
   ) {
     if (!targetItem.isCamera || !targetItem.isScene) {
       const scene = getScene();
@@ -86,7 +87,7 @@ export default function OutlineView() {
       _setCamera(camera);
       setCamera(camera);
       dispatchScene({
-        type: 'setScene',
+        type: "setScene",
         payload: scene,
       });
     }
@@ -126,10 +127,10 @@ export default function OutlineView() {
   }
 
   return (
-    <Accordion defaultActiveKey={['0', '1']} alwaysOpen>
+    <Accordion defaultActiveKey={["0", "1"]} alwaysOpen>
       <Accordion.Item eventKey="0">
         <Accordion.Header>
-          <i className={setClassName('archive')}></i>
+          <i className={setClassName("archive")}></i>
           <span className="px-2">大纲视图</span>
         </Accordion.Header>
         <Accordion.Body className="outline-view">

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { AppConfig, HTTP_TYPE } from "../type";
+import { AppConfig, HTTP_TYPE } from "./type";
 import { APP_CONFIG } from "./config";
 
 function getApp() {

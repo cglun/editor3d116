@@ -1,6 +1,5 @@
 import {
   BoxGeometry,
-  Camera,
   DirectionalLight,
   DirectionalLightHelper,
   GridHelper,
@@ -13,10 +12,13 @@ import {
   Scene,
   WebGLRenderer,
 } from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
-import { GlbModel } from "../type";
+
+import {
+  GLTFLoader,
+  DRACOLoader,
+  OrbitControls,
+} from "three/examples/jsm/Addons.js";
+import { GlbModel } from "../app/type";
 let scene: Scene,
   camera: PerspectiveCamera,
   controls: OrbitControls,
@@ -66,14 +68,6 @@ function addCube() {
 function addLight(): void {
   // 添加正交光源
   const light = new DirectionalLight(0xffffff, 2.16);
-  light.position.set(3, 3, 3);
-  light.castShadow = true; // 开启投射阴影
-  light.lookAt(0, 0, 0);
-  scene.add(light);
-  const dh = new DirectionalLightHelper(light);
-  dh.name = "灯光辅助";
-  scene.add(dh);
-
   // 设置阴影参数
   light.shadow.mapSize.width = 2048; // 阴影图的宽度
   light.shadow.mapSize.height = 2048; // 阴影图的高度
@@ -84,11 +78,13 @@ function addLight(): void {
   light.shadow.camera.top = 10;
   light.shadow.camera.bottom = -10;
 
-  const size = 10;
-  const divisions = 10;
-
-  const gridHelper = new GridHelper(size, divisions);
-  scene.add(gridHelper);
+  light.position.set(3, 3, 3);
+  light.castShadow = true; // 开启投射阴影
+  light.lookAt(0, 0, 0);
+  scene.add(light);
+  const dh = new DirectionalLightHelper(light);
+  dh.name = "灯光辅助";
+  scene.add(dh);
 }
 
 function createScene(node: HTMLDivElement): void {
@@ -107,8 +103,6 @@ function createScene(node: HTMLDivElement): void {
 
   scene = new Scene();
   scene.userData.isSelected = false;
-  const gridHelper = new GridHelper(10, 10);
-  scene.add(gridHelper);
 
   node.appendChild(renderer.domElement);
   addOrbitControls();
@@ -156,7 +150,7 @@ export function addGlb(update: void): void {
 }
 
 // 场景序列化
-export function sceneSerialization(scene: Scene, camera: Camera): string {
+function sceneSerialization(scene: Scene, camera: PerspectiveCamera): string {
   const _scene = scene.clone();
   const models: GlbModel[] = [];
   _scene.children.forEach((child) => {
@@ -182,8 +176,16 @@ export function sceneSerialization(scene: Scene, camera: Camera): string {
   );
 }
 
+function addGridHelper() {
+  const gridHelper = new GridHelper(30, 30);
+  gridHelper.name = "网格辅助";
+  scene.add(gridHelper);
+}
+
 export {
+  sceneSerialization,
   createScene,
+  addGridHelper,
   getRenderer,
   setScene,
   getScene,

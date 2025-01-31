@@ -2,9 +2,11 @@ import {
   Object3D,
   ObjectLoader,
   PerspectiveCamera,
+  Scene,
   WebGLRenderer,
 } from "three";
 import {
+  addGridHelper,
   addLight,
   createScene,
   getCamera,
@@ -44,7 +46,6 @@ export function hasAttribute(obj: any, attribute: string, includes: string) {
 }
 
 export function init3d(canvas: React.RefObject<HTMLDivElement>) {
-  const renderer = getRenderer();
   const _scene = localStorage.getItem("scene");
   const _camera = localStorage.getItem("camera");
 
@@ -52,11 +53,17 @@ export function init3d(canvas: React.RefObject<HTMLDivElement>) {
     if (_scene && _camera) {
       createScene(canvas.current);
 
-      setScene(new ObjectLoader().parse(JSON.parse(_scene)));
+      setScene(new ObjectLoader().parse(JSON.parse(_scene)) as Scene);
 
       setCamera(new ObjectLoader().parse(JSON.parse(_camera)));
       const camera = getCamera();
       const scene = getScene();
+      const gridHelper = scene.getObjectByName("网格辅助");
+
+      if (gridHelper !== undefined) {
+        scene.remove(gridHelper);
+      }
+      addGridHelper();
 
       if (import.meta.env.MODE === "development") {
         runScript({ camera: camera, scene: scene });
@@ -76,15 +83,16 @@ export function init3d(canvas: React.RefObject<HTMLDivElement>) {
       createScene(canvas.current);
 
       addLight();
+      addGridHelper();
     }
 
     window.addEventListener("resize", () =>
-      onWindowResize(canvas, getCamera(), renderer)
+      onWindowResize(canvas, getCamera(), getRenderer())
     );
   }
   return () => {
     window.removeEventListener("resize", () =>
-      onWindowResize(canvas, getCamera(), renderer)
+      onWindowResize(canvas, getCamera(), getRenderer())
     );
   };
 }

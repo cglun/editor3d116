@@ -9,14 +9,20 @@ import {
   Image,
 } from "react-bootstrap";
 import { setClassName } from "../../app/utils";
-import { getThemeColor, initThemeColor, setThemeColor } from "../../app/config";
+import {
+  getThemeColor,
+  initThemeColor,
+  setThemeColor,
+  SPACE,
+} from "../../app/config";
 import { getCamera, getScene, setScene } from "../../three/init3d116";
-import ListCard, { ItemInfo } from "../ListCard";
-import { Scene } from "three";
+import ListCard, { ItemInfo } from "./ListCard";
+
 import { testData1 } from "../../app/testData";
 import Toast3d from "../common/Toast3d";
 import ModalConfirm3d from "../common/ModalConfirm3d";
 import EditorForm from "../common/EditorForm";
+import { Scene } from "three";
 
 export default function EditorTop() {
   initThemeColor();
@@ -124,6 +130,7 @@ export default function EditorTop() {
                 ) : (
                   <i className={setClassName("moon-stars")}></i>
                 )}
+                模式
               </Dropdown.Toggle>
 
               <Dropdown.Menu>

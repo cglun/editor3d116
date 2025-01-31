@@ -4,6 +4,7 @@ import Form from "react-bootstrap/esm/Form";
 import { getButtonColor } from "../../app/config";
 import { useRef, useState } from "react";
 import Toast3d from "../common/Toast3d";
+import { setClassName } from "../../app/utils";
 
 export function UploadModel() {
   const color = getButtonColor();
@@ -30,7 +31,13 @@ export function UploadModel() {
       <ListGroup.Item>
         {btn ? (
           <Form.Group controlId="formFile">
-            <Form.Label className="custom-file-upload">上传模型</Form.Label>
+            <Form.Label className="custom-file-upload d-flex align-items-center">
+              <i
+                style={{ fontSize: "1.4rem" }}
+                className={setClassName("cloud-plus")}
+              ></i>
+              <div className="ms-1">模型</div>
+            </Form.Label>
             <Form.Control
               as="input"
               style={{ display: "none" }}
@@ -50,7 +57,7 @@ export function UploadModel() {
           </Form.Group>
         ) : (
           <>
-            <Form.Text>{curFile?.name}</Form.Text>{" "}
+            <Form.Text>{curFile?.name}</Form.Text>
             {upload && <ProgressBar now={60} />}
           </>
         )}

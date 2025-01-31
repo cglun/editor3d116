@@ -1,23 +1,18 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import Button from "react-bootstrap/esm/Button";
-import { getButtonColor, getThemeColor } from "../app/config";
-import {
-  addGlb,
-  getCamera,
-  getScene,
-  sceneSerialization,
-} from "../three/init3d116";
+import { getThemeColor } from "../app/config";
+
 import {
   AmbientLight,
   BoxGeometry,
   DirectionalLight,
-  GridHelper,
   Group,
   Mesh,
   MeshLambertMaterial,
   Object3D,
   PlaneGeometry,
-} from "three/src/Three.Core.js";
+} from "three";
+import { addGlb, getScene } from "../three/init3d116";
 
 import { useContext } from "react";
 import { MyContext } from "../app/MyContext";

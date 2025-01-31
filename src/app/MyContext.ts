@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { ToastBody, ModalBody } from "../type";
+import { ToastBody, ModalBody } from "./type";
 import { Scene } from "three";
 
 export type Toast = { type: string; toastBody: ToastBody };

@@ -1,7 +1,7 @@
 import { Alert } from "react-bootstrap";
 
 import { setClassName } from "../../app/utils";
-import { APP_COLOR } from "../../type";
+import { APP_COLOR } from "../../app/type";
 
 // export default function AlertBase(type: string, text: string) {
 //   let iconClassName = setClassName('info-circle') + ' me-1';

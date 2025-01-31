@@ -8,13 +8,13 @@ export default function BottomNav() {
     <>
       <Nav variant="tabs" defaultActiveKey="/">
         <Nav.Item>
-          <Link to="/addMesh" className="nav-link">
-            <i className={setClassName("patch-plus")}></i> 添加网格
+          <Link to="/" className="nav-link">
+            <i className={setClassName("box")}></i> 模型列表
           </Link>
         </Nav.Item>
         <Nav.Item>
-          <Link to="/" className="nav-link">
-            <i className={setClassName("box")}></i> 模型列表
+          <Link to="/addMesh" className="nav-link">
+            <i className={setClassName("patch-plus")}></i> 添加网格
           </Link>
         </Nav.Item>
         <Nav.Item>

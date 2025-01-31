@@ -3,7 +3,7 @@ import { Button, ListGroup, ListGroupItem } from "react-bootstrap";
 import { setClassName } from "../app/utils";
 import { getThemeColor } from "../app/config";
 import AlertBase from "../component/common/AlertBase";
-import { APP_COLOR } from "../type";
+import { APP_COLOR } from "../app/type";
 export const Route = createLazyFileRoute("/about")({
   component: RouteComponent,
 });

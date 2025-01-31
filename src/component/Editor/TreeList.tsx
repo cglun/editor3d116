@@ -3,7 +3,7 @@ import { Button, ListGroupItem } from "react-bootstrap";
 import { setClassName } from "../../app/utils";
 import { getObjectNameByName } from "../../three/utils";
 import { SPACE } from "../../app/config";
-import { APP_COLOR } from "../../type";
+import { APP_COLOR } from "../../app/type";
 import { Object3D, Object3DEventMap } from "three";
 import ModalConfirm3d from "../common/ModalConfirm3d";
 import AlertBase from "../common/AlertBase";

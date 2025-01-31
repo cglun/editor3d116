@@ -25,11 +25,10 @@
   text-overflow: ellipsis;
 }
 .outline-view .list-group .list-group-item {
-  padding:.1rem .1rem .1rem 1rem;
+  padding: 0.1rem 0.1rem 0.1rem 1rem;
   border-top: 0;
   border-right: 0;
   border-bottom: 0;
- 
 }
 
 .my-card-body {
@@ -59,18 +58,15 @@ svg {
 btn-group-sm > .btn,
 .btn-sm {
   --bs-btn-padding-y: 0;
-
   --bs-btn-font-size: 0.8rem;
 }
-.custom-file-upload {
-  display: inline-block;
-  padding: 6px 12px;
+.custom-file-upload {  
+  padding: .1rem .4rem;
   cursor: pointer;
- 
-  border: 1px solid #ccc;
+  border: 1px dashed #ccc;
   border-radius: 4px;
 }
 
 .custom-file-upload:hover {
-  background-color: #e2a64c;
+  background-color: #666666;
 }

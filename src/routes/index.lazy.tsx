@@ -1,6 +1,6 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 
-import ListCard from "../component/ListCard";
+import ListCard from "../component/Editor/ListCard";
 import React from "react";
 
 import { testData2 } from "../app/testData";
