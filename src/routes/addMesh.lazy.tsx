@@ -1,6 +1,6 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import Button from "react-bootstrap/esm/Button";
-import { getThemeColor } from "../app/config";
+import { getButtonColor, getThemeColor } from "../app/config";
 import {
   addGlb,
   getCamera,
@@ -30,6 +30,7 @@ export const Route = createLazyFileRoute("/addMesh")({
 
 function RouteComponent() {
   const color = getThemeColor();
+
   const scene = getScene();
   const { dispatchScene } = useContext(MyContext);
   function setSelected(object3D: Object3D) {
@@ -156,12 +157,16 @@ function RouteComponent() {
             >
               环境光
             </Button>
-
             <Button
               variant={color}
               title="添加glb模型"
               onClick={() => {
-                addGlb();
+                addGlb(
+                  dispatchScene({
+                    type: "setScene",
+                    payload: getScene(),
+                  })
+                );
               }}
             >
               glb模型
@@ -175,6 +180,18 @@ function RouteComponent() {
               }}
             >
               序列化
+            </Button>
+            <Button
+              variant={color}
+              onClick={() => {
+                fetch("/api", (result: any): any => {
+                  return result.text();
+                }).then((result) => {
+                  console.log(result.body);
+                });
+              }}
+            >
+              测试
             </Button>
           </ButtonGroup>
         </Card.Body>

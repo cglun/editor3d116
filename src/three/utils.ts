@@ -3,21 +3,20 @@ import {
   ObjectLoader,
   PerspectiveCamera,
   WebGLRenderer,
-} from 'three';
+} from "three";
 import {
   addLight,
-  camera,
   createScene,
   getCamera,
+  getRenderer,
   getScene,
-  renderer,
   setCamera,
   setScene,
-} from './init3d116';
-import { runScript } from './scriptDev';
+} from "./init3d116";
+import { runScript } from "./scriptDev";
 
 export function getObjectNameByName(object3D: Object3D): string {
-  return object3D.name.trim() === '' ? object3D.type : object3D.name;
+  return object3D.name.trim() === "" ? object3D.type : object3D.name;
 }
 
 export function hasClass(obj: any, className: string) {
@@ -33,7 +32,7 @@ export function toggleClass(currentSelectDiv: any, className: string) {
 export function toggleAttribute(
   currentSelectDiv: any,
   attribute: string,
-  value: string,
+  value: string
 ) {
   currentSelectDiv.getAttribute(attribute)?.includes(value)
     ? currentSelectDiv.removeAttribute(attribute)
@@ -45,8 +44,9 @@ export function hasAttribute(obj: any, attribute: string, includes: string) {
 }
 
 export function init3d(canvas: React.RefObject<HTMLDivElement>) {
-  const _scene = localStorage.getItem('scene');
-  const _camera = localStorage.getItem('camera');
+  const renderer = getRenderer();
+  const _scene = localStorage.getItem("scene");
+  const _camera = localStorage.getItem("camera");
 
   if (canvas.current !== null) {
     if (_scene && _camera) {
@@ -58,7 +58,7 @@ export function init3d(canvas: React.RefObject<HTMLDivElement>) {
       const camera = getCamera();
       const scene = getScene();
 
-      if (import.meta.env.MODE === 'development') {
+      if (import.meta.env.MODE === "development") {
         runScript({ camera: camera, scene: scene });
       }
 
@@ -78,20 +78,20 @@ export function init3d(canvas: React.RefObject<HTMLDivElement>) {
       addLight();
     }
 
-    window.addEventListener('resize', () =>
-      onWindowResize(canvas, camera, renderer),
+    window.addEventListener("resize", () =>
+      onWindowResize(canvas, getCamera(), renderer)
     );
   }
   return () => {
-    window.removeEventListener('resize', () =>
-      onWindowResize(canvas, camera, renderer),
+    window.removeEventListener("resize", () =>
+      onWindowResize(canvas, getCamera(), renderer)
     );
   };
 }
 function onWindowResize(
   canvas: React.RefObject<HTMLDivElement>,
   camera: PerspectiveCamera,
-  renderer: WebGLRenderer,
+  renderer: WebGLRenderer
 ) {
   if (canvas.current !== null) {
     camera.aspect = canvas.current.offsetWidth / canvas.current.offsetHeight; // 设置相机的宽高比和视口的宽高比一致
@@ -99,7 +99,3 @@ function onWindowResize(
     renderer.setSize(canvas.current.offsetWidth, canvas.current.offsetHeight); // 更新渲染器的大小
   }
 }
-
-//return scene.getObjectByProperty('uuid', uuid);
-
-export function loaderGlb() {}

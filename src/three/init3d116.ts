@@ -5,7 +5,6 @@ import {
   DirectionalLightHelper,
   GridHelper,
   Group,
-  LoadingManager,
   Mesh,
   MeshLambertMaterial,
   Object3D,
@@ -16,27 +15,23 @@ import {
 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { GlbModel } from "../type";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
-
-let scene: Scene = new Scene();
-
-let camera: PerspectiveCamera, controls: OrbitControls;
-
-let renderer: WebGLRenderer = new WebGLRenderer();
-renderer.shadowMap.enabled = true;
+import { GlbModel } from "../type";
+let scene: Scene,
+  camera: PerspectiveCamera,
+  controls: OrbitControls,
+  renderer: WebGLRenderer;
 
 function animate() {
   requestAnimationFrame(animate);
-  if (controls !== undefined) {
-    controls.update();
-  }
+
+  controls.update();
 
   renderer.render(scene, camera);
 }
 
 let cube: Mesh;
-let light: DirectionalLight;
+
 function addCube() {
   // 创建立方体
   const cubeGeometry = new BoxGeometry(1, 1, 1);
@@ -68,7 +63,7 @@ function addCube() {
   scene.add(g);
 }
 
-function addLight() {
+function addLight(): void {
   // 添加正交光源
   const light = new DirectionalLight(0xffffff, 2.16);
   light.position.set(3, 3, 3);
@@ -96,7 +91,7 @@ function addLight() {
   scene.add(gridHelper);
 }
 
-function createScene(node: HTMLDivElement) {
+function createScene(node: HTMLDivElement): void {
   camera = new PerspectiveCamera(
     75,
     node.offsetWidth / node.offsetHeight,
@@ -104,11 +99,14 @@ function createScene(node: HTMLDivElement) {
     1000
   );
   camera.name = "透视相机";
-
-  renderer.setSize(node.offsetWidth, node.offsetHeight);
   camera.position.set(-5, 5, 8);
-  scene.userData.isSelected = false;
 
+  renderer = new WebGLRenderer();
+  renderer.shadowMap.enabled = true;
+  renderer.setSize(node.offsetWidth, node.offsetHeight);
+
+  scene = new Scene();
+  scene.userData.isSelected = false;
   const gridHelper = new GridHelper(10, 10);
   scene.add(gridHelper);
 
@@ -120,7 +118,7 @@ function createScene(node: HTMLDivElement) {
 function addOrbitControls(): void {
   controls = new OrbitControls(camera, renderer.domElement);
 }
-function setScene(newScene: any) {
+function setScene(newScene: Scene) {
   scene = newScene;
 }
 function setCamera(camera1: Object3D<Object3DEventMap>) {
@@ -128,17 +126,18 @@ function setCamera(camera1: Object3D<Object3DEventMap>) {
   camera.position.y = camera1.position.y;
   camera.position.z = camera1.position.z;
 }
-function getCamera(): Camera {
+function getCamera(): PerspectiveCamera {
   return camera;
 }
 function getScene(): Scene {
   return scene;
 }
-function getCube() {
-  return cube;
+
+function getRenderer(): WebGLRenderer {
+  return renderer;
 }
 
-export function addGlb() {
+export function addGlb(update: void): void {
   const dracoLoader = new DRACOLoader();
   dracoLoader.setDecoderPath("/assets/js/draco/gltf/");
   //const loader = new GLTFLoader(new LoadingManager());
@@ -152,6 +151,7 @@ export function addGlb() {
       scene.children.push(element);
     }
     //scene.add(data.scene);
+    update;
   });
 }
 
@@ -182,18 +182,11 @@ export function sceneSerialization(scene: Scene, camera: Camera): string {
   );
 }
 
-export default scene;
 export {
   createScene,
-  renderer,
-  getCube,
-  camera,
-  addOrbitControls,
-  cube,
-  light,
+  getRenderer,
   setScene,
   getScene,
-  addCube,
   addLight,
   setCamera,
   getCamera,
