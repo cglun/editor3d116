@@ -18,6 +18,7 @@ import {
   TransformControls,
 } from "three/examples/jsm/Addons.js";
 import { GlbModel } from "../app/type";
+import { getObjectNameByName } from "./utils";
 
 let scene: Scene,
   camera: PerspectiveCamera,
@@ -25,8 +26,6 @@ let scene: Scene,
   renderer: WebGLRenderer,
   divElement: HTMLDivElement,
   transfControls: TransformControls;
-const raycaster = new Raycaster();
-const pointer = new Vector2();
 
 function animate() {
   requestAnimationFrame(animate);
@@ -86,10 +85,6 @@ function addLight(): void {
   light.castShadow = true; // 开启投射阴影
   light.lookAt(0, 0, 0);
   scene.add(light);
-  const dh = new DirectionalLightHelper(light);
-  dh.name = "灯光辅助";
-  dh.position.copy(light.position);
-  scene.add(dh);
 }
 
 function createScene(node: HTMLDivElement): void {
@@ -189,11 +184,18 @@ function addGridHelper() {
   scene.add(gridHelper);
 }
 
+//射线拾取物体
 function onPointerClick(event: MouseEvent, callBack: Function) {
+  const t = scene.getObjectByName("TransformHelper");
+  if (t) {
+    scene.remove(t);
+  }
   // 将鼠标位置归一化为设备坐标。x 和 y 方向的取值范围是 (-1 to +1)
+  const raycaster = new Raycaster();
+  const pointer = new Vector2();
 
-  pointer.x = (event.clientX / divElement.offsetWidth) * 2 - 1;
-  pointer.y = -(event.clientY / divElement.offsetHeight) * 2 + 1;
+  pointer.x = (event.offsetX / divElement.offsetWidth) * 2 - 1;
+  pointer.y = -(event.offsetY / divElement.offsetHeight) * 2 + 1;
 
   raycaster.setFromCamera(pointer, camera);
 
@@ -201,10 +203,8 @@ function onPointerClick(event: MouseEvent, callBack: Function) {
   const intersects = raycaster.intersectObjects(scene.children, true);
 
   if (intersects.length > 0) {
-    //console.log("射线与物体相交:", getObjectNameByName(intersects[0].object));
     // 你可以根据intersects数组中的信息来处理相交事件，比如改变相交物体的颜色等
     callBack(intersects[0].object);
-    // return intersects[0].object;
   }
 }
 function getDivElement() {
@@ -213,14 +213,15 @@ function getDivElement() {
 
 function transformControls(currentObject: Object3D) {
   transfControls.detach();
-  if (
-    currentObject.userData.type === "GridHelper" ||
-    currentObject.type === "TransformControlsPlane" ||
-    currentObject.type === "Line"
-  ) {
-    // transfControls.detach();
-    return;
-  }
+
+  // if (
+  //   currentObject.userData.type === "GridHelper" ||
+  //   currentObject.type === "TransformControlsPlane" ||
+  //   currentObject.type === "Line"
+  // ) {
+  //   // transfControls.detach();
+  //   return;
+  // }
 
   transfControls.addEventListener("dragging-changed", (event) => {
     controls.enabled = !event.value;
@@ -230,6 +231,9 @@ function transformControls(currentObject: Object3D) {
 
   transfControls.size = 0.5;
 
+  //const t = scene.getObjectByName("TransformHelper");
+  // if (t === undefined) {
+  // }
   const getHelper = transfControls.getHelper();
   getHelper.name = "TransformHelper";
   getHelper.userData.type = "TransformHelper";

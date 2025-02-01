@@ -40,17 +40,10 @@ export default function OutlineView() {
   useEffect(() => {
     getDivElement().addEventListener("click", function (event) {
       onPointerClick(event, (res: Object3D) => {
-        if (res === undefined || res.userData.type === "GridHelper") {
-          return;
+        if (res !== undefined) {
+          setCurObj3d(res);
+          transformControls(res);
         }
-        setCurObj3d(res);
-        resetTextWarning(res);
-        res.userData.isSelected = true;
-        transformControls(res);
-        dispatchScene({
-          type: "setScene",
-          payload: getScene(),
-        });
       });
     });
 

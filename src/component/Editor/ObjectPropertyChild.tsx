@@ -342,12 +342,14 @@ export default function ObjectPropertyChild({
     }
     //currentObject.userData.type === "GridHelper" ||
 
-    if (
-      curObj3d.type === "TransformControlsPlane" ||
-      curObj3d.type === "Line"
-    ) {
-      return <AlertBase type={APP_COLOR.Warning} text={"变换控制器"} />;
-    }
+    // if (curObj3d.userData.type === "TransformHelper") {
+    //   return (
+    //     <AlertBase
+    //       type={APP_COLOR.Warning}
+    //       text={getObjectNameByName(curObj3d)}
+    //     />
+    //   );
+    // }
 
     return commonProperty(curObj3d);
   }

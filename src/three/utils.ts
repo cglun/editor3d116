@@ -65,13 +65,6 @@ export function init3d(canvas: React.RefObject<HTMLDivElement>) {
       }
       addGridHelper();
 
-      const data = scene.children;
-      for (let i = 0; i < data.length; i++) {
-        if (data[i].userData.type === "TransformHelper") {
-          data.splice(i, 1);
-        }
-      }
-
       if (import.meta.env.MODE === "development") {
         runScript({ camera: camera, scene: scene });
       }
