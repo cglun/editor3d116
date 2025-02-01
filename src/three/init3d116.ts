@@ -1,6 +1,5 @@
 import {
   DirectionalLight,
-  DirectionalLightHelper,
   GridHelper,
   Object3D,
   Object3DEventMap,
@@ -18,7 +17,6 @@ import {
   TransformControls,
 } from "three/examples/jsm/Addons.js";
 import { GlbModel } from "../app/type";
-import { getObjectNameByName } from "./utils";
 
 let scene: Scene,
   camera: PerspectiveCamera,
