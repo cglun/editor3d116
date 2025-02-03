@@ -84,12 +84,6 @@ export function init3d(canvas: React.RefObject<HTMLDivElement>) {
 
       addLight();
       addGridHelper();
-      const data = getScene().children;
-      for (let i = 0; i < data.length; i++) {
-        if (data[i].userData.type === "TransformHelper") {
-          data.splice(i, 1);
-        }
-      }
     }
 
     window.addEventListener("resize", () =>

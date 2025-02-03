@@ -4,9 +4,11 @@ import {
   getDivElement,
   getScene,
   onPointerClick,
+  raycasterSelect,
   setCamera,
+  setDragControls,
   setScene,
-  transformControls,
+  setTransformControls,
 } from "../../three/init3d116";
 import { setClassName } from "../../app/utils";
 
@@ -39,16 +41,23 @@ export default function OutlineView() {
   }, []);
   useEffect(() => {
     getDivElement().addEventListener("click", function (event) {
-      onPointerClick(event, (res: Object3D) => {
-        if (res !== undefined) {
-          setCurObj3d(res);
-          transformControls(res);
+      const currentObject = raycasterSelect(event);
+      const selectedMesh = [];
+      if (currentObject.length === 0) {
+        return;
+      }
+      for (let i = 0; i < currentObject.length; i++) {
+        const { object } = currentObject[i];
+        if (object.userData.tag !== "TransformHelper") {
+          selectedMesh.push(object);
         }
-      });
+      }
+      setTransformControls(selectedMesh);
+      setCurObj3d(selectedMesh[0]);
     });
 
     return () => {
-      getDivElement().removeEventListener("click", onPointerClick as any);
+      getDivElement().removeEventListener("click", () => {});
     };
   }, []);
 

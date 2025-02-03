@@ -1,6 +1,7 @@
 import {
   DirectionalLight,
   GridHelper,
+  MOUSE,
   Object3D,
   Object3DEventMap,
   PerspectiveCamera,
@@ -15,6 +16,7 @@ import {
   DRACOLoader,
   OrbitControls,
   TransformControls,
+  DragControls,
 } from "three/examples/jsm/Addons.js";
 import { GlbModel } from "../app/type";
 
@@ -182,60 +184,70 @@ function addGridHelper() {
   scene.add(gridHelper);
 }
 
-//射线拾取物体
-function onPointerClick(event: MouseEvent, callBack: Function) {
-  const t = scene.getObjectByName("TransformHelper");
-  if (t) {
-    scene.remove(t);
-  }
-  // 将鼠标位置归一化为设备坐标。x 和 y 方向的取值范围是 (-1 to +1)
-  const raycaster = new Raycaster();
-  const pointer = new Vector2();
-
-  pointer.x = (event.offsetX / divElement.offsetWidth) * 2 - 1;
-  pointer.y = -(event.offsetY / divElement.offsetHeight) * 2 + 1;
-
-  raycaster.setFromCamera(pointer, camera);
-
-  // 计算物体和射线的焦点
-  const intersects = raycaster.intersectObjects(scene.children, true);
-
-  if (intersects.length > 0) {
-    // 你可以根据intersects数组中的信息来处理相交事件，比如改变相交物体的颜色等
-    callBack(intersects[0].object);
-  }
-}
 function getDivElement() {
   return divElement;
 }
 
-function transformControls(currentObject: Object3D) {
-  transfControls.detach();
+function setDragControls(currentObject: Object3D) {
+  const dragControls = new DragControls(
+    [currentObject],
+    camera,
+    renderer.domElement
+  );
+  dragControls.mouseButtons = {
+    LEFT: null,
+    MIDDLE: MOUSE.DOLLY,
+    RIGHT: null,
+  };
+  dragControls.addEventListener("dragstart", function () {
+    controls.enabled = false;
+    // dragControls.enabled = true;
+  });
 
-  // if (
-  //   currentObject.userData.type === "GridHelper" ||
-  //   currentObject.type === "TransformControlsPlane" ||
-  //   currentObject.type === "Line"
-  // ) {
-  //   // transfControls.detach();
-  //   return;
-  // }
+  dragControls.addEventListener("dragend", function () {
+    controls.enabled = true;
+    dragControls.enabled = false;
+    setTimeout(() => {
+      dragControls.dispose();
+    }, 100);
+  });
+}
+//射线 拾取物体
+function raycasterSelect(event: MouseEvent) {
+  const raycaster = new Raycaster();
+  const pointer = new Vector2();
+  pointer.x = (event.offsetX / divElement.offsetWidth) * 2 - 1;
+  pointer.y = -(event.offsetY / divElement.offsetHeight) * 2 + 1;
+  raycaster.setFromCamera(pointer, camera);
+  // 计算物体和射线的焦点
+  const intersects = raycaster.intersectObjects(scene.children, true);
+  if (intersects.length > 0) {
+    // 你可以根据intersects数组中的信息来处理相交事件，比如改变相交物体的颜色等
+    return intersects;
+  }
+  return [];
+}
 
+function setTransformControls(selectedMesh: Object3D[]) {
   transfControls.addEventListener("dragging-changed", (event) => {
     controls.enabled = !event.value;
   });
-  //raycaster = transfControls.getRaycaster();
-  transfControls.attach(currentObject);
 
-  transfControls.size = 0.5;
+  transfControls.setSize(0.6);
 
-  //const t = scene.getObjectByName("TransformHelper");
-  // if (t === undefined) {
-  // }
+  transfControls.attach(selectedMesh[0]);
   const getHelper = transfControls.getHelper();
-  getHelper.name = "TransformHelper";
-  getHelper.userData.type = "TransformHelper";
+  getHelper.name = "TransformControlsRoot";
+  getHelper.userData.tag = "TransformHelper";
   scene.add(getHelper);
+  if (selectedMesh[0] === undefined) {
+    getHelper.visible = false;
+  } else {
+    getHelper.visible = true;
+  }
+  getHelper.traverse((child) => {
+    child.userData.tag = "TransformHelper";
+  });
 }
 
 export {
@@ -250,5 +262,7 @@ export {
   getCamera,
   onPointerClick,
   getDivElement,
-  transformControls,
+  setDragControls,
+  setTransformControls,
+  raycasterSelect,
 };
