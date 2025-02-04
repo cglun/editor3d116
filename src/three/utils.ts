@@ -5,10 +5,9 @@ import {
   Scene,
   WebGLRenderer,
 } from "three";
-import {
+import createScene, {
   addGridHelper,
   addLight,
-  createScene,
   getCamera,
   getRenderer,
   getScene,

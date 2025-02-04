@@ -7,6 +7,7 @@ import {
   setCamera,
   setScene,
   setTransformControls,
+  setTransformControls_1,
 } from "../../three/init3d116";
 import { setClassName } from "../../app/utils";
 
@@ -24,6 +25,7 @@ export default function OutlineView() {
   let [curObj3d, setCurObj3d] = useState<Object3D>();
   const [camera, _setCamera] = useState<Camera | any>();
   const { scene, dispatchScene } = useContext(MyContext);
+
   useEffect(() => {
     const _camera = getCamera();
     _camera.userData.isSelected = false;
@@ -37,28 +39,27 @@ export default function OutlineView() {
       type: "setScene",
       payload: getScene(),
     });
-  }, []);
-  useEffect(() => {
+
     getDivElement().addEventListener("click", function (event) {
+      event.stopPropagation();
+      event.preventDefault();
       const currentObject = raycasterSelect(event);
       const selectedMesh = [];
-      if (currentObject.length === 0) {
-        return;
-      }
       for (let i = 0; i < currentObject.length; i++) {
         const { object } = currentObject[i];
         if (object.userData.type !== UserDataType.TransformHelper) {
           selectedMesh.push(object);
         }
       }
-      setTransformControls(selectedMesh);
       setCurObj3d(selectedMesh[0]);
+      setTransformControls(selectedMesh);
     });
 
     return () => {
       getDivElement().removeEventListener("click", () => {});
     };
   }, []);
+  useEffect(() => {}, []);
 
   function sceneDiv(object3D: Object3D | any) {
     return (
@@ -151,7 +152,17 @@ export default function OutlineView() {
       return item;
     });
   }
-
+  const lightList = [];
+  const meshList = [];
+  const array = scene.payload.children;
+  for (let index = 0; index < array.length; index++) {
+    const element = array[index] as any;
+    if (element.isLight) {
+      lightList.push(element);
+    } else {
+      meshList.push(element);
+    }
+  }
   return (
     <Accordion defaultActiveKey={["0", "1"]} alwaysOpen>
       <Accordion.Item eventKey="0">
@@ -161,26 +172,48 @@ export default function OutlineView() {
         </Accordion.Header>
         <Accordion.Body className="outline-view">
           <Card>
-            <Card.Header className="text-center">相机</Card.Header>
+            <Card.Header className="text-center">
+              <i className={setClassName("camera-reels")}></i> 相机
+            </Card.Header>
             <Card.Body>
               <ListGroup> {sceneDiv(camera)}</ListGroup>
             </Card.Body>
           </Card>
           <Card>
-            <Card.Header className="text-center">场景</Card.Header>
+            <Card.Header className="text-center">
+              <i className={setClassName("box2")}></i> 场景
+            </Card.Header>
             <Card.Body>
               <ListGroup>{sceneDiv(getScene())}</ListGroup>
             </Card.Body>
           </Card>
           <Card>
-            <Card.Header className="text-center">网格</Card.Header>
+            <Card.Header className="text-center">
+              <i className={setClassName("lightbulb")}></i> 灯光
+            </Card.Header>
             <Card.Body>
               <ListGroup className="da-gang">
-                {scene.payload.children && (
+                {lightList && (
                   <TreeList
                     setCurObj3d={setCurObj3d}
                     resetTextWarning={resetTextWarning}
-                    data={scene.payload.children}
+                    data={lightList}
+                  />
+                )}
+              </ListGroup>
+            </Card.Body>
+          </Card>
+          <Card>
+            <Card.Header className="text-center">
+              <i className={setClassName("box")}></i> 模型
+            </Card.Header>
+            <Card.Body>
+              <ListGroup className="da-gang">
+                {meshList && (
+                  <TreeList
+                    setCurObj3d={setCurObj3d}
+                    resetTextWarning={resetTextWarning}
+                    data={meshList}
                   />
                 )}
               </ListGroup>

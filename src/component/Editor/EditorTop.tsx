@@ -18,6 +18,7 @@ import Toast3d from "../common/Toast3d";
 import ModalConfirm3d from "../common/ModalConfirm3d";
 import EditorForm from "../common/EditorForm";
 import { Scene } from "three";
+import { UserDataType } from "../../app/type";
 
 export default function EditorTop() {
   initThemeColor();
@@ -30,10 +31,17 @@ export default function EditorTop() {
   const [appTheme, setAppTheme] = useState(themeColor);
 
   function saveScene() {
-    const sceneJson = getScene().toJSON();
+    const scene = getScene();
+    //移除辅助 TransformHelper
+    scene.children.forEach((item) => {
+      if (item.userData.type === UserDataType.TransformHelper) {
+        item.removeFromParent();
+      }
+    });
+    scene.toJSON();
     const c = getCamera().toJSON();
 
-    localStorage.setItem("scene", JSON.stringify(sceneJson));
+    localStorage.setItem("scene", JSON.stringify(scene));
     localStorage.setItem("camera", JSON.stringify(c));
 
     Toast3d("保存成功");
@@ -48,7 +56,7 @@ export default function EditorTop() {
   function saveAsNewScene() {
     const item: ItemInfo = {
       id: 0,
-      name: "新场景",
+      name: "新建场景",
       type: "场景",
       desc: "无",
     };
@@ -88,7 +96,7 @@ export default function EditorTop() {
                 setScene(new Scene());
               }}
             >
-              <i className={setClassName("plus-square")}></i> 新场景
+              <i className={setClassName("plus-square")}></i> 新建场景
             </Button>
             <Button
               variant={themeColor}

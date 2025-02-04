@@ -12,7 +12,7 @@ import {
   Object3D,
   PlaneGeometry,
 } from "three";
-import { addGlb, getScene } from "../three/init3d116";
+import { addGlb, getScene, takeScreenshot } from "../three/init3d116";
 
 import { useContext } from "react";
 import { MyContext } from "../app/MyContext";
@@ -185,22 +185,17 @@ function RouteComponent() {
             >
               测试
             </Button>
-            <InputGroup>
-              <InputGroup.Text>输入</InputGroup.Text>
-              <Form.Control
-                aria-label="Amount (to the nearest dollar)"
-                placeholder="输入"
-                type="file"
-                onChange={(e) => {
-                  const file = e.target.files[0];
-                  base64(file).then((res) => {
-                    console.log(res);
-                  });
-                }}
-              ></Form.Control>
-            </InputGroup>
-          </ButtonGroup>{" "}
-          <Image src="" />
+
+            <Button
+              variant={color}
+              onClick={() => {
+                // takeScreenshot();
+                console.log(getScene());
+              }}
+            >
+              截图
+            </Button>
+          </ButtonGroup>
         </Card.Body>
       </Card>
     </div>

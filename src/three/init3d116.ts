@@ -18,7 +18,8 @@ import {
   TransformControls,
   DragControls,
 } from "three/examples/jsm/Addons.js";
-import { GlbModel, UserData, UserDataType } from "../app/type";
+import { GlbModel, UserDataType } from "../app/type";
+import { tan } from "three/tsl";
 
 let scene: Scene,
   camera: PerspectiveCamera,
@@ -68,7 +69,7 @@ function animate() {
 //   scene.add(g);
 // }
 
-function addLight(): void {
+export function addLight(): void {
   // 添加正交光源
   const light = new DirectionalLight(0xffffff, 2.16);
   // 设置阴影参数
@@ -86,8 +87,7 @@ function addLight(): void {
   light.lookAt(0, 0, 0);
   scene.add(light);
 }
-
-function createScene(node: HTMLDivElement): void {
+export default function createScene(node: HTMLDivElement): void {
   divElement = node;
 
   camera = new PerspectiveCamera(
@@ -113,22 +113,22 @@ function createScene(node: HTMLDivElement): void {
   animate();
 }
 
-function setScene(newScene: Scene) {
+export function setScene(newScene: Scene) {
   scene = newScene;
 }
-function setCamera(camera1: Object3D<Object3DEventMap>) {
+export function setCamera(camera1: Object3D<Object3DEventMap>) {
   camera.position.x = camera1.position.x;
   camera.position.y = camera1.position.y;
   camera.position.z = camera1.position.z;
 }
-function getCamera(): PerspectiveCamera {
+export function getCamera(): PerspectiveCamera {
   return camera;
 }
-function getScene(): Scene {
+export function getScene(): Scene {
   return scene;
 }
 
-function getRenderer(): WebGLRenderer {
+export function getRenderer(): WebGLRenderer {
   return renderer;
 }
 
@@ -151,7 +151,10 @@ export function addGlb(update: void): void {
 }
 
 // 场景序列化
-function sceneSerialization(scene: Scene, camera: PerspectiveCamera): string {
+export function sceneSerialization(
+  scene: Scene,
+  camera: PerspectiveCamera
+): string {
   const _scene = scene.clone();
   const models: GlbModel[] = [];
   _scene.children.forEach((child) => {
@@ -177,7 +180,7 @@ function sceneSerialization(scene: Scene, camera: PerspectiveCamera): string {
   );
 }
 
-function addGridHelper() {
+export function addGridHelper() {
   const gridHelper = new GridHelper(30, 30);
 
   gridHelper.userData = {
@@ -188,11 +191,11 @@ function addGridHelper() {
   scene.add(gridHelper);
 }
 
-function getDivElement() {
+export function getDivElement() {
   return divElement;
 }
 
-function setDragControls(currentObject: Object3D) {
+export function setDragControls(currentObject: Object3D) {
   const dragControls = new DragControls(
     [currentObject],
     camera,
@@ -217,7 +220,7 @@ function setDragControls(currentObject: Object3D) {
   });
 }
 //射线 拾取物体
-function raycasterSelect(event: MouseEvent) {
+export function raycasterSelect(event: MouseEvent) {
   const raycaster = new Raycaster();
   const pointer = new Vector2();
   pointer.x = (event.offsetX / divElement.offsetWidth) * 2 - 1;
@@ -232,41 +235,29 @@ function raycasterSelect(event: MouseEvent) {
   return [];
 }
 
-function setTransformControls(selectedMesh: Object3D[]) {
+//为选中的物体加上变换控件
+export function setTransformControls(selectedMesh: Object3D[]) {
   transfControls.addEventListener("dragging-changed", (event) => {
     controls.enabled = !event.value;
   });
 
-  transfControls.setSize(0.6);
-
   transfControls.attach(selectedMesh[0]);
+  transfControls.setSize(0.6);
   const getHelper = transfControls.getHelper();
   getHelper.name = "TransformControlsRoot";
   getHelper.userData.type = UserDataType.TransformHelper;
   scene.add(getHelper);
-  if (selectedMesh[0] === undefined) {
+  if (selectedMesh.length === 0) {
     getHelper.visible = false;
-  } else {
-    getHelper.visible = true;
   }
   getHelper.traverse((child) => {
     child.userData.type = UserDataType.TransformHelper;
   });
 }
 
-export {
-  sceneSerialization,
-  createScene,
-  addGridHelper,
-  getRenderer,
-  setScene,
-  getScene,
-  addLight,
-  setCamera,
-  getCamera,
-  onPointerClick,
-  getDivElement,
-  setDragControls,
-  setTransformControls,
-  raycasterSelect,
-};
+// 截图,返回图片的base64
+export function takeScreenshot(): string {
+  renderer.render(scene, camera);
+  const screenshot = renderer.domElement.toDataURL("image/png");
+  return screenshot;
+}
