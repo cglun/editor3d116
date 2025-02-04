@@ -41,6 +41,19 @@ export function toggleAttribute(
     : currentSelectDiv.setAttribute(attribute, value);
 }
 
+//base64转码
+export function base64(file: File) {
+  const reader = new FileReader();
+
+  return new Promise((resolve, reject) => {
+    reader.onload = () => {
+      resolve(reader.result);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 export function hasAttribute(obj: any, attribute: string, includes: string) {
   return obj.getAttribute(attribute)?.includes(includes);
 }

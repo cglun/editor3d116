@@ -16,8 +16,9 @@ import { addGlb, getScene } from "../three/init3d116";
 
 import { useContext } from "react";
 import { MyContext } from "../app/MyContext";
-import { ButtonGroup, Card } from "react-bootstrap";
+import { ButtonGroup, Card, Form, Image, InputGroup } from "react-bootstrap";
 import { setClassName } from "../app/utils";
+import { base64 } from "../three/utils";
 
 export const Route = createLazyFileRoute("/addMesh")({
   component: RouteComponent,
@@ -184,7 +185,22 @@ function RouteComponent() {
             >
               测试
             </Button>
-          </ButtonGroup>
+            <InputGroup>
+              <InputGroup.Text>输入</InputGroup.Text>
+              <Form.Control
+                aria-label="Amount (to the nearest dollar)"
+                placeholder="输入"
+                type="file"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  base64(file).then((res) => {
+                    console.log(res);
+                  });
+                }}
+              ></Form.Control>
+            </InputGroup>
+          </ButtonGroup>{" "}
+          <Image src="" />
         </Card.Body>
       </Card>
     </div>

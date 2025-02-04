@@ -18,7 +18,7 @@ import {
   TransformControls,
   DragControls,
 } from "three/examples/jsm/Addons.js";
-import { GlbModel } from "../app/type";
+import { GlbModel, UserData, UserDataType } from "../app/type";
 
 let scene: Scene,
   camera: PerspectiveCamera,
@@ -142,7 +142,7 @@ export function addGlb(update: void): void {
     const children = gltf.scene.children;
     for (let i = 0; i < children.length; i++) {
       const element = children[i];
-      element.userData.type = "GlbModel";
+      element.userData.type = UserDataType.GlbModel;
       scene.children.push(element);
     }
     //scene.add(data.scene);
@@ -179,7 +179,11 @@ function sceneSerialization(scene: Scene, camera: PerspectiveCamera): string {
 
 function addGridHelper() {
   const gridHelper = new GridHelper(30, 30);
-  gridHelper.userData.type = "GridHelper";
+
+  gridHelper.userData = {
+    type: UserDataType.GridHelper,
+    isSelected: false,
+  };
   gridHelper.name = "网格辅助";
   scene.add(gridHelper);
 }
@@ -238,7 +242,7 @@ function setTransformControls(selectedMesh: Object3D[]) {
   transfControls.attach(selectedMesh[0]);
   const getHelper = transfControls.getHelper();
   getHelper.name = "TransformControlsRoot";
-  getHelper.userData.tag = "TransformHelper";
+  getHelper.userData.type = UserDataType.TransformHelper;
   scene.add(getHelper);
   if (selectedMesh[0] === undefined) {
     getHelper.visible = false;
@@ -246,7 +250,7 @@ function setTransformControls(selectedMesh: Object3D[]) {
     getHelper.visible = true;
   }
   getHelper.traverse((child) => {
-    child.userData.tag = "TransformHelper";
+    child.userData.type = UserDataType.TransformHelper;
   });
 }
 

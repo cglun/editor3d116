@@ -75,3 +75,9 @@ export interface GlbModel {
   rotation: Euler;
   scale: Vector3;
 }
+
+export enum UserDataType {
+  GlbModel = "GlbModel",
+  TransformHelper = "TransformHelper",
+  GridHelper = "GridHelper",
+}

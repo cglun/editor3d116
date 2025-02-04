@@ -114,7 +114,7 @@ export default function EditorTop() {
             </Button>
           </ButtonGroup>
           <>
-            <Dropdown className="d-inline mx-2 ">
+            <Dropdown className="d-inline">
               <Dropdown.Toggle
                 id="dropdown-autoclose-true"
                 variant={themeColor}

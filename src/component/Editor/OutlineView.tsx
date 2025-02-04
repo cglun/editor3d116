@@ -3,10 +3,8 @@ import {
   getCamera,
   getDivElement,
   getScene,
-  onPointerClick,
   raycasterSelect,
   setCamera,
-  setDragControls,
   setScene,
   setTransformControls,
 } from "../../three/init3d116";
@@ -20,6 +18,7 @@ import ObjectProperty from "./ObjectProperty";
 import { getObjectNameByName } from "../../three/utils";
 import TreeList from "./TreeList";
 import { MyContext } from "../../app/MyContext";
+import { UserDataType } from "../../app/type";
 
 export default function OutlineView() {
   let [curObj3d, setCurObj3d] = useState<Object3D>();
@@ -48,7 +47,7 @@ export default function OutlineView() {
       }
       for (let i = 0; i < currentObject.length; i++) {
         const { object } = currentObject[i];
-        if (object.userData.tag !== "TransformHelper") {
+        if (object.userData.type !== UserDataType.TransformHelper) {
           selectedMesh.push(object);
         }
       }
