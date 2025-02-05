@@ -257,7 +257,10 @@ export function setTransformControls(selectedMesh: Object3D[]) {
 
 // 截图,返回图片的base64
 export function takeScreenshot(): string {
+  renderer.setSize(300, 300);
+  camera.aspect = 1;
   renderer.render(scene, camera);
   const screenshot = renderer.domElement.toDataURL("image/png");
+
   return screenshot;
 }

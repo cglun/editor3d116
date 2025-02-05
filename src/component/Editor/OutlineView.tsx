@@ -7,7 +7,6 @@ import {
   setCamera,
   setScene,
   setTransformControls,
-  setTransformControls_1,
 } from "../../three/init3d116";
 import { setClassName } from "../../app/utils";
 

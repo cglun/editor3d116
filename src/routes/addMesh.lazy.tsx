@@ -14,11 +14,10 @@ import {
 } from "three";
 import { addGlb, getScene, takeScreenshot } from "../three/init3d116";
 
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { MyContext } from "../app/MyContext";
-import { ButtonGroup, Card, Form, Image, InputGroup } from "react-bootstrap";
+import { ButtonGroup, Card, Image } from "react-bootstrap";
 import { setClassName } from "../app/utils";
-import { base64 } from "../three/utils";
 
 export const Route = createLazyFileRoute("/addMesh")({
   component: RouteComponent,
@@ -94,6 +93,7 @@ function RouteComponent() {
       payload: scene,
     });
   }
+  const [xx, setXx] = useState("");
   return (
     <div className="d-flex flex-wrap pt-2">
       <Card>
@@ -189,12 +189,13 @@ function RouteComponent() {
             <Button
               variant={color}
               onClick={() => {
-                // takeScreenshot();
-                console.log(getScene());
+                const xx = takeScreenshot();
+                setXx(xx);
               }}
             >
               截图
             </Button>
+            <Image src={xx}></Image>
           </ButtonGroup>
         </Card.Body>
       </Card>

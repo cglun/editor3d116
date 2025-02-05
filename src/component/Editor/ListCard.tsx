@@ -57,16 +57,27 @@ function ItemInfoCard(props: Props) {
 
   function editorBtn(item: ItemInfo) {
     let newItem = item;
+    let imgData = "";
     function getNewItem(item: ItemInfo) {
       newItem = item;
+    }
+    function getScreenShot(_imgData: string) {
+      imgData = _imgData;
     }
     ModalConfirm3d(
       {
         title: "编辑",
-        body: <EditorForm item={item} getNewItem={getNewItem} />,
+        body: (
+          <EditorForm
+            item={item}
+            getNewItem={getNewItem}
+            getScreenShot={getScreenShot}
+          />
+        ),
       },
       () => {
         Toast3d(`【${item.name}】已修改为【${newItem.name}】`);
+        console.log("imgUrl", imgData);
       }
     );
   }

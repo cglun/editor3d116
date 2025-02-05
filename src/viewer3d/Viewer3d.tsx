@@ -7,7 +7,7 @@ import { init3d } from "../three/utils";
  */
 
 export default function Viewer3d({
-  canvasStyle = { height: "60vh", width: "60vw" },
+  canvasStyle = { height: "100vh", width: "100vw" },
 }) {
   const canvas3d: React.RefObject<HTMLDivElement> = useRef<
     HTMLDivElement | any
