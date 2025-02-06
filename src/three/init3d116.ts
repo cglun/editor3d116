@@ -29,45 +29,9 @@ let scene: Scene,
 
 export function animate() {
   requestAnimationFrame(animate);
-  // console.log(camera.name);
-
   controls.update();
-
   renderer.render(scene, camera);
 }
-
-// let cube: Mesh;
-
-// function addCube() {
-//   // 创建立方体
-//   const cubeGeometry = new BoxGeometry(1, 1, 1);
-//   const cubeMaterial = new MeshLambertMaterial();
-//   cube = new Mesh(cubeGeometry, cubeMaterial);
-//   cube.name = "cube1";
-//   cube.castShadow = true; // 立方体投射阴影
-
-//   // 创建立方体
-//   const cubeGeometry2 = new BoxGeometry(1, 1, 1);
-//   const cubeMaterial2 = new MeshLambertMaterial();
-//   const cube2 = new Mesh(cubeGeometry2, cubeMaterial2);
-//   cube2.name = "cube2";
-//   cube2.castShadow = true; // 立方体投射阴影
-
-//   // 创建立方体
-//   const cubeGeometry3 = new BoxGeometry(1, 1, 1);
-//   const cubeMaterial3 = new MeshLambertMaterial();
-//   const cube3 = new Mesh(cubeGeometry3, cubeMaterial3);
-//   cube3.name = "cube3";
-//   cube3.castShadow = true; // 立方体投射阴影
-
-//   cube2.add(cube3);
-
-//   const g = new Group();
-//   g.name = "立方体组";
-//   g.add(cube);
-//   g.add(cube2);
-//   scene.add(g);
-// }
 
 export function addLight(): void {
   // 添加正交光源

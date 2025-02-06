@@ -2,7 +2,6 @@ import React, { memo, useContext, useEffect, useRef } from "react";
 
 import { MyContext } from "../../app/MyContext";
 import createScene, { getScene } from "../../three/init3d116"; // 初始化
-import Button from "react-bootstrap/esm/Button";
 
 function EditorViewer3d() {
   const editorCanvas: React.RefObject<HTMLDivElement> =
@@ -22,18 +21,6 @@ function EditorViewer3d() {
     };
   }, []);
 
-  return (
-    <div>
-      <div style={{ height: "70vh" }} ref={editorCanvas}></div>
-      <Button onClick={() => {}}>ff【{}】</Button>
-      <Button
-        onClick={() => {
-          // addControls();
-        }}
-      >
-        getScene
-      </Button>
-    </div>
-  );
+  return <div style={{ height: "70vh" }} ref={editorCanvas}></div>;
 }
 export default memo(EditorViewer3d);
