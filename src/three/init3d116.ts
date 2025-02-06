@@ -19,7 +19,6 @@ import {
   DragControls,
 } from "three/examples/jsm/Addons.js";
 import { GlbModel, UserDataType } from "../app/type";
-import { tan } from "three/tsl";
 
 let scene: Scene,
   camera: PerspectiveCamera,
@@ -28,8 +27,9 @@ let scene: Scene,
   divElement: HTMLDivElement,
   transfControls: TransformControls;
 
-function animate() {
+export function animate() {
   requestAnimationFrame(animate);
+  // console.log(camera.name);
 
   controls.update();
 
@@ -89,14 +89,13 @@ export function addLight(): void {
 }
 export default function createScene(node: HTMLDivElement): void {
   divElement = node;
-
   camera = new PerspectiveCamera(
     75,
     node.offsetWidth / node.offsetHeight,
     0.1,
     1000
   );
-  camera.name = "透视相机";
+  camera.name = "透视相机" + Math.random();
   camera.position.set(-5, 5, 8);
 
   renderer = new WebGLRenderer();
@@ -109,8 +108,15 @@ export default function createScene(node: HTMLDivElement): void {
   node.appendChild(renderer.domElement);
   controls = new OrbitControls(camera, renderer.domElement);
   transfControls = new TransformControls(camera, renderer.domElement);
+  addLight();
+
+  addGridHelper();
 
   animate();
+}
+
+export function getControls() {
+  return controls;
 }
 
 export function setScene(newScene: Scene) {
@@ -261,6 +267,5 @@ export function takeScreenshot(): string {
   camera.aspect = 1;
   renderer.render(scene, camera);
   const screenshot = renderer.domElement.toDataURL("image/png");
-
   return screenshot;
 }

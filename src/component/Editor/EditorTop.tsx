@@ -10,7 +10,7 @@ import {
 } from "react-bootstrap";
 import { setClassName } from "../../app/utils";
 import { getThemeColor, initThemeColor, setThemeColor } from "../../app/config";
-import { getCamera, getScene, setScene } from "../../three/init3d116";
+
 import ListCard, { ItemInfo } from "./ListCard";
 
 import { testData1 } from "../../app/testData";
@@ -19,6 +19,7 @@ import ModalConfirm3d from "../common/ModalConfirm3d";
 import EditorForm from "../common/EditorForm";
 import { Scene } from "three";
 import { UserDataType } from "../../app/type";
+import { getCamera, getScene } from "../../three/init3d116";
 
 export default function EditorTop() {
   initThemeColor();

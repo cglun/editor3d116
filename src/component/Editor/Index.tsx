@@ -2,9 +2,10 @@ import Container from "react-bootstrap/esm/Container";
 import Row from "react-bootstrap/esm/Row";
 import EditorTop from "./EditorTop";
 import Col from "react-bootstrap/esm/Col";
-import Canvas3d from "./Canvas3d";
+
 import BottomNav from "./BottomNav";
 import OutlineView from "./OutlineView";
+import EditorViewer3d from "./EditorViewer3d";
 export default function Index() {
   return (
     <>
@@ -18,7 +19,7 @@ export default function Index() {
           <Col xl={10} style={{ margin: 0, padding: 0 }}>
             <Row>
               <Col>
-                <Canvas3d />
+                <EditorViewer3d />
               </Col>
             </Row>
             <Row>

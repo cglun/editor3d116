@@ -1,0 +1,126 @@
+import {
+  DirectionalLight,
+  GridHelper,
+  Object3D,
+  Object3DEventMap,
+  PerspectiveCamera,
+  Scene,
+  WebGLRenderer,
+} from "three";
+
+import {
+  GLTFLoader,
+  DRACOLoader,
+  OrbitControls,
+  TransformControls,
+} from "three/examples/jsm/Addons.js";
+import { UserDataType } from "../app/type";
+import { addGridHelper } from "./init3d116";
+
+let scene: Scene,
+  camera: PerspectiveCamera,
+  controls: OrbitControls,
+  renderer: WebGLRenderer,
+  divElement: HTMLDivElement;
+
+export function animate() {
+  requestAnimationFrame(animate);
+
+  controls.update();
+
+  renderer.render(scene, camera);
+}
+
+export function addLight(): void {
+  // 添加正交光源
+  const light = new DirectionalLight(0xffffff, 2.16);
+  // 设置阴影参数
+  light.shadow.mapSize.width = 2048; // 阴影图的宽度
+  light.shadow.mapSize.height = 2048; // 阴影图的高度
+  light.shadow.camera.near = 0.5; // 阴影摄像机的近剪裁面
+  light.shadow.camera.far = 5000; // 阴影摄像机的远剪裁面
+  light.shadow.camera.left = -10;
+  light.shadow.camera.right = 10;
+  light.shadow.camera.top = 10;
+  light.shadow.camera.bottom = -10;
+
+  light.position.set(3, 3, 3);
+  light.castShadow = true; // 开启投射阴影
+  light.lookAt(0, 0, 0);
+  scene.add(light);
+}
+export default function createScene(node: HTMLDivElement): void {
+  divElement = node;
+  camera = new PerspectiveCamera(
+    75,
+    node.offsetWidth / node.offsetHeight,
+    0.1,
+    1000
+  );
+  camera.name = "透视相机" + Math.random();
+  camera.position.set(-5, 5, 8);
+
+  renderer = new WebGLRenderer();
+  renderer.shadowMap.enabled = true;
+  renderer.setSize(node.offsetWidth, node.offsetHeight);
+
+  scene = new Scene();
+  scene.userData.isSelected = false;
+
+  node.appendChild(renderer.domElement);
+  controls = new OrbitControls(camera, renderer.domElement);
+
+  addLight();
+  addGridHelper();
+  animate();
+}
+
+export function getControls() {
+  return controls;
+}
+
+export function setScene(newScene: Scene) {
+  scene = newScene;
+}
+export function setCamera(_camera: Object3D<Object3DEventMap>) {
+  camera.position.x = _camera.position.x;
+  camera.position.y = _camera.position.y;
+  camera.position.z = _camera.position.z;
+}
+
+export function addGlb(update: void): void {
+  const dracoLoader = new DRACOLoader();
+  dracoLoader.setDecoderPath("/assets/js/draco/gltf/");
+  //const loader = new GLTFLoader(new LoadingManager());
+  const loader = new GLTFLoader();
+  loader.setDRACOLoader(dracoLoader);
+  loader.load("/assets/models/blender.glb", (gltf) => {
+    const children = gltf.scene.children;
+    for (let i = 0; i < children.length; i++) {
+      const element = children[i];
+      element.userData.type = UserDataType.GlbModel;
+      scene.children.push(element);
+    }
+    //scene.add(data.scene);
+    update;
+  });
+}
+export function addGridHelper() {
+  const gridHelper = new GridHelper(16, 16);
+
+  gridHelper.userData = {
+    type: UserDataType.GridHelper,
+    isSelected: false,
+  };
+  gridHelper.name = "网格辅助";
+  scene.add(gridHelper);
+}
+
+// 截图,返回图片的base64
+export function takeScreenshot(width: number, height: number): string {
+  renderer.setSize(width, height);
+  camera.aspect = 1;
+  renderer.render(scene, camera);
+  const screenshot = renderer.domElement.toDataURL("image/png");
+  return screenshot;
+}

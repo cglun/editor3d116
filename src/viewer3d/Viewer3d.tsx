@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-import { init3d } from "../three/utils";
+import createScene from "../three/init3d105";
 /**
  * 其他应用可以调用此组件，
  * @returns
@@ -13,7 +13,8 @@ export default function Viewer3d({
     HTMLDivElement | any
   >();
   useEffect(() => {
-    init3d(canvas3d);
+    // init3d(canvas3d);
+    createScene(canvas3d.current);
   }, []);
 
   return <div style={canvasStyle} ref={canvas3d}></div>;

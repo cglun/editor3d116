@@ -2,13 +2,14 @@ import { useState } from "react";
 import { ItemInfo } from "../Editor/ListCard";
 import InputGroup from "react-bootstrap/esm/InputGroup";
 import Form from "react-bootstrap/esm/Form";
-import { Button, Image } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 
 import Viewer3d from "../../viewer3d/Viewer3d";
-import { takeScreenshot } from "../../three/init3d116";
+
 import Toast3d from "./Toast3d";
-import { getButtonColor, getThemeColor } from "../../app/config";
+import { getButtonColor } from "../../app/config";
 import { setClassName } from "../../app/utils";
+import { takeScreenshot } from "../../three/init3d105";
 
 // interface EditorFormProps {
 //   item: ItemInfo;
@@ -24,7 +25,6 @@ export default function EditorForm({
   getNewItem: (item: ItemInfo) => void;
 }) {
   const [_item, _setItem] = useState<ItemInfo>({ ...item });
-
   return (
     <>
       <InputGroup size="sm">
@@ -36,7 +36,6 @@ export default function EditorForm({
           type="text"
           value={_item.name}
           onChange={(e) => {
-            // const imgBase64 = takeScreenshot();
             const _item = { ...item, name: e.target.value };
             _setItem(_item);
             getNewItem(_item);
@@ -44,21 +43,22 @@ export default function EditorForm({
         />
       </InputGroup>
 
-      <Viewer3d canvasStyle={{ height: "300px", width: "300px" }}></Viewer3d>
-
-      <Button
-        className="mt-2"
-        variant={getButtonColor()}
-        onClick={() => {
-          const imgBase64 = takeScreenshot();
-          const _item = { ...item, imgUrl: imgBase64 };
-          _setItem(_item);
-          getNewItem(_item);
-          Toast3d("截图成功");
-        }}
-      >
-        <i className={setClassName("camera")}></i> 设为封面
-      </Button>
+      <div className="mt-2 d-flex flex-column align-items-center">
+        <Viewer3d canvasStyle={{ height: "300px", width: "300px" }}></Viewer3d>
+        <Button
+          className="mt-2"
+          variant={getButtonColor()}
+          onClick={() => {
+            const imgBase64 = takeScreenshot(300, 300);
+            const _item = { ...item, imgUrl: imgBase64 };
+            _setItem(_item);
+            getNewItem(_item);
+            Toast3d("截图成功");
+          }}
+        >
+          <i className={setClassName("camera")}></i> 设为封面
+        </Button>
+      </div>
     </>
   );
 }
