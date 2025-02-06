@@ -23,7 +23,6 @@ export default function EditorForm({
   item: ItemInfo;
   getNewItem: (item: ItemInfo) => void;
 }) {
-  // const { item, getNewItem, getScreenShot } = editorFormProps;
   const [_item, _setItem] = useState<ItemInfo>({ ...item });
 
   return (
@@ -37,6 +36,7 @@ export default function EditorForm({
           type="text"
           value={_item.name}
           onChange={(e) => {
+            // const imgBase64 = takeScreenshot();
             const _item = { ...item, name: e.target.value };
             _setItem(_item);
             getNewItem(_item);
