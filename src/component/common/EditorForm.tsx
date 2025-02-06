@@ -10,14 +10,20 @@ import Toast3d from "./Toast3d";
 import { getButtonColor, getThemeColor } from "../../app/config";
 import { setClassName } from "../../app/utils";
 
-interface EditorFormProps {
+// interface EditorFormProps {
+//   item: ItemInfo;
+//   getNewItem: (item: ItemInfo) => void;
+//   getScreenShot: (imgUrl: string) => void;
+// }
+
+export default function EditorForm({
+  item,
+  getNewItem,
+}: {
   item: ItemInfo;
   getNewItem: (item: ItemInfo) => void;
-  getScreenShot: (imgUrl: string) => void;
-}
-
-export default function EditorForm(editorFormProps: EditorFormProps) {
-  const { item, getNewItem, getScreenShot } = editorFormProps;
+}) {
+  // const { item, getNewItem, getScreenShot } = editorFormProps;
   const [_item, _setItem] = useState<ItemInfo>({ ...item });
 
   return (
@@ -27,13 +33,13 @@ export default function EditorForm(editorFormProps: EditorFormProps) {
         <Form.Control
           aria-label="Small"
           aria-describedby="inputGroup-sizing-sm"
-          placeholder={item.name}
+          placeholder={_item.name}
           type="text"
           value={_item.name}
           onChange={(e) => {
-            const xx = { ..._item, name: e.target.value };
-            _setItem(xx);
-            getNewItem(xx);
+            const _item = { ...item, name: e.target.value };
+            _setItem(_item);
+            getNewItem(_item);
           }}
         />
       </InputGroup>
@@ -45,7 +51,9 @@ export default function EditorForm(editorFormProps: EditorFormProps) {
         variant={getButtonColor()}
         onClick={() => {
           const imgBase64 = takeScreenshot();
-          getScreenShot(imgBase64);
+          const _item = { ...item, imgUrl: imgBase64 };
+          _setItem(_item);
+          getNewItem(_item);
           Toast3d("截图成功");
         }}
       >

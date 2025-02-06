@@ -13,6 +13,7 @@ export interface ItemInfo {
   name: string;
   type: string;
   desc: string;
+  imgUrl: string;
 }
 
 interface Props {
@@ -25,6 +26,7 @@ interface Props {
 }
 function ItemInfoCard(props: Props) {
   const { list, getType, setList } = props;
+
   const { isLoading, error } = getType;
   //加载中……
   if (isLoading) {
@@ -55,29 +57,26 @@ function ItemInfoCard(props: Props) {
     );
   }
 
-  function editorBtn(item: ItemInfo) {
-    let newItem = item;
-    let imgData = "";
-    function getNewItem(item: ItemInfo) {
-      newItem = item;
+  function editorBtn(item: ItemInfo, _index: number) {
+    function getNewItem(_newItem: ItemInfo) {
+      console.log("getNewItem", _newItem);
+
+      const newList = list.map((item, index) => {
+        if (index === _index) {
+          return _newItem;
+        }
+        return item;
+      });
+      setList(newList);
     }
-    function getScreenShot(_imgData: string) {
-      imgData = _imgData;
-    }
+
     ModalConfirm3d(
       {
         title: "编辑",
-        body: (
-          <EditorForm
-            item={item}
-            getNewItem={getNewItem}
-            getScreenShot={getScreenShot}
-          />
-        ),
+        body: <EditorForm item={item} getNewItem={getNewItem} />,
       },
       () => {
-        Toast3d(`【${item.name}】已修改为【${newItem.name}】`);
-        console.log("imgUrl", imgData);
+        Toast3d(`【${item.name}】已修改 `);
       }
     );
   }
@@ -90,13 +89,18 @@ function ItemInfoCard(props: Props) {
             <Card.Header style={{ width: "6rem" }} title={item.name}>
               {item.name}
             </Card.Header>
-            <Card.Body className="d-flex flex-column ">
-              <Card.Img src={"/assets/images/test.jpg"} variant="top" />
+            <Card.Body className="d-flex flex-column text-center">
+              {item.imgUrl ? (
+                <Card.Img src={item.imgUrl} variant="top" />
+              ) : (
+                <i className="bi bi-image" style={{ fontSize: "4rem" }}></i>
+              )}
+
               <ButtonGroup aria-label="Basic example" className="mt-2">
                 <Button
                   variant={getThemeColor()}
                   size="sm"
-                  onClick={() => editorBtn(item)}
+                  onClick={() => editorBtn(item, index)}
                 >
                   <i className={setClassName("pencil")} title="编辑"></i>
                 </Button>
