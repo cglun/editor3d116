@@ -1,13 +1,16 @@
 import {
+  BoxHelper,
   DirectionalLight,
   GridHelper,
   MOUSE,
   Object3D,
   Object3DEventMap,
+  OrthographicCamera,
   PerspectiveCamera,
   Raycaster,
   Scene,
   Vector2,
+  Vector3,
   WebGLRenderer,
 } from "three";
 
@@ -17,12 +20,13 @@ import {
   OrbitControls,
   TransformControls,
   DragControls,
-  ViewHelper,
 } from "three/examples/jsm/Addons.js";
 import { GlbModel, UserDataType } from "../app/type";
 
 let scene: Scene,
-  camera: PerspectiveCamera,
+  camera: PerspectiveCamera | OrthographicCamera,
+  perspectiveCamera: PerspectiveCamera,
+  orthographicCamera: OrthographicCamera,
   controls: OrbitControls,
   renderer: WebGLRenderer,
   divElement: HTMLDivElement,
@@ -54,16 +58,20 @@ export function addLight(): void {
 }
 export default function createScene(node: HTMLDivElement): void {
   divElement = node;
-  camera = new PerspectiveCamera(
+  perspectiveCamera = new PerspectiveCamera(
     75,
     node.offsetWidth / node.offsetHeight,
     0.1,
     1000
   );
-  camera.name = "透视相机";
-  camera.position.set(-5, 5, 8);
+
+  perspectiveCamera.name = "透视相机";
+  perspectiveCamera.position.set(-5, 5, 8);
+  camera = perspectiveCamera.clone();
+
   renderer = new WebGLRenderer();
   renderer.shadowMap.enabled = true;
+
   renderer.setSize(node.offsetWidth, node.offsetHeight);
   scene = new Scene();
   scene.userData.isSelected = false;
@@ -71,15 +79,42 @@ export default function createScene(node: HTMLDivElement): void {
   controls = new OrbitControls(camera, renderer.domElement);
   transfControls = new TransformControls(camera, renderer.domElement);
 
+  const xxx = 30;
+  orthographicCamera = new OrthographicCamera(
+    node.offsetWidth / -xxx,
+    node.offsetWidth / xxx,
+    node.offsetHeight / xxx,
+    node.offsetHeight / -xxx,
+    -1000,
+    1000
+  );
+
   addLight();
   addGridHelper();
   animate();
 }
 
+export function setCameraType(cameraType: string, cameraUp: Vector3) {
+  if (cameraType === "PerspectiveCamera") {
+    camera = perspectiveCamera;
+
+    controls = new OrbitControls(camera, renderer.domElement);
+  }
+  if (cameraType === "OrthographicCamera") {
+    camera = orthographicCamera;
+    const { x, y, z } = cameraUp;
+    camera.position.x = x;
+    camera.position.y = y;
+    camera.position.z = z;
+    camera.lookAt(0, 0, 0);
+  }
+}
 export function getControls() {
   return controls;
 }
-
+export function getTransfControls() {
+  return transfControls;
+}
 export function setScene(newScene: Scene) {
   scene = newScene;
 }
@@ -89,7 +124,7 @@ export function setCamera(camera1: Object3D<Object3DEventMap>) {
   camera.position.z = camera1.position.z;
 }
 export function getCamera(): PerspectiveCamera {
-  return camera;
+  return perspectiveCamera;
 }
 export function getScene(): Scene {
   return scene;
@@ -203,16 +238,29 @@ export function raycasterSelect(event: MouseEvent) {
 }
 
 //为选中的物体加上变换控件
-
+let boxHelper: BoxHelper;
 export function setTransformControls(selectedMesh: Object3D[]) {
   transfControls.addEventListener("dragging-changed", (event) => {
     controls.enabled = !event.value;
   });
+  transfControls.addEventListener("change", () => {
+    if (boxHelper) {
+      boxHelper.update();
+    }
+  });
   //transfControls.addEventListener("mouseDown", () => {});
 
-  //transfControls.addEventListener("mouseUp", () => {});
+  transfControls.addEventListener("mouseUp", () => {});
 
   transfControls.attach(selectedMesh[0]);
+
+  if (boxHelper) {
+    boxHelper.setFromObject(selectedMesh[0]);
+    boxHelper.update();
+  } else {
+    boxHelper = new BoxHelper(selectedMesh[0], 0xffff00);
+    scene.add(boxHelper);
+  }
 
   transfControls.setSize(0.6);
 

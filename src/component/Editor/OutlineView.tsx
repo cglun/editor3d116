@@ -39,7 +39,7 @@ export default function OutlineView() {
       payload: getScene(),
     });
 
-    getDivElement().addEventListener("mousedown", function (event) {
+    getDivElement().addEventListener("click", function (event) {
       event.stopPropagation();
       event.preventDefault();
       const currentObject = raycasterSelect(event);
@@ -49,20 +49,21 @@ export default function OutlineView() {
         const { object } = currentObject[i];
         if (
           object.userData.type !== UserDataType.TransformHelper &&
-          object.userData.type !== UserDataType.GridHelper
+          object.userData.type !== UserDataType.GridHelper &&
+          object.type !== UserDataType.BoxHelper
         ) {
           selectedMesh.push(object);
         }
       }
+
       setCurObj3d(selectedMesh[0]);
       setTransformControls(selectedMesh);
     });
 
     return () => {
-      getDivElement().removeEventListener("mousedown", () => {});
+      getDivElement().removeEventListener("click", () => {});
     };
   }, []);
-  useEffect(() => {}, []);
 
   function sceneDiv(object3D: Object3D | any) {
     return (

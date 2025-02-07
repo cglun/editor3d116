@@ -80,4 +80,5 @@ export enum UserDataType {
   GlbModel = "GlbModel",
   TransformHelper = "TransformHelper",
   GridHelper = "GridHelper",
+  BoxHelper = "BoxHelper",
 }
