@@ -22,15 +22,20 @@ import {
   DragControls,
 } from "three/examples/jsm/Addons.js";
 import { GlbModel, UserDataType } from "../app/type";
+import { premultipliedGaussianBlur } from "three/examples/jsm/tsl/display/GaussianBlurNode.js";
 
 let scene: Scene,
   camera: PerspectiveCamera | OrthographicCamera,
   perspectiveCamera: PerspectiveCamera,
   orthographicCamera: OrthographicCamera,
   controls: OrbitControls,
+  controls1: OrbitControls,
+  controls2: OrbitControls,
   renderer: WebGLRenderer,
   divElement: HTMLDivElement,
-  transfControls: TransformControls;
+  transfControls: TransformControls,
+  transfControls1: TransformControls,
+  transfControls2: TransformControls;
 
 export function animate() {
   requestAnimationFrame(animate);
@@ -67,7 +72,18 @@ export default function createScene(node: HTMLDivElement): void {
 
   perspectiveCamera.name = "透视相机";
   perspectiveCamera.position.set(-5, 5, 8);
-  camera = perspectiveCamera.clone();
+
+  const xxx = 40;
+  orthographicCamera = new OrthographicCamera(
+    node.offsetWidth / -xxx,
+    node.offsetWidth / xxx,
+    node.offsetHeight / xxx,
+    node.offsetHeight / -xxx,
+    1,
+    1000
+  );
+
+  camera = perspectiveCamera;
 
   renderer = new WebGLRenderer();
   renderer.shadowMap.enabled = true;
@@ -76,37 +92,59 @@ export default function createScene(node: HTMLDivElement): void {
   scene = new Scene();
   scene.userData.isSelected = false;
   node.appendChild(renderer.domElement);
-  controls = new OrbitControls(camera, renderer.domElement);
-  transfControls = new TransformControls(camera, renderer.domElement);
+  controls1 = new OrbitControls(perspectiveCamera, renderer.domElement);
+  controls2 = new OrbitControls(orthographicCamera, renderer.domElement);
 
-  const xxx = 30;
-  orthographicCamera = new OrthographicCamera(
-    node.offsetWidth / -xxx,
-    node.offsetWidth / xxx,
-    node.offsetHeight / xxx,
-    node.offsetHeight / -xxx,
-    -1000,
-    1000
+  controls = controls1;
+
+  transfControls1 = new TransformControls(
+    perspectiveCamera,
+    renderer.domElement
   );
-
+  transfControls2 = new TransformControls(
+    orthographicCamera,
+    renderer.domElement
+  );
+  transfControls = transfControls1;
   addLight();
   addGridHelper();
   animate();
 }
 
+let perspectiveCameraPosition: Vector3 = new Vector3(-5, 5, 8);
 export function setCameraType(cameraType: string, cameraUp: Vector3) {
   if (cameraType === "PerspectiveCamera") {
+    const { x, y, z } = perspectiveCameraPosition;
+    perspectiveCamera.position.set(x, y, z);
     camera = perspectiveCamera;
-
-    controls = new OrbitControls(camera, renderer.domElement);
+    camera.lookAt(0, 0, 0);
+    transfControls = transfControls1;
+    transfControls2.getHelper().visible = false;
+    controls = controls1;
   }
+
   if (cameraType === "OrthographicCamera") {
+    if (camera.type === "PerspectiveCamera") {
+      perspectiveCameraPosition = camera.position.clone();
+    }
+
     camera = orthographicCamera;
     const { x, y, z } = cameraUp;
-    camera.position.x = x;
-    camera.position.y = y;
-    camera.position.z = z;
+
+    const bl = 40;
+    camera.position.x = x * bl;
+    camera.position.y = y * bl;
+    camera.position.z = z * bl;
     camera.lookAt(0, 0, 0);
+    transfControls = transfControls2;
+    transfControls1.getHelper().visible = false;
+
+    controls2.mouseButtons = {
+      LEFT: MOUSE.LEFT,
+      MIDDLE: MOUSE.DOLLY,
+      RIGHT: MOUSE.LEFT,
+    };
+    controls = controls2;
   }
 }
 export function getControls() {
@@ -228,6 +266,7 @@ export function raycasterSelect(event: MouseEvent) {
   pointer.x = (event.offsetX / divElement.offsetWidth) * 2 - 1;
   pointer.y = -(event.offsetY / divElement.offsetHeight) * 2 + 1;
   raycaster.setFromCamera(pointer, camera);
+
   // 计算物体和射线的焦点
   const intersects = raycaster.intersectObjects(scene.children, true);
   if (intersects.length > 0) {
@@ -250,7 +289,7 @@ export function setTransformControls(selectedMesh: Object3D[]) {
   });
   //transfControls.addEventListener("mouseDown", () => {});
 
-  transfControls.addEventListener("mouseUp", () => {});
+  // transfControls.addEventListener("mouseUp", () => {});
 
   transfControls.attach(selectedMesh[0]);
 
@@ -262,15 +301,10 @@ export function setTransformControls(selectedMesh: Object3D[]) {
     scene.add(boxHelper);
   }
 
-  transfControls.setSize(0.6);
-
   const getHelper = transfControls.getHelper();
   getHelper.name = "TransformControlsRoot";
   getHelper.userData.type = UserDataType.TransformHelper;
   scene.add(getHelper);
-  if (selectedMesh.length === 0) {
-    // getHelper.visible = false;
-  }
   getHelper.traverse((child) => {
     child.userData.type = UserDataType.TransformHelper;
   });

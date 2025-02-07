@@ -30,8 +30,9 @@ function EditorViewer3d() {
     };
   }, []);
   const buttonColor = getThemeColor();
-  const transfControls = getTransfControls();
+
   function setMode(modeName: TransformControlsMode) {
+    const transfControls = getTransfControls();
     transfControls.setMode(modeName);
   }
   return (
