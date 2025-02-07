@@ -17,6 +17,7 @@ import {
   OrbitControls,
   TransformControls,
   DragControls,
+  ViewHelper,
 } from "three/examples/jsm/Addons.js";
 import { GlbModel, UserDataType } from "../app/type";
 
@@ -59,23 +60,19 @@ export default function createScene(node: HTMLDivElement): void {
     0.1,
     1000
   );
-  camera.name = "透视相机" + Math.random();
+  camera.name = "透视相机";
   camera.position.set(-5, 5, 8);
-
   renderer = new WebGLRenderer();
   renderer.shadowMap.enabled = true;
   renderer.setSize(node.offsetWidth, node.offsetHeight);
-
   scene = new Scene();
   scene.userData.isSelected = false;
-
   node.appendChild(renderer.domElement);
   controls = new OrbitControls(camera, renderer.domElement);
   transfControls = new TransformControls(camera, renderer.domElement);
+
   addLight();
-
   addGridHelper();
-
   animate();
 }
 
@@ -151,7 +148,7 @@ export function sceneSerialization(
 }
 
 export function addGridHelper() {
-  const gridHelper = new GridHelper(30, 30);
+  const gridHelper = new GridHelper(16, 16);
 
   gridHelper.userData = {
     type: UserDataType.GridHelper,
@@ -206,19 +203,25 @@ export function raycasterSelect(event: MouseEvent) {
 }
 
 //为选中的物体加上变换控件
+
 export function setTransformControls(selectedMesh: Object3D[]) {
   transfControls.addEventListener("dragging-changed", (event) => {
     controls.enabled = !event.value;
   });
+  //transfControls.addEventListener("mouseDown", () => {});
+
+  //transfControls.addEventListener("mouseUp", () => {});
 
   transfControls.attach(selectedMesh[0]);
+
   transfControls.setSize(0.6);
+
   const getHelper = transfControls.getHelper();
   getHelper.name = "TransformControlsRoot";
   getHelper.userData.type = UserDataType.TransformHelper;
   scene.add(getHelper);
   if (selectedMesh.length === 0) {
-    getHelper.visible = false;
+    // getHelper.visible = false;
   }
   getHelper.traverse((child) => {
     child.userData.type = UserDataType.TransformHelper;

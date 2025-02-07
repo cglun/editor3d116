@@ -1,6 +1,9 @@
 import {
+  BoxGeometry,
   DirectionalLight,
   GridHelper,
+  Mesh,
+  MeshBasicMaterial,
   Object3D,
   Object3DEventMap,
   PerspectiveCamera,
@@ -12,16 +15,13 @@ import {
   GLTFLoader,
   DRACOLoader,
   OrbitControls,
-  TransformControls,
 } from "three/examples/jsm/Addons.js";
 import { UserDataType } from "../app/type";
-import { addGridHelper } from "./init3d116";
 
 let scene: Scene,
   camera: PerspectiveCamera,
   controls: OrbitControls,
-  renderer: WebGLRenderer,
-  divElement: HTMLDivElement;
+  renderer: WebGLRenderer;
 
 export function animate() {
   requestAnimationFrame(animate);
@@ -50,14 +50,13 @@ export function addLight(): void {
   scene.add(light);
 }
 export default function createScene(node: HTMLDivElement): void {
-  divElement = node;
   camera = new PerspectiveCamera(
     75,
     node.offsetWidth / node.offsetHeight,
     0.1,
     1000
   );
-  camera.name = "透视相机" + Math.random();
+
   camera.position.set(-5, 5, 8);
 
   renderer = new WebGLRenderer();
@@ -106,7 +105,7 @@ export function addGlb(update: void): void {
   });
 }
 export function addGridHelper() {
-  const gridHelper = new GridHelper(16, 16);
+  const gridHelper = new GridHelper(10, 10);
 
   gridHelper.userData = {
     type: UserDataType.GridHelper,
@@ -114,6 +113,15 @@ export function addGridHelper() {
   };
   gridHelper.name = "网格辅助";
   scene.add(gridHelper);
+}
+export function getScene(): Scene {
+  return scene;
+}
+export function addCube() {
+  const geometry = new BoxGeometry(1, 1, 1);
+  const material = new MeshBasicMaterial({ color: 0x00ff00 });
+  const cube = new Mesh(geometry, material);
+  scene.add(cube);
 }
 
 // 截图,返回图片的base64

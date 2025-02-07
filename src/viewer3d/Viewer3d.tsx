@@ -14,7 +14,9 @@ export default function Viewer3d({
   >();
   useEffect(() => {
     // init3d(canvas3d);
-    createScene(canvas3d.current);
+    if (canvas3d.current) {
+      createScene(canvas3d.current);
+    }
   }, []);
 
   return <div style={canvasStyle} ref={canvas3d}></div>;

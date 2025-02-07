@@ -13,7 +13,7 @@ export default defineConfig({
       filename: "remoteEntry.js",
       exposes: {
         "./Viewer3d": "./src/Viewer3d/Viewer3d.tsx",
-        "./init3d116": "./src/three/init3d116.ts",
+        "./init3d105": "./src/three/init3d105.ts",
         //  "./Index": "./src/Hook.tsx",
       },
       shared: [

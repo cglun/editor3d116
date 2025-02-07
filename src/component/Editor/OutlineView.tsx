@@ -39,14 +39,18 @@ export default function OutlineView() {
       payload: getScene(),
     });
 
-    getDivElement().addEventListener("click", function (event) {
+    getDivElement().addEventListener("mousedown", function (event) {
       event.stopPropagation();
       event.preventDefault();
       const currentObject = raycasterSelect(event);
+
       const selectedMesh = [];
       for (let i = 0; i < currentObject.length; i++) {
         const { object } = currentObject[i];
-        if (object.userData.type !== UserDataType.TransformHelper) {
+        if (
+          object.userData.type !== UserDataType.TransformHelper &&
+          object.userData.type !== UserDataType.GridHelper
+        ) {
           selectedMesh.push(object);
         }
       }
@@ -55,7 +59,7 @@ export default function OutlineView() {
     });
 
     return () => {
-      getDivElement().removeEventListener("click", () => {});
+      getDivElement().removeEventListener("mousedown", () => {});
     };
   }, []);
   useEffect(() => {}, []);

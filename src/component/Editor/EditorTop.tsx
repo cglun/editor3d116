@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   Row,
   Col,
@@ -19,7 +19,13 @@ import ModalConfirm3d from "../common/ModalConfirm3d";
 import EditorForm from "../common/EditorForm";
 import { Scene } from "three";
 import { UserDataType } from "../../app/type";
-import { getCamera, getScene } from "../../three/init3d116";
+import {
+  addGridHelper,
+  getCamera,
+  getScene,
+  setScene,
+} from "../../three/init3d116";
+import { MyContext } from "../../app/MyContext";
 
 export default function EditorTop() {
   initThemeColor();
@@ -30,7 +36,7 @@ export default function EditorTop() {
   const handleShow = () => setShowScene(true);
 
   const [appTheme, setAppTheme] = useState(themeColor);
-
+  const { dispatchScene } = useContext(MyContext);
   function saveScene() {
     const scene = getScene();
     //移除辅助 TransformHelper
@@ -60,6 +66,7 @@ export default function EditorTop() {
       name: "新建场景",
       type: "场景",
       desc: "无",
+      imgUrl: "",
     };
     const getNewItem = (newItem: ItemInfo) => {
       item.name = newItem.name;
@@ -94,7 +101,13 @@ export default function EditorTop() {
               onClick={() => {
                 localStorage.removeItem("camera");
                 localStorage.removeItem("scene");
-                setScene(new Scene());
+                const newScene = new Scene();
+                setScene(newScene);
+                addGridHelper();
+                dispatchScene({
+                  type: "setScene",
+                  payload: newScene,
+                });
               }}
             >
               <i className={setClassName("plus-square")}></i> 新建场景
