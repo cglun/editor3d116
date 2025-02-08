@@ -3,6 +3,7 @@ import { createRootRoute } from "@tanstack/react-router";
 import { initScene, MyContext } from "../app/MyContext";
 import { reducerScene } from "../app/reducer";
 import Editor from "../component/Editor/Index";
+
 export const Route = createRootRoute({
   component: RootComponent,
 });

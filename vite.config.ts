@@ -13,7 +13,7 @@ export default defineConfig({
       filename: "remoteEntry.js",
       exposes: {
         "./Viewer3d": "./src/Viewer3d/Viewer3d.tsx",
-        "./init3d105": "./src/three/init3d105.ts",
+        "./init3dViewer": "./src/three/init3dViewer.ts",
         //  "./Index": "./src/Hook.tsx",
       },
       shared: [
@@ -30,12 +30,13 @@ export default defineConfig({
       // import "bootstrap-icons/font/bootstrap-icons.css";
     }),
   ],
+  //base: "./",
   build: {
     modulePreload: false,
     target: "esnext",
     minify: false,
     cssCodeSplit: false,
-    outDir: "dist",
+    outDir: "editor3d",
     assetsDir: "assets",
   },
   server: {

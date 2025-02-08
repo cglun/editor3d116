@@ -50,9 +50,9 @@ export default function EditorForm({
           variant={getButtonColor()}
           onClick={() => {
             const imgBase64 = takeScreenshot(300, 300);
-            const _item = { ...item, imgUrl: imgBase64 };
-            _setItem(_item);
-            getNewItem(_item);
+            const __item = { ...item, imgUrl: imgBase64, name: _item.name };
+            _setItem(__item);
+            getNewItem(__item);
             Toast3d("截图成功");
           }}
         >

@@ -61,10 +61,7 @@ export default function createScene(node: HTMLDivElement): void {
   renderer = new WebGLRenderer();
   renderer.shadowMap.enabled = true;
   renderer.setSize(node.offsetWidth, node.offsetHeight);
-
   scene = new Scene();
-  scene.userData.isSelected = false;
-
   node.appendChild(renderer.domElement);
   controls = new OrbitControls(camera, renderer.domElement);
 
@@ -89,11 +86,7 @@ export function getCamera() {
   return camera;
 }
 
-export function getRenderer() {
-  return renderer;
-}
-
-export function addGlb(update: void): void {
+export function addGlb(): void {
   const dracoLoader = new DRACOLoader();
   dracoLoader.setDecoderPath("/common/js/draco/gltf/");
   //const loader = new GLTFLoader(new LoadingManager());
@@ -107,7 +100,6 @@ export function addGlb(update: void): void {
       scene.children.push(element);
     }
     //scene.add(data.scene);
-    update;
   });
 }
 export function addGridHelper() {
@@ -126,15 +118,18 @@ export function getScene(): Scene {
 export function addCube() {
   const geometry = new BoxGeometry(1, 1, 1);
   const material = new MeshBasicMaterial({ color: 0x00ff00 });
+
   const cube = new Mesh(geometry, material);
+  cube.name = "立方体";
   scene.add(cube);
+}
+export function getRenderer() {
+  return renderer;
 }
 
 // 截图,返回图片的base64
 export function takeScreenshot(width: number, height: number): string {
   renderer.setSize(width, height);
-  // camera = getCamera();
-  debugger;
   camera.aspect = 1;
   renderer.render(scene, camera);
   const screenshot = renderer.domElement.toDataURL("image/png");

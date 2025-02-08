@@ -87,7 +87,11 @@ function ItemInfoCard(props: Props) {
         return (
           <Card className="ms-2 mt-2" key={index}>
             <Card.Header style={{ width: "6rem" }} title={item.name}>
-              {item.name}
+              {item.name.trim() === "" ? (
+                <span className="text-warning"> 未命名</span>
+              ) : (
+                item.name
+              )}
             </Card.Header>
             <Card.Body className="d-flex flex-column text-center">
               {item.imgUrl.trim() !== "" ? (
