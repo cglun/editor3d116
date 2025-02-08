@@ -25,9 +25,7 @@ let scene: Scene,
 
 export function animate() {
   requestAnimationFrame(animate);
-
   controls.update();
-
   renderer.render(scene, camera);
 }
 
@@ -58,6 +56,7 @@ export default function createScene(node: HTMLDivElement): void {
   );
 
   camera.position.set(-5, 5, 8);
+  camera.name = "截图透视相机";
 
   renderer = new WebGLRenderer();
   renderer.shadowMap.enabled = true;
@@ -89,11 +88,11 @@ export function setCamera(_camera: Object3D<Object3DEventMap>) {
 
 export function addGlb(update: void): void {
   const dracoLoader = new DRACOLoader();
-  dracoLoader.setDecoderPath("/assets/js/draco/gltf/");
+  dracoLoader.setDecoderPath("/common/js/draco/gltf/");
   //const loader = new GLTFLoader(new LoadingManager());
   const loader = new GLTFLoader();
   loader.setDRACOLoader(dracoLoader);
-  loader.load("/assets/models/blender.glb", (gltf) => {
+  loader.load("/common/models/blender.glb", (gltf) => {
     const children = gltf.scene.children;
     for (let i = 0; i < children.length; i++) {
       const element = children[i];
@@ -127,6 +126,8 @@ export function addCube() {
 // 截图,返回图片的base64
 export function takeScreenshot(width: number, height: number): string {
   renderer.setSize(width, height);
+  // camera = getCamera();
+  debugger;
   camera.aspect = 1;
   renderer.render(scene, camera);
   const screenshot = renderer.domElement.toDataURL("image/png");

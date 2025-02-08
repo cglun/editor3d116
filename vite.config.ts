@@ -35,6 +35,8 @@ export default defineConfig({
     target: "esnext",
     minify: false,
     cssCodeSplit: false,
+    outDir: "dist",
+    assetsDir: "assets",
   },
   server: {
     proxy: {

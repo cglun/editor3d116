@@ -22,7 +22,6 @@ import {
   DragControls,
 } from "three/examples/jsm/Addons.js";
 import { GlbModel, UserDataType } from "../app/type";
-import { premultipliedGaussianBlur } from "three/examples/jsm/tsl/display/GaussianBlurNode.js";
 
 let scene: Scene,
   camera: PerspectiveCamera | OrthographicCamera,
@@ -174,11 +173,11 @@ export function getRenderer(): WebGLRenderer {
 
 export function addGlb(update: void): void {
   const dracoLoader = new DRACOLoader();
-  dracoLoader.setDecoderPath("/assets/js/draco/gltf/");
+  dracoLoader.setDecoderPath("/common/js/draco/gltf/");
   //const loader = new GLTFLoader(new LoadingManager());
   const loader = new GLTFLoader();
   loader.setDRACOLoader(dracoLoader);
-  loader.load("/assets/models/blender.glb", (gltf) => {
+  loader.load("/common/models/blender.glb", (gltf) => {
     const children = gltf.scene.children;
     for (let i = 0; i < children.length; i++) {
       const element = children[i];
@@ -313,6 +312,7 @@ export function setTransformControls(selectedMesh: Object3D[]) {
 // 截图,返回图片的base64
 export function takeScreenshot(): string {
   renderer.setSize(300, 300);
+  camera = perspectiveCamera;
   camera.aspect = 1;
   renderer.render(scene, camera);
   const screenshot = renderer.domElement.toDataURL("image/png");

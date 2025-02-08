@@ -90,7 +90,7 @@ function ItemInfoCard(props: Props) {
               {item.name}
             </Card.Header>
             <Card.Body className="d-flex flex-column text-center">
-              {item.imgUrl ? (
+              {item.imgUrl.trim() !== "" ? (
                 <Card.Img src={item.imgUrl} variant="top" />
               ) : (
                 <i className="bi bi-image" style={{ fontSize: "4rem" }}></i>

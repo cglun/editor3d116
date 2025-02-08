@@ -87,7 +87,7 @@ export default function EditorTop() {
     <>
       <Row>
         <Col>
-          <Image src="/assets/images/logo.png" />
+          <Image src="/common/images/logo.png" />
           <Button variant={themeColor} size="sm" onClick={handleShow}>
             <i className={setClassName("bi me-1 bi-badge-3d")}></i>切换场景
           </Button>
