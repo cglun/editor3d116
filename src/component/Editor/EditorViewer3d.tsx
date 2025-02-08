@@ -2,15 +2,18 @@ import React, { memo, useContext, useEffect, useRef } from "react";
 
 import { MyContext } from "../../app/MyContext";
 import createScene, {
+  getCamera,
+  getRenderer,
   getScene,
   getTransfControls,
   setCameraType,
-} from "../../three/init3d116"; // 初始化
+} from "../../three/init3dEditor"; // 初始化
 import { Button, ButtonGroup } from "react-bootstrap";
 import { getThemeColor } from "../../app/config";
 import { TransformControlsMode } from "three/examples/jsm/Addons.js";
 import { Object3D, Vector3 } from "three";
 import { setClassName } from "../../app/utils";
+import { onWindowResize } from "../../three/utils";
 
 function EditorViewer3d() {
   const editorCanvas: React.RefObject<HTMLDivElement> =
@@ -25,8 +28,14 @@ function EditorViewer3d() {
       type: "setScene",
       payload: getScene().clone(),
     });
+    window.addEventListener("resize", () =>
+      onWindowResize(editorCanvas, getCamera(), getRenderer())
+    );
     return () => {
       editorCanvas.current?.children[0].remove();
+      window.removeEventListener("resize", () =>
+        onWindowResize(editorCanvas, getCamera(), getRenderer())
+      );
     };
   }, []);
   const buttonColor = getThemeColor();

@@ -1,7 +1,7 @@
 import { Scene } from "three";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { Button } from "react-bootstrap";
-import { getScene, setScene } from "../three/init3d116";
+import { getScene, setScene } from "../three/init3dEditor";
 import { getThemeColor } from "../app/config";
 
 export const Route = createLazyFileRoute("/mark")({

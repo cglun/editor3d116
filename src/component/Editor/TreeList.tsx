@@ -8,7 +8,7 @@ import { Object3D, Object3DEventMap } from "three";
 import ModalConfirm3d from "../common/ModalConfirm3d";
 import AlertBase from "../common/AlertBase";
 import Toast3d from "../common/Toast3d";
-import { getScene, setTransformControls } from "../../three/init3d116";
+import { getScene, setTransformControls } from "../../three/init3dEditor";
 import { MyContext } from "../../app/MyContext";
 
 const TreeNode = ({

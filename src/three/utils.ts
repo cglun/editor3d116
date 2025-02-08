@@ -13,7 +13,7 @@ import createScene, {
   getScene,
   setCamera,
   setScene,
-} from "./init3d116";
+} from "./init3dEditor";
 import { runScript } from "./scriptDev";
 
 export function getObjectNameByName(object3D: Object3D): string {
@@ -110,7 +110,7 @@ export function init3d(canvas: React.RefObject<HTMLDivElement>) {
     //canvas.current?.removeEventListener("click", onPointerClick);
   };
 }
-function onWindowResize(
+export function onWindowResize(
   canvas: React.RefObject<HTMLDivElement>,
   camera: PerspectiveCamera,
   renderer: WebGLRenderer

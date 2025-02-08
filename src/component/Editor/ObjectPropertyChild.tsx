@@ -7,7 +7,7 @@ import Card from "react-bootstrap/esm/Card";
 import InputGroup from "react-bootstrap/esm/InputGroup";
 import { getObjectNameByName } from "../../three/utils";
 import ButtonGroup from "react-bootstrap/esm/ButtonGroup";
-import { getScene } from "../../three/init3d116";
+import { getScene } from "../../three/init3dEditor";
 import { MyContext } from "../../app/MyContext";
 import AlertBase from "../common/AlertBase";
 import { APP_COLOR } from "../../app/type";

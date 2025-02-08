@@ -9,7 +9,7 @@ import Viewer3d from "../../viewer3d/Viewer3d";
 import Toast3d from "./Toast3d";
 import { getButtonColor } from "../../app/config";
 import { setClassName } from "../../app/utils";
-import { takeScreenshot } from "../../three/init3d105";
+import { takeScreenshot } from "../../three/init3dViewer";
 
 // interface EditorFormProps {
 //   item: ItemInfo;

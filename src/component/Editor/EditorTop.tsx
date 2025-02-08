@@ -24,7 +24,7 @@ import {
   getCamera,
   getScene,
   setScene,
-} from "../../three/init3d116";
+} from "../../three/init3dEditor";
 import { MyContext } from "../../app/MyContext";
 
 export default function EditorTop() {

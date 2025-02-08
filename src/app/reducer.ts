@@ -1,17 +1,17 @@
-import { Scene116, Toast } from './MyContext';
+import { EditorScene, Toast } from "./MyContext";
 
 export default function reducerToast(toast: Toast, action: Toast): any {
   switch (action.type) {
-    case 'toast':
+    case "toast":
       return { ...toast, toastBody: { ...action.toastBody } };
     default:
       return toast;
   }
 }
 
-export function reducerScene(scene: Scene116, action: Scene116): any {
+export function reducerScene(scene: EditorScene, action: EditorScene): any {
   switch (action.type) {
-    case 'setScene':
+    case "setScene":
       return { ...scene, payload: { ...action.payload } };
     default:
       return scene;

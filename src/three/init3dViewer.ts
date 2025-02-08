@@ -85,6 +85,13 @@ export function setCamera(_camera: Object3D<Object3DEventMap>) {
   camera.position.y = _camera.position.y;
   camera.position.z = _camera.position.z;
 }
+export function getCamera() {
+  return camera;
+}
+
+export function getRenderer() {
+  return renderer;
+}
 
 export function addGlb(update: void): void {
   const dracoLoader = new DRACOLoader();

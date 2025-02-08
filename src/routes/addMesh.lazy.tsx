@@ -12,7 +12,7 @@ import {
   Object3D,
   PlaneGeometry,
 } from "three";
-import { addGlb, getScene, takeScreenshot } from "../three/init3d116";
+import { addGlb, getScene, takeScreenshot } from "../three/init3dEditor";
 
 import { useContext, useState } from "react";
 import { MyContext } from "../app/MyContext";
