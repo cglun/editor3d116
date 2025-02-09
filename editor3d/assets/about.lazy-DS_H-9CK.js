@@ -1,8 +1,8 @@
-import { j as jsxRuntimeExports } from './__federation_expose_Viewer3d-BCRozzVR.js';
-import { c as createLazyFileRoute, L as ListGroup, b as ListGroupItem, B as Button, g as getThemeColor, s as setClassName, A as AlertBase } from './index-CyFBSHEy.js';
-import { A as APP_COLOR } from './__federation_expose_Init3dViewer-BtTbt1Ug.js';
+import { j as jsxRuntimeExports } from './__federation_expose_Viewer3d-DuFPoqtD.js';
+import { b as createLazyFileRoute, L as ListGroup, h as ListGroupItem, B as Button, e as getThemeColor, s as setClassName, A as AlertBase } from './index-EAKGt_3N.js';
+import { A as APP_COLOR } from './__federation_expose_Init3dViewer-U8DSWyuG.js';
 
-const Route = createLazyFileRoute("/about")({
+const Route = createLazyFileRoute("/editor3d/about")({
   component: RouteComponent
 });
 function RouteComponent() {

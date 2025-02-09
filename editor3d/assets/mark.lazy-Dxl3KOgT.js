@@ -1,8 +1,8 @@
-import { j as jsxRuntimeExports, s as setScene, b as getScene } from './__federation_expose_Viewer3d-BCRozzVR.js';
-import { c as createLazyFileRoute, B as Button, g as getThemeColor } from './index-CyFBSHEy.js';
-import { S as Scene } from './__federation_expose_Init3dViewer-BtTbt1Ug.js';
+import { j as jsxRuntimeExports, s as setScene, b as getScene } from './__federation_expose_Viewer3d-DuFPoqtD.js';
+import { b as createLazyFileRoute, B as Button, e as getThemeColor } from './index-EAKGt_3N.js';
+import { S as Scene } from './__federation_expose_Init3dViewer-U8DSWyuG.js';
 
-const Route = createLazyFileRoute("/mark")({
+const Route = createLazyFileRoute("/editor3d/mark")({
   component: RouteComponent
 });
 function RouteComponent() {

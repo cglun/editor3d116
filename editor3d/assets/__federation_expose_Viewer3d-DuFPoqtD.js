@@ -1,6 +1,6 @@
 import { importShared } from './__federation_fn_import-DkmQLHYr.js';
 import { r as requireReact } from './index-fT0rZ_0F.js';
-import createScene$1, { R as Raycaster, V as Vector3, a as Controls, Q as Quaternion, M as Matrix4, O as Object3D, b as MeshBasicMaterial, L as LineBasicMaterial, c as CylinderGeometry, B as BoxGeometry, d as BufferGeometry, e as Float32BufferAttribute, f as Mesh, g as OctahedronGeometry, h as Line, i as SphereGeometry, T as TorusGeometry, P as PlaneGeometry, j as DoubleSide, E as Euler, k as DRACOLoader, G as GLTFLoader, U as UserDataType, l as PerspectiveCamera, m as OrthographicCamera, W as WebGLRenderer, S as Scene, n as OrbitControls, o as DirectionalLight, p as MOUSE, q as GridHelper, r as Vector2, s as BoxHelper, getRenderer as getRenderer$1, getCamera as getCamera$1 } from './__federation_expose_Init3dViewer-BtTbt1Ug.js';
+import createScene$1, { R as Raycaster, V as Vector3, a as Controls, Q as Quaternion, M as Matrix4, O as Object3D, b as MeshBasicMaterial, L as LineBasicMaterial, c as CylinderGeometry, B as BoxGeometry, d as BufferGeometry, e as Float32BufferAttribute, f as Mesh, g as OctahedronGeometry, h as Line, i as SphereGeometry, T as TorusGeometry, P as PlaneGeometry, j as DoubleSide, E as Euler, k as DRACOLoader, G as GLTFLoader, U as UserDataType, l as PerspectiveCamera, m as OrthographicCamera, W as WebGLRenderer, S as Scene, n as OrbitControls, o as DirectionalLight, p as MOUSE, q as GridHelper, r as Vector2, s as BoxHelper, getRenderer as getRenderer$1, getCamera as getCamera$1 } from './__federation_expose_Init3dViewer-U8DSWyuG.js';
 
 var jsxRuntime = {exports: {}};
 
@@ -1756,10 +1756,10 @@ function getRenderer() {
 }
 function addGlb(update) {
   const dracoLoader = new DRACOLoader();
-  dracoLoader.setDecoderPath("/common/js/draco/gltf/");
+  dracoLoader.setDecoderPath("/static/js/draco/gltf/");
   const loader = new GLTFLoader();
   loader.setDRACOLoader(dracoLoader);
-  loader.load("/common/models/blender.glb", (gltf) => {
+  loader.load("/static/models/blender.glb", (gltf) => {
     const children = gltf.scene.children;
     for (let i = 0; i < children.length; i++) {
       const element = children[i];

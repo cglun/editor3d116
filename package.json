@@ -7,8 +7,9 @@
   "main": "main.tsx",
   "type": "module",
   "scripts": {
-    "dev": "vite --port 116 --strictPort",
-    "build": "tsc -b && vite build", 
+    "dev": "vite --port 105 --strictPort",
+    "build": "tsc -b && vite build ", 
+    "build2OutsideProject": "tsc -b && vite build --emptyOutDir", 
     "lint": "eslint .",
     "preview": "vite preview --port 116 --strictPort"
   },

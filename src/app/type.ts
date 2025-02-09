@@ -1,18 +1,5 @@
 import { Euler, Vector3 } from "three";
 
-interface accessToken {
-  data: string;
-  type: string;
-}
-
-export interface AppConfig {
-  SERVER: string;
-  projectId: string;
-  TOKEN: string;
-  accessToken: accessToken;
-  currentProjectID: string;
-}
-
 export interface CanvasNode {
   width: number;
   height: number;

@@ -1,10 +1,10 @@
 import { importShared } from './__federation_fn_import-DkmQLHYr.js';
-import { j as jsxRuntimeExports, m as addGlb, b as getScene, t as takeScreenshot } from './__federation_expose_Viewer3d-BCRozzVR.js';
-import { c as createLazyFileRoute, M as MyContext, C as Card, s as setClassName, a as ButtonGroup, B as Button, I as Image, g as getThemeColor } from './index-CyFBSHEy.js';
-import { B as BoxGeometry, t as MeshLambertMaterial, f as Mesh, u as AmbientLight, P as PlaneGeometry, v as Group, o as DirectionalLight } from './__federation_expose_Init3dViewer-BtTbt1Ug.js';
+import { j as jsxRuntimeExports, m as addGlb, b as getScene, t as takeScreenshot } from './__federation_expose_Viewer3d-DuFPoqtD.js';
+import { b as createLazyFileRoute, M as MyContext, C as Card, s as setClassName, a as ButtonGroup, B as Button, f as Image, e as getThemeColor } from './index-EAKGt_3N.js';
+import { B as BoxGeometry, t as MeshLambertMaterial, f as Mesh, u as AmbientLight, P as PlaneGeometry, v as Group, o as DirectionalLight } from './__federation_expose_Init3dViewer-U8DSWyuG.js';
 
 const {useContext,useState} = await importShared('react');
-const Route = createLazyFileRoute("/addMesh")({
+const Route = createLazyFileRoute("/editor3d/addMesh")({
   component: RouteComponent
 });
 function RouteComponent() {

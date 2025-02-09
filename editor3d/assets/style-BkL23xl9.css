@@ -12062,8 +12062,8 @@ textarea.form-control-lg {
 @font-face {
   font-display: block;
   font-family: "bootstrap-icons";
-  src: url("/assets/bootstrap-icons-BtvjY1KL.woff2?dd67030699838ea613ee6dbda90effa6") format("woff2"),
-url("/assets/bootstrap-icons-BOrJxbIo.woff?dd67030699838ea613ee6dbda90effa6") format("woff");
+  src: url("/editor3d/assets/bootstrap-icons-BtvjY1KL.woff2?dd67030699838ea613ee6dbda90effa6") format("woff2"),
+url("/editor3d/assets/bootstrap-icons-BOrJxbIo.woff?dd67030699838ea613ee6dbda90effa6") format("woff");
 }
 
 .bi::before,

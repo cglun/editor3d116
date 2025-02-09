@@ -1,6 +1,6 @@
 import { importShared } from './__federation_fn_import-DkmQLHYr.js';
-import { j as jsxRuntimeExports } from './__federation_expose_Viewer3d-BCRozzVR.js';
-import { u as useBootstrapPrefix, d as classNames, m as map, e as getButtonColor, L as ListGroup, f as InputGroup, F as Form, B as Button, s as setClassName, a as ButtonGroup, T as Toast3d, c as createLazyFileRoute, t as testData2, h as ListCard } from './index-CyFBSHEy.js';
+import { j as jsxRuntimeExports } from './__federation_expose_Viewer3d-DuFPoqtD.js';
+import { u as useBootstrapPrefix, c as classNames, m as map, g as getButtonColor, L as ListGroup, I as InputGroup, F as Form, B as Button, s as setClassName, a as ButtonGroup, T as Toast3d, b as createLazyFileRoute, t as testData2, d as ListCard } from './index-EAKGt_3N.js';
 
 const React$1 = await importShared('react');
 
@@ -228,7 +228,7 @@ function UploadModel() {
 }
 
 const React = await importShared('react');
-const Route = createLazyFileRoute("/")({
+const Route = createLazyFileRoute("/editor3d/")({
   component: ModelList
 });
 function ModelList() {

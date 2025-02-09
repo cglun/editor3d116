@@ -16,67 +16,73 @@ import { Route as rootRoute } from './routes/__root'
 
 // Create Virtual Routes
 
-const MarkLazyImport = createFileRoute('/mark')()
-const AddMeshLazyImport = createFileRoute('/addMesh')()
-const AboutLazyImport = createFileRoute('/about')()
-const IndexLazyImport = createFileRoute('/')()
+const Editor3dIndexLazyImport = createFileRoute('/editor3d/')()
+const Editor3dMarkLazyImport = createFileRoute('/editor3d/mark')()
+const Editor3dAddMeshLazyImport = createFileRoute('/editor3d/addMesh')()
+const Editor3dAboutLazyImport = createFileRoute('/editor3d/about')()
 
 // Create/Update Routes
 
-const MarkLazyRoute = MarkLazyImport.update({
-  id: '/mark',
-  path: '/mark',
+const Editor3dIndexLazyRoute = Editor3dIndexLazyImport.update({
+  id: '/editor3d/',
+  path: '/editor3d/',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/mark.lazy').then((d) => d.Route))
+} as any).lazy(() =>
+  import('./routes/editor3d/index.lazy').then((d) => d.Route),
+)
 
-const AddMeshLazyRoute = AddMeshLazyImport.update({
-  id: '/addMesh',
-  path: '/addMesh',
+const Editor3dMarkLazyRoute = Editor3dMarkLazyImport.update({
+  id: '/editor3d/mark',
+  path: '/editor3d/mark',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/addMesh.lazy').then((d) => d.Route))
+} as any).lazy(() => import('./routes/editor3d/mark.lazy').then((d) => d.Route))
 
-const AboutLazyRoute = AboutLazyImport.update({
-  id: '/about',
-  path: '/about',
+const Editor3dAddMeshLazyRoute = Editor3dAddMeshLazyImport.update({
+  id: '/editor3d/addMesh',
+  path: '/editor3d/addMesh',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
+} as any).lazy(() =>
+  import('./routes/editor3d/addMesh.lazy').then((d) => d.Route),
+)
 
-const IndexLazyRoute = IndexLazyImport.update({
-  id: '/',
-  path: '/',
+const Editor3dAboutLazyRoute = Editor3dAboutLazyImport.update({
+  id: '/editor3d/about',
+  path: '/editor3d/about',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+} as any).lazy(() =>
+  import('./routes/editor3d/about.lazy').then((d) => d.Route),
+)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexLazyImport
+    '/editor3d/about': {
+      id: '/editor3d/about'
+      path: '/editor3d/about'
+      fullPath: '/editor3d/about'
+      preLoaderRoute: typeof Editor3dAboutLazyImport
       parentRoute: typeof rootRoute
     }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutLazyImport
+    '/editor3d/addMesh': {
+      id: '/editor3d/addMesh'
+      path: '/editor3d/addMesh'
+      fullPath: '/editor3d/addMesh'
+      preLoaderRoute: typeof Editor3dAddMeshLazyImport
       parentRoute: typeof rootRoute
     }
-    '/addMesh': {
-      id: '/addMesh'
-      path: '/addMesh'
-      fullPath: '/addMesh'
-      preLoaderRoute: typeof AddMeshLazyImport
+    '/editor3d/mark': {
+      id: '/editor3d/mark'
+      path: '/editor3d/mark'
+      fullPath: '/editor3d/mark'
+      preLoaderRoute: typeof Editor3dMarkLazyImport
       parentRoute: typeof rootRoute
     }
-    '/mark': {
-      id: '/mark'
-      path: '/mark'
-      fullPath: '/mark'
-      preLoaderRoute: typeof MarkLazyImport
+    '/editor3d/': {
+      id: '/editor3d/'
+      path: '/editor3d'
+      fullPath: '/editor3d'
+      preLoaderRoute: typeof Editor3dIndexLazyImport
       parentRoute: typeof rootRoute
     }
   }
@@ -85,48 +91,57 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexLazyRoute
-  '/about': typeof AboutLazyRoute
-  '/addMesh': typeof AddMeshLazyRoute
-  '/mark': typeof MarkLazyRoute
+  '/editor3d/about': typeof Editor3dAboutLazyRoute
+  '/editor3d/addMesh': typeof Editor3dAddMeshLazyRoute
+  '/editor3d/mark': typeof Editor3dMarkLazyRoute
+  '/editor3d': typeof Editor3dIndexLazyRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexLazyRoute
-  '/about': typeof AboutLazyRoute
-  '/addMesh': typeof AddMeshLazyRoute
-  '/mark': typeof MarkLazyRoute
+  '/editor3d/about': typeof Editor3dAboutLazyRoute
+  '/editor3d/addMesh': typeof Editor3dAddMeshLazyRoute
+  '/editor3d/mark': typeof Editor3dMarkLazyRoute
+  '/editor3d': typeof Editor3dIndexLazyRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/': typeof IndexLazyRoute
-  '/about': typeof AboutLazyRoute
-  '/addMesh': typeof AddMeshLazyRoute
-  '/mark': typeof MarkLazyRoute
+  '/editor3d/about': typeof Editor3dAboutLazyRoute
+  '/editor3d/addMesh': typeof Editor3dAddMeshLazyRoute
+  '/editor3d/mark': typeof Editor3dMarkLazyRoute
+  '/editor3d/': typeof Editor3dIndexLazyRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/addMesh' | '/mark'
+  fullPaths:
+    | '/editor3d/about'
+    | '/editor3d/addMesh'
+    | '/editor3d/mark'
+    | '/editor3d'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/addMesh' | '/mark'
-  id: '__root__' | '/' | '/about' | '/addMesh' | '/mark'
+  to: '/editor3d/about' | '/editor3d/addMesh' | '/editor3d/mark' | '/editor3d'
+  id:
+    | '__root__'
+    | '/editor3d/about'
+    | '/editor3d/addMesh'
+    | '/editor3d/mark'
+    | '/editor3d/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  IndexLazyRoute: typeof IndexLazyRoute
-  AboutLazyRoute: typeof AboutLazyRoute
-  AddMeshLazyRoute: typeof AddMeshLazyRoute
-  MarkLazyRoute: typeof MarkLazyRoute
+  Editor3dAboutLazyRoute: typeof Editor3dAboutLazyRoute
+  Editor3dAddMeshLazyRoute: typeof Editor3dAddMeshLazyRoute
+  Editor3dMarkLazyRoute: typeof Editor3dMarkLazyRoute
+  Editor3dIndexLazyRoute: typeof Editor3dIndexLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexLazyRoute: IndexLazyRoute,
-  AboutLazyRoute: AboutLazyRoute,
-  AddMeshLazyRoute: AddMeshLazyRoute,
-  MarkLazyRoute: MarkLazyRoute,
+  Editor3dAboutLazyRoute: Editor3dAboutLazyRoute,
+  Editor3dAddMeshLazyRoute: Editor3dAddMeshLazyRoute,
+  Editor3dMarkLazyRoute: Editor3dMarkLazyRoute,
+  Editor3dIndexLazyRoute: Editor3dIndexLazyRoute,
 }
 
 export const routeTree = rootRoute
@@ -139,23 +154,23 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/",
-        "/about",
-        "/addMesh",
-        "/mark"
+        "/editor3d/about",
+        "/editor3d/addMesh",
+        "/editor3d/mark",
+        "/editor3d/"
       ]
     },
-    "/": {
-      "filePath": "index.lazy.tsx"
+    "/editor3d/about": {
+      "filePath": "editor3d/about.lazy.tsx"
     },
-    "/about": {
-      "filePath": "about.lazy.tsx"
+    "/editor3d/addMesh": {
+      "filePath": "editor3d/addMesh.lazy.tsx"
     },
-    "/addMesh": {
-      "filePath": "addMesh.lazy.tsx"
+    "/editor3d/mark": {
+      "filePath": "editor3d/mark.lazy.tsx"
     },
-    "/mark": {
-      "filePath": "mark.lazy.tsx"
+    "/editor3d/": {
+      "filePath": "editor3d/index.lazy.tsx"
     }
   }
 }

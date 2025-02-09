@@ -30,21 +30,27 @@ export default defineConfig({
       // import "bootstrap-icons/font/bootstrap-icons.css";
     }),
   ],
-  //base: "./",
+  base: "/editor3d/",
   build: {
     modulePreload: false,
     target: "esnext",
     minify: false,
     cssCodeSplit: false,
-    outDir: "editor3d",
+    outDir: "../datav_vr_2d/editor3d",
+
+    // outDir: "editor3d",
     assetsDir: "assets",
   },
   server: {
     proxy: {
       "/api": {
-        target: "https://www.baidu.com",
+        target: "http://localhost:8042",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ""),
+        rewrite: (path: string) => path.replace(/^\/api/, ""),
+      },
+      "/file": {
+        target: "http://localhost:8042",
+        changeOrigin: true,
       },
     },
   },

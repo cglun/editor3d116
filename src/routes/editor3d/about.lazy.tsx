@@ -1,13 +1,14 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
-import { Button, ListGroup, ListGroupItem } from "react-bootstrap";
-import { setClassName } from "../app/utils";
-import { getThemeColor } from "../app/config";
-import AlertBase from "../component/common/AlertBase";
-import { APP_COLOR } from "../app/type";
+import { createLazyFileRoute } from '@tanstack/react-router'
+import { Button, ListGroup, ListGroupItem } from 'react-bootstrap'
+import { setClassName } from '../../app/utils'
+import { getThemeColor } from '../../app/config'
 
-export const Route = createLazyFileRoute("/about")({
+import { APP_COLOR } from '../../app/type'
+import AlertBase from '../../component/common/AlertBase'
+
+export const Route = createLazyFileRoute('/editor3d/about')({
   component: RouteComponent,
-});
+})
 function RouteComponent() {
   // const handleTest = () => {
   //   const sceneJson = scene.toJSON();
@@ -27,7 +28,7 @@ function RouteComponent() {
         </a>
         <a href="https://3d.oklun.com" className="ms-2" target="_blank">
           <Button variant={getThemeColor()}>
-            <i className={setClassName("eye")}></i> 预览APP
+            <i className={setClassName('eye')}></i> 预览APP
           </Button>
         </a>
       </ListGroupItem>
@@ -36,11 +37,11 @@ function RouteComponent() {
           <AlertBase
             type={APP_COLOR.Success}
             text={
-              "【名称：3d116】【版本：1.1.6】【制作：李论】【先定个小目标，活个116岁】"
+              '【名称：3d116】【版本：1.1.6】【制作：李论】【先定个小目标，活个116岁】'
             }
           ></AlertBase>
         </div>
       </ListGroupItem>
     </ListGroup>
-  );
+  )
 }

@@ -1,32 +1,43 @@
-import { Link, Outlet } from "@tanstack/react-router";
+import { useNavigate, Outlet, useLocation } from "@tanstack/react-router";
 
 import { Nav } from "react-bootstrap";
 import { setClassName } from "../../app/utils";
 
 export default function BottomNav() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  function handleSelect(eventKey: string | null) {
+    if (eventKey !== null) {
+      navigate({ to: eventKey });
+    }
+  }
   return (
     <>
-      <Nav variant="tabs" defaultActiveKey="/">
+      <Nav
+        variant="tabs"
+        // activeKey="/editor3d"
+        defaultActiveKey={location.href}
+        onSelect={(eventKey) => handleSelect(eventKey)}
+      >
         <Nav.Item>
-          <Link to="/" className="nav-link">
+          <Nav.Link eventKey="/editor3d">
             <i className={setClassName("box")}></i> 模型列表
-          </Link>
+          </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Link to="/addMesh" className="nav-link">
+          <Nav.Link eventKey="/editor3d/addMesh">
             <i className={setClassName("patch-plus")}></i> 添加网格
-          </Link>
+          </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Link to="/mark" className="nav-link">
+          <Nav.Link eventKey="/editor3d/mark">
             <i className={setClassName("pin-map")}></i> 点位标注
-          </Link>
+          </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Link to="/about" className="nav-link">
-            {/* <i className={setClassName('dash-circle')}></i> 关于 */}
+          <Nav.Link eventKey="/editor3d/about">
             <i className={setClassName("info-circle")}></i> 关于
-          </Link>
+          </Nav.Link>
         </Nav.Item>
       </Nav>
       <Outlet />

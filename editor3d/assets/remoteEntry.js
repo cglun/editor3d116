@@ -2,11 +2,11 @@ const currentImports = {};
       const exportSet = new Set(['Module', '__esModule', 'default', '_export_sfc']);
       let moduleMap = {
 "./Viewer3d":()=>{
-      dynamicLoadingCss(["style-Dwgz_B8V.css"], false, './Viewer3d');
-      return __federation_import('./__federation_expose_Viewer3d-BCRozzVR.js').then(module =>Object.keys(module).every(item => exportSet.has(item)) ? () => module.default : () => module)},
+      dynamicLoadingCss(["style-BkL23xl9.css"], false, './Viewer3d');
+      return __federation_import('/editor3d/assets/__federation_expose_Viewer3d-DuFPoqtD.js').then(module =>Object.keys(module).every(item => exportSet.has(item)) ? () => module.default : () => module)},
 "./init3dViewer":()=>{
-      dynamicLoadingCss(["style-Dwgz_B8V.css"], false, './init3dViewer');
-      return __federation_import('./__federation_expose_Init3dViewer-BtTbt1Ug.js').then(module =>Object.keys(module).every(item => exportSet.has(item)) ? () => module.default : () => module)},};
+      dynamicLoadingCss(["style-BkL23xl9.css"], false, './init3dViewer');
+      return __federation_import('/editor3d/assets/__federation_expose_Init3dViewer-U8DSWyuG.js').then(module =>Object.keys(module).every(item => exportSet.has(item)) ? () => module.default : () => module)},};
       const seen = {};
       const dynamicLoadingCss = (cssFilePaths, dontAppendStylesToHead, exposeItemName) => {
         const metaUrl = import.meta.url;
@@ -16,7 +16,7 @@ const currentImports = {};
         }
 
         const curUrl = metaUrl.substring(0, metaUrl.lastIndexOf('remoteEntry.js'));
-        const base = '/';
+        const base = '/editor3d/';
         'assets';
 
         cssFilePaths.forEach(cssPath => {

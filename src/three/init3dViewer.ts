@@ -88,11 +88,11 @@ export function getCamera() {
 
 export function addGlb(): void {
   const dracoLoader = new DRACOLoader();
-  dracoLoader.setDecoderPath("/common/js/draco/gltf/");
+  dracoLoader.setDecoderPath("/static/js/draco/gltf/");
   //const loader = new GLTFLoader(new LoadingManager());
   const loader = new GLTFLoader();
   loader.setDRACOLoader(dracoLoader);
-  loader.load("/common/models/blender.glb", (gltf) => {
+  loader.load("/static/models/blender.glb", (gltf) => {
     const children = gltf.scene.children;
     for (let i = 0; i < children.length; i++) {
       const element = children[i];

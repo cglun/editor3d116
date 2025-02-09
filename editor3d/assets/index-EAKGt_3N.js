@@ -1,9 +1,9 @@
 import { importShared } from './__federation_fn_import-DkmQLHYr.js';
-import Viewer3d, { j as jsxRuntimeExports, s as setScene, a as addGridHelper, g as getCamera, b as getScene, c as getObjectNameByName, d as setTransformControls, e as setCamera, f as getDivElement, r as raycasterSelect, h as createScene, o as onWindowResize, i as getRenderer, k as setCameraType, l as getTransfControls } from './__federation_expose_Viewer3d-BCRozzVR.js';
+import Viewer3d, { j as jsxRuntimeExports, s as setScene, a as addGridHelper, g as getCamera, b as getScene, c as getObjectNameByName, d as setTransformControls, e as setCamera, f as getDivElement, r as raycasterSelect, h as createScene, o as onWindowResize, i as getRenderer, k as setCameraType, l as getTransfControls } from './__federation_expose_Viewer3d-DuFPoqtD.js';
 import { g as getDefaultExportFromCjs } from './_commonjsHelpers-B85MJLTf.js';
 import { r as requireReactDom } from './index-CQoTOKjm.js';
 import { r as requireReact } from './index-fT0rZ_0F.js';
-import { S as Scene, A as APP_COLOR, D as DELAY, takeScreenshot, U as UserDataType, C as Color, F as Fog, V as Vector3, O as Object3D } from './__federation_expose_Init3dViewer-BtTbt1Ug.js';
+import { S as Scene, A as APP_COLOR, D as DELAY, takeScreenshot, U as UserDataType, C as Color, F as Fog, V as Vector3, O as Object3D } from './__federation_expose_Init3dViewer-U8DSWyuG.js';
 
 var client = {};
 
@@ -4823,7 +4823,7 @@ function RouterProvider({ router, ...rest }) {
 const scriptRel = /* @__PURE__ */ (function detectScriptRel() {
   const relList = typeof document !== "undefined" && document.createElement("link").relList;
   return relList && relList.supports && relList.supports("modulepreload") ? "modulepreload" : "preload";
-})();const assetsURL = function(dep) { return "/"+dep };const seen = {};const __vitePreload = function preload(baseModule, deps, importerUrl) {
+})();const assetsURL = function(dep) { return "/editor3d/"+dep };const seen = {};const __vitePreload = function preload(baseModule, deps, importerUrl) {
   let promise = Promise.resolve();
   if (true && deps && deps.length > 0) {
     document.getElementsByTagName("link");
@@ -13159,28 +13159,28 @@ const testData1 = [
     name: "场景1",
     type: "场景",
     desc: "这是一个场景",
-    imgUrl: "/common/images/test.jpg"
+    imgUrl: "/editor3d/static/images/test.jpg"
   },
   {
     id: 2,
     name: "场景2",
     type: "场景",
     desc: "这是一个场景",
-    imgUrl: "/common/images/test.jpg"
+    imgUrl: "/editor3d/static/images/test.jpg"
   },
   {
     id: 3,
     name: "场景3",
     type: "场景",
     desc: "这是一个场景",
-    imgUrl: "/common/images/test.jpg"
+    imgUrl: "/editor3d/static/images/test.jpg"
   },
   {
     id: 4,
     name: "场景4",
     type: "场景",
     desc: "这是一个场景",
-    imgUrl: "/common/images/test.jpg"
+    imgUrl: "/editor3d/static/images/test.jpg"
   },
   {
     id: 5,
@@ -13217,21 +13217,21 @@ const testData2 = [
     name: "模型1",
     type: "模型",
     desc: "这是一个场景",
-    imgUrl: "/common/images/test.jpg"
+    imgUrl: "/editor3d/static/images/test.jpg"
   },
   {
     id: 2,
     name: "模型2",
     type: "模型",
     desc: "这是一个场景",
-    imgUrl: "/common/images/test.jpg"
+    imgUrl: "/editor3d/static/images/test.jpg"
   },
   {
     id: 3,
     name: "模型3",
     type: "模型",
     desc: "这是一个场景",
-    imgUrl: "/common/images/test.jpg"
+    imgUrl: "/editor3d/static/images/test.jpg"
   },
   {
     id: 4,
@@ -13323,7 +13323,7 @@ function EditorTop() {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs(Row, { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs(Col, { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Image$1, { src: "/common/images/logo.png" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Image$1, { src: "/editor3d/static/images/logo.png" }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { variant: themeColor, size: "sm", onClick: handleShow, children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("i", { className: setClassName("bi me-1 bi-badge-3d") }),
           "切换场景"
@@ -13451,19 +13451,19 @@ function EditorTop() {
 function BottomNav() {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs(Nav$1, { variant: "tabs", defaultActiveKey: "/", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Nav$1.Item, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Link, { to: "/", className: "nav-link", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Nav$1.Item, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Link, { to: "/editor3d", className: "nav-link", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("i", { className: setClassName("box") }),
         " 模型列表"
       ] }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Nav$1.Item, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Link, { to: "/addMesh", className: "nav-link", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Nav$1.Item, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Link, { to: "/editor3d/addMesh", className: "nav-link", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("i", { className: setClassName("patch-plus") }),
         " 添加网格"
       ] }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Nav$1.Item, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Link, { to: "/mark", className: "nav-link", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Nav$1.Item, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Link, { to: "/editor3d/mark", className: "nav-link", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("i", { className: setClassName("pin-map") }),
         " 点位标注"
       ] }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Nav$1.Item, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Link, { to: "/about", className: "nav-link", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Nav$1.Item, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Link, { to: "/editor3d/about", className: "nav-link", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("i", { className: setClassName("info-circle") }),
         " 关于"
       ] }) })
@@ -14251,35 +14251,41 @@ function RootComponent() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(MyContext.Provider, { value: { scene, dispatchScene }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Index, {}) });
 }
 
-const MarkLazyImport = createFileRoute("/mark")();
-const AddMeshLazyImport = createFileRoute("/addMesh")();
-const AboutLazyImport = createFileRoute("/about")();
-const IndexLazyImport = createFileRoute("/")();
-const MarkLazyRoute = MarkLazyImport.update({
-  id: "/mark",
-  path: "/mark",
+const Editor3dIndexLazyImport = createFileRoute("/editor3d/")();
+const Editor3dMarkLazyImport = createFileRoute("/editor3d/mark")();
+const Editor3dAddMeshLazyImport = createFileRoute("/editor3d/addMesh")();
+const Editor3dAboutLazyImport = createFileRoute("/editor3d/about")();
+const Editor3dIndexLazyRoute = Editor3dIndexLazyImport.update({
+  id: "/editor3d/",
+  path: "/editor3d/",
   getParentRoute: () => Route
-}).lazy(() => __vitePreload(() => import('./mark.lazy-47e0wsl8.js'),true?[]:undefined).then((d) => d.Route));
-const AddMeshLazyRoute = AddMeshLazyImport.update({
-  id: "/addMesh",
-  path: "/addMesh",
+}).lazy(
+  () => __vitePreload(() => import('./index.lazy-Cw5A-20W.js'),true?[]:undefined).then((d) => d.Route)
+);
+const Editor3dMarkLazyRoute = Editor3dMarkLazyImport.update({
+  id: "/editor3d/mark",
+  path: "/editor3d/mark",
   getParentRoute: () => Route
-}).lazy(() => __vitePreload(() => import('./addMesh.lazy-BJvJ6WN-.js'),true?[]:undefined).then((d) => d.Route));
-const AboutLazyRoute = AboutLazyImport.update({
-  id: "/about",
-  path: "/about",
+}).lazy(() => __vitePreload(() => import('./mark.lazy-Dxl3KOgT.js'),true?[]:undefined).then((d) => d.Route));
+const Editor3dAddMeshLazyRoute = Editor3dAddMeshLazyImport.update({
+  id: "/editor3d/addMesh",
+  path: "/editor3d/addMesh",
   getParentRoute: () => Route
-}).lazy(() => __vitePreload(() => import('./about.lazy-d9mAyZcM.js'),true?[]:undefined).then((d) => d.Route));
-const IndexLazyRoute = IndexLazyImport.update({
-  id: "/",
-  path: "/",
+}).lazy(
+  () => __vitePreload(() => import('./addMesh.lazy-DEKa2EsX.js'),true?[]:undefined).then((d) => d.Route)
+);
+const Editor3dAboutLazyRoute = Editor3dAboutLazyImport.update({
+  id: "/editor3d/about",
+  path: "/editor3d/about",
   getParentRoute: () => Route
-}).lazy(() => __vitePreload(() => import('./index.lazy-B7-VQJs_.js'),true?[]:undefined).then((d) => d.Route));
+}).lazy(
+  () => __vitePreload(() => import('./about.lazy-DS_H-9CK.js'),true?[]:undefined).then((d) => d.Route)
+);
 const rootRouteChildren = {
-  IndexLazyRoute,
-  AboutLazyRoute,
-  AddMeshLazyRoute,
-  MarkLazyRoute
+  Editor3dAboutLazyRoute,
+  Editor3dAddMeshLazyRoute,
+  Editor3dMarkLazyRoute,
+  Editor3dIndexLazyRoute
 };
 const routeTree = Route._addFileChildren(rootRouteChildren)._addFileTypes();
 
@@ -14293,4 +14299,4 @@ if (!rootElement.innerHTML) {
   );
 }
 
-export { AlertBase as A, Button as B, Card$1 as C, Form$1 as F, Image$1 as I, ListGroup$1 as L, MyContext as M, Toast3d as T, ButtonGroup as a, ListGroupItem as b, createLazyFileRoute as c, classNames as d, getButtonColor as e, InputGroup$1 as f, getThemeColor as g, ListCard as h, map as m, setClassName as s, testData2 as t, useBootstrapPrefix as u };
+export { AlertBase as A, Button as B, Card$1 as C, Form$1 as F, InputGroup$1 as I, ListGroup$1 as L, MyContext as M, Toast3d as T, ButtonGroup as a, createLazyFileRoute as b, classNames as c, ListCard as d, getThemeColor as e, Image$1 as f, getButtonColor as g, ListGroupItem as h, map as m, setClassName as s, testData2 as t, useBootstrapPrefix as u };
