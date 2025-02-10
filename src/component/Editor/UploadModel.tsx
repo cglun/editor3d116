@@ -11,14 +11,15 @@ export function UploadModel() {
   let fileRef = useRef<any>(null);
   const [curFile, setCurFile] = useState<File | null>(null);
   const [btn, setBtn] = useState<boolean>(true);
-  const [upload, setUpload] = useState<boolean>(false);
+  const [progress, setProgress] = useState<number>(100);
   function handleUpload() {
-    if (upload) {
-      Toast3d("上传中……");
-      return;
-    }
+    // if (progress < 100) {
+    //   Toast3d("上传中……");
+    //   return;
+    // }
     if (curFile) {
-      setUpload(true);
+      //上传文件
+      setProgress(30);
     }
   }
 
@@ -27,7 +28,7 @@ export function UploadModel() {
       <ListGroup.Item>
         {btn ? (
           <Form.Group controlId="formFile">
-            <Form.Label className="custom-file-upload d-flex align-items-center">
+            <Form.Label className="custom-file-progress d-flex align-items-center">
               <i
                 style={{ fontSize: "1.4rem" }}
                 className={setClassName("cloud-plus")}
@@ -54,7 +55,7 @@ export function UploadModel() {
         ) : (
           <>
             <Form.Text>{curFile?.name}</Form.Text>
-            {upload && <ProgressBar now={60} />}
+            {progress < 100 && <ProgressBar now={progress} label={progress} />}
           </>
         )}
       </ListGroup.Item>
@@ -67,7 +68,7 @@ export function UploadModel() {
             onClick={() => {
               //fileRef.current.value = "";
 
-              if (upload) {
+              if (progress) {
                 Toast3d("上传中……");
                 return;
               }

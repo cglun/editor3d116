@@ -20,6 +20,7 @@ import {
   OrbitControls,
   TransformControls,
   DragControls,
+  GLTF,
 } from "three/examples/jsm/Addons.js";
 import { GlbModel, UserDataType } from "../app/type";
 
@@ -34,7 +35,8 @@ let scene: Scene,
   divElement: HTMLDivElement,
   transfControls: TransformControls,
   transfControls1: TransformControls,
-  transfControls2: TransformControls;
+  transfControls2: TransformControls,
+  perspectiveCameraPosition: Vector3 = new Vector3(-5, 5, 8);
 
 export function animate() {
   requestAnimationFrame(animate);
@@ -68,9 +70,12 @@ export default function createScene(node: HTMLDivElement): void {
     0.1,
     1000
   );
-
   perspectiveCamera.name = "透视相机";
-  perspectiveCamera.position.set(-5, 5, 8);
+  perspectiveCamera.position.set(
+    perspectiveCameraPosition.x,
+    perspectiveCameraPosition.y,
+    perspectiveCameraPosition.z
+  );
 
   const xxx = 40;
   orthographicCamera = new OrthographicCamera(
@@ -91,11 +96,13 @@ export default function createScene(node: HTMLDivElement): void {
   scene = new Scene();
   scene.userData.isSelected = false;
   node.appendChild(renderer.domElement);
+
+  // 初始化轨道控制器
   controls1 = new OrbitControls(perspectiveCamera, renderer.domElement);
   controls2 = new OrbitControls(orthographicCamera, renderer.domElement);
-
   controls = controls1;
 
+  // 初始化变换控制器
   transfControls1 = new TransformControls(
     perspectiveCamera,
     renderer.domElement
@@ -105,12 +112,10 @@ export default function createScene(node: HTMLDivElement): void {
     renderer.domElement
   );
   transfControls = transfControls1;
-  addLight();
-  addGridHelper();
+
   animate();
 }
 
-let perspectiveCameraPosition: Vector3 = new Vector3(-5, 5, 8);
 export function setCameraType(cameraType: string, cameraUp: Vector3) {
   if (cameraType === "PerspectiveCamera") {
     const { x, y, z } = perspectiveCameraPosition;
@@ -171,21 +176,41 @@ export function getRenderer(): WebGLRenderer {
   return renderer;
 }
 
-export function addGlb(update: void): void {
+export function glbLoader() {
   const dracoLoader = new DRACOLoader();
-  dracoLoader.setDecoderPath("/static/js/draco/gltf/");
+  dracoLoader.setDecoderPath("/editor3d/static/js/draco/gltf/");
   //const loader = new GLTFLoader(new LoadingManager());
   const loader = new GLTFLoader();
   loader.setDRACOLoader(dracoLoader);
-  loader.load("/static/models/blender.glb", (gltf) => {
-    const children = gltf.scene.children;
-    for (let i = 0; i < children.length; i++) {
-      const element = children[i];
-      element.userData.type = UserDataType.GlbModel;
-      scene.children.push(element);
-    }
-    //scene.add(data.scene);
-    update;
+  return loader;
+}
+
+export function gltfToScene(gltf: GLTF) {
+  const children = gltf.scene.children;
+  for (let i = 0; i < children.length; i++) {
+    const element = children[i];
+    element.userData.type = UserDataType.GlbModel;
+    scene.children.push(element);
+  }
+}
+
+export function addGlb1(modelUrl = "/editor3d/static/models/blender.glb") {
+  const dracoLoader = new DRACOLoader();
+  dracoLoader.setDecoderPath("/editor3d/static/js/draco/gltf/");
+  //const loader = new GLTFLoader(new LoadingManager());
+  const loader = new GLTFLoader();
+  loader.setDRACOLoader(dracoLoader);
+
+  return new Promise((resolve) => {
+    loader.load(modelUrl, (gltf) => {
+      const children = gltf.scene.children;
+      for (let i = 0; i < children.length; i++) {
+        const element = children[i];
+        element.userData.type = UserDataType.GlbModel;
+        scene.children.push(element);
+      }
+      resolve(gltf);
+    });
   });
 }
 
@@ -197,7 +222,8 @@ export function sceneSerialization(
   const _scene = scene.clone();
   const models: GlbModel[] = [];
   _scene.children.forEach((child) => {
-    if (child.userData.type === "GlbModel") {
+    const childType = child.userData.type;
+    if (childType === UserDataType.GlbModel) {
       const model: GlbModel = {
         id: child.id,
         name: child.name,
@@ -206,9 +232,18 @@ export function sceneSerialization(
         scale: child.scale,
       };
       models.push(model);
+    }
+    if (
+      childType === UserDataType.GlbModel ||
+      childType === UserDataType.BoxHelper ||
+      childType === UserDataType.TransformHelper ||
+      childType === UserDataType.GridHelper
+    ) {
       child.parent?.remove(child);
+      console.log("删除了", child.name);
     }
   });
+
   const sceneJson = _scene.toJSON();
   const cameraJson = camera.toJSON();
   const sceneJsonString = JSON.stringify(sceneJson);

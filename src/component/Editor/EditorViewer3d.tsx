@@ -2,6 +2,7 @@ import React, { memo, useContext, useEffect, useRef } from "react";
 
 import { MyContext } from "../../app/MyContext";
 import createScene, {
+  addGridHelper,
   getCamera,
   getRenderer,
   getScene,
@@ -22,6 +23,7 @@ function EditorViewer3d() {
   useEffect(() => {
     if (editorCanvas.current) {
       createScene(editorCanvas.current);
+      addGridHelper();
     }
 
     dispatchScene({
