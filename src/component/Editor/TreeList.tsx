@@ -23,13 +23,9 @@ const TreeNode = ({
   onToggle: (uuid: string, isExpanded: boolean) => void;
   resetTextWarning: (targetItem: Object3D) => void;
 }) => {
-  // if (node.hasOwnProperty("isTransformControlsRoot")) {
-  //   const nodeA = node as any;
-  //   if (nodeA.isTransformControlsRoot) {
-  //     return;
-  //   }
-  // }
-
+  if (node.userData.isHelper) {
+    return;
+  }
   const hasChildren = node.children && node.children.length > 0;
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [delBtn, setDelBtn] = React.useState(false);

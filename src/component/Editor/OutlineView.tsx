@@ -18,7 +18,6 @@ import ObjectProperty from "./ObjectProperty";
 import { getObjectNameByName } from "../../three/utils";
 import TreeList from "./TreeList";
 import { MyContext } from "../../app/MyContext";
-import { UserDataType } from "../../app/type";
 
 export default function OutlineView() {
   let [curObj3d, setCurObj3d] = useState<Object3D>();
@@ -47,11 +46,7 @@ export default function OutlineView() {
       const selectedMesh = [];
       for (let i = 0; i < currentObject.length; i++) {
         const { object } = currentObject[i];
-        if (
-          object.userData.type !== UserDataType.TransformHelper &&
-          object.userData.type !== UserDataType.GridHelper &&
-          object.type !== UserDataType.BoxHelper
-        ) {
+        if (!object.userData.isHelper) {
           selectedMesh.push(object);
         }
       }

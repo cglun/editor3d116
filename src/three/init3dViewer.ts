@@ -108,6 +108,7 @@ export function addGridHelper() {
   gridHelper.userData = {
     type: UserDataType.GridHelper,
     isSelected: false,
+    isHelper: true,
   };
   gridHelper.name = "网格辅助";
   scene.add(gridHelper);

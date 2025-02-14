@@ -215,50 +215,44 @@ export function addGlb1(modelUrl = "/editor3d/static/models/blender.glb") {
 }
 
 // 场景序列化
-export function sceneSerialization(
-  scene: Scene,
-  camera: PerspectiveCamera
-): string {
-  const _scene = scene.clone();
-  const models: GlbModel[] = [];
-  _scene.children.forEach((child) => {
+export function sceneSerialization(): string {
+  const modelList: GlbModel[] = [];
+  const oldChildren = [...scene.children];
+
+  const children = scene.children.filter((child: Object3D | any) => {
     const childType = child.userData.type;
     if (childType === UserDataType.GlbModel) {
+      const { id, name, position, rotation, scale } = child;
       const model: GlbModel = {
-        id: child.id,
-        name: child.name,
-        position: child.position,
-        rotation: child.rotation,
-        scale: child.scale,
+        id,
+        name,
+        position,
+        rotation,
+        scale,
+
+        modelUrl: child.userData.modelUrl,
       };
-      models.push(model);
-    }
-    if (
-      childType === UserDataType.GlbModel ||
-      childType === UserDataType.BoxHelper ||
-      childType === UserDataType.TransformHelper ||
-      childType === UserDataType.GridHelper
-    ) {
-      child.parent?.remove(child);
-      console.log("删除了", child.name);
+      modelList.push(model);
+    } else {
+      return child;
     }
   });
-
-  const sceneJson = _scene.toJSON();
-  const cameraJson = camera.toJSON();
-  const sceneJsonString = JSON.stringify(sceneJson);
-  const cameraJsonString = JSON.stringify(cameraJson);
-  const modelsJsonString2 = JSON.stringify(models);
-  return (
-    sceneJsonString + "!116!" + cameraJsonString + "!116!" + modelsJsonString2
-  );
+  scene.children = children;
+  const result = {
+    sceneJsonString: JSON.stringify(scene.toJSON()),
+    cameraJsonString: JSON.stringify(perspectiveCamera.toJSON()),
+    modelsJsonString: JSON.stringify(modelList),
+    type: "scene",
+  };
+  scene.children = oldChildren;
+  return JSON.stringify(result);
 }
 
 export function addGridHelper() {
   const gridHelper = new GridHelper(16, 16);
-
   gridHelper.userData = {
     type: UserDataType.GridHelper,
+    isHelper: true,
     isSelected: false,
   };
   gridHelper.name = "网格辅助";
@@ -332,15 +326,28 @@ export function setTransformControls(selectedMesh: Object3D[]) {
     boxHelper.update();
   } else {
     boxHelper = new BoxHelper(selectedMesh[0], 0xffff00);
+    boxHelper.userData = {
+      type: UserDataType.BoxHelper,
+      isHelper: true,
+      isSelected: false,
+    };
     scene.add(boxHelper);
   }
 
   const getHelper = transfControls.getHelper();
   getHelper.name = "TransformControlsRoot";
-  getHelper.userData.type = UserDataType.TransformHelper;
+  getHelper.userData = {
+    type: UserDataType.TransformHelper,
+    isHelper: true,
+    isSelected: false,
+  };
   scene.add(getHelper);
   getHelper.traverse((child) => {
-    child.userData.type = UserDataType.TransformHelper;
+    child.userData = {
+      type: UserDataType.TransformHelper,
+      isHelper: true,
+      isSelected: false,
+    };
   });
 }
 

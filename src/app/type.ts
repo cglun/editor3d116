@@ -55,12 +55,14 @@ export enum ACTION_TYPE {
   UPDATE = "UPDATE",
 }
 export type ViewType = string | null;
+
 export interface GlbModel {
-  id: number;
+  id?: number;
   name: string;
   position: Vector3;
   rotation: Euler;
   scale: Vector3;
+  modelUrl: string;
 }
 
 export enum UserDataType {

@@ -5,27 +5,22 @@ import {
   AmbientLight,
   BoxGeometry,
   DirectionalLight,
+  DirectionalLightHelper,
   Group,
   Mesh,
   MeshLambertMaterial,
-  Object3D,
   PlaneGeometry,
 } from "three";
-import {
-  getScene,
-  glbLoader,
-  gltfToScene,
-  takeScreenshot,
-} from "../../three/init3dEditor";
+import { getScene, glbLoader, gltfToScene } from "../../three/init3dEditor";
 
-import { useContext, useState } from "react";
+import { useContext } from "react";
 
-import { ButtonGroup, Card, Image, ProgressBar } from "react-bootstrap";
+import { ButtonGroup, Card, ProgressBar } from "react-bootstrap";
 import { getThemeColor } from "../../app/config";
 import { MyContext } from "../../app/MyContext";
 import { setClassName } from "../../app/utils";
 import ModalConfirm3d from "../../component/common/ModalConfirm3d";
-import axiosInstance from "../../app/http";
+import _axios from "../../app/http";
 
 export const Route = createLazyFileRoute("/editor3d/addMesh")({
   component: RouteComponent,
@@ -36,9 +31,7 @@ function RouteComponent() {
 
   const scene = getScene();
   const { dispatchScene } = useContext(MyContext);
-  function setSelected(object3D: Object3D) {
-    object3D.userData.isSelected = true;
-  }
+
   function addBox() {
     // 创建立方体
     const cubeGeometry = new BoxGeometry(1, 1, 1);
@@ -47,7 +40,7 @@ function RouteComponent() {
     cube.name = "cube1";
     // cube.castShadow = true; // 立方体投射阴影
     cube.position.set(0, 0.5, 0);
-    setSelected(cube);
+    cube.userData.isSelected = true;
     scene.add(cube);
     dispatchScene({
       type: "setScene",
@@ -57,8 +50,7 @@ function RouteComponent() {
   function addAmbientLight() {
     const light = new AmbientLight(0xffffff, 0.5);
     scene.add(light);
-
-    setSelected(light);
+    light.userData.isSelected = true;
     dispatchScene({
       type: "setScene",
       payload: scene,
@@ -73,7 +65,7 @@ function RouteComponent() {
     plane.receiveShadow = true; // 地面接收阴影
     plane.castShadow = true;
     plane.rotation.x = -Math.PI / 2;
-    setSelected(plane);
+    plane.userData.isSelected = true;
     scene.add(plane);
     dispatchScene({
       type: "setScene",
@@ -82,7 +74,7 @@ function RouteComponent() {
   }
   function addGroup() {
     const group = new Group();
-    setSelected(group);
+    group.userData.isSelected = true;
     scene.add(group);
     dispatchScene({
       type: "setScene",
@@ -92,16 +84,24 @@ function RouteComponent() {
   function addDirectionalLight() {
     const directionalLight = new DirectionalLight(0xffffff, 0.5);
     scene.add(directionalLight);
-    setSelected(directionalLight);
+    directionalLight.userData.isSelected = true;
     directionalLight.position.set(3, 3, 3);
     directionalLight.lookAt(0, 0, 0);
 
+    const helper = new DirectionalLightHelper(directionalLight, 1, 0xffff00);
+
+    helper.userData = {
+      isHelper: true,
+    };
+
+    helper.position.setFromMatrixPosition(directionalLight.matrixWorld);
+    scene.add(helper);
     dispatchScene({
       type: "setScene",
       payload: scene,
     });
   }
-  const [xx, setXx] = useState("");
+
   return (
     <div className="d-flex flex-wrap pt-2">
       <Card>
@@ -209,53 +209,11 @@ function RouteComponent() {
             >
               glb模型
             </Button>
-            <Button
-              variant={color}
-              title="序列化"
-              onClick={() => {
-                //const str = sceneSerialization(getScene(), getCamera());
-                // console.log(str);
-              }}
-            >
-              序列化
-            </Button>
-            <Button
-              variant={color}
-              onClick={() => {
-                fetch("/api");
-              }}
-            >
-              测试
-            </Button>
 
             <Button
               variant={color}
               onClick={() => {
-                const xx = takeScreenshot();
-                setXx(xx);
-              }}
-            >
-              截图
-            </Button>
-            <Image src={xx}></Image>
-            <Button
-              variant={color}
-              onClick={() => {
-                // http://localhost:5173/api/material/list?keyword=&type=1&current=1&size=8&parentId=0
-
-                axiosInstance
-                  .get("/material/list", {
-                    params: {
-                      keyword: "",
-                      type: 1,
-                      current: 1,
-                      size: 8,
-                      parentId: 0,
-                    },
-                  })
-                  .then((res) => {
-                    setXx(res.data.result.records[0].url);
-                  });
+                // http://localhost:5173/material/list?keyword=&type=1&current=1&size=8&parentId=0
               }}
             >
               fetch

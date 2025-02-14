@@ -44,7 +44,7 @@ const header = {
   if (import.meta.env.MODE === "development") {
     localStorage.setItem(
       "TOKEN",
-      "73dd13c066eca2273e4622959ecfcc0bef55c9e0ff1d76f203c6680c0a57189de08b8c52d56e5b988e13b7c34da1faf161668949e052c14fab158489cad268c35d704501132b83defbf0fe3c7c81222fb6f7fee36cec9994fcdd0df53a856bd0d3bbfee9869d23481b9cb38838bf33b8ea83d9a999507b285464520a222f8dbb4de68d293bbde55537bd64f201d26160ed7810ddda70210516fc78d75dad6a356f55d54c12b1cb05d41a717eece8e0b25681935e7b4dfcd931bc1864e3050541a7e25a89111c2f79354e75baad0e5b0335da54cfeccc14f6d14305f9361c6f374f47864839cd5579e6a00c2ad44ac467a1acefde30689ded6f564629307cc5c2"
+      "73dd13c066eca2273e4622959ecfcc0bef55c9e0ff1d76f203c6680c0a57189de08b8c52d56e5b988e13b7c34da1faf161668949e052c14fab158489cad268c31a86dc7cc75f2cc5cc773a83ade92b99a3772cbeaa286c77d5aa7b8296f47dd490a54cb67ee36174ae3d6b7ca41d877f146840ec8aca66397145722a3b8fe22f5c078f7a12cc86f28c57e815d0a45df58d04f7616ecad3e7fc5784bc062cc77a3a31b166248c9cfa873907c508d454a89f743dffb1ddbdaf3ef19eda69453df742809eb3c3b6bc1cf7a0142f3a298b661a4a77b6c64d34645687b4d4f76196ac466aee98f38336176026f3e1d6cd81539d0b8e77263869cb761096ec2d4fb9e6"
     );
   }
   const config: StoreConfig = {
@@ -59,13 +59,24 @@ const header = {
   const storage = config.isEncrypt
     ? JSON.parse(decrypt(__localStorage!))
     : JSON.parse(__localStorage!);
+
   header.Authorization = storage.value;
+
   // return storage;
 })();
 
-const axiosInstance = axios.create({
+const _axios = axios.create({
   baseURL: "/api",
   timeout: 1000,
   headers: header,
 });
-export default axiosInstance;
+export default _axios;
+
+export function loadAssets(url: string) {
+  return url?.replace("/static/covers/", "");
+  //   if (import.meta.env.DEV) {
+  //   } else {
+  //     return url?.replace("/^\\/file/", "/file");
+  //   }
+  //
+}

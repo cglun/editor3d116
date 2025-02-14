@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Row,
   Col,
@@ -10,22 +10,21 @@ import {
 } from "react-bootstrap";
 import { setClassName } from "../../app/utils";
 import { getThemeColor, initThemeColor, setThemeColor } from "../../app/config";
-
-import ListCard, { ItemInfo } from "./ListCard";
-
+import ListCard from "./ListCard";
 import { testData1 } from "../../app/testData";
 import Toast3d from "../common/Toast3d";
 import ModalConfirm3d from "../common/ModalConfirm3d";
-import EditorForm from "../common/EditorForm";
 import { Scene } from "three";
-import { UserDataType } from "../../app/type";
+import { APP_COLOR } from "../../app/type";
 import {
   addGridHelper,
-  getCamera,
   getScene,
+  sceneSerialization,
   setScene,
 } from "../../three/init3dEditor";
 import { MyContext } from "../../app/MyContext";
+import _axios from "../../app/http";
+import InputBase from "../common/InputBase";
 
 export default function EditorTop() {
   initThemeColor();
@@ -37,21 +36,52 @@ export default function EditorTop() {
 
   const [appTheme, setAppTheme] = useState(themeColor);
   const { dispatchScene } = useContext(MyContext);
+  const [sceneIsSave, setSceneIsSave] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+
   function saveScene() {
-    const scene = getScene();
     //移除辅助 TransformHelper
-    scene.children.forEach((item) => {
-      if (item.userData.type === UserDataType.TransformHelper) {
-        item.removeFromParent();
-      }
-    });
-    scene.toJSON();
-    const c = getCamera().toJSON();
+    // scene.children.forEach((item) => {
+    //   if (item.userData.type === UserDataType.TransformHelper) {
+    //     item.removeFromParent();
+    //   }
+    // });
+    // scene.toJSON();
+    // const c = getCamera().toJSON();
 
-    localStorage.setItem("scene", JSON.stringify(scene));
-    localStorage.setItem("camera", JSON.stringify(c));
+    // localStorage.setItem("scene", JSON.stringify(scene));
+    // localStorage.setItem("camera", JSON.stringify(c));
 
-    Toast3d("保存成功");
+    // private Long id;
+    // private String name;
+    // private String des;
+    // private LocalDateTime createTime;
+    // private LocalDateTime updateTime;
+    // @TableLogic
+    // private int deleted;
+    // private String dataJson;
+    // private String cover;
+    // @TableField(exist = false)
+    // private MultipartFile file;
+
+    // _axios.post("/material/insert", {
+    //   scene: scene.toJSON(),
+    //   camera: getCamera().toJSON(),
+    // });
+    const dataJson = sceneSerialization();
+
+    _axios
+      .post("/project/create/", {
+        name: "新场景",
+        des: "0",
+        dataJson: dataJson,
+      })
+      .catch((res) => {
+        Toast3d(res.message);
+      })
+      .catch((error) => {
+        Toast3d("错误:" + error, "提示", APP_COLOR.Warning);
+      });
   }
   function setTheme(color: string) {
     document.body.setAttribute("data-bs-theme", color);
@@ -61,28 +91,72 @@ export default function EditorTop() {
   }
 
   function saveAsNewScene() {
-    const item: ItemInfo = {
-      id: 0,
-      name: "新建场景",
-      type: "场景",
-      desc: "无",
-      imgUrl: "",
-    };
-    const getNewItem = (newItem: ItemInfo) => {
-      item.name = newItem.name;
-    };
+    const scene = getScene();
+
+    function getValue(sceneName: string, des: string) {
+      scene.userData.sceneName = sceneName;
+      scene.userData.des = des;
+    }
+
     ModalConfirm3d(
       {
         title: "另存场景",
-        body: <EditorForm item={item} getNewItem={getNewItem} />,
+        body: (
+          <InputBase
+            getValue={getValue}
+            name={scene.userData.sceneName}
+            des={"Scene"}
+          ></InputBase>
+        ),
       },
       function () {
-        Toast3d("保存成功" + item.name);
+        scene.userData.isSave = true;
+
+        const dataJson = sceneSerialization();
+        _axios
+          .post("/project/create/", {
+            name: scene.userData.sceneName,
+            des: "Scene",
+            dataJson: dataJson,
+          })
+          .then((res) => {
+            if (res.data.code === 200) {
+              setSceneIsSave(false);
+              Toast3d("保存成功");
+            } else {
+              Toast3d(res.data.message, "提示", APP_COLOR.Warning);
+            }
+          })
+          .catch((error) => {
+            Toast3d(error, "提示", APP_COLOR.Warning);
+          });
       }
     );
   }
 
   const [list, setList] = useState(testData1);
+  useEffect(() => {
+    setIsLoading(true);
+    _axios
+      .post("/project/pageList/", {
+        params: {
+          size: 1000,
+        },
+      })
+      .then((res) => {
+        if ((res.data.code = 200)) {
+          const list = res.data.data.records;
+          const sceneList = list.filter((item: any) => {
+            if (item.des === "Scene") {
+              return item;
+            }
+          });
+          setList(sceneList);
+          setIsLoading(false);
+        }
+      });
+  }, [showScene]);
+
   return (
     <>
       <Row>
@@ -115,6 +189,7 @@ export default function EditorTop() {
             <Button
               variant={themeColor}
               size="sm"
+              disabled={sceneIsSave}
               onClick={() => {
                 saveScene();
               }}
@@ -182,10 +257,7 @@ export default function EditorTop() {
             <ListCard
               list={list}
               setList={setList}
-              getType={{
-                isLoading: false,
-                error: false,
-              }}
+              isLoading={isLoading}
             ></ListCard>
           </Offcanvas.Body>
         </Offcanvas>
