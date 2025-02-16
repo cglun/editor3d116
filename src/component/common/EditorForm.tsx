@@ -65,7 +65,10 @@ export default function EditorForm({
       </InputGroup>
 
       <div className="mt-2 d-flex flex-column align-items-center">
-        <Viewer3d canvasStyle={{ height: "300px", width: "300px" }}></Viewer3d>
+        <Viewer3d
+          canvasStyle={{ height: "300px", width: "300px" }}
+          item={item}
+        ></Viewer3d>
         <ButtonGroup className="mt-2">
           <Button
             variant={getButtonColor()}

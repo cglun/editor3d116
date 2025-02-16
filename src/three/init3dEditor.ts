@@ -47,6 +47,7 @@ export function animate() {
 export function addLight(): void {
   // 添加正交光源
   const light = new DirectionalLight(0xffffff, 2.16);
+  light.name = "平行光";
   // 设置阴影参数
   light.shadow.mapSize.width = 2048; // 阴影图的宽度
   light.shadow.mapSize.height = 2048; // 阴影图的高度
@@ -185,6 +186,16 @@ export function glbLoader() {
   return loader;
 }
 
+export function addLocalModel() {
+  const url = "/editor3d/static/models/blender.glb";
+  const loader = glbLoader();
+  loader.load(url, function (gltf) {
+    scene.children = gltf.scene.children;
+    addLight();
+    addGridHelper();
+  });
+}
+
 export function gltfToScene(gltf: GLTF) {
   // scene.add(gltf.scene);
   const _gltf = gltf.scene;
@@ -245,7 +256,9 @@ export function sceneSerialization(): string {
       }
     }
   });
+
   scene.children = children;
+
   const result = {
     sceneJsonString: JSON.stringify(scene.toJSON()),
     cameraJsonString: JSON.stringify(perspectiveCamera.toJSON()),
@@ -314,6 +327,21 @@ export function raycasterSelect(event: MouseEvent) {
 
 //为选中的物体加上变换控件
 let boxHelper: BoxHelper;
+
+export function setBoxHelper(selectedMesh: Object3D = new Object3D()) {
+  if (boxHelper === undefined) {
+    boxHelper = new BoxHelper(selectedMesh, 0xffff00);
+    boxHelper.userData = {
+      type: UserDataType.BoxHelper,
+      isHelper: true,
+      isSelected: false,
+    };
+    scene.add(boxHelper);
+  } else {
+    scene.add(boxHelper);
+  }
+}
+
 export function setTransformControls(selectedMesh: Object3D[]) {
   transfControls.addEventListener("dragging-changed", (event) => {
     controls.enabled = !event.value;
@@ -333,13 +361,7 @@ export function setTransformControls(selectedMesh: Object3D[]) {
     boxHelper.setFromObject(selectedMesh[0]);
     boxHelper.update();
   } else {
-    boxHelper = new BoxHelper(selectedMesh[0], 0xffff00);
-    boxHelper.userData = {
-      type: UserDataType.BoxHelper,
-      isHelper: true,
-      isSelected: false,
-    };
-    scene.add(boxHelper);
+    setBoxHelper();
   }
 
   const getHelper = transfControls.getHelper();

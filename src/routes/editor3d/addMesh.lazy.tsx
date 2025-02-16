@@ -12,10 +12,12 @@ import {
   PlaneGeometry,
 } from "three";
 import {
+  addGridHelper,
+  addLight,
+  addLocalModel,
   getScene,
   glbLoader,
   gltfToScene,
-  sceneSerialization,
 } from "../../three/init3dEditor";
 
 import { useContext } from "react";
@@ -139,6 +141,15 @@ function RouteComponent() {
             >
               组
             </Button>
+            <Button
+              variant={color}
+              title="添加glb模型"
+              onClick={() => {
+                addLocalModel();
+              }}
+            >
+              本地模型
+            </Button>
           </ButtonGroup>
         </Card.Body>
       </Card>
@@ -165,71 +176,6 @@ function RouteComponent() {
               }}
             >
               环境光
-            </Button>
-            <Button
-              variant={color}
-              title="添加glb模型"
-              onClick={() => {
-                const url = "/editor3d/static/models/blender.glb";
-                const loader = glbLoader();
-                let progress = 0;
-                loader.load(
-                  url,
-                  function (gltf) {
-                    ModalConfirm3d({
-                      title: "提示",
-                      body: "加载完成",
-                      confirmButton: {
-                        show: false,
-                      },
-                    });
-                    gltfToScene(gltf);
-                    dispatchScene({
-                      type: "setScene",
-                      payload: getScene(),
-                    });
-                  },
-                  function (xhr) {
-                    progress = parseFloat(
-                      ((xhr.loaded / xhr.total) * 100).toFixed(2)
-                    );
-                    ModalConfirm3d({
-                      title: "提示",
-                      body: <ProgressBar now={progress} label={progress} />,
-                      confirmButton: {
-                        show: true,
-                        closeButton: false,
-                        hasButton: false,
-                      },
-                    });
-                  },
-                  function (error) {
-                    ModalConfirm3d({
-                      title: "提示",
-                      body: " An error happened" + error,
-                    });
-                  }
-                );
-              }}
-            >
-              glb模型
-            </Button>
-
-            <Button
-              variant={color}
-              onClick={() => {
-                // http://localhost:5173/material/list?keyword=&type=1&current=1&size=8&parentId=0
-              }}
-            >
-              fetch
-            </Button>
-            <Button
-              onClick={() => {
-                sceneSerialization();
-                // console.log(getScene());
-              }}
-            >
-              xulieh
             </Button>
           </ButtonGroup>
         </Card.Body>

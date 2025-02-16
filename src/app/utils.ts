@@ -4,7 +4,6 @@
 
 import { ObjectLoader } from "three";
 import { iconIsFill } from "./config";
-import { getScene } from "../three/init3dEditor";
 
 export function setClassName(className: string): string {
   if (iconIsFill) {

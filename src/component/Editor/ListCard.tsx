@@ -1,4 +1,4 @@
-import React, { memo, useContext } from "react";
+import { memo, useContext } from "react";
 import {
   Button,
   ButtonGroup,
@@ -19,12 +19,11 @@ import {
   setCamera,
   setScene,
   getScene,
-  addLight,
-  addGridHelper,
   glbLoader,
-  gltfToScene,
+  addGridHelper,
+  setBoxHelper,
 } from "../../three/init3dEditor";
-import { Euler, Group, Object3D, Scene } from "three";
+import { Group, Scene } from "three";
 import { MyContext } from "../../app/MyContext";
 
 export interface ItemInfo {
@@ -42,7 +41,6 @@ interface Props {
 function ItemInfoCard(props: Props) {
   const { list, setList, isLoading } = props;
   const { dispatchScene } = useContext(MyContext);
-  const [progress, setProgress] = React.useState<number>(100);
 
   //加载中……
   if (isLoading) {
@@ -120,38 +118,41 @@ function ItemInfoCard(props: Props) {
       }
     );
   }
-  function loadScene(id: number, des: string) {
+  function loadScene(item: ItemInfo) {
+    const { id, des, name } = item;
     if (des === "Scene") {
+      const newScene = new Scene();
       _axios.get(`/project/getProjectData/${id}`).then((res) => {
         if (res.data.data) {
           const data = res.data.data;
           const { scene, camera, models, loader } = strToJson(data);
 
-          loader.parse(scene, function (object) {
-            const { children } = object;
-            const scene = new Scene();
-            if (children.length > 0) {
-              children.forEach((item: Object3D) => {
-                scene.add(item);
-              });
-            }
-            setScene(scene);
-            addLight();
+          loader.parse(scene, function (object: Scene | any) {
+            const { children, fog, background } = object;
+            newScene.children = children;
+            newScene.fog = fog;
+            newScene.background = background;
+            newScene.userData = {
+              projectName: name,
+              projectId: id,
+              canSave: true,
+            };
+
+            setScene(newScene);
             addGridHelper();
+            setBoxHelper();
+            dispatchScene({
+              type: "setScene",
+              payload: getScene(),
+            });
           });
+
           loader.parse(camera, function (object) {
             setCamera(object);
           });
 
           models.forEach((item: GlbModel) => {
-            //addGlb(item);
-
             loadModelByUrl(item);
-          });
-
-          dispatchScene({
-            type: "setScene",
-            payload: getScene(),
           });
         }
       });
@@ -187,24 +188,22 @@ function ItemInfoCard(props: Props) {
         group.add(...gltf.scene.children);
         group.userData = {
           ...model.userData,
-          isSelected: true,
           type: UserDataType.GlbModel,
         };
         group.position.set(position.x, position.y, position.z);
 
-        // const group = gltf.scene;
-
         group.position.set(position.x, position.y, position.z);
-        group.rotation.set(rotation._x, rotation._y, rotation._z, "XYZ");
+
+        // group.rotation.set(rotation._x, rotation._y, rotation._z, "XYZ");
+        group.setRotationFromEuler(rotation);
         group.scale.set(scale.x, scale.y, scale.z);
 
         getScene().add(group);
-
-        //  gltfToScene(group);
         dispatchScene({
           type: "setScene",
           payload: getScene(),
         });
+        //  gltfToScene(group);
       },
       function (xhr) {
         progress = parseFloat(
@@ -225,6 +224,11 @@ function ItemInfoCard(props: Props) {
         ModalConfirm3d({
           title: "提示",
           body: " An error happened" + error,
+          confirmButton: {
+            show: true,
+            closeButton: true,
+            hasButton: true,
+          },
         });
       }
     );
@@ -248,7 +252,7 @@ function ItemInfoCard(props: Props) {
                   src={loadAssets(item.cover)}
                   variant="top"
                   onClick={() => {
-                    loadScene(item.id, item.des);
+                    loadScene(item);
                   }}
                 />
               ) : (
@@ -256,7 +260,7 @@ function ItemInfoCard(props: Props) {
                   className="bi bi-image"
                   style={{ fontSize: "4rem" }}
                   onClick={() => {
-                    loadScene(item.id, item.des);
+                    loadScene(item);
                   }}
                 ></i>
               )}

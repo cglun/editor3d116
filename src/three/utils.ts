@@ -1,20 +1,4 @@
-import {
-  Object3D,
-  ObjectLoader,
-  PerspectiveCamera,
-  Scene,
-  WebGLRenderer,
-} from "three";
-import createScene, {
-  addGridHelper,
-  addLight,
-  getCamera,
-  getRenderer,
-  getScene,
-  setCamera,
-  setScene,
-} from "./init3dEditor";
-import { runScript } from "./scriptDev";
+import { Object3D, PerspectiveCamera, WebGLRenderer } from "three";
 
 export function getObjectNameByName(object3D: Object3D): string {
   return object3D.name.trim() === "" ? object3D.type : object3D.name;
@@ -57,59 +41,6 @@ export function hasAttribute(obj: any, attribute: string, includes: string) {
   return obj.getAttribute(attribute)?.includes(includes);
 }
 
-export function init3d(canvas: React.RefObject<HTMLDivElement>) {
-  const _scene = localStorage.getItem("scene");
-  const _camera = localStorage.getItem("camera");
-
-  if (canvas.current !== null) {
-    if (_scene && _camera) {
-      createScene(canvas.current);
-
-      setScene(new ObjectLoader().parse(JSON.parse(_scene)) as Scene);
-
-      setCamera(new ObjectLoader().parse(JSON.parse(_camera)));
-      const camera = getCamera();
-      const scene = getScene();
-      const gridHelper = scene.getObjectByName("网格辅助");
-
-      if (gridHelper !== undefined) {
-        scene.remove(gridHelper);
-      }
-      addGridHelper();
-
-      if (import.meta.env.MODE === "development") {
-        runScript({ camera: camera, scene: scene });
-      }
-
-      eval(`
-              const cube = scene.getObjectByName('cube');
-              if (cube !== undefined) { 
-              cube.position.z+= 2;
-                setInterval(() => {
-                  cube.rotation.y += 0.5;
-                
-                }, 50);
-              }
-          `);
-    } else {
-      createScene(canvas.current);
-
-      addLight();
-      addGridHelper();
-    }
-
-    window.addEventListener("resize", () =>
-      onWindowResize(canvas, getCamera(), getRenderer())
-    );
-  }
-  return () => {
-    window.removeEventListener("resize", () =>
-      onWindowResize(canvas, getCamera(), getRenderer())
-    );
-
-    //canvas.current?.removeEventListener("click", onPointerClick);
-  };
-}
 export function onWindowResize(
   canvas: React.RefObject<HTMLDivElement>,
   camera: PerspectiveCamera,

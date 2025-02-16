@@ -18,6 +18,7 @@ import { Scene } from "three";
 import { APP_COLOR } from "../../app/type";
 import {
   addGridHelper,
+  addLight,
   getScene,
   sceneSerialization,
   setScene,
@@ -39,45 +40,29 @@ export default function EditorTop() {
   const [sceneIsSave, setSceneIsSave] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
+  useEffect(() => {
+    const scene = getScene();
+
+    if (scene?.userData.canSave) {
+      setSceneIsSave(!scene.userData.canSave);
+    }
+  }, [getScene()]);
+
   function saveScene() {
-    //移除辅助 TransformHelper
-    // scene.children.forEach((item) => {
-    //   if (item.userData.type === UserDataType.TransformHelper) {
-    //     item.removeFromParent();
-    //   }
-    // });
-    // scene.toJSON();
-    // const c = getCamera().toJSON();
-
-    // localStorage.setItem("scene", JSON.stringify(scene));
-    // localStorage.setItem("camera", JSON.stringify(c));
-
-    // private Long id;
-    // private String name;
-    // private String des;
-    // private LocalDateTime createTime;
-    // private LocalDateTime updateTime;
-    // @TableLogic
-    // private int deleted;
-    // private String dataJson;
-    // private String cover;
-    // @TableField(exist = false)
-    // private MultipartFile file;
-
-    // _axios.post("/material/insert", {
-    //   scene: scene.toJSON(),
-    //   camera: getCamera().toJSON(),
-    // });
     const dataJson = sceneSerialization();
 
     _axios
-      .post("/project/create/", {
-        name: "新场景",
-        des: "0",
+      .post("/project/update/", {
+        id: getScene().userData.projectId,
         dataJson: dataJson,
       })
-      .catch((res) => {
-        Toast3d(res.message);
+      .then((res) => {
+        if (res.data.code === 200) {
+          // setSceneIsSave(false);
+          Toast3d("保存成功");
+        } else {
+          Toast3d(res.data.message, "提示", APP_COLOR.Warning);
+        }
       })
       .catch((error) => {
         Toast3d("错误:" + error, "提示", APP_COLOR.Warning);
@@ -110,8 +95,6 @@ export default function EditorTop() {
         ),
       },
       function () {
-        scene.userData.isSave = true;
-
         const dataJson = sceneSerialization();
         _axios
           .post("/project/create/", {
@@ -121,7 +104,7 @@ export default function EditorTop() {
           })
           .then((res) => {
             if (res.data.code === 200) {
-              setSceneIsSave(false);
+              // setSceneIsSave(false);
               Toast3d("保存成功");
             } else {
               Toast3d(res.data.message, "提示", APP_COLOR.Warning);
@@ -167,11 +150,11 @@ export default function EditorTop() {
               variant={themeColor}
               size="sm"
               onClick={() => {
-                localStorage.removeItem("camera");
-                localStorage.removeItem("scene");
                 const newScene = new Scene();
                 setScene(newScene);
                 addGridHelper();
+                addLight();
+                setSceneIsSave(true);
                 dispatchScene({
                   type: "setScene",
                   payload: newScene,
