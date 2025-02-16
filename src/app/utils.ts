@@ -2,7 +2,9 @@
  * 工具类
  */
 
+import { ObjectLoader } from "three";
 import { iconIsFill } from "./config";
+import { getScene } from "../three/init3dEditor";
 
 export function setClassName(className: string): string {
   if (iconIsFill) {
@@ -33,4 +35,14 @@ export function blobToFile(blob: Blob, fileName: string) {
     console.warn("File constructor not available, returning Blob instead.");
     return blob;
   }
+}
+
+export function strToJson(str: string) {
+  const json = JSON.parse(str);
+  const { sceneJsonString, cameraJsonString, modelsJsonString, type } = json;
+  const scene = JSON.parse(sceneJsonString);
+  const camera = JSON.parse(cameraJsonString);
+  const models = JSON.parse(modelsJsonString);
+  const loader = new ObjectLoader();
+  return { scene, camera, models, type, loader };
 }

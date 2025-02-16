@@ -137,24 +137,18 @@ export default function EditorTop() {
   const [list, setList] = useState(testData1);
   useEffect(() => {
     setIsLoading(true);
-    _axios
-      .post("/project/pageList/", {
-        params: {
-          size: 1000,
-        },
-      })
-      .then((res) => {
-        if ((res.data.code = 200)) {
-          const list = res.data.data.records;
-          const sceneList = list.filter((item: any) => {
-            if (item.des === "Scene") {
-              return item;
-            }
-          });
-          setList(sceneList);
-          setIsLoading(false);
-        }
-      });
+    _axios.post("/project/pageList/", { size: 1000 }).then((res) => {
+      if ((res.data.code = 200)) {
+        const list = res.data.data.records;
+        const sceneList = list.filter((item: any) => {
+          if (item.des === "Scene") {
+            return item;
+          }
+        });
+        setList(sceneList);
+        setIsLoading(false);
+      }
+    });
   }, [showScene]);
 
   return (

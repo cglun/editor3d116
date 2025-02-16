@@ -62,7 +62,7 @@ export interface GlbModel {
   position: Vector3;
   rotation: Euler;
   scale: Vector3;
-  modelUrl: string;
+  userData: any;
 }
 
 export enum UserDataType {
@@ -71,3 +71,8 @@ export enum UserDataType {
   GridHelper = "GridHelper",
   BoxHelper = "BoxHelper",
 }
+// export type XXXX = {
+//   modelUrl: string;
+//   modelTotal: number;
+//   type: "Mesh";
+// };

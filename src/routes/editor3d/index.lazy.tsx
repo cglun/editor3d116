@@ -20,25 +20,18 @@ function ModelList() {
   const [updateTime, setUpdateTime] = React.useState(0);
   useEffect(() => {
     setIsLoading(true);
-    _axios
-      .post("/project/pageList/", {
-        params: {
-          size: 1000,
-        },
-      })
-      .then((res) => {
-        if ((res.data.code = 200)) {
-          const list = res.data.data.records;
-          const sceneList = list.filter((item: any) => {
-            if (item.des === "Mesh") {
-              return item;
-            }
-          });
-          setFilterList(sceneList);
-          setIsLoading(false);
-          console.log("sceneList");
-        }
-      });
+    _axios.post("/project/pageList/", { size: 1000 }).then((res) => {
+      if ((res.data.code = 200)) {
+        const list = res.data.data.records;
+        const sceneList = list.filter((item: any) => {
+          if (item.des === "Mesh") {
+            return item;
+          }
+        });
+        setFilterList(sceneList);
+        setIsLoading(false);
+      }
+    });
   }, [updateTime]);
 
   function updateList(_time: number): void {

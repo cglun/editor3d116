@@ -11,7 +11,12 @@ import {
   MeshLambertMaterial,
   PlaneGeometry,
 } from "three";
-import { getScene, glbLoader, gltfToScene } from "../../three/init3dEditor";
+import {
+  getScene,
+  glbLoader,
+  gltfToScene,
+  sceneSerialization,
+} from "../../three/init3dEditor";
 
 import { useContext } from "react";
 
@@ -217,6 +222,14 @@ function RouteComponent() {
               }}
             >
               fetch
+            </Button>
+            <Button
+              onClick={() => {
+                sceneSerialization();
+                // console.log(getScene());
+              }}
+            >
+              xulieh
             </Button>
           </ButtonGroup>
         </Card.Body>

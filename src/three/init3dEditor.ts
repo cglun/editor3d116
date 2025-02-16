@@ -186,11 +186,17 @@ export function glbLoader() {
 }
 
 export function gltfToScene(gltf: GLTF) {
-  const children = gltf.scene.children;
+  // scene.add(gltf.scene);
+  const _gltf = gltf.scene;
+  const children = [...gltf.scene.children];
   for (let i = 0; i < children.length; i++) {
     const element = children[i];
-    element.userData.type = UserDataType.GlbModel;
-    scene.children.push(element);
+    element.userData = {
+      ...element.userData,
+      ..._gltf.userData,
+      type: UserDataType.GlbModel,
+    };
+    scene.add(element);
   }
 }
 
@@ -220,8 +226,8 @@ export function sceneSerialization(): string {
   const oldChildren = [...scene.children];
 
   const children = scene.children.filter((child: Object3D | any) => {
-    const childType = child.userData.type;
-    if (childType === UserDataType.GlbModel) {
+    const childUserData = child.userData;
+    if (childUserData.type === UserDataType.GlbModel) {
       const { id, name, position, rotation, scale } = child;
       const model: GlbModel = {
         id,
@@ -229,12 +235,14 @@ export function sceneSerialization(): string {
         position,
         rotation,
         scale,
-
-        modelUrl: child.userData.modelUrl,
+        userData: child.userData,
       };
+
       modelList.push(model);
     } else {
-      return child;
+      if (!childUserData.isHelper) {
+        return child;
+      }
     }
   });
   scene.children = children;

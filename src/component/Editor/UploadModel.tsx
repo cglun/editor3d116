@@ -1,12 +1,14 @@
 import { ButtonGroup, ListGroup, ProgressBar } from "react-bootstrap";
 import Button from "react-bootstrap/esm/Button";
 import Form from "react-bootstrap/esm/Form";
+import { Euler, Vector3 } from "three";
+
 import { getButtonColor } from "../../app/config";
 import { useRef, useState } from "react";
 import Toast3d from "../common/Toast3d";
 import { setClassName } from "../../app/utils";
 import _axios from "../../app/http";
-import { APP_COLOR } from "../../app/type";
+import { APP_COLOR, GlbModel } from "../../app/type";
 
 export function UploadModel({ updateList = (_time: number) => {} }) {
   const color = getButtonColor();
@@ -19,16 +21,25 @@ export function UploadModel({ updateList = (_time: number) => {} }) {
       const formData = new FormData();
       formData.append("file", curFile);
 
-      const modelUrl = await uploadModels(formData);
-      if (modelUrl) {
+      const model = await uploadModels(formData);
+      // const model: GlbModel = {
+      //   name: curFile.name,
+      //   position: new Vector3(0, 0, 0),
+      //   rotation: new Euler(0, 0, 0, "XYZ"),
+      //   scale: new Vector3(1, 1, 1),
+      //   userData: {
+      //     modelUrl,
+      //     type: "Mesh",
+      //     modelTotal,
+      //   },
+      // };
+      debugger;
+      if (model) {
         _axios
           .post("/project/create/", {
-            name: curFile.name,
+            name: model.name,
             des: "Mesh",
-            dataJson: JSON.stringify({
-              modelUrl,
-              type: "Mesh",
-            }),
+            dataJson: JSON.stringify(model),
           })
           .then((res) => {
             if (res.data.code === 200) {
@@ -49,8 +60,9 @@ export function UploadModel({ updateList = (_time: number) => {} }) {
     }
   }
 
-  function uploadModels(formData: FormData) {
+  function uploadModels(formData: FormData): Promise<GlbModel> {
     return new Promise((resolve, reject) => {
+      let modelTotal = 0;
       _axios
         .post("/material/upload/116", formData, {
           headers: {
@@ -58,6 +70,7 @@ export function UploadModel({ updateList = (_time: number) => {} }) {
           },
           onUploadProgress: function (progressEvent) {
             if (progressEvent.total !== undefined) {
+              modelTotal = progressEvent.total;
               setProgress(progressEvent.loaded / progressEvent.total);
               // 计算上传的百分比
               const percentCompleted = Math.round(
@@ -72,7 +85,18 @@ export function UploadModel({ updateList = (_time: number) => {} }) {
             Toast3d(res.data.message, "提示", APP_COLOR.Warning);
             return;
           }
-          resolve(res.data.result.url);
+          const model: GlbModel = {
+            name: curFile!.name,
+            position: new Vector3(0, 0, 0),
+            rotation: new Euler(0, 0, 0, "XYZ"),
+            scale: new Vector3(1, 1, 1),
+            userData: {
+              modelUrl: res.data.result.url,
+              modelTotal: modelTotal,
+            },
+          };
+
+          resolve(model);
           //  const   modelurl=
           //     setProgress(100);
           //     Toast3d(res.data.message, "提示", APP_COLOR.Success);

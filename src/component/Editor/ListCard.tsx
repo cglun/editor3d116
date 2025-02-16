@@ -1,13 +1,31 @@
-import { memo } from "react";
-import { Button, ButtonGroup, Card, Container, Spinner } from "react-bootstrap";
+import React, { memo, useContext } from "react";
+import {
+  Button,
+  ButtonGroup,
+  Card,
+  Container,
+  ProgressBar,
+  Spinner,
+} from "react-bootstrap";
 import AlertBase from "../common/AlertBase";
 import { getThemeColor } from "../../app/config";
-import { setClassName } from "../../app/utils";
-import { APP_COLOR } from "../../app/type";
+import { setClassName, strToJson } from "../../app/utils";
+import { APP_COLOR, GlbModel, UserDataType } from "../../app/type";
 import ModalConfirm3d from "../common/ModalConfirm3d";
 import Toast3d from "../common/Toast3d";
 import EditorForm from "../common/EditorForm";
 import _axios, { loadAssets } from "../../app/http";
+import {
+  setCamera,
+  setScene,
+  getScene,
+  addLight,
+  addGridHelper,
+  glbLoader,
+  gltfToScene,
+} from "../../three/init3dEditor";
+import { Euler, Group, Object3D, Scene } from "three";
+import { MyContext } from "../../app/MyContext";
 
 export interface ItemInfo {
   id: number;
@@ -23,6 +41,8 @@ interface Props {
 }
 function ItemInfoCard(props: Props) {
   const { list, setList, isLoading } = props;
+  const { dispatchScene } = useContext(MyContext);
+  const [progress, setProgress] = React.useState<number>(100);
 
   //加载中……
   if (isLoading) {
@@ -100,6 +120,115 @@ function ItemInfoCard(props: Props) {
       }
     );
   }
+  function loadScene(id: number, des: string) {
+    if (des === "Scene") {
+      _axios.get(`/project/getProjectData/${id}`).then((res) => {
+        if (res.data.data) {
+          const data = res.data.data;
+          const { scene, camera, models, loader } = strToJson(data);
+
+          loader.parse(scene, function (object) {
+            const { children } = object;
+            const scene = new Scene();
+            if (children.length > 0) {
+              children.forEach((item: Object3D) => {
+                scene.add(item);
+              });
+            }
+            setScene(scene);
+            addLight();
+            addGridHelper();
+          });
+          loader.parse(camera, function (object) {
+            setCamera(object);
+          });
+
+          models.forEach((item: GlbModel) => {
+            //addGlb(item);
+
+            loadModelByUrl(item);
+          });
+
+          dispatchScene({
+            type: "setScene",
+            payload: getScene(),
+          });
+        }
+      });
+    }
+    if (des === "Mesh") {
+      _axios.get(`/project/getProjectData/${id}`).then((res) => {
+        if (res.data.data) {
+          const data = res.data.data;
+          const _data = JSON.parse(data);
+          loadModelByUrl(_data);
+        }
+      });
+    }
+  }
+  function loadModelByUrl(model: GlbModel) {
+    const loader = glbLoader();
+    let progress = 0;
+    loader.load(
+      model.userData.modelUrl,
+      function (gltf) {
+        ModalConfirm3d({
+          title: "提示",
+          body: "加载完成",
+          confirmButton: {
+            show: false,
+          },
+        });
+
+        const { position, rotation, scale } = model;
+
+        const group = new Group();
+        group.name = model.name;
+        group.add(...gltf.scene.children);
+        group.userData = {
+          ...model.userData,
+          isSelected: true,
+          type: UserDataType.GlbModel,
+        };
+        group.position.set(position.x, position.y, position.z);
+
+        // const group = gltf.scene;
+
+        group.position.set(position.x, position.y, position.z);
+        group.rotation.set(rotation._x, rotation._y, rotation._z, "XYZ");
+        group.scale.set(scale.x, scale.y, scale.z);
+
+        getScene().add(group);
+
+        //  gltfToScene(group);
+        dispatchScene({
+          type: "setScene",
+          payload: getScene(),
+        });
+      },
+      function (xhr) {
+        progress = parseFloat(
+          ((xhr.loaded / model.userData.modelTotal) * 100).toFixed(2)
+        );
+
+        ModalConfirm3d({
+          title: "提示",
+          body: <ProgressBar now={progress} label={`${progress}%`} />,
+          confirmButton: {
+            show: true,
+            closeButton: false,
+            hasButton: false,
+          },
+        });
+      },
+      function (error) {
+        ModalConfirm3d({
+          title: "提示",
+          body: " An error happened" + error,
+        });
+      }
+    );
+  }
 
   return (
     <Container fluid className="d-flex flex-wrap">
@@ -115,9 +244,21 @@ function ItemInfoCard(props: Props) {
             </Card.Header>
             <Card.Body className="d-flex flex-column text-center">
               {item.cover?.trim().length > 0 ? (
-                <Card.Img src={loadAssets(item.cover)} variant="top" />
+                <Card.Img
+                  src={loadAssets(item.cover)}
+                  variant="top"
+                  onClick={() => {
+                    loadScene(item.id, item.des);
+                  }}
+                />
               ) : (
-                <i className="bi bi-image" style={{ fontSize: "4rem" }}></i>
+                <i
+                  className="bi bi-image"
+                  style={{ fontSize: "4rem" }}
+                  onClick={() => {
+                    loadScene(item.id, item.des);
+                  }}
+                ></i>
               )}
 
               <ButtonGroup aria-label="Basic example" className="mt-2">
