@@ -6,6 +6,7 @@ import Form from "react-bootstrap/esm/Form";
 import InputGroup from "react-bootstrap/esm/InputGroup";
 
 import { getButtonColor } from "../../app/config";
+import { setClassName } from "../../app/utils";
 
 export function Serch3d({
   list,
@@ -42,6 +43,7 @@ export function Serch3d({
         <Button
           variant={color}
           id="button-addon2"
+          title="搜索"
           onClick={() => {
             const newList = list.filter((item: any) => {
               return item.name.includes(name);
@@ -49,7 +51,7 @@ export function Serch3d({
             setFilterList(newList);
           }}
         >
-          搜索
+          <i className={setClassName("search-heart")}></i>
         </Button>
       </InputGroup>
     </ListGroup.Item>

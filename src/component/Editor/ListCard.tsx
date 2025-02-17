@@ -251,6 +251,10 @@ function ItemInfoCard(props: Props) {
                 <Card.Img
                   src={loadAssets(item.cover)}
                   variant="top"
+                  style={{ cursor: "crosshair" }}
+                  onClickCapture={() => {
+                    console.log("click");
+                  }}
                   onClick={() => {
                     loadScene(item);
                   }}

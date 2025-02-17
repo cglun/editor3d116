@@ -11,22 +11,15 @@ import {
   MeshLambertMaterial,
   PlaneGeometry,
 } from "three";
-import {
-  addGridHelper,
-  addLight,
-  addLocalModel,
-  getScene,
-  glbLoader,
-  gltfToScene,
-} from "../../three/init3dEditor";
+import { addLocalModel, getScene } from "../../three/init3dEditor";
 
 import { useContext } from "react";
 
-import { ButtonGroup, Card, ProgressBar } from "react-bootstrap";
+import { ButtonGroup, Card } from "react-bootstrap";
 import { getThemeColor } from "../../app/config";
 import { MyContext } from "../../app/MyContext";
 import { setClassName } from "../../app/utils";
-import ModalConfirm3d from "../../component/common/ModalConfirm3d";
+
 import _axios from "../../app/http";
 
 export const Route = createLazyFileRoute("/editor3d/addMesh")({

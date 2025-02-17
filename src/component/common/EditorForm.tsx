@@ -2,22 +2,14 @@ import { useEffect, useState } from "react";
 import { ItemInfo } from "../Editor/ListCard";
 import InputGroup from "react-bootstrap/esm/InputGroup";
 import Form from "react-bootstrap/esm/Form";
-import { Button, ButtonGroup } from "react-bootstrap";
-
+import { Button, ButtonGroup, Card } from "react-bootstrap";
 import Viewer3d from "../../viewer3d/Viewer3d";
-
 import Toast3d from "./Toast3d";
 import { getButtonColor } from "../../app/config";
 import { base64ToBlob, blobToFile, setClassName } from "../../app/utils";
 import { takeScreenshot } from "../../three/init3dViewer";
-import _axios from "../../app/http";
+import _axios, { loadAssets } from "../../app/http";
 import { APP_COLOR } from "../../app/type";
-
-// interface EditorFormProps {
-//   item: ItemInfo;
-//   getNewItem: (item: ItemInfo) => void;
-//   getScreenShot: (imgUrl: string) => void;
-// }
 
 export default function EditorForm({
   item,
@@ -28,6 +20,8 @@ export default function EditorForm({
 }) {
   const [_item, _setItem] = useState<ItemInfo>({ ...item });
   const [imgBase64, setImgBase64] = useState("");
+
+  const [loadScene, setLoadScene] = useState<boolean>(false);
   useEffect(() => {
     getNewItem(_item);
   }, [_item]);
@@ -65,17 +59,35 @@ export default function EditorForm({
       </InputGroup>
 
       <div className="mt-2 d-flex flex-column align-items-center">
-        <Viewer3d
-          canvasStyle={{ height: "300px", width: "300px" }}
-          item={item}
-        ></Viewer3d>
+        {loadScene ? (
+          <Viewer3d
+            canvasStyle={{ height: "300px", width: "300px" }}
+            item={item}
+          ></Viewer3d>
+        ) : _item.cover?.trim().length > 0 ? (
+          <Card.Img
+            style={{ height: "300px", width: "300px" }}
+            src={loadAssets(item.cover)}
+            variant="top"
+          />
+        ) : (
+          <i className="bi bi-image" style={{ fontSize: "4rem" }}></i>
+        )}
         <ButtonGroup className="mt-2">
           <Button
             variant={getButtonColor()}
             onClick={() => {
+              setLoadScene(true);
+            }}
+          >
+            <i className={setClassName("box")}></i> 使用场景
+          </Button>
+          <Button
+            variant={getButtonColor()}
+            disabled={!loadScene}
+            onClick={() => {
               const imgBase64 = takeScreenshot(300, 300);
               setImgBase64(imgBase64);
-
               Toast3d("截图成功");
             }}
           >
@@ -110,6 +122,7 @@ export default function EditorForm({
                 });
             }}
           >
+            <i className={setClassName("cloud-arrow-up")}></i>
             上传截图
           </Button>
         </ButtonGroup>

@@ -1,4 +1,4 @@
-import { ButtonGroup, ListGroup, ProgressBar } from "react-bootstrap";
+import { ButtonGroup, ListGroupItem, ProgressBar } from "react-bootstrap";
 import Button from "react-bootstrap/esm/Button";
 import Form from "react-bootstrap/esm/Form";
 import { Euler, Vector3 } from "three";
@@ -112,67 +112,69 @@ export function UploadModel({ updateList = (_time: number) => {} }) {
   }
 
   return (
-    <div className="d-flex">
-      <ListGroup.Item>
-        {btn ? (
-          <Form.Group controlId="formFile">
-            <Form.Label className="custom-file-progress d-flex align-items-center">
+    <ListGroupItem>
+      {btn ? (
+        <Form.Group controlId="formFile">
+          <Button variant={color}>
+            <Form.Label
+              className="custom-file-progress"
+              style={{ cursor: "pointer", marginBottom: 0 }}
+            >
               <i
-                style={{ fontSize: "1.4rem" }}
                 className={setClassName("cloud-plus")}
-              ></i>
-              <div className="ms-1">模型</div>
+                style={{ fontSize: "1rem" }}
+              >
+                上传模型
+              </i>
             </Form.Label>
-            <Form.Control
-              as="input"
-              style={{ display: "none" }}
-              type="file"
-              ref={fileRef}
-              accept=".glb,.gltf"
-              onChange={() => {
-                if (fileRef.current.files.length > 0) {
-                  const curFile = fileRef.current.files[0];
-                  setCurFile(curFile);
-                  setBtn(false);
-                } else {
-                  setBtn(true);
-                }
-              }}
-            />
-          </Form.Group>
-        ) : (
-          <>
-            <Form.Text>{curFile?.name}</Form.Text>
-            {progress < 100 && <ProgressBar now={progress} label={progress} />}
-          </>
-        )}
-      </ListGroup.Item>
-      <ListGroup.Item>
-        <ButtonGroup size="sm">
-          <Button
-            variant={color}
-            id="button-addon1"
-            disabled={btn}
-            onClick={() => {
-              fileRef.current = null;
-              setCurFile(null);
-              setBtn(true);
-            }}
-          >
-            清空
           </Button>
-          <Button
-            variant={color}
-            id="button-addon2"
-            onClick={() => {
-              handleUpload();
+          <Form.Control
+            as="input"
+            style={{ display: "none", marginBottom: 0 }}
+            type="file"
+            ref={fileRef}
+            accept=".glb,.gltf"
+            onChange={() => {
+              if (fileRef.current.files.length > 0) {
+                const curFile = fileRef.current.files[0];
+                setCurFile(curFile);
+                setBtn(false);
+              } else {
+                setBtn(true);
+              }
             }}
-            disabled={btn}
-          >
-            上传
-          </Button>
-        </ButtonGroup>
-      </ListGroup.Item>
-    </div>
+          />
+        </Form.Group>
+      ) : (
+        <>
+          <Form.Text>{curFile?.name}</Form.Text>
+          {progress < 100 && <ProgressBar now={progress} label={progress} />}
+        </>
+      )}
+      <ButtonGroup size="sm" className="mt-2">
+        <Button
+          variant={color}
+          id="button-addon1"
+          disabled={btn}
+          onClick={() => {
+            fileRef.current = null;
+            setCurFile(null);
+            setBtn(true);
+          }}
+        >
+          <i className={setClassName("trash2")}></i>清空
+        </Button>
+        <Button
+          variant={color}
+          id="button-addon2"
+          onClick={() => {
+            handleUpload();
+          }}
+          disabled={btn}
+        >
+          <i className={setClassName("cloud-arrow-up")}></i>上传
+        </Button>
+      </ButtonGroup>
+    </ListGroupItem>
   );
 }

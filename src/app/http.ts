@@ -31,7 +31,7 @@ interface StoreConfig {
 
 const header = {
   Accept: "application/json, text/plain, */*",
-  catch: "no-catch",
+  // catch: "no-catch",
   Authorization: "TOKEN",
   //"accept-encoding": "gzip, deflate, br, zstd",
   "Content-type": "application/json;charset=UTF-8",
@@ -44,7 +44,7 @@ const header = {
   if (import.meta.env.MODE === "development") {
     localStorage.setItem(
       "TOKEN",
-      "73dd13c066eca2273e4622959ecfcc0bef55c9e0ff1d76f203c6680c0a57189de08b8c52d56e5b988e13b7c34da1faf161668949e052c14fab158489cad268c31cbde3c9e551238387f95a247294341d3d3e2393d6f2a0b461c42915c77e112c7f169cbcb0118e100f8c6bf6b3182de33dc2bb7b2be72fb7e114a10c641a5167f8c565b6209294c5d9ca7fd1c5dfcf33fadba6e2ece6b7a6f79b571d610b9ea80e2fe67e6e20c57e7494e58fc38371b2d2cb921459ba053401cd345647e7792aa71618912879def12c2c5b55ebf1dc64d5a9e1187c7780b53909c537d87165e89e5900475445361a0bdd3ef591d0cc7a1f641c24334230f7e5ba1083e6d2ad34"
+      "73dd13c066eca2273e4622959ecfcc0bef55c9e0ff1d76f203c6680c0a57189de08b8c52d56e5b988e13b7c34da1faf161668949e052c14fab158489cad268c3d77a1e82f2d84172a2051d751646f5c736d2774cd0b5cb58ee50ccdb7f20f461d9b26d40dc70f1a56725ff67b73207c1a22962439425bce83534466953cec34e593b7e127ffdb5ec5532538963c42b3f0ed27bfb14f2c734f48dcb22a13d53c7eb877d282d1bf3724ab4833f4095d1f10b639be12171427833afdb887fc0b0edaaf771b64908d4946bf5d0d3c1c0cec8928b73a4c4485ea09f63fdbb34cac39db96a632075f61a89c0f37ab145413486bfee6c3ca739557508c8804a1e321fec"
     );
   }
   const config: StoreConfig = {
