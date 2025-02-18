@@ -145,7 +145,9 @@ export default function Viewer3d({
   return (
     <>
       <div className="mb-1" style={{ width: "300px" }}>
-        <ProgressBar now={progress} label={`${progress}%`} />
+        {progress < 100 && (
+          <ProgressBar now={progress} label={`${progress}%`} />
+        )}
       </div>
       <div style={canvasStyle} ref={canvas3d}></div>
     </>

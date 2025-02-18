@@ -34,12 +34,35 @@ export default defineConfig({
   build: {
     modulePreload: false,
     target: "esnext",
-    minify: false,
+    minify: true,
     cssCodeSplit: false,
     outDir: "../datav_vr_2d/editor3d",
-
     // outDir: "editor3d",
     assetsDir: "assets",
+    assetsInlineLimit: 4096,
+    chunkSizeWarningLimit: 1600,
+    commonjsOptions: {
+      transformMixedEsModules: true,
+    },
+    rollupOptions: {
+      output: {
+        // manualChunks: (id) => {
+        //   if (id.includes("node_modules")) {
+        //     return "xx";
+        //   }
+        // },
+        assetFileNames: "assets/[name].[ext]",
+        chunkFileNames: (parameter) => {
+          if (parameter.name.includes("xx")) {
+            return "assets/[name].js";
+          } else {
+            return "assets/[name]-[hash].js";
+          }
+        },
+        entryFileNames: "assets/[name].js",
+        // entryFileNames: "assets/[name]-[hash].[js]",
+      },
+    },
   },
   server: {
     proxy: {
