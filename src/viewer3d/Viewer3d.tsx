@@ -33,10 +33,11 @@ export default function Viewer3d({
   const canvas3d: React.RefObject<HTMLDivElement> = useRef<
     HTMLDivElement | any
   >();
-  const [progress, setProgress] = useState(30);
+  const [progress, setProgress] = useState(0);
 
   function loadScene() {
     const { id, des, name } = item;
+
     if (des === "Scene") {
       const newScene = new Scene();
       _axios.get(`/project/getProjectData/${id}`).then((res) => {
@@ -125,7 +126,11 @@ export default function Viewer3d({
   useEffect(() => {
     // init3d(canvas3d);
     if (canvas3d.current) {
-      createScene(canvas3d.current);
+      const scene = getScene();
+      if (scene === undefined) {
+        createScene(canvas3d.current);
+      }
+
       loadScene();
     }
 
@@ -133,14 +138,13 @@ export default function Viewer3d({
       onWindowResize(canvas3d, getCamera(), getRenderer())
     );
     return () => {
-      setScene(new Scene());
       console.log("销毁大场景");
-
+      setScene(new Scene());
       window.removeEventListener("resize", () =>
         onWindowResize(canvas3d, getCamera(), getRenderer())
       );
     };
-  }, []);
+  }, [item.id]);
 
   return (
     <>
@@ -149,6 +153,7 @@ export default function Viewer3d({
           <ProgressBar now={progress} label={`${progress}%`} />
         )}
       </div>
+
       <div style={canvasStyle} ref={canvas3d}></div>
     </>
   );

@@ -35,6 +35,11 @@ export default function BottomNav() {
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
+          <Nav.Link eventKey="/editor3d/document">
+            <i className={setClassName("file-code")}></i> 文档
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
           <Nav.Link eventKey="/editor3d/about">
             <i className={setClassName("info-circle")}></i> 关于
           </Nav.Link>
