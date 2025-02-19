@@ -137,7 +137,6 @@ export default function Viewer3d({
       // getDivElement()?.removeChild(getRenderer().domElement);
       canvas3d.current?.children[0].remove();
 
-      console.log("销毁大场景");
       window.removeEventListener("resize", () =>
         onWindowResize(canvas3d, getCamera(), getRenderer())
       );
