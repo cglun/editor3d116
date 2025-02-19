@@ -126,11 +126,7 @@ export default function Viewer3d({
   useEffect(() => {
     // init3d(canvas3d);
     if (canvas3d.current) {
-      const scene = getScene();
-      if (scene === undefined) {
-        createScene(canvas3d.current);
-      }
-
+      createScene(canvas3d.current);
       loadScene();
     }
 
@@ -138,8 +134,10 @@ export default function Viewer3d({
       onWindowResize(canvas3d, getCamera(), getRenderer())
     );
     return () => {
+      // getDivElement()?.removeChild(getRenderer().domElement);
+      canvas3d.current?.children[0].remove();
+
       console.log("销毁大场景");
-      setScene(new Scene());
       window.removeEventListener("resize", () =>
         onWindowResize(canvas3d, getCamera(), getRenderer())
       );

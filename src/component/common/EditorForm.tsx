@@ -71,7 +71,7 @@ export default function EditorForm({
             variant="top"
           />
         ) : (
-          <i className="bi bi-image" style={{ fontSize: "4rem" }}></i>
+          <i className="bi bi-image" style={{ fontSize: "11.6rem" }}></i>
         )}
         <ButtonGroup className="mt-2">
           <Button

@@ -115,7 +115,7 @@ export function UploadModel({ updateList = (_time: number) => {} }) {
     <ListGroupItem>
       {btn ? (
         <Form.Group controlId="formFile">
-          <Button variant={color}>
+          <Button variant={color} className="custom-file-upload">
             <Form.Label
               className="custom-file-progress"
               style={{ cursor: "pointer", marginBottom: 0 }}

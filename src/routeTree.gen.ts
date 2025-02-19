@@ -13,7 +13,6 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as rootdevImport } from './routes/__root_dev'
 
 // Create Virtual Routes
 
@@ -24,11 +23,6 @@ const Editor3dAddMeshLazyImport = createFileRoute('/editor3d/addMesh')()
 const Editor3dAboutLazyImport = createFileRoute('/editor3d/about')()
 
 // Create/Update Routes
-
-const rootdevRoute = rootdevImport.update({
-  id: '/__root_dev',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const Editor3dIndexLazyRoute = Editor3dIndexLazyImport.update({
   id: '/editor3d/',
@@ -72,13 +66,6 @@ const Editor3dAboutLazyRoute = Editor3dAboutLazyImport.update({
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/__root_dev': {
-      id: '/__root_dev'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof rootdevImport
-      parentRoute: typeof rootRoute
-    }
     '/editor3d/about': {
       id: '/editor3d/about'
       path: '/editor3d/about'
@@ -120,7 +107,6 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export interface FileRoutesByFullPath {
-  '': typeof rootdevRoute
   '/editor3d/about': typeof Editor3dAboutLazyRoute
   '/editor3d/addMesh': typeof Editor3dAddMeshLazyRoute
   '/editor3d/document': typeof Editor3dDocumentLazyRoute
@@ -129,7 +115,6 @@ export interface FileRoutesByFullPath {
 }
 
 export interface FileRoutesByTo {
-  '': typeof rootdevRoute
   '/editor3d/about': typeof Editor3dAboutLazyRoute
   '/editor3d/addMesh': typeof Editor3dAddMeshLazyRoute
   '/editor3d/document': typeof Editor3dDocumentLazyRoute
@@ -139,7 +124,6 @@ export interface FileRoutesByTo {
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/__root_dev': typeof rootdevRoute
   '/editor3d/about': typeof Editor3dAboutLazyRoute
   '/editor3d/addMesh': typeof Editor3dAddMeshLazyRoute
   '/editor3d/document': typeof Editor3dDocumentLazyRoute
@@ -150,7 +134,6 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | ''
     | '/editor3d/about'
     | '/editor3d/addMesh'
     | '/editor3d/document'
@@ -158,7 +141,6 @@ export interface FileRouteTypes {
     | '/editor3d'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | ''
     | '/editor3d/about'
     | '/editor3d/addMesh'
     | '/editor3d/document'
@@ -166,7 +148,6 @@ export interface FileRouteTypes {
     | '/editor3d'
   id:
     | '__root__'
-    | '/__root_dev'
     | '/editor3d/about'
     | '/editor3d/addMesh'
     | '/editor3d/document'
@@ -176,7 +157,6 @@ export interface FileRouteTypes {
 }
 
 export interface RootRouteChildren {
-  rootdevRoute: typeof rootdevRoute
   Editor3dAboutLazyRoute: typeof Editor3dAboutLazyRoute
   Editor3dAddMeshLazyRoute: typeof Editor3dAddMeshLazyRoute
   Editor3dDocumentLazyRoute: typeof Editor3dDocumentLazyRoute
@@ -185,7 +165,6 @@ export interface RootRouteChildren {
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  rootdevRoute: rootdevRoute,
   Editor3dAboutLazyRoute: Editor3dAboutLazyRoute,
   Editor3dAddMeshLazyRoute: Editor3dAddMeshLazyRoute,
   Editor3dDocumentLazyRoute: Editor3dDocumentLazyRoute,
@@ -203,16 +182,12 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/__root_dev",
         "/editor3d/about",
         "/editor3d/addMesh",
         "/editor3d/document",
         "/editor3d/mark",
         "/editor3d/"
       ]
-    },
-    "/__root_dev": {
-      "filePath": "__root_dev.tsx"
     },
     "/editor3d/about": {
       "filePath": "editor3d/about.lazy.tsx"
