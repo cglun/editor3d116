@@ -14,7 +14,7 @@ export const Route = createLazyFileRoute("/editor3d/")({
 function ModelList() {
   // const { data, isLoading, error } = useFetch('type=Mesh', HTTP_TYPE.GET);
 
-  const [list] = React.useState(testData2);
+  const [list, setList] = React.useState(testData2);
   const [filterList, setFilterList] = React.useState(testData2);
   const [isLoading, setIsLoading] = React.useState(true);
   const [updateTime, setUpdateTime] = React.useState(0);
@@ -28,6 +28,7 @@ function ModelList() {
             return item;
           }
         });
+        setList(sceneList);
         setFilterList(sceneList);
         setIsLoading(false);
       }
@@ -39,7 +40,7 @@ function ModelList() {
   }
 
   return (
-    <div className="d-flex ">
+    <div className="d-flex mt-2">
       <ListGroup>
         <Serch3d list={list} setFilterList={setFilterList} />
         <UploadModel updateList={updateList} />

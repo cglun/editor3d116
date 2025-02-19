@@ -9,30 +9,15 @@ import AlertBase from "../../component/common/AlertBase";
 export const Route = createLazyFileRoute("/editor3d/about")({
   component: RouteComponent,
 });
-function xx33333aa() {
-  if (import.meta.env.DEV) {
-    return (
-      <div>
-        <AlertBase
-          type={APP_COLOR.Warning}
-          text={"版权信息，只在开发中生效，不会打包到产品中！"}
-        ></AlertBase>
-        <AlertBase
-          type={APP_COLOR.Success}
-          text={
-            "【名称：3d116】【版本：1.1.6】【制作：李论】【先定个小目标，活个116岁】"
-          }
-        ></AlertBase>
-      </div>
-    );
-  }
-}
-function RouteComponent() {
-  // const handleTest = () => {
-  //   const sceneJson = scene.toJSON();
 
-  //   localStorage.setItem('scene', JSON.stringify(sceneJson));
-  // };
+function RouteComponent() {
+  return (
+    <iframe
+      src="/editor3d/static/about.html"
+      width={"100%"}
+      height={"100%"}
+    ></iframe>
+  );
   return (
     // <Button onClick={handleTest} variant={getThemeColor()}>
     //   测试
@@ -51,8 +36,16 @@ function RouteComponent() {
         </a>
       </ListGroupItem>
       <ListGroupItem>
-        <iframe src="/editor3d/static/about.html" width={"100%"}></iframe>
-        {xx33333aa()}
+        <AlertBase
+          type={APP_COLOR.Warning}
+          text={"修改about页面，请到：/editor3d/static/about.html"}
+        ></AlertBase>
+        <AlertBase
+          type={APP_COLOR.Success}
+          text={
+            "【名称：3d116】【版本：1.1.6】【制作：李论】【先定个小目标，活个116岁】"
+          }
+        ></AlertBase>
       </ListGroupItem>
     </ListGroup>
   );
