@@ -119,54 +119,53 @@ function ItemInfoCard(props: Props) {
     );
   }
   function loadScene(item: ItemInfo) {
-    const { id, des, name } = item;
-    if (des === "Scene") {
-      const newScene = new Scene();
-      _axios.get(`/project/getProjectData/${id}`).then((res) => {
-        if (res.data.data) {
-          const data = res.data.data;
-          const { scene, camera, models, loader } = strToJson(data);
+    const { id, name } = item;
+    const newScene = new Scene();
+    _axios.get(`/project/getProjectData/${id}`).then((res) => {
+      if (res.data.data) {
+        const data = res.data.data;
+        const { scene, camera, models, loader } = strToJson(data);
 
-          loader.parse(scene, function (object: Scene | any) {
-            const { children, fog, background } = object;
-            newScene.children = children;
-            newScene.fog = fog;
-            newScene.background = background;
-            newScene.userData = {
-              projectName: name,
-              projectId: id,
-              canSave: true,
-            };
+        loader.parse(scene, function (object: Scene | any) {
+          const { children, fog, background } = object;
+          newScene.children = children;
+          newScene.fog = fog;
+          newScene.background = background;
+          newScene.userData = {
+            projectName: name,
+            projectId: id,
+            canSave: true,
+          };
 
-            setScene(newScene);
-            addGridHelper();
-            setBoxHelper();
-            dispatchScene({
-              type: "setScene",
-              payload: getScene(),
-            });
+          setScene(newScene);
+          addGridHelper();
+          setBoxHelper();
+          dispatchScene({
+            type: "setScene",
+            payload: getScene(),
           });
+        });
 
-          loader.parse(camera, function (object) {
-            setCamera(object);
-          });
+        loader.parse(camera, function (object) {
+          setCamera(object);
+        });
 
-          models.forEach((item: GlbModel) => {
-            loadModelByUrl(item);
-          });
-        }
-      });
-    }
-    if (des === "Mesh") {
-      _axios.get(`/project/getProjectData/${id}`).then((res) => {
-        if (res.data.data) {
-          const data = res.data.data;
-          const _data = JSON.parse(data);
-          loadModelByUrl(_data);
-        }
-      });
-    }
+        models.forEach((item: GlbModel) => {
+          loadModelByUrl(item);
+        });
+      }
+    });
   }
+  function loadMesh(item: ItemInfo) {
+    _axios.get(`/project/getProjectData/${item.id}`).then((res) => {
+      if (res.data.data) {
+        const data = res.data.data;
+        const _data = JSON.parse(data);
+        loadModelByUrl(_data);
+      }
+    });
+  }
+
   function loadModelByUrl(model: GlbModel) {
     const loader = glbLoader();
     let progress = 0;
@@ -252,11 +251,8 @@ function ItemInfoCard(props: Props) {
                   src={loadAssets(item.cover)}
                   variant="top"
                   style={{ cursor: "crosshair" }}
-                  onClickCapture={() => {
-                    console.log("click");
-                  }}
                   onClick={() => {
-                    loadScene(item);
+                    item.des === "Scene" ? loadScene(item) : loadMesh(item);
                   }}
                 />
               ) : (
@@ -264,7 +260,7 @@ function ItemInfoCard(props: Props) {
                   className="bi bi-image"
                   style={{ fontSize: "4rem" }}
                   onClick={() => {
-                    loadScene(item);
+                    item.des === "Scene" ? loadScene(item) : loadMesh(item);
                   }}
                 ></i>
               )}

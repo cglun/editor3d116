@@ -23,6 +23,7 @@ import {
   GLTF,
 } from "three/examples/jsm/Addons.js";
 import { GlbModel, UserDataType } from "../app/type";
+import { createDirectionalLight, createGridHelper } from "./utils";
 
 let scene: Scene,
   camera: PerspectiveCamera | OrthographicCamera,
@@ -45,22 +46,7 @@ export function animate() {
 }
 
 export function addLight(): void {
-  // 添加正交光源
-  const light = new DirectionalLight(0xffffff, 2.16);
-  light.name = "平行光";
-  // 设置阴影参数
-  light.shadow.mapSize.width = 2048; // 阴影图的宽度
-  light.shadow.mapSize.height = 2048; // 阴影图的高度
-  light.shadow.camera.near = 0.5; // 阴影摄像机的近剪裁面
-  light.shadow.camera.far = 5000; // 阴影摄像机的远剪裁面
-  light.shadow.camera.left = -10;
-  light.shadow.camera.right = 10;
-  light.shadow.camera.top = 10;
-  light.shadow.camera.bottom = -10;
-
-  light.position.set(3, 3, 3);
-  light.castShadow = true; // 开启投射阴影
-  light.lookAt(0, 0, 0);
+  const light = createDirectionalLight("平行光");
   scene.add(light);
 }
 export default function createScene(node: HTMLDivElement): void {
@@ -270,14 +256,7 @@ export function sceneSerialization(): string {
 }
 
 export function addGridHelper() {
-  const gridHelper = new GridHelper(16, 16);
-  gridHelper.userData = {
-    type: UserDataType.GridHelper,
-    isHelper: true,
-    isSelected: false,
-  };
-  gridHelper.name = "网格辅助";
-  scene.add(gridHelper);
+  scene.add(createGridHelper("网格辅助"));
 }
 
 export function getDivElement() {
@@ -327,7 +306,6 @@ export function raycasterSelect(event: MouseEvent) {
 
 //为选中的物体加上变换控件
 let boxHelper: BoxHelper;
-
 export function setBoxHelper(selectedMesh: Object3D = new Object3D()) {
   if (boxHelper === undefined) {
     boxHelper = new BoxHelper(selectedMesh, 0xffff00);
@@ -379,14 +357,4 @@ export function setTransformControls(selectedMesh: Object3D[]) {
       isSelected: false,
     };
   });
-}
-
-// 截图,返回图片的base64
-export function takeScreenshot(): string {
-  renderer.setSize(300, 300);
-  camera = perspectiveCamera;
-  camera.aspect = 1;
-  renderer.render(scene, camera);
-  const screenshot = renderer.domElement.toDataURL("image/png");
-  return screenshot;
 }
