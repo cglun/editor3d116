@@ -35,13 +35,3 @@ export function blobToFile(blob: Blob, fileName: string) {
     return blob;
   }
 }
-
-export function strToJson(str: string) {
-  const json = JSON.parse(str);
-  const { sceneJsonString, cameraJsonString, modelsJsonString, type } = json;
-  const scene = JSON.parse(sceneJsonString);
-  const camera = JSON.parse(cameraJsonString);
-  const models = JSON.parse(modelsJsonString);
-  const loader = new ObjectLoader();
-  return { scene, camera, models, type, loader };
-}

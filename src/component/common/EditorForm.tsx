@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ItemInfo } from "../Editor/ListCard";
 import InputGroup from "react-bootstrap/esm/InputGroup";
 import Form from "react-bootstrap/esm/Form";
-import { Button, ButtonGroup, Card } from "react-bootstrap";
+import { Button, ButtonGroup, Card, Container } from "react-bootstrap";
 import Viewer3d from "../../viewer3d/Viewer3d";
 import Toast3d from "./Toast3d";
 import { getButtonColor } from "../../app/config";
@@ -27,7 +27,7 @@ export default function EditorForm({
   }, [_item]);
 
   return (
-    <>
+    <Container fluid>
       <InputGroup size="sm">
         <InputGroup.Text id="inputGroup-sizing-sm">名称</InputGroup.Text>
         <Form.Control
@@ -58,7 +58,7 @@ export default function EditorForm({
         />
       </InputGroup>
 
-      <div className="mt-2 d-flex flex-column align-items-center">
+      <div className="mt-2 d-flex flex-column align-items-center ">
         {loadScene ? (
           <Viewer3d
             canvasStyle={{ height: "300px", width: "300px" }}
@@ -127,6 +127,6 @@ export default function EditorForm({
           </Button>
         </ButtonGroup>
       </div>
-    </>
+    </Container>
   );
 }

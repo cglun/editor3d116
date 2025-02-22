@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Container } from "react-bootstrap";
 import Form from "react-bootstrap/esm/Form";
 import InputGroup from "react-bootstrap/esm/InputGroup";
 
@@ -15,7 +16,7 @@ export default function InputBase({
   }, [sceneDes, sceneName]);
 
   return (
-    <>
+    <Container fluid>
       <InputGroup size="sm">
         <InputGroup.Text id="inputGroup-sizing-sm">名称</InputGroup.Text>
         <Form.Control
@@ -43,6 +44,6 @@ export default function InputBase({
           }}
         />
       </InputGroup>
-    </>
+    </Container>
   );
 }

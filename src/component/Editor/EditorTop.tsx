@@ -7,6 +7,7 @@ import {
   Dropdown,
   Offcanvas,
   Image,
+  Container,
 } from "react-bootstrap";
 import { setClassName } from "../../app/utils";
 import { getThemeColor, initThemeColor, setThemeColor } from "../../app/config";
@@ -135,7 +136,7 @@ export default function EditorTop() {
   }, [showScene]);
 
   return (
-    <>
+    <Container fluid>
       <Row>
         <Col>
           <Image src="/editor3d/static/images/logo.png" />
@@ -239,6 +240,6 @@ export default function EditorTop() {
           </Offcanvas.Body>
         </Offcanvas>
       )}
-    </>
+    </Container>
   );
 }

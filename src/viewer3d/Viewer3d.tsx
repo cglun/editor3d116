@@ -6,16 +6,21 @@ import createScene, {
   getScene,
   setCamera,
   setScene,
+  getLabelRenderer,
 } from "../three/init3dViewer";
-import { onWindowResize } from "../three/utils";
+import {
+  getProjectData,
+  onWindowResize,
+  sceneDeserialize,
+} from "../three/utils";
 
 import { APP_COLOR, GlbModel, UserDataType } from "../app/type";
 import { Group, Scene } from "three";
 import { glbLoader } from "../three/init3dEditor";
 import _axios from "../app/http";
-import { strToJson } from "../app/utils";
+
 import { ItemInfo } from "../component/Editor/ListCard";
-import { ProgressBar } from "react-bootstrap";
+import { Container, ProgressBar } from "react-bootstrap";
 import Toast3d from "../component/common/Toast3d";
 
 /**
@@ -35,50 +40,28 @@ export default function Viewer3d({
   >();
   const [progress, setProgress] = useState(0);
 
-  function loadScene() {
-    const { id, des, name } = item;
-
-    if (des === "Scene") {
-      const newScene = new Scene();
-      _axios.get(`/project/getProjectData/${id}`).then((res) => {
-        if (res.data.data) {
-          const data = res.data.data;
-          const { scene, camera, models, loader } = strToJson(data);
-
-          loader.parse(scene, function (object: Scene | any) {
-            const { children, fog, background } = object;
-            newScene.children = children;
-            newScene.fog = fog;
-            newScene.background = background;
-            newScene.userData = {
-              projectName: name,
-              projectId: id,
-              canSave: true,
-            };
-
-            setScene(newScene);
-          });
-
-          loader.parse(camera, function (object) {
-            setCamera(object);
-          });
-
-          models.forEach((item: GlbModel) => {
-            loadModelByUrl(item);
-          });
-        }
+  function loadScene(item: ItemInfo) {
+    getProjectData(item.id)
+      .then((data: any) => {
+        const { scene, camera, modelList } = sceneDeserialize(data, item);
+        setScene(scene);
+        setCamera(camera);
+        modelList.forEach((item: GlbModel) => {
+          loadModelByUrl(item);
+        });
+      })
+      .catch((error) => {
+        Toast3d(error, "提示", APP_COLOR.Danger);
       });
-    }
-    if (des === "Mesh") {
-      _axios.get(`/project/getProjectData/${id}`).then((res) => {
-        if (res.data.data) {
-          const data = res.data.data;
-          const _data = JSON.parse(data);
-
-          loadModelByUrl(_data);
-        }
+  }
+  function loadMesh(item: ItemInfo) {
+    getProjectData(item.id)
+      .then((res: any) => {
+        loadModelByUrl(JSON.parse(res));
+      })
+      .catch((error) => {
+        Toast3d(error, "提示", APP_COLOR.Danger);
       });
-    }
   }
 
   function loadModelByUrl(model: GlbModel) {
@@ -124,34 +107,31 @@ export default function Viewer3d({
   }
 
   useEffect(() => {
-    // init3d(canvas3d);
     if (canvas3d.current) {
       createScene(canvas3d.current);
-      loadScene();
+      item.des === "Scene" ? loadScene(item) : loadMesh(item);
     }
 
     window.addEventListener("resize", () =>
-      onWindowResize(canvas3d, getCamera(), getRenderer())
+      onWindowResize(canvas3d, getCamera(), getRenderer(), getLabelRenderer())
     );
     return () => {
       // getDivElement()?.removeChild(getRenderer().domElement);
       canvas3d.current?.children[0].remove();
-
       window.removeEventListener("resize", () =>
-        onWindowResize(canvas3d, getCamera(), getRenderer())
+        onWindowResize(canvas3d, getCamera(), getRenderer(), getLabelRenderer())
       );
     };
   }, [item.id]);
 
   return (
-    <>
-      <div className="mb-1" style={{ width: "300px" }}>
+    <Container fluid>
+      <div className="mb-1 mx-auto" style={{ width: "300px" }}>
         {progress < 100 && (
           <ProgressBar now={progress} label={`${progress}%`} />
         )}
       </div>
-
-      <div style={canvasStyle} ref={canvas3d}></div>
-    </>
+      <div className="mx-auto" style={canvasStyle} ref={canvas3d}></div>
+    </Container>
   );
 }

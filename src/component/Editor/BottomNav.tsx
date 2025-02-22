@@ -1,6 +1,6 @@
 import { useNavigate, Outlet, useLocation } from "@tanstack/react-router";
 
-import { Nav } from "react-bootstrap";
+import { Container, Nav } from "react-bootstrap";
 import { setClassName } from "../../app/utils";
 
 export default function BottomNav() {
@@ -12,7 +12,7 @@ export default function BottomNav() {
     }
   }
   return (
-    <>
+    <Container fluid>
       <Nav
         variant="tabs"
         // activeKey="/editor3d"
@@ -35,6 +35,11 @@ export default function BottomNav() {
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
+          <Nav.Link eventKey="/editor3d/config">
+            <i className={setClassName("file-code")}></i> 配置
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
           <Nav.Link eventKey="/editor3d/document">
             <i className={setClassName("file-code")}></i> 文档
           </Nav.Link>
@@ -46,6 +51,6 @@ export default function BottomNav() {
         </Nav.Item>
       </Nav>
       <Outlet />
-    </>
+    </Container>
   );
 }

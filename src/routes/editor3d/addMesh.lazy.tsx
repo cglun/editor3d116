@@ -15,7 +15,7 @@ import { addLocalModel, getScene } from "../../three/init3dEditor";
 
 import { useContext } from "react";
 
-import { ButtonGroup, Card } from "react-bootstrap";
+import { ButtonGroup, Card, Container } from "react-bootstrap";
 import { getThemeColor } from "../../app/config";
 import { MyContext } from "../../app/MyContext";
 import { setClassName } from "../../app/utils";
@@ -103,7 +103,7 @@ function RouteComponent() {
   }
 
   return (
-    <div className="d-flex flex-wrap pt-2">
+    <Container fluid className="d-flex flex-wrap pt-2">
       <Card>
         <Card.Header>
           <i className={setClassName("box")}></i> 几何体
@@ -134,14 +134,23 @@ function RouteComponent() {
             >
               组
             </Button>
+
             <Button
               variant={color}
               title="添加glb模型"
               onClick={() => {
-                addLocalModel();
+                const scene = getScene();
+                setInterval(() => {
+                  const blender = scene.getObjectByName("blender");
+                  if (blender) {
+                    blender.rotation.y += 0.1;
+                  } else {
+                    addLocalModel();
+                  }
+                }, 50);
               }}
             >
-              本地模型
+              猴头
             </Button>
           </ButtonGroup>
         </Card.Body>
@@ -173,6 +182,6 @@ function RouteComponent() {
           </ButtonGroup>
         </Card.Body>
       </Card>
-    </div>
+    </Container>
   );
 }

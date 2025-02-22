@@ -9,7 +9,7 @@ import {
 } from "react-bootstrap";
 import AlertBase from "../common/AlertBase";
 import { getThemeColor } from "../../app/config";
-import { setClassName, strToJson } from "../../app/utils";
+import { setClassName } from "../../app/utils";
 import { APP_COLOR, GlbModel, UserDataType } from "../../app/type";
 import ModalConfirm3d from "../common/ModalConfirm3d";
 import Toast3d from "../common/Toast3d";
@@ -20,11 +20,10 @@ import {
   setScene,
   getScene,
   glbLoader,
-  addGridHelper,
-  setBoxHelper,
 } from "../../three/init3dEditor";
-import { Group, Scene } from "three";
+import { Group } from "three";
 import { MyContext } from "../../app/MyContext";
+import { getProjectData, sceneDeserialize } from "../../three/utils";
 
 export interface ItemInfo {
   id: number;
@@ -119,54 +118,30 @@ function ItemInfoCard(props: Props) {
     );
   }
   function loadScene(item: ItemInfo) {
-    const { id, name } = item;
-    const newScene = new Scene();
-    _axios.get(`/project/getProjectData/${id}`).then((res) => {
-      if (res.data.data) {
-        const data = res.data.data;
-        const { scene, camera, models, loader } = strToJson(data);
-
-        loader.parse(scene, function (object: Scene | any) {
-          const { children, fog, background } = object;
-          newScene.children = children;
-          newScene.fog = fog;
-          newScene.background = background;
-          newScene.userData = {
-            projectName: name,
-            projectId: id,
-            canSave: true,
-          };
-
-          setScene(newScene);
-          addGridHelper();
-          setBoxHelper();
-          dispatchScene({
-            type: "setScene",
-            payload: getScene(),
-          });
-        });
-
-        loader.parse(camera, function (object) {
-          setCamera(object);
-        });
-
-        models.forEach((item: GlbModel) => {
+    getProjectData(item.id)
+      .then((data: any) => {
+        const { scene, camera, modelList } = sceneDeserialize(data, item);
+        setScene(scene);
+        setCamera(camera);
+        modelList.forEach((item: GlbModel) => {
           loadModelByUrl(item);
         });
-      }
-    });
+      })
+      .catch((error) => {
+        Toast3d(error, "提示", APP_COLOR.Danger);
+      });
   }
   function loadMesh(item: ItemInfo) {
-    _axios.get(`/project/getProjectData/${item.id}`).then((res) => {
-      if (res.data.data) {
-        const data = res.data.data;
-        const _data = JSON.parse(data);
-        loadModelByUrl(_data);
-      }
-    });
+    getProjectData(item.id)
+      .then((res: any) => {
+        loadModelByUrl(JSON.parse(res));
+      })
+      .catch((error) => {
+        Toast3d(error, "提示", APP_COLOR.Danger);
+      });
   }
 
-  function loadModelByUrl(model: GlbModel) {
+  function loadModelByUrl(model: GlbModel | any) {
     const loader = glbLoader();
     let progress = 0;
     loader.load(
@@ -180,15 +155,20 @@ function ItemInfoCard(props: Props) {
           },
         });
 
-        const { position, rotation, scale } = model;
+        const { position, rotation, scale, userData } = model;
 
         const group = new Group();
         group.name = model.name;
         group.add(...gltf.scene.children);
         group.userData = {
-          ...model.userData,
+          ...userData,
           type: UserDataType.GlbModel,
         };
+
+        if (userData.label) {
+          console.log(userData.label, "label");
+        }
+
         group.position.set(position.x, position.y, position.z);
 
         group.position.set(position.x, position.y, position.z);

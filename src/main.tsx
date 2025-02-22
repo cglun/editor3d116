@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "/public/static/css/github-dark.min.css";
+
 import "./App.css";
 
 import { RouterProvider, createRouter } from "@tanstack/react-router";

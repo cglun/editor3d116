@@ -1,7 +1,5 @@
 import {
   BoxHelper,
-  DirectionalLight,
-  GridHelper,
   MOUSE,
   Object3D,
   Object3DEventMap,
@@ -21,6 +19,7 @@ import {
   TransformControls,
   DragControls,
   GLTF,
+  CSS2DRenderer,
 } from "three/examples/jsm/Addons.js";
 import { GlbModel, UserDataType } from "../app/type";
 import { createDirectionalLight, createGridHelper } from "./utils";
@@ -37,12 +36,16 @@ let scene: Scene,
   transfControls: TransformControls,
   transfControls1: TransformControls,
   transfControls2: TransformControls,
-  perspectiveCameraPosition: Vector3 = new Vector3(-5, 5, 8);
+  perspectiveCameraPosition: Vector3 = new Vector3(-5, 5, 8),
+  labelRenderer: CSS2DRenderer | null = null;
 
 export function animate() {
   requestAnimationFrame(animate);
   controls.update();
   renderer.render(scene, camera);
+  if (labelRenderer) {
+    labelRenderer.render(scene, camera);
+  }
 }
 
 export function addLight(): void {
@@ -226,6 +229,7 @@ export function sceneSerialization(): string {
     const childUserData = child.userData;
     if (childUserData.type === UserDataType.GlbModel) {
       const { id, name, position, rotation, scale } = child;
+
       const model: GlbModel = {
         id,
         name,
@@ -261,6 +265,16 @@ export function addGridHelper() {
 
 export function getDivElement() {
   return divElement;
+}
+export function getLabelRenderer() {
+  return labelRenderer;
+}
+let labelOrbitControls: OrbitControls | null = null;
+export function setLabelRenderer(_labelRenderer: CSS2DRenderer) {
+  labelRenderer = _labelRenderer;
+  if (labelOrbitControls === null) {
+    new OrbitControls(perspectiveCamera, labelRenderer.domElement);
+  }
 }
 
 export function setDragControls(currentObject: Object3D) {
@@ -344,6 +358,7 @@ export function setTransformControls(selectedMesh: Object3D[]) {
 
   const getHelper = transfControls.getHelper();
   getHelper.name = "TransformControlsRoot";
+
   getHelper.userData = {
     type: UserDataType.TransformHelper,
     isHelper: true,

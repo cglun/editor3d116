@@ -12,11 +12,13 @@ export const Route = createLazyFileRoute("/editor3d/about")({
 
 function RouteComponent() {
   return (
-    <iframe
-      src="/editor3d/static/about.html"
-      width={"100%"}
-      height={"100%"}
-    ></iframe>
+    <div style={{ height: "100vh" }}>
+      <iframe
+        src="/editor3d/static/about.html"
+        width={"100%"}
+        height={"100%"}
+      ></iframe>
+    </div>
   );
   return (
     // <Button onClick={handleTest} variant={getThemeColor()}>

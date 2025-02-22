@@ -60,8 +60,7 @@ btn-group-sm > .btn,
   --bs-btn-padding-y: 0;
   --bs-btn-font-size: 0.8rem;
 }
-.custom-file-upload {  
- 
+.custom-file-upload {
   cursor: pointer;
   border: 1px dashed #ccc;
   border-radius: 4px;
@@ -69,5 +68,11 @@ btn-group-sm > .btn,
 
 .custom-file-upload:hover {
   color: var(--bs-primary-text-emphasis);
-  background-color: var(--bg-primary)
+  background-color: var(--bg-primary);
+}
+.mark-label {
+  font-size: 1.16rem;
+  padding: 0.4rem;
+  border-radius: 0.4rem;
+  background: rgb(41, 32, 32) !important;
 }

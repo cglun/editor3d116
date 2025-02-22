@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Button, ListGroupItem } from "react-bootstrap";
+import { Button, Container, ListGroupItem } from "react-bootstrap";
 import { setClassName } from "../../app/utils";
 import { getObjectNameByName } from "../../three/utils";
 import { SPACE } from "../../app/config";
@@ -90,57 +90,56 @@ const TreeNode = ({
   }
 
   return (
-    <>
-      <ListGroupItem>
-        <div
-          className={light}
-          onClick={handleToggle}
-          onMouseEnter={() => setDelBtn(true)}
-          onMouseLeave={() => setDelBtn(false)}
-        >
-          <div>
-            {getLogo(node)} {SPACE}
-            {getObjectNameByName(node)}
-          </div>
-          <div>
-            {delBtn ? (
-              <Button
-                size="sm"
-                variant={APP_COLOR.Dark}
-                className="me-1"
-                onClick={(e) => delMesh(e, node)}
-              >
-                <i className={setClassName("trash")}></i>
-              </Button>
-            ) : (
-              ""
-            )}
-            {hasChildren ? (
-              isExpanded ? (
-                <i className={setClassName("dash-square")}></i>
-              ) : (
-                <i className={setClassName("plus-square")}></i>
-              )
-            ) : (
-              ""
-            )}
-          </div>
+    <ListGroupItem>
+      <Container
+        fluid
+        className={light}
+        onClick={handleToggle}
+        onMouseEnter={() => setDelBtn(true)}
+        onMouseLeave={() => setDelBtn(false)}
+      >
+        <div>
+          {getLogo(node)} {SPACE}
+          {getObjectNameByName(node)}
         </div>
-        {isExpanded && hasChildren && (
-          <div>
-            {node.children.map((child) => (
-              <TreeNode
-                key={child.uuid}
-                node={child}
-                setCurObj3d={setCurObj3d}
-                onToggle={onToggle}
-                resetTextWarning={resetTextWarning}
-              />
-            ))}
-          </div>
-        )}
-      </ListGroupItem>
-    </>
+        <div>
+          {delBtn ? (
+            <Button
+              size="sm"
+              variant={APP_COLOR.Dark}
+              className="me-1"
+              onClick={(e) => delMesh(e, node)}
+            >
+              <i className={setClassName("trash")}></i>
+            </Button>
+          ) : (
+            ""
+          )}
+          {hasChildren ? (
+            isExpanded ? (
+              <i className={setClassName("dash-square")}></i>
+            ) : (
+              <i className={setClassName("plus-square")}></i>
+            )
+          ) : (
+            ""
+          )}
+        </div>
+      </Container>
+      {isExpanded && hasChildren && (
+        <>
+          {node.children.map((child) => (
+            <TreeNode
+              key={child.uuid}
+              node={child}
+              setCurObj3d={setCurObj3d}
+              onToggle={onToggle}
+              resetTextWarning={resetTextWarning}
+            />
+          ))}
+        </>
+      )}
+    </ListGroupItem>
   );
 };
 

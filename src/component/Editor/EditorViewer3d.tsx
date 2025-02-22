@@ -4,6 +4,7 @@ import { MyContext } from "../../app/MyContext";
 import createScene, {
   addGridHelper,
   getCamera,
+  getLabelRenderer,
   getRenderer,
   getScene,
   getTransfControls,
@@ -31,12 +32,22 @@ function EditorViewer3d() {
       payload: getScene().clone(),
     });
     window.addEventListener("resize", () =>
-      onWindowResize(editorCanvas, getCamera(), getRenderer())
+      onWindowResize(
+        editorCanvas,
+        getCamera(),
+        getRenderer(),
+        getLabelRenderer()
+      )
     );
     return () => {
       editorCanvas.current?.children[0].remove();
       window.removeEventListener("resize", () =>
-        onWindowResize(editorCanvas, getCamera(), getRenderer())
+        onWindowResize(
+          editorCanvas,
+          getCamera(),
+          getRenderer(),
+          getLabelRenderer()
+        )
       );
     };
   }, []);

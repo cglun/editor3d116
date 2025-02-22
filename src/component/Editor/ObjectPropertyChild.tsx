@@ -11,6 +11,7 @@ import { getScene } from "../../three/init3dEditor";
 import { MyContext } from "../../app/MyContext";
 import AlertBase from "../common/AlertBase";
 import { APP_COLOR } from "../../app/type";
+import { Container } from "react-bootstrap";
 const step = 0.1;
 export function Switch3d({
   title,
@@ -217,7 +218,7 @@ function sceneProperty(curObj3d: Object3D | any) {
     ? curObj3d.background?.getHexString()
     : "000000";
   return (
-    <>
+    <Container fluid>
       <InputGroup size="sm">
         <InputGroup.Text>背景色</InputGroup.Text>
         <Form.Control
@@ -272,14 +273,14 @@ function sceneProperty(curObj3d: Object3D | any) {
       >
         重置雾气
       </Button>
-    </>
+    </Container>
   );
 }
 
 function commonProperty(curObj3d: Object3D | any) {
   return (
     curObj3d && (
-      <>
+      <Container fluid>
         <Object3dInput
           transform={curObj3d.position}
           title={"位置"}
@@ -323,7 +324,7 @@ function commonProperty(curObj3d: Object3D | any) {
             )}
           </Card.Body>
         </Card>
-      </>
+      </Container>
     )
   );
 }

@@ -6,13 +6,14 @@ import {
   WebGLRenderer,
 } from "three";
 
-import { OrbitControls } from "three/examples/jsm/Addons.js";
+import { CSS2DRenderer, OrbitControls } from "three/examples/jsm/Addons.js";
 import { createDirectionalLight, createGridHelper } from "./utils";
 
 let scene: Scene,
   camera: PerspectiveCamera,
   controls: OrbitControls,
-  renderer: WebGLRenderer;
+  renderer: WebGLRenderer,
+  labelRenderer: CSS2DRenderer | null;
 
 function animate() {
   requestAnimationFrame(animate);
@@ -42,6 +43,9 @@ export default function createScene(node: HTMLDivElement): void {
 
 export function getControls() {
   return controls;
+}
+export function getLabelRenderer() {
+  return labelRenderer;
 }
 
 export function setScene(newScene: Scene) {
