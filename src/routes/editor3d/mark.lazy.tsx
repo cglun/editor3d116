@@ -10,17 +10,13 @@ import {
 } from "react-bootstrap";
 
 import { getButtonColor } from "../../app/config";
-import { useContext, useEffect, useState } from "react";
+import { Children, useContext, useEffect, useState } from "react";
 import { setClassName } from "../../app/utils";
-import { addLabelRenderer, createCss2dLabel } from "../../three/utils";
-import {
-  addLocalModel,
-  getDivElement,
-  getLabelRenderer,
-  getScene,
-  setLabelRenderer,
-} from "../../three/init3dEditor";
+import { createCss2dLabel } from "../../three/utils";
+import { getScene, setLabelRenderer1 } from "../../three/init3dEditor";
 import { MyContext } from "../../app/MyContext";
+import { Group } from "three";
+import { UserDataType } from "../../app/type";
 
 export const Route = createLazyFileRoute("/editor3d/mark")({
   component: RouteComponent,
@@ -32,17 +28,11 @@ function RouteComponent() {
   const [logo, setLogo] = useState<string>("geo-alt");
   const { dispatchScene } = useContext(MyContext);
   function addMarkTest(inputText: string) {
-    const labelRender = getLabelRenderer();
-    if (labelRender === null) {
-      const lb = addLabelRenderer(getDivElement());
-      setLabelRenderer(lb);
-    }
-    const blender = getScene().getObjectByName("blender");
+    // const blender = getScene().getObjectByName("blender");
 
-    if (blender) {
-      const label = createCss2dLabel(blender, inputText, logo);
-      getScene().add(label);
-    }
+    const label = createCss2dLabel(inputText, logo);
+
+    getScene().add(label);
   }
   useEffect(() => {
     // addLocalModel();
@@ -97,6 +87,16 @@ function RouteComponent() {
             variant={getButtonColor()}
             onClick={() => {
               console.log(getScene());
+              const scene = getScene();
+              scene?.traverse((child) => {
+                // const { needDlete } = child.userData;
+                // if (child.name === "xx") {
+                // }
+                scene.remove(child);
+              });
+              // scene.children.forEach((element) => {
+              //   element.parent?.remove(element);
+              // });
             }}
           >
             一键标记

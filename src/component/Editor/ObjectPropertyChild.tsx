@@ -65,7 +65,9 @@ export function Object3dInput({
       return;
     }
   }
-
+  const [transformX, setTransformX] = useState(transform.x);
+  const [transformY, setTransformY] = useState(transform.y);
+  const [transformZ, setTransformZ] = useState(transform.z);
   return (
     <Card>
       <Card.Header className="d-flex justify-content-between">
@@ -91,10 +93,13 @@ export function Object3dInput({
             placeholder={transform.x.toString()}
             type="number"
             step={step}
-            title={transform.x.toString()}
+            value={transformX.toString()}
+            title={transformX.toString()}
             onChange={(e) => {
-              setValue(parseFloat(e.target.value));
-              transform.x = parseFloat(e.target.value);
+              const x = parseFloat(e.target.value);
+              setValue(x);
+              setTransformX(x);
+              transform.x = x;
             }}
           />
         </InputGroup>
@@ -106,6 +111,7 @@ export function Object3dInput({
             placeholder={transform.y.toString()}
             type="number"
             step={step}
+            value={transformY.toString()}
             disabled={_isScale && checked}
             title={
               _isScale && checked
@@ -113,8 +119,10 @@ export function Object3dInput({
                 : transform.y.toString()
             }
             onChange={(e) => {
-              setValue(parseFloat(e.target.value));
-              transform.y = parseFloat(e.target.value);
+              const y = parseFloat(e.target.value);
+              setValue(y);
+              setTransformY(y);
+              transform.y = y;
             }}
           />
         </InputGroup>
@@ -125,6 +133,7 @@ export function Object3dInput({
             aria-describedby="inputGroup-sizing-sm"
             placeholder={transform.z.toString()}
             type="number"
+            value={transformZ.toString()}
             step={step}
             disabled={_isScale && checked}
             title={
@@ -133,8 +142,10 @@ export function Object3dInput({
                 : transform.z.toString()
             }
             onChange={(e) => {
-              setValue(parseFloat(e.target.value));
-              transform.z = parseFloat(e.target.value);
+              const z = parseFloat(e.target.value);
+              setValue(z);
+              setTransformZ(z);
+              transform.z = z;
             }}
           />
         </InputGroup>
@@ -151,6 +162,7 @@ export function AttrInputNumber({
   curObj3d: Object3D | any;
   attr: string;
 }) {
+  const [value, setValue] = useState(curObj3d === null ? 0 : curObj3d[attr]);
   return (
     curObj3d &&
     curObj3d.hasOwnProperty(attr) && (
@@ -162,9 +174,11 @@ export function AttrInputNumber({
           placeholder={curObj3d[attr].toString()}
           type="number"
           step={step}
+          value={value}
           title={curObj3d[attr].toString()}
           onChange={(e) => {
             curObj3d[attr] = parseFloat(e.target.value);
+            setValue(parseFloat(e.target.value));
           }}
         />
       </InputGroup>
@@ -268,7 +282,12 @@ function sceneProperty(curObj3d: Object3D | any) {
       <Button
         variant={getThemeColor()}
         onClick={() => {
+          curObj3d.background = new Color("#000");
           curObj3d.fog = null;
+          dispatchScene({
+            type: "setScene",
+            payload: getScene(),
+          });
         }}
       >
         重置雾气

@@ -23,7 +23,12 @@ import {
 } from "../../three/init3dEditor";
 import { Group } from "three";
 import { MyContext } from "../../app/MyContext";
-import { getProjectData, sceneDeserialize } from "../../three/utils";
+import {
+  config3d,
+  createCss2dLabel,
+  getProjectData,
+  sceneDeserialize,
+} from "../../three/utils";
 
 export interface ItemInfo {
   id: number;
@@ -123,6 +128,40 @@ function ItemInfoCard(props: Props) {
         const { scene, camera, modelList } = sceneDeserialize(data, item);
         setScene(scene);
         setCamera(camera);
+        // 加载完成后，设置标签
+        if (config3d.css2d) {
+          const scene = getScene();
+          scene.traverse((child) => {
+            const { type, labelLogo } = child.userData;
+            if (type === UserDataType.CSS2DObject) {
+              const label = createCss2dLabel(child.name, labelLogo);
+              const { x, y, z } = child.position;
+              label.position.set(x, y, z);
+
+              //   child.add(label);
+              // child.name = "needDlete";
+              // child = label;
+              child.parent?.add(label);
+
+              //  child.parent?.add(label);
+              //child.parent?.remove(child);
+              child.name = "xx";
+              // child.userData = {
+              //   needDlete: true,
+              // };
+            }
+          });
+          // setTimeout(() => {
+          //   getScene()?.traverse((child) => {
+          //     const { needDlete } = child.userData;
+          //     if (needDlete) {
+          //       child.parent?.remove(child);
+          //     }
+          //   });
+          // }, 1000);
+
+          // const label = createCss2dLabel(model.name, model.userData.logo);
+        }
         modelList.forEach((item: GlbModel) => {
           loadModelByUrl(item);
         });
@@ -164,25 +203,16 @@ function ItemInfoCard(props: Props) {
           ...userData,
           type: UserDataType.GlbModel,
         };
-
-        if (userData.label) {
-          console.log(userData.label, "label");
-        }
-
         group.position.set(position.x, position.y, position.z);
-
         group.position.set(position.x, position.y, position.z);
-
         // group.rotation.set(rotation._x, rotation._y, rotation._z, "XYZ");
         group.setRotationFromEuler(rotation);
         group.scale.set(scale.x, scale.y, scale.z);
-
         getScene().add(group);
         dispatchScene({
           type: "setScene",
           payload: getScene(),
         });
-        //  gltfToScene(group);
       },
       function (xhr) {
         progress = parseFloat(

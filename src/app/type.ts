@@ -70,6 +70,7 @@ export enum UserDataType {
   TransformHelper = "TransformHelper",
   GridHelper = "GridHelper",
   BoxHelper = "BoxHelper",
+  CSS2DObject = "CSS2DObject",
 }
 // export type XXXX = {
 //   modelUrl: string;

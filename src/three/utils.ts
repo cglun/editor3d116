@@ -1,17 +1,15 @@
 import {
-  Camera,
   DirectionalLight,
   GridHelper,
-  NotEqualStencilFunc,
   Object3D,
   ObjectLoader,
   PerspectiveCamera,
   Scene,
   WebGLRenderer,
 } from "three";
-import { GlbModel, UserDataType } from "../app/type";
+import { UserDataType } from "../app/type";
 import { CSS2DObject, CSS2DRenderer } from "three/examples/jsm/Addons.js";
-import { setClassName, strToJson } from "../app/utils";
+import { setClassName } from "../app/utils";
 import { ItemInfo } from "../component/Editor/ListCard";
 import _axios from "../app/http";
 
@@ -105,7 +103,7 @@ export function createDirectionalLight(name: string) {
   return light;
 }
 
-export function addLabelRenderer(node: HTMLElement) {
+export function createLabelRenderer(node: HTMLElement) {
   const labelRenderer = new CSS2DRenderer();
   labelRenderer.setSize(node.offsetWidth, node.offsetHeight);
   labelRenderer.domElement.style.position = "absolute";
@@ -116,7 +114,7 @@ export function addLabelRenderer(node: HTMLElement) {
   return labelRenderer;
 }
 
-export function createCss2dLabel(model: Object3D, name: string, logo: string) {
+export function createCss2dLabel(name: string, logo: string) {
   const div = document.createElement("div");
   div.className = "mark-label";
 
@@ -131,16 +129,20 @@ export function createCss2dLabel(model: Object3D, name: string, logo: string) {
   //div.style.backgroundColor = "transparent";
   div.style.backgroundColor = "var(--bs-link-hover-color";
   const divLabel = new CSS2DObject(div);
-  divLabel.name = "label";
+  divLabel.name = name;
+  divLabel.userData = {
+    type: UserDataType.CSS2DObject,
+    labelLogo: logo,
+  };
   // divLabel.userData = {
   //   type: UserDataType.Label,
   //   isHelper: true,
   //   isSelected: false,
   // };
-  const { x, y, z } = model.position;
-  divLabel.position.set(x, y, z);
+  //const { x, y, z } = model.position;
+  // divLabel.position.set(x, y, z);
   //  divLabel.center.set(0, 0);
-  model.userData.label = divLabel;
+  //  model.userData.label = divLabel;
   return divLabel;
 }
 export function strToJson(str: string) {

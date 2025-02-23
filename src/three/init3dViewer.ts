@@ -38,6 +38,7 @@ export default function createScene(node: HTMLDivElement): void {
   controls = new OrbitControls(camera, renderer.domElement);
   scene.add(createDirectionalLight("平行光"));
   scene.add(createGridHelper("网格辅助"));
+
   animate();
 }
 

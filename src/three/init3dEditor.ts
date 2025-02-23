@@ -22,7 +22,12 @@ import {
   CSS2DRenderer,
 } from "three/examples/jsm/Addons.js";
 import { GlbModel, UserDataType } from "../app/type";
-import { createDirectionalLight, createGridHelper } from "./utils";
+import {
+  config3d,
+  createDirectionalLight,
+  createGridHelper,
+  createLabelRenderer,
+} from "./utils";
 
 let scene: Scene,
   camera: PerspectiveCamera | OrthographicCamera,
@@ -37,13 +42,13 @@ let scene: Scene,
   transfControls1: TransformControls,
   transfControls2: TransformControls,
   perspectiveCameraPosition: Vector3 = new Vector3(-5, 5, 8),
-  labelRenderer: CSS2DRenderer | null = null;
+  labelRenderer: CSS2DRenderer;
 
 export function animate() {
   requestAnimationFrame(animate);
   controls.update();
   renderer.render(scene, camera);
-  if (labelRenderer) {
+  if (labelRenderer && config3d.css2d) {
     labelRenderer.render(scene, camera);
   }
 }
@@ -102,6 +107,10 @@ export default function createScene(node: HTMLDivElement): void {
     renderer.domElement
   );
   transfControls = transfControls1;
+  if (config3d.css2d) {
+    labelRenderer = createLabelRenderer(node);
+    // new OrbitControls(perspectiveCamera, labelRenderer.domElement);
+  }
 
   animate();
 }
@@ -268,13 +277,6 @@ export function getDivElement() {
 }
 export function getLabelRenderer() {
   return labelRenderer;
-}
-let labelOrbitControls: OrbitControls | null = null;
-export function setLabelRenderer(_labelRenderer: CSS2DRenderer) {
-  labelRenderer = _labelRenderer;
-  if (labelOrbitControls === null) {
-    new OrbitControls(perspectiveCamera, labelRenderer.domElement);
-  }
 }
 
 export function setDragControls(currentObject: Object3D) {
