@@ -9,24 +9,32 @@ export const Route = createLazyFileRoute("/editor3d/config")({
 });
 
 function RouteComponent() {
-  const [config, setConfig] = useState(config3d);
+  function ConfigCheck({ label = "标签", configKey = "css2d" }) {
+    const _configKey = configKey as keyof typeof config3d;
+    const [_value, _setValue] = useState(config3d[_configKey]);
+    return (
+      <Form className="ms-2">
+        <Form.Check
+          label={label}
+          type="switch"
+          checked={_value}
+          onChange={() => {
+            _setValue(!_value);
+            config3d[_configKey] = !_value;
+            console.log(config3d[_configKey] as boolean);
+          }}
+        />
+      </Form>
+    );
+  }
+
   return (
     <ListGroup horizontal className="ms-2 mt-2">
       <ListGroup.Item>
-        <Form className="ms-2">
-          <Form.Check
-            label="2d标签"
-            type="switch"
-            checked={config.css2d}
-            onChange={() => {
-              setConfig({
-                ...config3d,
-                css2d: !config.css2d,
-              });
-              config3d.css2d = !config.css2d;
-            }}
-          />
-        </Form>
+        <ConfigCheck label="css2d" configKey="css2d" />
+      </ListGroup.Item>
+      <ListGroup.Item>
+        <ConfigCheck label="css3d" configKey="css3d" />
       </ListGroup.Item>
     </ListGroup>
   );

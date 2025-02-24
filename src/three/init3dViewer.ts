@@ -13,7 +13,7 @@ let scene: Scene,
   camera: PerspectiveCamera,
   controls: OrbitControls,
   renderer: WebGLRenderer,
-  labelRenderer: CSS2DRenderer | null;
+  labelRenderer2d: CSS2DRenderer | null;
 
 function animate() {
   requestAnimationFrame(animate);
@@ -46,7 +46,7 @@ export function getControls() {
   return controls;
 }
 export function getLabelRenderer() {
-  return labelRenderer;
+  return labelRenderer2d;
 }
 
 export function setScene(newScene: Scene) {

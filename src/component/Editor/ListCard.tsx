@@ -19,15 +19,17 @@ import {
   setCamera,
   setScene,
   getScene,
-  glbLoader,
+  addGridHelper,
 } from "../../three/init3dEditor";
 import { Group } from "three";
 import { MyContext } from "../../app/MyContext";
 import {
-  config3d,
+  glbLoader,
   createCss2dLabel,
   getProjectData,
   sceneDeserialize,
+  setConfig3d,
+  setLabel,
 } from "../../three/utils";
 
 export interface ItemInfo {
@@ -41,10 +43,15 @@ interface Props {
   list: ItemInfo[];
   setList: (list: ItemInfo[]) => void;
   isLoading: boolean;
+  error: string;
 }
 function ItemInfoCard(props: Props) {
-  const { list, setList, isLoading } = props;
+  const { list, setList, isLoading, error } = props;
   const { dispatchScene } = useContext(MyContext);
+  //错误提示
+  if (error.trim().length > 0) {
+    return <AlertBase type={APP_COLOR.Warning} text={error} />;
+  }
 
   //加载中……
   if (isLoading) {
@@ -123,45 +130,22 @@ function ItemInfoCard(props: Props) {
     );
   }
   function loadScene(item: ItemInfo) {
+    const XX = getScene();
+    console.log(XX);
+
     getProjectData(item.id)
       .then((data: any) => {
-        const { scene, camera, modelList } = sceneDeserialize(data, item);
+        const { scene, camera, modelList, config3d } = sceneDeserialize(
+          data,
+          item
+        );
         setScene(scene);
         setCamera(camera);
+        addGridHelper();
+        setConfig3d(config3d);
         // 加载完成后，设置标签
-        if (config3d.css2d) {
-          const scene = getScene();
-          scene.traverse((child) => {
-            const { type, labelLogo } = child.userData;
-            if (type === UserDataType.CSS2DObject) {
-              const label = createCss2dLabel(child.name, labelLogo);
-              const { x, y, z } = child.position;
-              label.position.set(x, y, z);
+        setLabel(scene);
 
-              //   child.add(label);
-              // child.name = "needDlete";
-              // child = label;
-              child.parent?.add(label);
-
-              //  child.parent?.add(label);
-              //child.parent?.remove(child);
-              child.name = "xx";
-              // child.userData = {
-              //   needDlete: true,
-              // };
-            }
-          });
-          // setTimeout(() => {
-          //   getScene()?.traverse((child) => {
-          //     const { needDlete } = child.userData;
-          //     if (needDlete) {
-          //       child.parent?.remove(child);
-          //     }
-          //   });
-          // }, 1000);
-
-          // const label = createCss2dLabel(model.name, model.userData.logo);
-        }
         modelList.forEach((item: GlbModel) => {
           loadModelByUrl(item);
         });

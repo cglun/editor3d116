@@ -119,20 +119,33 @@ export default function EditorTop() {
   }
 
   const [list, setList] = useState(testData1);
+  const [error, setError] = useState("");
   useEffect(() => {
     setIsLoading(true);
-    _axios.post("/project/pageList/", { size: 1000 }).then((res) => {
-      if ((res.data.code = 200)) {
-        const list = res.data.data.records;
-        const sceneList = list.filter((item: any) => {
-          if (item.des === "Scene") {
-            return item;
+    _axios
+      .post("/project/pageList/", { size: 1000 })
+      .then((res) => {
+        if ((res.data.code = 200)) {
+          const message = res.data.message;
+          if (message) {
+            setError(message);
+            return;
           }
-        });
-        setList(sceneList);
-        setIsLoading(false);
-      }
-    });
+          const list = res.data.data.records;
+          const sceneList = list.filter((item: any) => {
+            if (item.des === "Scene") {
+              return item;
+            }
+          });
+          setList(sceneList);
+          setIsLoading(false);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+
+        Toast3d("error", error, APP_COLOR.Danger);
+      });
   }, [showScene]);
 
   return (
@@ -236,6 +249,7 @@ export default function EditorTop() {
               list={list}
               setList={setList}
               isLoading={isLoading}
+              error={error}
             ></ListCard>
           </Offcanvas.Body>
         </Offcanvas>

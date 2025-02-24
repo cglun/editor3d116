@@ -1,4 +1,4 @@
-import { Euler, Vector3 } from "three";
+import { Euler, Sprite, Vector3 } from "three";
 
 export interface CanvasNode {
   width: number;
@@ -71,7 +71,9 @@ export enum UserDataType {
   GridHelper = "GridHelper",
   BoxHelper = "BoxHelper",
   CSS2DObject = "CSS2DObject",
+  CSS3DObject = "CSS3DObject",
 }
+
 // export type XXXX = {
 //   modelUrl: string;
 //   modelTotal: number;

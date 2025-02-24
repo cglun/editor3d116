@@ -17,11 +17,17 @@ function ModelList() {
   const [list, setList] = React.useState(testData2);
   const [filterList, setFilterList] = React.useState(testData2);
   const [isLoading, setIsLoading] = React.useState(true);
+  const [error, setError] = React.useState("");
   const [updateTime, setUpdateTime] = React.useState(0);
   useEffect(() => {
     setIsLoading(true);
     _axios.post("/project/pageList/", { size: 1000 }).then((res) => {
       if ((res.data.code = 200)) {
+        const message = res.data.message;
+        if (message) {
+          setError(message);
+          return;
+        }
         const list = res.data.data.records;
         const sceneList = list.filter((item: any) => {
           if (item.des === "Mesh") {
@@ -49,6 +55,7 @@ function ModelList() {
         list={filterList}
         setList={setFilterList}
         isLoading={isLoading}
+        error={error}
       ></ListCard>
     </div>
   );

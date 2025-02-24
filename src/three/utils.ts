@@ -8,10 +8,19 @@ import {
   WebGLRenderer,
 } from "three";
 import { UserDataType } from "../app/type";
-import { CSS2DObject, CSS2DRenderer } from "three/examples/jsm/Addons.js";
+import {
+  CSS2DObject,
+  CSS2DRenderer,
+  CSS3DObject,
+  CSS3DRenderer,
+  CSS3DSprite,
+  DRACOLoader,
+  GLTFLoader,
+} from "three/examples/jsm/Addons.js";
 import { setClassName } from "../app/utils";
 import { ItemInfo } from "../component/Editor/ListCard";
 import _axios from "../app/http";
+import { getScene } from "./init3dEditor";
 
 export function getObjectNameByName(object3D: Object3D): string {
   return object3D.name.trim() === "" ? object3D.type : object3D.name;
@@ -103,8 +112,11 @@ export function createDirectionalLight(name: string) {
   return light;
 }
 
-export function createLabelRenderer(node: HTMLElement) {
-  const labelRenderer = new CSS2DRenderer();
+export function createLabelRenderer(
+  node: HTMLElement,
+  renderer: CSS2DRenderer | CSS3DRenderer
+) {
+  const labelRenderer = renderer;
   labelRenderer.setSize(node.offsetWidth, node.offsetHeight);
   labelRenderer.domElement.style.position = "absolute";
   labelRenderer.domElement.style.top = "0px";
@@ -114,10 +126,9 @@ export function createLabelRenderer(node: HTMLElement) {
   return labelRenderer;
 }
 
-export function createCss2dLabel(name: string, logo: string) {
+function createDiv(logo: string, name: string) {
   const div = document.createElement("div");
   div.className = "mark-label";
-
   const img = document.createElement("i");
   img.className = setClassName(logo);
   div.appendChild(img);
@@ -126,38 +137,76 @@ export function createCss2dLabel(name: string, logo: string) {
   span.textContent = name;
   div.appendChild(span);
 
-  //div.style.backgroundColor = "transparent";
-  div.style.backgroundColor = "var(--bs-link-hover-color";
-  const divLabel = new CSS2DObject(div);
-  divLabel.name = name;
-  divLabel.userData = {
+  return div;
+}
+
+export function createCss3dLabel(name: string, logo: string) {
+  const div = createDiv(logo, name);
+  const css3DSprite = new CSS3DSprite(div);
+  css3DSprite.name = name;
+  css3DSprite.position.set(0, 0, 0);
+  css3DSprite.scale.set(0.04, 0.04, 0.04);
+  css3DSprite.userData = {
+    type: UserDataType.CSS3DObject,
+    labelLogo: logo,
+  };
+  return css3DSprite;
+}
+
+export function createCss2dLabel(name: string, logo: string) {
+  const div = createDiv(logo, name);
+  const css2DObject = new CSS2DObject(div);
+  css2DObject.name = name;
+  css2DObject.userData = {
     type: UserDataType.CSS2DObject,
     labelLogo: logo,
   };
-  // divLabel.userData = {
-  //   type: UserDataType.Label,
-  //   isHelper: true,
-  //   isSelected: false,
-  // };
-  //const { x, y, z } = model.position;
-  // divLabel.position.set(x, y, z);
-  //  divLabel.center.set(0, 0);
-  //  model.userData.label = divLabel;
-  return divLabel;
+
+  return css2DObject;
 }
+
+export function setLabel(scene: Scene) {
+  const MARK_LABEL = scene.getObjectByName("MARK_LABEL");
+  if (!MARK_LABEL) {
+    return;
+  }
+
+  const children = MARK_LABEL.children;
+  children.forEach((item) => {
+    const { type } = item.userData;
+    let label = createCss3dLabel(item.name, item.userData.labelLogo);
+    const { x, y, z } = item.position;
+    label.position.set(x, y, z);
+    if (type === UserDataType.CSS2DObject) {
+      label = createCss2dLabel(item.name, item.userData.labelLogo);
+    }
+    item.userData.needDelete = true;
+    MARK_LABEL.add(label);
+  });
+
+  const labelList = children.filter((item) => {
+    if (!item.userData.needDelete) {
+      return item;
+    }
+  });
+  debugger;
+  MARK_LABEL.children = labelList;
+}
+
 export function strToJson(str: string) {
   const json = JSON.parse(str);
   const { sceneJsonString, cameraJsonString, modelsJsonString, type } = json;
   const scene: Scene = JSON.parse(sceneJsonString);
   const camera: PerspectiveCamera = JSON.parse(cameraJsonString);
   const models = JSON.parse(modelsJsonString);
+  const config3d = JSON.parse(json.config3d);
   const loader = new ObjectLoader();
-  return { scene, camera, models, type, loader };
+  return { scene, camera, models, type, loader, config3d };
 }
 
 //反序列化
 export function sceneDeserialize(data: string, item: ItemInfo) {
-  const { scene, camera, models, loader } = strToJson(data);
+  const { scene, camera, models, loader, config3d } = strToJson(data);
   const newScene = new Scene();
   loader.parse(scene, function (object: Scene | any) {
     const { children, fog, background } = object;
@@ -175,7 +224,12 @@ export function sceneDeserialize(data: string, item: ItemInfo) {
     newCamera = object;
   });
 
-  return { scene: newScene, camera: newCamera, modelList: models };
+  return {
+    scene: newScene,
+    camera: newCamera,
+    modelList: models,
+    config3d: config3d,
+  };
 }
 
 export function getProjectData(id: number | string) {
@@ -197,6 +251,22 @@ export function getProjectData(id: number | string) {
   });
 }
 
-export const config3d = {
-  css2d: true,
+export function glbLoader() {
+  const dracoLoader = new DRACOLoader();
+  dracoLoader.setDecoderPath("/editor3d/static/js/draco/gltf/");
+  //const loader = new GLTFLoader(new LoadingManager());
+  const loader = new GLTFLoader();
+  loader.setDRACOLoader(dracoLoader);
+  return loader;
+}
+
+export let config3d = {
+  css2d: true, //是否开启2d标签
+  css3d: true, //是否开启3d标签
 };
+export function setConfig3d(_config3d: {
+  css2d: boolean; //是否开启2d标签
+  css3d: boolean;
+}) {
+  config3d = _config3d;
+}

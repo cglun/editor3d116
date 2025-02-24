@@ -20,13 +20,16 @@ import {
   DragControls,
   GLTF,
   CSS2DRenderer,
+  CSS3DRenderer,
 } from "three/examples/jsm/Addons.js";
 import { GlbModel, UserDataType } from "../app/type";
+
 import {
   config3d,
   createDirectionalLight,
   createGridHelper,
   createLabelRenderer,
+  glbLoader,
 } from "./utils";
 
 let scene: Scene,
@@ -42,14 +45,18 @@ let scene: Scene,
   transfControls1: TransformControls,
   transfControls2: TransformControls,
   perspectiveCameraPosition: Vector3 = new Vector3(-5, 5, 8),
-  labelRenderer: CSS2DRenderer;
+  labelRenderer2d: CSS2DRenderer,
+  labelRenderer3d: CSS3DRenderer;
 
 export function animate() {
   requestAnimationFrame(animate);
   controls.update();
   renderer.render(scene, camera);
-  if (labelRenderer && config3d.css2d) {
-    labelRenderer.render(scene, camera);
+  if (labelRenderer2d && config3d.css2d) {
+    labelRenderer2d.render(scene, camera);
+  }
+  if (labelRenderer3d && config3d.css3d) {
+    labelRenderer3d.render(scene, camera);
   }
 }
 
@@ -108,8 +115,11 @@ export default function createScene(node: HTMLDivElement): void {
   );
   transfControls = transfControls1;
   if (config3d.css2d) {
-    labelRenderer = createLabelRenderer(node);
-    // new OrbitControls(perspectiveCamera, labelRenderer.domElement);
+    labelRenderer2d = createLabelRenderer(node, new CSS2DRenderer());
+    // new OrbitControls(perspectiveCamera, labelRenderer2d.domElement);
+  }
+  if (config3d.css3d) {
+    labelRenderer3d = createLabelRenderer(node, new CSS3DRenderer());
   }
 
   animate();
@@ -173,15 +183,6 @@ export function getScene(): Scene {
 
 export function getRenderer(): WebGLRenderer {
   return renderer;
-}
-
-export function glbLoader() {
-  const dracoLoader = new DRACOLoader();
-  dracoLoader.setDecoderPath("/editor3d/static/js/draco/gltf/");
-  //const loader = new GLTFLoader(new LoadingManager());
-  const loader = new GLTFLoader();
-  loader.setDRACOLoader(dracoLoader);
-  return loader;
 }
 
 export function addLocalModel() {
@@ -262,6 +263,7 @@ export function sceneSerialization(): string {
     sceneJsonString: JSON.stringify(scene.toJSON()),
     cameraJsonString: JSON.stringify(perspectiveCamera.toJSON()),
     modelsJsonString: JSON.stringify(modelList),
+    config3d: JSON.stringify(config3d),
     type: "scene",
   };
   scene.children = oldChildren;
@@ -276,7 +278,7 @@ export function getDivElement() {
   return divElement;
 }
 export function getLabelRenderer() {
-  return labelRenderer;
+  return labelRenderer2d;
 }
 
 export function setDragControls(currentObject: Object3D) {

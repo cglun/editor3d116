@@ -15,8 +15,8 @@ import {
 } from "../three/utils";
 
 import { APP_COLOR, GlbModel, UserDataType } from "../app/type";
-import { Group, Scene } from "three";
-import { glbLoader } from "../three/init3dEditor";
+import { Group } from "three";
+import { glbLoader } from "../three/utils";
 import _axios from "../app/http";
 
 import { ItemInfo } from "../component/Editor/ListCard";
