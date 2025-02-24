@@ -25,7 +25,6 @@ import { Group } from "three";
 import { MyContext } from "../../app/MyContext";
 import {
   glbLoader,
-  createCss2dLabel,
   getProjectData,
   sceneDeserialize,
   setConfig3d,

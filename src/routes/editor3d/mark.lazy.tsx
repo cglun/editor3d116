@@ -10,17 +10,17 @@ import {
 } from "react-bootstrap";
 
 import { getButtonColor } from "../../app/config";
-import { Children, useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { setClassName } from "../../app/utils";
 import {
   config3d,
   createCss2dLabel,
   createCss3dLabel,
 } from "../../three/utils";
-import { getScene, setLabelRenderer1 } from "../../three/init3dEditor";
-import { MyContext } from "../../app/MyContext";
+import { getScene } from "../../three/init3dEditor";
+
 import { Group } from "three";
-import { UserDataType } from "../../app/type";
+
 import { CSS2DObject, CSS3DSprite } from "three/examples/jsm/Addons.js";
 
 export const Route = createLazyFileRoute("/editor3d/mark")({
@@ -31,7 +31,7 @@ function RouteComponent() {
   const [inputText, setInputText] = useState("mark");
 
   const [logo, setLogo] = useState<string>("geo-alt");
-  const { dispatchScene } = useContext(MyContext);
+  //const { dispatchScene } = useContext(MyContext);
 
   useEffect(() => {
     // addLocalModel();

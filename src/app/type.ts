@@ -1,4 +1,4 @@
-import { Euler, Sprite, Vector3 } from "three";
+import { Euler, Vector3 } from "three";
 
 export interface CanvasNode {
   width: number;

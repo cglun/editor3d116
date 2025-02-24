@@ -11,7 +11,6 @@ import { UserDataType } from "../app/type";
 import {
   CSS2DObject,
   CSS2DRenderer,
-  CSS3DObject,
   CSS3DRenderer,
   CSS3DSprite,
   DRACOLoader,
@@ -20,7 +19,6 @@ import {
 import { setClassName } from "../app/utils";
 import { ItemInfo } from "../component/Editor/ListCard";
 import _axios from "../app/http";
-import { getScene } from "./init3dEditor";
 
 export function getObjectNameByName(object3D: Object3D): string {
   return object3D.name.trim() === "" ? object3D.type : object3D.name;

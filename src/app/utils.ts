@@ -1,8 +1,6 @@
 /**
  * 工具类
  */
-
-import { ObjectLoader } from "three";
 import { iconIsFill } from "./config";
 
 export function setClassName(className: string): string {
