@@ -1,6 +1,4 @@
-import React, { memo, useContext, useEffect, useRef } from "react";
-
-import { MyContext } from "../../app/MyContext";
+import React, { memo, useEffect, useRef } from "react";
 import createScene, {
   addGridHelper,
   getCamera,
@@ -16,21 +14,19 @@ import { TransformControlsMode } from "three/examples/jsm/Addons.js";
 import { Object3D, Vector3 } from "three";
 import { setClassName } from "../../app/utils";
 import { onWindowResize } from "../../three/utils";
+import { useUpdateScene } from "../../app/hooks";
 
 function EditorViewer3d() {
   const editorCanvas: React.RefObject<HTMLDivElement> =
     useRef<HTMLDivElement>(null);
-  const { dispatchScene } = useContext(MyContext);
+
+  const { updateScene } = useUpdateScene();
   useEffect(() => {
     if (editorCanvas.current) {
       createScene(editorCanvas.current);
       addGridHelper();
     }
-
-    dispatchScene({
-      type: "setScene",
-      payload: getScene().clone(),
-    });
+    updateScene(getScene().clone());
     window.addEventListener("resize", () =>
       onWindowResize(
         editorCanvas,

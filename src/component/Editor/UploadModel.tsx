@@ -2,7 +2,6 @@ import { ButtonGroup, ListGroupItem, ProgressBar } from "react-bootstrap";
 import Button from "react-bootstrap/esm/Button";
 import Form from "react-bootstrap/esm/Form";
 import { Euler, Vector3 } from "three";
-
 import { getButtonColor } from "../../app/config";
 import { useRef, useState } from "react";
 import Toast3d from "../common/Toast3d";
@@ -33,7 +32,7 @@ export function UploadModel({ updateList = (_time: number) => {} }) {
       //     modelTotal,
       //   },
       // };
-      debugger;
+
       if (model) {
         _axios
           .post("/project/create/", {

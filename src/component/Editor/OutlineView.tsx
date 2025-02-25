@@ -12,17 +12,19 @@ import { setClassName } from "../../app/utils";
 
 import { SPACE } from "../../app/config";
 import { Accordion, Card, ListGroup } from "react-bootstrap";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import ObjectProperty from "./ObjectProperty";
 import { getObjectNameByName } from "../../three/utils";
 import TreeList from "./TreeList";
-import { MyContext } from "../../app/MyContext";
+
+import { useUpdateScene } from "../../app/hooks";
 
 export default function OutlineView() {
   let [curObj3d, setCurObj3d] = useState<Object3D>();
   const [camera, _setCamera] = useState<Camera | any>();
-  const { scene, dispatchScene } = useContext(MyContext);
+
+  const { scene, updateScene } = useUpdateScene();
 
   useEffect(() => {
     const _camera = getCamera();
@@ -33,11 +35,7 @@ export default function OutlineView() {
     _scene.children = setD2(_scene.children);
 
     setCamera(_camera);
-    dispatchScene({
-      type: "setScene",
-      payload: getScene(),
-    });
-
+    updateScene(getScene());
     getDivElement().addEventListener("click", function (event) {
       event.stopPropagation();
       event.preventDefault();
@@ -74,10 +72,8 @@ export default function OutlineView() {
               if (object3D.isScene) {
                 object3D.userData.isSelected = !object3D.userData.isSelected;
                 setScene(object3D);
-                dispatchScene({
-                  type: "setScene",
-                  payload: object3D,
-                });
+
+                updateScene(object3D);
               }
               if (object3D.isCamera) {
                 object3D.userData.isSelected = !object3D.userData.isSelected;
@@ -112,17 +108,14 @@ export default function OutlineView() {
       camera.userData.isSelected = false;
       _setCamera(camera);
       setCamera(camera);
-      dispatchScene({
-        type: "setScene",
-        payload: scene,
-      });
+      updateScene(scene);
     }
 
     if (_children === undefined) {
       return;
     }
 
-    return _children.map((item) => {
+    return _children.map((item: any) => {
       if (item.uuid === targetItem.uuid) {
         item.userData.isSelected = true;
       } else {

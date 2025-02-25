@@ -1,4 +1,4 @@
-import { memo, useContext } from "react";
+import { memo } from "react";
 import {
   Button,
   ButtonGroup,
@@ -22,7 +22,6 @@ import {
   addGridHelper,
 } from "../../three/init3dEditor";
 import { Group } from "three";
-import { MyContext } from "../../app/MyContext";
 import {
   glbLoader,
   getProjectData,
@@ -30,6 +29,7 @@ import {
   setConfig3d,
   setLabel,
 } from "../../three/utils";
+import { useUpdateScene } from "../../app/hooks";
 
 export interface ItemInfo {
   id: number;
@@ -46,7 +46,7 @@ interface Props {
 }
 function ItemInfoCard(props: Props) {
   const { list, setList, isLoading, error } = props;
-  const { dispatchScene } = useContext(MyContext);
+  const { updateScene } = useUpdateScene();
   //错误提示
   if (error.trim().length > 0) {
     return <AlertBase type={APP_COLOR.Warning} text={error} />;
@@ -129,8 +129,13 @@ function ItemInfoCard(props: Props) {
     );
   }
   function loadScene(item: ItemInfo) {
-    const XX = getScene();
-    console.log(XX);
+    //debugger;
+
+    // if (labelDiv.length > 0) {
+    //   for (let i = 0; i < labelDiv.length; i++) {
+    //     labelDiv[i].remove();
+    //   }
+    // }
 
     getProjectData(item.id)
       .then((data: any) => {
@@ -143,6 +148,7 @@ function ItemInfoCard(props: Props) {
         addGridHelper();
         setConfig3d(config3d);
         // 加载完成后，设置标签
+
         setLabel(scene);
 
         modelList.forEach((item: GlbModel) => {
@@ -192,10 +198,7 @@ function ItemInfoCard(props: Props) {
         group.setRotationFromEuler(rotation);
         group.scale.set(scale.x, scale.y, scale.z);
         getScene().add(group);
-        dispatchScene({
-          type: "setScene",
-          payload: getScene(),
-        });
+        updateScene(getScene());
       },
       function (xhr) {
         progress = parseFloat(

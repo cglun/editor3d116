@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "react-bootstrap/esm/Button";
 import Form from "react-bootstrap/esm/Form";
 import { Color, Euler, Fog, Object3D, Vector3 } from "three";
@@ -8,10 +8,10 @@ import InputGroup from "react-bootstrap/esm/InputGroup";
 import { getObjectNameByName } from "../../three/utils";
 import ButtonGroup from "react-bootstrap/esm/ButtonGroup";
 import { getScene } from "../../three/init3dEditor";
-import { MyContext } from "../../app/MyContext";
 import AlertBase from "../common/AlertBase";
 import { APP_COLOR } from "../../app/type";
 import { Container } from "react-bootstrap";
+import { useUpdateScene } from "../../app/hooks";
 const step = 0.1;
 export function Switch3d({
   title,
@@ -223,7 +223,7 @@ export function AttrInputText({
 }
 
 function sceneProperty(curObj3d: Object3D | any) {
-  const { dispatchScene } = useContext(MyContext);
+  const { updateScene } = useUpdateScene();
 
   const backgroundColor = curObj3d.background?.getHexString()
     ? curObj3d.background?.getHexString()
@@ -242,10 +242,7 @@ function sceneProperty(curObj3d: Object3D | any) {
           value={"#" + backgroundColor}
           onChange={(e) => {
             curObj3d.background = new Color(e.target.value);
-            dispatchScene({
-              type: "setScene",
-              payload: getScene(),
-            });
+            updateScene(getScene());
           }}
         />
       </InputGroup>

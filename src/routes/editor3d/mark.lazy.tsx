@@ -1,6 +1,7 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import {
   Button,
+  ButtonGroup,
   Col,
   Container,
   Form,
@@ -13,6 +14,7 @@ import { getButtonColor } from "../../app/config";
 import { useEffect, useState } from "react";
 import { setClassName } from "../../app/utils";
 import {
+  cleaerOldLabel,
   config3d,
   createCss2dLabel,
   createCss3dLabel,
@@ -22,6 +24,9 @@ import { getScene } from "../../three/init3dEditor";
 import { Group } from "three";
 
 import { CSS2DObject, CSS3DSprite } from "three/examples/jsm/Addons.js";
+import Toast3d from "../../component/common/Toast3d";
+import { APP_COLOR } from "../../app/type";
+//import { useUpdateScene } from "../../app/hooks";
 
 export const Route = createLazyFileRoute("/editor3d/mark")({
   component: RouteComponent,
@@ -29,16 +34,13 @@ export const Route = createLazyFileRoute("/editor3d/mark")({
 
 function RouteComponent() {
   const [inputText, setInputText] = useState("mark");
-
   const [logo, setLogo] = useState<string>("geo-alt");
-  //const { dispatchScene } = useContext(MyContext);
+  const buttonColor = getButtonColor();
+  // const { updateScene } = useUpdateScene();
 
   useEffect(() => {
     // addLocalModel();
-    // dispatchScene({
-    //   type: "setScene",
-    //   payload: getScene(),
-    // });
+    //updateScene(getScene());
   }, []);
 
   function addMark(label: CSS3DSprite | CSS2DObject) {
@@ -70,7 +72,10 @@ function RouteComponent() {
           onChange={() => {
             _setValue(!_value);
             config3d[_configKey] = !_value;
-            console.log(config3d[_configKey] as boolean);
+            //  console.log(config3d[_configKey] as boolean);
+            if (_value) {
+              cleaerOldLabel();
+            }
           }}
         />
       </Form>
@@ -90,16 +95,18 @@ function RouteComponent() {
             </ListGroup.Item>
           </ListGroup>
         </Col>
-        <Col xl={1} className="text-center mt-2">
-          <i className={setClassName(logo)} style={{ fontSize: "1.4rem" }}></i>
-        </Col>
       </Row>
       <Row className="mt-2">
         <Col xl={8}>
           <InputGroup className="mb-3">
-            <div>
-              <div></div>
+            <div className="d-flex ms-2">
+              <i
+                className={setClassName(logo)}
+                style={{ fontSize: "1.4rem" }}
+              ></i>
+
               <Form.Select
+                className="ms-2"
                 aria-label="logo"
                 onChange={(e) => {
                   setLogo(e.target.value);
@@ -118,34 +125,51 @@ function RouteComponent() {
                 setInputText(e.target.value);
               }}
             />
-            <Button
-              variant={getButtonColor()}
-              onClick={() => {
-                addMark(createCss2dLabel(inputText, logo));
-              }}
-            >
-              添加标记
-            </Button>
+            <ButtonGroup>
+              <Button
+                variant={buttonColor}
+                onClick={() => {
+                  if (config3d.css2d) {
+                    addMark(createCss2dLabel(inputText, logo));
+                  } else {
+                    Toast3d("请先开启css2d", "提示", APP_COLOR.Danger);
+                  }
+                }}
+              >
+                添加2d标记
+              </Button>
+              <Button
+                variant={buttonColor}
+                onClick={() => {
+                  Toast3d("待续", "提示", APP_COLOR.Danger);
+                }}
+              >
+                一键2d标记
+              </Button>
+              <Button
+                variant={buttonColor}
+                onClick={() => {
+                  if (config3d.css3d) {
+                    addMark(createCss3dLabel(inputText, logo));
+                  } else {
+                    Toast3d("请先开启css3d", "提示", APP_COLOR.Danger);
+                  }
+                }}
+              >
+                添加3d标记
+              </Button>
+              <Button
+                variant={buttonColor}
+                onClick={() => {
+                  Toast3d("待续", "提示", APP_COLOR.Danger);
+                }}
+              >
+                一键3d标记
+              </Button>
+            </ButtonGroup>
           </InputGroup>
         </Col>
-        <Col className="ms-2">
-          <Button
-            variant={getButtonColor()}
-            onClick={() => {
-              const scene = getScene();
-              console.log(scene);
-            }}
-          >
-            一键标记
-          </Button>
-          <Button
-            onClick={() => {
-              addMark(createCss3dLabel(inputText, logo));
-            }}
-          >
-            3d标记
-          </Button>
-        </Col>
+        <Col className="ms-2"></Col>
       </Row>
     </Container>
   );

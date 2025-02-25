@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Row,
   Col,
@@ -24,9 +24,9 @@ import {
   sceneSerialization,
   setScene,
 } from "../../three/init3dEditor";
-import { MyContext } from "../../app/MyContext";
 import _axios from "../../app/http";
 import InputBase from "../common/InputBase";
+import { useUpdateScene } from "../../app/hooks";
 
 export default function EditorTop() {
   initThemeColor();
@@ -37,7 +37,7 @@ export default function EditorTop() {
   const handleShow = () => setShowScene(true);
 
   const [appTheme, setAppTheme] = useState(themeColor);
-  const { dispatchScene } = useContext(MyContext);
+  const { updateScene } = useUpdateScene();
   const [sceneIsSave, setSceneIsSave] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -169,10 +169,7 @@ export default function EditorTop() {
                 addGridHelper();
                 addLight();
                 setSceneIsSave(true);
-                dispatchScene({
-                  type: "setScene",
-                  payload: newScene,
-                });
+                updateScene(newScene);
               }}
             >
               <i className={setClassName("plus-square")}></i> 新建场景

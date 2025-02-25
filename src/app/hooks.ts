@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { HTTP_TYPE } from "./type";
+import { MyContext } from "./MyContext";
 
-function useFetch(url: string, type: HTTP_TYPE) {
+export default function useFetch(url: string, type: HTTP_TYPE) {
   const [data, setData] = React.useState(null);
   const [error, setError] = React.useState(null);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -31,4 +32,10 @@ function useFetch(url: string, type: HTTP_TYPE) {
   return { data, isLoading, error };
 }
 
-export default useFetch;
+export function useUpdateScene() {
+  const { scene, dispatchScene } = useContext(MyContext);
+  function updateScene(payload: any) {
+    dispatchScene({ type: "setScene", payload: payload });
+  }
+  return { scene, updateScene };
+}

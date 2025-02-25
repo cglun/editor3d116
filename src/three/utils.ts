@@ -141,6 +141,7 @@ function createDiv(logo: string, name: string) {
 export function createCss3dLabel(name: string, logo: string) {
   const div = createDiv(logo, name);
   const css3DSprite = new CSS3DSprite(div);
+
   css3DSprite.name = name;
   css3DSprite.position.set(0, 0, 0);
   css3DSprite.scale.set(0.04, 0.04, 0.04);
@@ -168,7 +169,7 @@ export function setLabel(scene: Scene) {
   if (!MARK_LABEL) {
     return;
   }
-
+  cleaerOldLabel();
   const children = MARK_LABEL.children;
   children.forEach((item) => {
     const { type } = item.userData;
@@ -187,8 +188,17 @@ export function setLabel(scene: Scene) {
       return item;
     }
   });
-  debugger;
+
   MARK_LABEL.children = labelList;
+}
+//删除之前的标签
+export function cleaerOldLabel() {
+  const labelDiv = document.querySelectorAll(".mark-label");
+  if (labelDiv.length > 0) {
+    labelDiv.forEach((element) => {
+      element.parentNode?.removeChild(element);
+    });
+  }
 }
 
 export function strToJson(str: string) {

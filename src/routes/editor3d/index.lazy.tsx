@@ -1,5 +1,4 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-
 import React, { useEffect } from "react";
 import ListGroup from "react-bootstrap/esm/ListGroup";
 import { Serch3d } from "../../component/Editor/Serch3d";

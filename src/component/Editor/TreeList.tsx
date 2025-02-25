@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Button, Container, ListGroupItem } from "react-bootstrap";
 import { setClassName } from "../../app/utils";
 import { getObjectNameByName } from "../../three/utils";
@@ -9,7 +9,8 @@ import ModalConfirm3d from "../common/ModalConfirm3d";
 import AlertBase from "../common/AlertBase";
 import Toast3d from "../common/Toast3d";
 import { getScene, setTransformControls } from "../../three/init3dEditor";
-import { MyContext } from "../../app/MyContext";
+
+import { useUpdateScene } from "../../app/hooks";
 
 const TreeNode = ({
   node,
@@ -30,8 +31,7 @@ const TreeNode = ({
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [delBtn, setDelBtn] = React.useState(false);
   const [isSelected, setIsSelected] = useState(false);
-  const { dispatchScene } = useContext(MyContext);
-
+  const { updateScene } = useUpdateScene();
   const handleToggle = () => {
     setIsExpanded(!isExpanded);
     resetTextWarning(node);
@@ -64,10 +64,8 @@ const TreeNode = ({
 
         targetItem.parent.remove(targetItem);
 
-        dispatchScene({
-          type: "setScene",
-          payload: scene,
-        });
+        updateScene(scene);
+
         Toast3d(`【${getObjectNameByName(item)}】已删除`);
       }
     );
