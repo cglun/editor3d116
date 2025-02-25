@@ -15,20 +15,20 @@ import { useUpdateScene } from "../../app/hooks";
 const step = 0.1;
 export function Switch3d({
   title,
-  curObj3d,
+  selectedObject,
   attr,
 }: {
   title: string;
-  curObj3d: Object3D | any;
+  selectedObject: Object3D | any;
   attr: string;
 }) {
-  const [checked, setChecked] = useState(curObj3d[attr]);
+  const [checked, setChecked] = useState(selectedObject[attr]);
   useEffect(() => {
-    setChecked(curObj3d[attr]);
-  }, [curObj3d]);
+    setChecked(selectedObject[attr]);
+  }, [selectedObject]);
 
   return (
-    curObj3d.hasOwnProperty(attr) && (
+    selectedObject.hasOwnProperty(attr) && (
       <div className=" d-flex justify-content-between flex-wrap p-1">
         <span>{title}</span>
         <Form className="ms-2">
@@ -36,7 +36,7 @@ export function Switch3d({
             type="switch"
             checked={checked}
             onChange={() => {
-              curObj3d[attr] = !checked;
+              selectedObject[attr] = !checked;
               setChecked(!checked);
             }}
           />
@@ -155,29 +155,31 @@ export function Object3dInput({
 }
 export function AttrInputNumber({
   title,
-  curObj3d,
+  selectedObject,
   attr,
 }: {
   title: string;
-  curObj3d: Object3D | any;
+  selectedObject: Object3D | any;
   attr: string;
 }) {
-  const [value, setValue] = useState(curObj3d === null ? 0 : curObj3d[attr]);
+  const [value, setValue] = useState(
+    selectedObject === null ? 0 : selectedObject[attr]
+  );
   return (
-    curObj3d &&
-    curObj3d.hasOwnProperty(attr) && (
+    selectedObject &&
+    selectedObject.hasOwnProperty(attr) && (
       <InputGroup size="sm">
         <InputGroup.Text>{title}</InputGroup.Text>
         <Form.Control
           aria-label="Small"
           aria-describedby="inputGroup-sizing-sm"
-          placeholder={curObj3d[attr].toString()}
+          placeholder={selectedObject[attr].toString()}
           type="number"
           step={step}
           value={value}
-          title={curObj3d[attr].toString()}
+          title={selectedObject[attr].toString()}
           onChange={(e) => {
-            curObj3d[attr] = parseFloat(e.target.value);
+            selectedObject[attr] = parseFloat(e.target.value);
             setValue(parseFloat(e.target.value));
           }}
         />
@@ -188,21 +190,21 @@ export function AttrInputNumber({
 
 export function AttrInputText({
   title,
-  curObj3d,
+  selectedObject,
   attr,
 }: {
   title: string;
-  curObj3d: Object3D;
+  selectedObject: Object3D;
   attr: string;
 }) {
-  const [value, setValue] = useState(getObjectNameByName(curObj3d));
+  const [value, setValue] = useState(getObjectNameByName(selectedObject));
   useEffect(() => {
-    setValue(getObjectNameByName(curObj3d));
-  }, [curObj3d]);
+    setValue(getObjectNameByName(selectedObject));
+  }, [selectedObject]);
 
   return (
-    curObj3d &&
-    curObj3d.hasOwnProperty(attr) && (
+    selectedObject &&
+    selectedObject.hasOwnProperty(attr) && (
       <InputGroup size="sm">
         <InputGroup.Text>{title}</InputGroup.Text>
         <Form.Control
@@ -213,7 +215,7 @@ export function AttrInputText({
           value={value}
           title={value}
           onChange={(e) => {
-            curObj3d.name = e.target.value;
+            selectedObject.name = e.target.value;
             setValue(e.target.value);
           }}
         />
@@ -222,14 +224,14 @@ export function AttrInputText({
   );
 }
 
-function sceneProperty(curObj3d: Object3D | any) {
+function sceneProperty(selectedObject: Object3D | any) {
   const { updateScene } = useUpdateScene();
 
-  const backgroundColor = curObj3d.background?.getHexString()
-    ? curObj3d.background?.getHexString()
+  const backgroundColor = selectedObject.background?.getHexString()
+    ? selectedObject.background?.getHexString()
     : "000000";
-  const fogColor = curObj3d.fog?.color.getHexString()
-    ? curObj3d.background?.getHexString()
+  const fogColor = selectedObject.fog?.color.getHexString()
+    ? selectedObject.background?.getHexString()
     : "000000";
   return (
     <Container fluid>
@@ -241,7 +243,7 @@ function sceneProperty(curObj3d: Object3D | any) {
           type="color"
           value={"#" + backgroundColor}
           onChange={(e) => {
-            curObj3d.background = new Color(e.target.value);
+            selectedObject.background = new Color(e.target.value);
             updateScene(getScene());
           }}
         />
@@ -254,10 +256,10 @@ function sceneProperty(curObj3d: Object3D | any) {
           type="color"
           value={"#" + fogColor}
           onChange={(e) => {
-            if (curObj3d.fog === null) {
-              curObj3d.fog = new Fog(e.target.value, 0, 20);
+            if (selectedObject.fog === null) {
+              selectedObject.fog = new Fog(e.target.value, 0, 20);
             } else {
-              curObj3d.fog.color = new Color(e.target.value);
+              selectedObject.fog.color = new Color(e.target.value);
             }
             dispatchScene({
               type: "setScene",
@@ -268,19 +270,19 @@ function sceneProperty(curObj3d: Object3D | any) {
       </InputGroup>
       <AttrInputNumber
         title={"雾气近端"}
-        curObj3d={curObj3d.fog}
+        selectedObject={selectedObject.fog}
         attr={"near"}
       ></AttrInputNumber>
       <AttrInputNumber
         title={"雾气远端"}
-        curObj3d={curObj3d.fog}
+        selectedObject={selectedObject.fog}
         attr={"far"}
       ></AttrInputNumber>
       <Button
         variant={getThemeColor()}
         onClick={() => {
-          curObj3d.background = new Color("#000");
-          curObj3d.fog = null;
+          selectedObject.background = new Color("#000");
+          selectedObject.fog = null;
           dispatchScene({
             type: "setScene",
             payload: getScene(),
@@ -293,20 +295,20 @@ function sceneProperty(curObj3d: Object3D | any) {
   );
 }
 
-function commonProperty(curObj3d: Object3D | any) {
+function commonProperty(selectedObject: Object3D | any) {
   return (
-    curObj3d && (
+    selectedObject && (
       <Container fluid>
         <Object3dInput
-          transform={curObj3d.position}
+          transform={selectedObject.position}
           title={"位置"}
         ></Object3dInput>
         <Object3dInput
-          transform={curObj3d.rotation}
+          transform={selectedObject.rotation}
           title={"旋转"}
         ></Object3dInput>
         <Object3dInput
-          transform={curObj3d.scale}
+          transform={selectedObject.scale}
           title={"缩放"}
         ></Object3dInput>
 
@@ -315,25 +317,25 @@ function commonProperty(curObj3d: Object3D | any) {
           <Card.Body>
             <AttrInputText
               title={"名称"}
-              curObj3d={curObj3d}
+              selectedObject={selectedObject}
               attr={"name"}
             ></AttrInputText>
             <AttrInputNumber
               title="亮度"
-              curObj3d={curObj3d}
+              selectedObject={selectedObject}
               attr={"intensity"}
             />
-            {!curObj3d.isAmbientLight && (
+            {!selectedObject.isAmbientLight && (
               <ButtonGroup className=" d-flex justify-content-between flex-wrap">
                 <Switch3d
                   title={"投射阴影"}
-                  curObj3d={curObj3d}
+                  selectedObject={selectedObject}
                   attr={"castShadow"}
                 ></Switch3d>
 
                 <Switch3d
                   title={"接收阴影"}
-                  curObj3d={curObj3d}
+                  selectedObject={selectedObject}
                   attr={"receiveShadow"}
                 />
               </ButtonGroup>
@@ -346,19 +348,19 @@ function commonProperty(curObj3d: Object3D | any) {
 }
 
 export default function ObjectPropertyChild({
-  curObj3d,
+  selectedObject,
 }: {
-  curObj3d: Object3D | any;
+  selectedObject: Object3D | any;
 }) {
-  if (curObj3d) {
-    if (curObj3d.isScene) {
-      return sceneProperty(curObj3d);
+  if (selectedObject) {
+    if (selectedObject.isScene) {
+      return sceneProperty(selectedObject);
     }
-    if (curObj3d.isCamera) {
+    if (selectedObject.isCamera) {
       return cameraProperty();
     }
 
-    return commonProperty(curObj3d);
+    return commonProperty(selectedObject);
   }
 }
 

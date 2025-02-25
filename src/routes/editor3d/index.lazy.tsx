@@ -47,7 +47,7 @@ function ModelList() {
   return (
     <div className="d-flex mt-2">
       <ListGroup>
-        <Serch3d list={list} setFilterList={setFilterList} />
+        <Serch3d list={list} setFilterList={setFilterList} type="模型" />
         <UploadModel updateList={updateList} />
       </ListGroup>
       <ListCard

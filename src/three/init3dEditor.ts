@@ -31,6 +31,7 @@ import {
   createLabelRenderer,
   glbLoader,
 } from "./utils";
+import { useUpdateScene } from "../app/hooks";
 
 let scene: Scene,
   camera: PerspectiveCamera | OrthographicCamera,
@@ -78,6 +79,7 @@ export default function createScene(node: HTMLDivElement): void {
     perspectiveCameraPosition.y,
     perspectiveCameraPosition.z
   );
+  perspectiveCamera.userData.isSelected = false;
 
   const xxx = 40;
   orthographicCamera = new OrthographicCamera(
@@ -323,26 +325,12 @@ export function raycasterSelect(event: MouseEvent) {
 }
 
 //为选中的物体加上变换控件
-let boxHelper: BoxHelper;
-export function setBoxHelper(selectedMesh: Object3D = new Object3D()) {
-  if (boxHelper === undefined) {
-    boxHelper = new BoxHelper(selectedMesh, 0xffff00);
-    boxHelper.userData = {
-      type: UserDataType.BoxHelper,
-      isHelper: true,
-      isSelected: false,
-    };
-    scene.add(boxHelper);
-  } else {
-    scene.add(boxHelper);
-  }
-}
-
 export function setTransformControls(selectedMesh: Object3D[]) {
   transfControls.addEventListener("dragging-changed", (event) => {
     controls.enabled = !event.value;
   });
   transfControls.addEventListener("change", () => {
+    const boxHelper = scene.getObjectByName("BOX_HELPER") as BoxHelper;
     if (boxHelper) {
       boxHelper.update();
     }
@@ -352,28 +340,39 @@ export function setTransformControls(selectedMesh: Object3D[]) {
   // transfControls.addEventListener("mouseUp", () => {});
 
   transfControls.attach(selectedMesh[0]);
-
-  if (boxHelper) {
-    boxHelper.setFromObject(selectedMesh[0]);
-    boxHelper.update();
-  } else {
-    setBoxHelper();
-  }
+  setBoxHelper(selectedMesh[0]);
 
   const getHelper = transfControls.getHelper();
   getHelper.name = "TransformControlsRoot";
 
-  getHelper.userData = {
+  const userData = {
     type: UserDataType.TransformHelper,
     isHelper: true,
     isSelected: false,
   };
+  getHelper.userData = userData;
   scene.add(getHelper);
   getHelper.traverse((child) => {
-    child.userData = {
-      type: UserDataType.TransformHelper,
+    child.userData = userData;
+  });
+}
+export function setBoxHelper(selectedMesh: Object3D) {
+  const BOX_HELPER = scene.getObjectByName("BOX_HELPER") as BoxHelper;
+  if (!BOX_HELPER) {
+    const boxHelper = new BoxHelper(selectedMesh, 0xffff00);
+    boxHelper.name = "BOX_HELPER";
+    boxHelper.userData = {
+      type: UserDataType.BoxHelper,
       isHelper: true,
       isSelected: false,
     };
-  });
+    scene.add(boxHelper);
+  } else {
+    BOX_HELPER.setFromObject(selectedMesh);
+    BOX_HELPER.update();
+  }
+}
+
+export function setSelectedObject(obj: Object3D) {
+  scene.userData.selectedObject = obj;
 }

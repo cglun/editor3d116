@@ -27,6 +27,7 @@ import {
 import _axios from "../../app/http";
 import InputBase from "../common/InputBase";
 import { useUpdateScene } from "../../app/hooks";
+import { Serch3d } from "./Serch3d";
 
 export default function EditorTop() {
   initThemeColor();
@@ -39,7 +40,6 @@ export default function EditorTop() {
   const [appTheme, setAppTheme] = useState(themeColor);
   const { updateScene } = useUpdateScene();
   const [sceneIsSave, setSceneIsSave] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const scene = getScene();
@@ -120,6 +120,9 @@ export default function EditorTop() {
 
   const [list, setList] = useState(testData1);
   const [error, setError] = useState("");
+  const [filterList, setFilterList] = useState(testData1);
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     setIsLoading(true);
     _axios
@@ -139,6 +142,7 @@ export default function EditorTop() {
           });
           setList(sceneList);
           setIsLoading(false);
+          setFilterList(sceneList);
         }
       })
       .catch((error) => {
@@ -242,8 +246,9 @@ export default function EditorTop() {
             </Offcanvas.Title>
           </Offcanvas.Header>
           <Offcanvas.Body>
+            <Serch3d list={list} setFilterList={setFilterList} type="场景" />
             <ListCard
-              list={list}
+              list={filterList}
               setList={setList}
               isLoading={isLoading}
               error={error}

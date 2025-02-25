@@ -9,19 +9,21 @@ import ObjectPropertyChild from "./ObjectPropertyChild";
  */
 
 export default function ObjectProperty({
-  curObj3d,
+  selectedObject,
 }: {
-  curObj3d: Object3D | any;
+  selectedObject: Object3D | any;
 }) {
   return (
-    curObj3d && (
+    selectedObject && (
       <Accordion.Item eventKey="1">
         <Accordion.Header>
           <i className={setClassName("menu-button")}></i>
           <span className="px-2 ellipsis-3d">属性</span>
         </Accordion.Header>
         <Accordion.Body>
-          <ObjectPropertyChild curObj3d={curObj3d}></ObjectPropertyChild>
+          <ObjectPropertyChild
+            selectedObject={selectedObject}
+          ></ObjectPropertyChild>
         </Accordion.Body>
       </Accordion.Item>
     )

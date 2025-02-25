@@ -129,14 +129,6 @@ function ItemInfoCard(props: Props) {
     );
   }
   function loadScene(item: ItemInfo) {
-    //debugger;
-
-    // if (labelDiv.length > 0) {
-    //   for (let i = 0; i < labelDiv.length; i++) {
-    //     labelDiv[i].remove();
-    //   }
-    // }
-
     getProjectData(item.id)
       .then((data: any) => {
         const { scene, camera, modelList, config3d } = sceneDeserialize(
@@ -146,6 +138,7 @@ function ItemInfoCard(props: Props) {
         setScene(scene);
         setCamera(camera);
         addGridHelper();
+
         setConfig3d(config3d);
         // 加载完成后，设置标签
 

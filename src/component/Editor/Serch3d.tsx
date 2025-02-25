@@ -11,19 +11,21 @@ import { setClassName } from "../../app/utils";
 export function Serch3d({
   list,
   setFilterList,
+  type = "模型",
 }: {
   list: any;
   setFilterList: any;
+  type: string;
 }) {
   const [name, setName] = useState("");
-
+  const placeholder = `请输入${type}名称`;
   const color = getButtonColor();
   return (
     <ListGroup.Item>
       <InputGroup>
         <Form.Control
-          placeholder="请输入模型名称"
-          aria-label="请输入模型名称"
+          placeholder={placeholder}
+          aria-label={placeholder}
           aria-describedby="basic-addon2"
           value={name}
           onChange={(e) => {

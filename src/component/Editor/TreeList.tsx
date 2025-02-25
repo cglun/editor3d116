@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import { Button, Container, ListGroupItem } from "react-bootstrap";
 import { setClassName } from "../../app/utils";
 import { getObjectNameByName } from "../../three/utils";
@@ -8,18 +8,21 @@ import { Object3D, Object3DEventMap } from "three";
 import ModalConfirm3d from "../common/ModalConfirm3d";
 import AlertBase from "../common/AlertBase";
 import Toast3d from "../common/Toast3d";
-import { getScene, setTransformControls } from "../../three/init3dEditor";
+import {
+  getScene,
+  setSelectedObject,
+  setTransformControls,
+} from "../../three/init3dEditor";
 
 import { useUpdateScene } from "../../app/hooks";
 
 const TreeNode = ({
   node,
-  setCurObj3d,
+
   onToggle,
   resetTextWarning,
 }: {
   node: Object3D;
-  setCurObj3d: (obj: Object3D) => void;
 
   onToggle: (uuid: string, isExpanded: boolean) => void;
   resetTextWarning: (targetItem: Object3D) => void;
@@ -36,7 +39,9 @@ const TreeNode = ({
     setIsExpanded(!isExpanded);
     resetTextWarning(node);
     setIsSelected(!isSelected);
-    setCurObj3d(node);
+    // setCurObj3d(node);
+    setSelectedObject(node);
+
     setTransformControls([node]);
     onToggle(node.uuid, !isExpanded);
   };
@@ -130,7 +135,6 @@ const TreeNode = ({
             <TreeNode
               key={child.uuid}
               node={child}
-              setCurObj3d={setCurObj3d}
               onToggle={onToggle}
               resetTextWarning={resetTextWarning}
             />
@@ -143,11 +147,11 @@ const TreeNode = ({
 
 const TreeList = ({
   data,
-  setCurObj3d,
+
   resetTextWarning,
 }: {
   data: Object3D[];
-  setCurObj3d: (obj: Object3D) => void;
+
   resetTextWarning: (targetItem: Object3D) => void;
 }) => {
   return (
@@ -157,7 +161,6 @@ const TreeList = ({
           key={node.uuid}
           node={node}
           onToggle={() => {}}
-          setCurObj3d={setCurObj3d}
           resetTextWarning={resetTextWarning}
         />
       ))}
@@ -165,4 +168,4 @@ const TreeList = ({
   );
 };
 
-export default TreeList;
+export default memo(TreeList);

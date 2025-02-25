@@ -6,6 +6,7 @@ import {
   raycasterSelect,
   setCamera,
   setScene,
+  setSelectedObject,
   setTransformControls,
 } from "../../three/init3dEditor";
 import { setClassName } from "../../app/utils";
@@ -21,20 +22,14 @@ import TreeList from "./TreeList";
 import { useUpdateScene } from "../../app/hooks";
 
 export default function OutlineView() {
-  let [curObj3d, setCurObj3d] = useState<Object3D>();
-  const [camera, _setCamera] = useState<Camera | any>();
-
+  const [_camera, _setCamera] = useState<Camera | any>();
   const { scene, updateScene } = useUpdateScene();
-
   useEffect(() => {
-    const _camera = getCamera();
-    _camera.userData.isSelected = false;
-    _setCamera(_camera);
+    const camera = getCamera();
+    _setCamera(camera);
 
     const _scene = getScene();
     _scene.children = setD2(_scene.children);
-
-    setCamera(_camera);
     updateScene(getScene());
     getDivElement().addEventListener("click", function (event) {
       event.stopPropagation();
@@ -49,7 +44,8 @@ export default function OutlineView() {
         }
       }
 
-      setCurObj3d(selectedMesh[0]);
+      setSelectedObject(selectedMesh[0]);
+      updateScene(getScene());
       setTransformControls(selectedMesh);
     });
 
@@ -80,7 +76,9 @@ export default function OutlineView() {
                 _setCamera(object3D);
               }
             }
-            setCurObj3d(object3D);
+            // setCurObj3d(object3D);
+            setSelectedObject(object3D);
+            updateScene(getScene());
           }}
         >
           <div>
@@ -168,7 +166,7 @@ export default function OutlineView() {
               <i className={setClassName("camera-reels")}></i> 相机
             </Card.Header>
             <Card.Body>
-              <ListGroup> {sceneDiv(camera)}</ListGroup>
+              <ListGroup> {sceneDiv(_camera)}</ListGroup>
             </Card.Body>
           </Card>
           <Card>
@@ -187,7 +185,6 @@ export default function OutlineView() {
               <ListGroup className="da-gang">
                 {lightList && (
                   <TreeList
-                    setCurObj3d={setCurObj3d}
                     resetTextWarning={resetTextWarning}
                     data={lightList}
                   />
@@ -203,7 +200,6 @@ export default function OutlineView() {
               <ListGroup className="da-gang">
                 {meshList && (
                   <TreeList
-                    setCurObj3d={setCurObj3d}
                     resetTextWarning={resetTextWarning}
                     data={meshList}
                   />
@@ -214,7 +210,7 @@ export default function OutlineView() {
         </Accordion.Body>
       </Accordion.Item>
 
-      <ObjectProperty curObj3d={curObj3d} />
+      <ObjectProperty selectedObject={scene.payload.userData.selectedObject} />
     </Accordion>
   );
 }
