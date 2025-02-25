@@ -249,7 +249,7 @@ export default function EditorTop() {
             <Serch3d list={list} setFilterList={setFilterList} type="场景" />
             <ListCard
               list={filterList}
-              setList={setList}
+              setList={setFilterList}
               isLoading={isLoading}
               error={error}
             ></ListCard>

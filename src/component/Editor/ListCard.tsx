@@ -26,7 +26,6 @@ import {
   glbLoader,
   getProjectData,
   sceneDeserialize,
-  setConfig3d,
   setLabel,
 } from "../../three/utils";
 import { useUpdateScene } from "../../app/hooks";
@@ -131,18 +130,14 @@ function ItemInfoCard(props: Props) {
   function loadScene(item: ItemInfo) {
     getProjectData(item.id)
       .then((data: any) => {
-        const { scene, camera, modelList, config3d } = sceneDeserialize(
-          data,
-          item
-        );
+        const { scene, camera, modelList } = sceneDeserialize(data, item);
+
         setScene(scene);
         setCamera(camera);
         addGridHelper();
-
-        setConfig3d(config3d);
         // 加载完成后，设置标签
-
         setLabel(scene);
+        // updateScene(getScene());
 
         modelList.forEach((item: GlbModel) => {
           loadModelByUrl(item);

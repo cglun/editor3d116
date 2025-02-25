@@ -359,7 +359,6 @@ export default function ObjectPropertyChild({
     if (selectedObject.isCamera) {
       return cameraProperty();
     }
-
     return commonProperty(selectedObject);
   }
 }

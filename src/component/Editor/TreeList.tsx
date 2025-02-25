@@ -147,11 +147,9 @@ const TreeNode = ({
 
 const TreeList = ({
   data,
-
   resetTextWarning,
 }: {
   data: Object3D[];
-
   resetTextWarning: (targetItem: Object3D) => void;
 }) => {
   return (

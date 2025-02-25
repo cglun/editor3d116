@@ -11,38 +11,27 @@ import {
 } from "react-bootstrap";
 
 import { getButtonColor } from "../../app/config";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { setClassName } from "../../app/utils";
 import {
   cleaerOldLabel,
-  config3d,
   createCss2dLabel,
   createCss3dLabel,
 } from "../../three/utils";
 import { getScene } from "../../three/init3dEditor";
-
 import { Group } from "three";
-
 import { CSS2DObject, CSS3DSprite } from "three/examples/jsm/Addons.js";
 import Toast3d from "../../component/common/Toast3d";
 import { APP_COLOR } from "../../app/type";
-//import { useUpdateScene } from "../../app/hooks";
-
+import { useUpdateScene } from "../../app/hooks";
 export const Route = createLazyFileRoute("/editor3d/mark")({
   component: RouteComponent,
 });
-
 function RouteComponent() {
   const [inputText, setInputText] = useState("mark");
   const [logo, setLogo] = useState<string>("geo-alt");
   const buttonColor = getButtonColor();
-  // const { updateScene } = useUpdateScene();
-
-  useEffect(() => {
-    // addLocalModel();
-    //updateScene(getScene());
-  }, []);
-
+  const { scene, updateScene } = useUpdateScene();
   function addMark(label: CSS3DSprite | CSS2DObject) {
     const MARK_LABEL = getScene().getObjectByName("MARK_LABEL");
 
@@ -61,19 +50,19 @@ function RouteComponent() {
   }
 
   function ConfigCheck({ label = "标签", configKey = "css2d" }) {
+    const { config3d } = scene.payload.userData;
     const _configKey = configKey as keyof typeof config3d;
-    const [_value, _setValue] = useState(config3d[_configKey]);
+
     return (
       <Form className="ms-2">
         <Form.Check
           label={label}
           type="switch"
-          checked={_value}
+          checked={config3d[_configKey]}
           onChange={() => {
-            _setValue(!_value);
-            config3d[_configKey] = !_value;
-            //  console.log(config3d[_configKey] as boolean);
-            if (_value) {
+            config3d[_configKey] = !config3d[_configKey];
+            updateScene(getScene());
+            if (!config3d[_configKey]) {
               cleaerOldLabel();
             }
           }}
@@ -81,6 +70,7 @@ function RouteComponent() {
       </Form>
     );
   }
+  const { config3d } = scene.payload.userData;
 
   return (
     <Container fluid>
@@ -128,18 +118,16 @@ function RouteComponent() {
             <ButtonGroup>
               <Button
                 variant={buttonColor}
+                disabled={!config3d.css2d}
                 onClick={() => {
-                  if (config3d.css2d) {
-                    addMark(createCss2dLabel(inputText, logo));
-                  } else {
-                    Toast3d("请先开启css2d", "提示", APP_COLOR.Danger);
-                  }
+                  addMark(createCss2dLabel(inputText, logo));
                 }}
               >
                 添加2d标记
               </Button>
               <Button
                 variant={buttonColor}
+                disabled={!config3d.css2d}
                 onClick={() => {
                   Toast3d("待续", "提示", APP_COLOR.Danger);
                 }}
@@ -148,18 +136,16 @@ function RouteComponent() {
               </Button>
               <Button
                 variant={buttonColor}
+                disabled={!config3d.css3d}
                 onClick={() => {
-                  if (config3d.css3d) {
-                    addMark(createCss3dLabel(inputText, logo));
-                  } else {
-                    Toast3d("请先开启css3d", "提示", APP_COLOR.Danger);
-                  }
+                  addMark(createCss3dLabel(inputText, logo));
                 }}
               >
                 添加3d标记
               </Button>
               <Button
                 variant={buttonColor}
+                disabled={!config3d.css3d}
                 onClick={() => {
                   Toast3d("待续", "提示", APP_COLOR.Danger);
                 }}

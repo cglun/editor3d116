@@ -174,11 +174,12 @@ export function setLabel(scene: Scene) {
   children.forEach((item) => {
     const { type } = item.userData;
     let label = createCss3dLabel(item.name, item.userData.labelLogo);
-    const { x, y, z } = item.position;
-    label.position.set(x, y, z);
+
     if (type === UserDataType.CSS2DObject) {
       label = createCss2dLabel(item.name, item.userData.labelLogo);
     }
+    const { x, y, z } = item.position;
+    label.position.set(x, y, z);
     item.userData.needDelete = true;
     MARK_LABEL.add(label);
   });
@@ -207,24 +208,27 @@ export function strToJson(str: string) {
   const scene: Scene = JSON.parse(sceneJsonString);
   const camera: PerspectiveCamera = JSON.parse(cameraJsonString);
   const models = JSON.parse(modelsJsonString);
-  const config3d = JSON.parse(json.config3d);
+
   const loader = new ObjectLoader();
-  return { scene, camera, models, type, loader, config3d };
+  return { scene, camera, models, type, loader };
 }
 
 //反序列化
 export function sceneDeserialize(data: string, item: ItemInfo) {
-  const { scene, camera, models, loader, config3d } = strToJson(data);
+  const { scene, camera, models, loader } = strToJson(data);
   const newScene = new Scene();
   loader.parse(scene, function (object: Scene | any) {
-    const { children, fog, background } = object;
+    const { children, fog, background, userData } = object;
     newScene.children = children;
     newScene.fog = fog;
     newScene.background = background;
+
     newScene.userData = {
+      ...userData,
       projectName: item.name,
       projectId: item.id,
       canSave: true,
+      selectedObject: null,
     };
   });
   let newCamera = new PerspectiveCamera();
@@ -236,7 +240,6 @@ export function sceneDeserialize(data: string, item: ItemInfo) {
     scene: newScene,
     camera: newCamera,
     modelList: models,
-    config3d: config3d,
   };
 }
 
@@ -266,15 +269,4 @@ export function glbLoader() {
   const loader = new GLTFLoader();
   loader.setDRACOLoader(dracoLoader);
   return loader;
-}
-
-export let config3d = {
-  css2d: true, //是否开启2d标签
-  css3d: true, //是否开启3d标签
-};
-export function setConfig3d(_config3d: {
-  css2d: boolean; //是否开启2d标签
-  css3d: boolean;
-}) {
-  config3d = _config3d;
 }

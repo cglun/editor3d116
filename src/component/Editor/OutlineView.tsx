@@ -153,6 +153,9 @@ export default function OutlineView() {
       meshList.push(element);
     }
   }
+
+  const { selectedObject } = scene.payload.userData;
+
   return (
     <Accordion defaultActiveKey={["0", "1"]} alwaysOpen>
       <Accordion.Item eventKey="0">
@@ -209,8 +212,7 @@ export default function OutlineView() {
           </Card>
         </Accordion.Body>
       </Accordion.Item>
-
-      <ObjectProperty selectedObject={scene.payload.userData.selectedObject} />
+      {selectedObject && <ObjectProperty selectedObject={selectedObject} />}
     </Accordion>
   );
 }

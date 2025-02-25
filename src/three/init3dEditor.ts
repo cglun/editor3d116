@@ -25,7 +25,6 @@ import {
 import { GlbModel, UserDataType } from "../app/type";
 
 import {
-  config3d,
   createDirectionalLight,
   createGridHelper,
   createLabelRenderer,
@@ -53,6 +52,7 @@ export function animate() {
   requestAnimationFrame(animate);
   controls.update();
   renderer.render(scene, camera);
+  const { config3d } = scene.userData;
   if (labelRenderer2d && config3d.css2d) {
     labelRenderer2d.render(scene, camera);
   }
@@ -98,7 +98,13 @@ export default function createScene(node: HTMLDivElement): void {
 
   renderer.setSize(node.offsetWidth, node.offsetHeight);
   scene = new Scene();
-  scene.userData.isSelected = false;
+  scene.userData = {
+    isSelected: false,
+    config3d: {
+      css2d: true, //是否开启2d标签
+      css3d: true, //是否开启3d标签
+    },
+  };
   node.appendChild(renderer.domElement);
 
   // 初始化轨道控制器
@@ -116,6 +122,7 @@ export default function createScene(node: HTMLDivElement): void {
     renderer.domElement
   );
   transfControls = transfControls1;
+  const { config3d } = scene.userData;
   if (config3d.css2d) {
     labelRenderer2d = createLabelRenderer(node, new CSS2DRenderer());
     // new OrbitControls(perspectiveCamera, labelRenderer2d.domElement);
@@ -265,7 +272,6 @@ export function sceneSerialization(): string {
     sceneJsonString: JSON.stringify(scene.toJSON()),
     cameraJsonString: JSON.stringify(perspectiveCamera.toJSON()),
     modelsJsonString: JSON.stringify(modelList),
-    config3d: JSON.stringify(config3d),
     type: "scene",
   };
   scene.children = oldChildren;
