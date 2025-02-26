@@ -21,6 +21,7 @@ import { MyContext } from "../../app/MyContext";
 import { setClassName } from "../../app/utils";
 
 import _axios from "../../app/http";
+import { useUpdateScene } from "../../app/hooks";
 
 export const Route = createLazyFileRoute("/editor3d/addMesh")({
   component: RouteComponent,
@@ -31,6 +32,7 @@ function RouteComponent() {
 
   const scene = getScene();
   const { dispatchScene } = useContext(MyContext);
+  const { updateScene } = useUpdateScene();
 
   function addBox() {
     // 创建立方体
@@ -42,19 +44,13 @@ function RouteComponent() {
     cube.position.set(0, 0.5, 0);
     cube.userData.isSelected = true;
     scene.add(cube);
-    dispatchScene({
-      type: "setScene",
-      payload: scene,
-    });
+    updateScene(scene);
   }
   function addAmbientLight() {
     const light = new AmbientLight(0xffffff, 0.5);
     scene.add(light);
     light.userData.isSelected = true;
-    dispatchScene({
-      type: "setScene",
-      payload: scene,
-    });
+    updateScene(scene);
   }
   function addPlane() {
     // 创建地面
@@ -76,10 +72,7 @@ function RouteComponent() {
     const group = new Group();
     group.userData.isSelected = true;
     scene.add(group);
-    dispatchScene({
-      type: "setScene",
-      payload: scene,
-    });
+    updateScene(scene);
   }
   function addDirectionalLight() {
     const directionalLight = new DirectionalLight(0xffffff, 0.5);
@@ -89,17 +82,10 @@ function RouteComponent() {
     directionalLight.lookAt(0, 0, 0);
 
     const helper = new DirectionalLightHelper(directionalLight, 1, 0xffff00);
-
-    helper.userData = {
-      isHelper: true,
-    };
-
+    helper.userData.isHelper = true;
     helper.position.setFromMatrixPosition(directionalLight.matrixWorld);
     scene.add(helper);
-    dispatchScene({
-      type: "setScene",
-      payload: scene,
-    });
+    updateScene(scene);
   }
 
   return (

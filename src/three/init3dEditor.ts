@@ -11,8 +11,7 @@ import {
   Vector3,
   WebGLRenderer,
 } from "three";
-import { Tween } from "three/examples/jsm/libs/tween.module.js";
-
+import TWEEN from "three/addons/libs/tween.module.js";
 import {
   GLTFLoader,
   DRACOLoader,
@@ -22,8 +21,8 @@ import {
   GLTF,
   CSS2DRenderer,
   CSS3DRenderer,
-  Timer,
 } from "three/examples/jsm/Addons.js";
+
 import { GlbModel, UserDataType } from "../app/type";
 import {
   createDirectionalLight,
@@ -31,7 +30,7 @@ import {
   createLabelRenderer,
   glbLoader,
 } from "./utils";
-import { test } from "./animate";
+import { cameraTween } from "./animate";
 
 let scene: Scene,
   camera: PerspectiveCamera | OrthographicCamera,
@@ -47,8 +46,7 @@ let scene: Scene,
   transfControls2: TransformControls,
   perspectiveCameraPosition: Vector3 = new Vector3(-5, 5, 8),
   labelRenderer2d: CSS2DRenderer,
-  labelRenderer3d: CSS3DRenderer,
-  tween: Tween<any>;
+  labelRenderer3d: CSS3DRenderer;
 
 export const config3d = {
   css2d: true, //是否开启2d标签
@@ -69,8 +67,8 @@ export function animate() {
   if (labelRenderer3d && config3d.css3d) {
     labelRenderer3d.render(scene, camera);
   }
-  if (config3d.useTween && tween) {
-    tween.update();
+  if (config3d.useTween) {
+    TWEEN.update();
   }
   controls.update();
   renderer.render(scene, camera);
@@ -145,7 +143,11 @@ export default function createScene(node: HTMLDivElement): void {
     labelRenderer.domElement.style.top = "0px";
     labelRenderer3d = createLabelRenderer(node, labelRenderer);
   }
-  tween = test();
+  const tween = cameraTween(perspectiveCamera, new Vector3(-5, 15, 18));
+  // tween.start();
+  tween.onUpdate(() => {
+    console.log("update");
+  });
 
   animate();
 }

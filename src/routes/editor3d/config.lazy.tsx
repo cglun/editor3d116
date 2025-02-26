@@ -4,6 +4,8 @@ import { Button, ListGroup } from "react-bootstrap";
 
 import { getScene } from "../../three/init3dEditor";
 import { ConfigCheck } from "../../component/common/ConfigCheck";
+import { BoxGeometry, Mesh, MeshLambertMaterial, Vector3 } from "three";
+import { cameraTween } from "../../three/animate";
 
 export const Route = createLazyFileRoute("/editor3d/config")({
   component: RouteComponent,
@@ -24,6 +26,30 @@ function RouteComponent() {
           }}
         >
           场景
+        </Button>
+        <Button
+          variant="outline-primary"
+          size="sm"
+          onClick={() => {
+            const cubeGeometry = new BoxGeometry(1, 1, 1);
+            const cubeMaterial = new MeshLambertMaterial();
+            const cube = new Mesh(cubeGeometry, cubeMaterial);
+            cube.name = "cube1";
+            // cube.castShadow = true; // 立方体投射阴影
+            cube.position.set(0, 0.5, 0);
+            cube.userData.isSelected = true;
+            getScene().add(cube);
+            cameraTween(cube, new Vector3(10, 10, 10))
+              .start()
+              .onComplete(() => {
+                console.log("动画完成");
+                cubeGeometry.dispose();
+                cubeMaterial.dispose();
+                cube.removeFromParent();
+              });
+          }}
+        >
+          移动
         </Button>
       </ListGroup.Item>
     </ListGroup>
