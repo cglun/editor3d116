@@ -219,7 +219,7 @@ export function strToJson(str: string) {
 
 //反序列化
 export function sceneDeserialize(data: string, item: ItemInfo) {
-  const { scene, camera, models, loader } = strToJson(data);
+  const { scene, models, loader } = strToJson(data);
   const newScene = new Scene();
   loader.parse(scene, function (object: Scene | any) {
     const { children, fog, background, userData } = object;

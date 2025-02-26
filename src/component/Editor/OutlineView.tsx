@@ -1,4 +1,4 @@
-import { Camera, Object3D, PerspectiveCamera } from "three";
+import { Object3D, OrthographicCamera, PerspectiveCamera } from "three";
 import {
   getCamera,
   getDivElement,
@@ -26,7 +26,9 @@ import Toast3d from "../common/Toast3d";
 import { cameraTween } from "../../three/animate";
 
 export default function OutlineView() {
-  const [_camera, _setCamera] = useState<PerspectiveCamera>();
+  const [_camera, _setCamera] = useState<
+    PerspectiveCamera | OrthographicCamera
+  >();
   const { scene, updateScene } = useUpdateScene();
   useEffect(() => {
     const camera = getPerspectiveCamera();
