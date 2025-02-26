@@ -14,7 +14,7 @@ function RootComponent() {
   const [scene, dispatchScene] = React.useReducer(reducerScene, initScene);
 
   const [item, setItem] = React.useState({
-    id: 139,
+    id: 156,
     name: "立方体",
     des: "Scene",
     cover: "",

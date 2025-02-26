@@ -6,19 +6,35 @@ import {
   WebGLRenderer,
 } from "three";
 
-import { CSS2DRenderer, OrbitControls } from "three/examples/jsm/Addons.js";
-import { createDirectionalLight, createGridHelper } from "./utils";
+import {
+  CSS2DRenderer,
+  CSS3DRenderer,
+  OrbitControls,
+} from "three/examples/jsm/Addons.js";
+import {
+  createDirectionalLight,
+  createGridHelper,
+  createLabelRenderer,
+} from "./utils";
 
 let scene: Scene,
   camera: PerspectiveCamera,
   controls: OrbitControls,
   renderer: WebGLRenderer,
-  labelRenderer2d: CSS2DRenderer | null;
+  labelRenderer2d: CSS2DRenderer,
+  labelRenderer3d: CSS3DRenderer;
 
 function animate() {
   requestAnimationFrame(animate);
   controls.update();
   renderer.render(scene, camera);
+  const { config3d } = scene.userData;
+  if (labelRenderer2d && config3d.css2d) {
+    labelRenderer2d.render(scene, camera);
+  }
+  if (labelRenderer3d && config3d.css3d) {
+    labelRenderer3d.render(scene, camera);
+  }
 }
 
 export default function createScene(node: HTMLDivElement): void {
@@ -38,6 +54,26 @@ export default function createScene(node: HTMLDivElement): void {
   controls = new OrbitControls(camera, renderer.domElement);
   scene.add(createDirectionalLight("平行光"));
   scene.add(createGridHelper("网格辅助"));
+  scene.userData = {
+    isSelected: false,
+    config3d: {
+      css2d: true, //是否开启2d标签
+      css3d: true, //是否开启3d标签
+    },
+  };
+  const { config3d } = scene.userData;
+  if (config3d.css2d) {
+    const labelRenderer = new CSS2DRenderer();
+    const top = node.getBoundingClientRect().top;
+    labelRenderer.domElement.style.top = top + "px";
+    labelRenderer2d = createLabelRenderer(node, labelRenderer);
+  }
+  if (config3d.css3d) {
+    const labelRenderer = new CSS3DRenderer();
+    const top = node.getBoundingClientRect().top;
+    labelRenderer.domElement.style.top = top + "px";
+    labelRenderer3d = createLabelRenderer(node, labelRenderer);
+  }
 
   animate();
 }

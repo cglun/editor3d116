@@ -78,10 +78,12 @@ export default function EditorForm({
             variant={getButtonColor()}
             onClick={() => {
               setLoadScene(true);
+              //useUpdateScene()
             }}
           >
             <i className={setClassName("box")}></i> 使用场景
           </Button>
+
           <Button
             variant={getButtonColor()}
             disabled={!loadScene}

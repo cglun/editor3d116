@@ -74,5 +74,6 @@ btn-group-sm > .btn,
   font-size: 1.16rem;
   padding: 0.2rem;
   border-radius: 0.4rem;
-  background: rgb(41, 32, 32) !important;
+  background: var(--bs-purple);
+  color:var(--bs-primary-bg-subtle);
 }

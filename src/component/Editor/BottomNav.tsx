@@ -36,7 +36,7 @@ export default function BottomNav() {
         </Nav.Item>
         <Nav.Item>
           <Nav.Link eventKey="/editor3d/config">
-            <i className={setClassName("file-code")}></i> 配置
+            <i className={setClassName("gear")}></i> 配置
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>

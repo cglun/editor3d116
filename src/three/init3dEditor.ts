@@ -11,6 +11,7 @@ import {
   Vector3,
   WebGLRenderer,
 } from "three";
+import { Tween } from "three/examples/jsm/libs/tween.module.js";
 
 import {
   GLTFLoader,
@@ -21,16 +22,16 @@ import {
   GLTF,
   CSS2DRenderer,
   CSS3DRenderer,
+  Timer,
 } from "three/examples/jsm/Addons.js";
 import { GlbModel, UserDataType } from "../app/type";
-
 import {
   createDirectionalLight,
   createGridHelper,
   createLabelRenderer,
   glbLoader,
 } from "./utils";
-import { useUpdateScene } from "../app/hooks";
+import { test } from "./animate";
 
 let scene: Scene,
   camera: PerspectiveCamera | OrthographicCamera,
@@ -46,12 +47,21 @@ let scene: Scene,
   transfControls2: TransformControls,
   perspectiveCameraPosition: Vector3 = new Vector3(-5, 5, 8),
   labelRenderer2d: CSS2DRenderer,
-  labelRenderer3d: CSS3DRenderer;
+  labelRenderer3d: CSS3DRenderer,
+  tween: Tween<any>;
+
+export const config3d = {
+  css2d: true, //是否开启2d标签
+  css3d: true, //是否开启3d标签
+  useTween: true, //是否开启动画
+};
+
+const userData = {
+  isSelected: false,
+  config3d,
+};
 
 export function animate() {
-  requestAnimationFrame(animate);
-  controls.update();
-  renderer.render(scene, camera);
   const { config3d } = scene.userData;
   if (labelRenderer2d && config3d.css2d) {
     labelRenderer2d.render(scene, camera);
@@ -59,6 +69,12 @@ export function animate() {
   if (labelRenderer3d && config3d.css3d) {
     labelRenderer3d.render(scene, camera);
   }
+  if (config3d.useTween && tween) {
+    tween.update();
+  }
+  controls.update();
+  renderer.render(scene, camera);
+  requestAnimationFrame(animate);
 }
 
 export function addLight(): void {
@@ -90,6 +106,7 @@ export default function createScene(node: HTMLDivElement): void {
     1,
     1000
   );
+  orthographicCamera.name = "正交相机";
 
   camera = perspectiveCamera;
 
@@ -98,13 +115,7 @@ export default function createScene(node: HTMLDivElement): void {
 
   renderer.setSize(node.offsetWidth, node.offsetHeight);
   scene = new Scene();
-  scene.userData = {
-    isSelected: false,
-    config3d: {
-      css2d: true, //是否开启2d标签
-      css3d: true, //是否开启3d标签
-    },
-  };
+  scene.userData = userData;
   node.appendChild(renderer.domElement);
 
   // 初始化轨道控制器
@@ -124,12 +135,17 @@ export default function createScene(node: HTMLDivElement): void {
   transfControls = transfControls1;
   const { config3d } = scene.userData;
   if (config3d.css2d) {
-    labelRenderer2d = createLabelRenderer(node, new CSS2DRenderer());
+    const labelRenderer = new CSS2DRenderer();
+    labelRenderer.domElement.style.top = "0px";
+    labelRenderer2d = createLabelRenderer(node, labelRenderer);
     // new OrbitControls(perspectiveCamera, labelRenderer2d.domElement);
   }
   if (config3d.css3d) {
-    labelRenderer3d = createLabelRenderer(node, new CSS3DRenderer());
+    const labelRenderer = new CSS3DRenderer();
+    labelRenderer.domElement.style.top = "0px";
+    labelRenderer3d = createLabelRenderer(node, labelRenderer);
   }
+  tween = test();
 
   animate();
 }
@@ -178,13 +194,17 @@ export function getTransfControls() {
 export function setScene(newScene: Scene) {
   scene = newScene;
 }
+
 export function setCamera(camera1: Object3D<Object3DEventMap>) {
   camera.position.x = camera1.position.x;
   camera.position.y = camera1.position.y;
   camera.position.z = camera1.position.z;
 }
-export function getCamera(): PerspectiveCamera {
+export function getPerspectiveCamera(): PerspectiveCamera {
   return perspectiveCamera;
+}
+export function getCamera(): PerspectiveCamera | OrthographicCamera {
+  return camera;
 }
 export function getScene(): Scene {
   return scene;

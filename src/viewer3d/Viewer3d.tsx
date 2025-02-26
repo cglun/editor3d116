@@ -12,13 +12,12 @@ import {
   getProjectData,
   onWindowResize,
   sceneDeserialize,
+  setLabel,
 } from "../three/utils";
-
 import { APP_COLOR, GlbModel, UserDataType } from "../app/type";
 import { Group } from "three";
 import { glbLoader } from "../three/utils";
 import _axios from "../app/http";
-
 import { ItemInfo } from "../component/Editor/ListCard";
 import { Container, ProgressBar } from "react-bootstrap";
 import Toast3d from "../component/common/Toast3d";
@@ -46,6 +45,7 @@ export default function Viewer3d({
         const { scene, camera, modelList } = sceneDeserialize(data, item);
         setScene(scene);
         setCamera(camera);
+        setLabel(scene);
         modelList.forEach((item: GlbModel) => {
           loadModelByUrl(item);
         });

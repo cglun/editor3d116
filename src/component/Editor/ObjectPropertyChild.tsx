@@ -162,9 +162,14 @@ export function AttrInputNumber({
   selectedObject: Object3D | any;
   attr: string;
 }) {
-  const [value, setValue] = useState(
-    selectedObject === null ? 0 : selectedObject[attr]
-  );
+  const [value, setValue] = useState(0);
+
+  useEffect(() => {
+    if (selectedObject) {
+      setValue(selectedObject[attr]);
+    }
+  }, [selectedObject]);
+
   return (
     selectedObject &&
     selectedObject.hasOwnProperty(attr) && (
@@ -198,6 +203,7 @@ export function AttrInputText({
   attr: string;
 }) {
   const [value, setValue] = useState(getObjectNameByName(selectedObject));
+
   useEffect(() => {
     setValue(getObjectNameByName(selectedObject));
   }, [selectedObject]);
@@ -210,8 +216,8 @@ export function AttrInputText({
         <Form.Control
           aria-label="Small"
           aria-describedby="inputGroup-sizing-sm"
-          placeholder={value}
           type="text"
+          placeholder={value}
           value={value}
           title={value}
           onChange={(e) => {
@@ -261,10 +267,7 @@ function sceneProperty(selectedObject: Object3D | any) {
             } else {
               selectedObject.fog.color = new Color(e.target.value);
             }
-            dispatchScene({
-              type: "setScene",
-              payload: getScene(),
-            });
+            updateScene(getScene());
           }}
         />
       </InputGroup>
@@ -283,10 +286,7 @@ function sceneProperty(selectedObject: Object3D | any) {
         onClick={() => {
           selectedObject.background = new Color("#000");
           selectedObject.fog = null;
-          dispatchScene({
-            type: "setScene",
-            payload: getScene(),
-          });
+          updateScene(getScene());
         }}
       >
         重置雾气

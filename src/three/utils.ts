@@ -116,8 +116,12 @@ export function createLabelRenderer(
 ) {
   const labelRenderer = renderer;
   labelRenderer.setSize(node.offsetWidth, node.offsetHeight);
+  // const top = node.childNodes[0] as HTMLElement;
+  // const tt = top.getBoundingClientRect().top;
+  // debugger;
+
   labelRenderer.domElement.style.position = "absolute";
-  labelRenderer.domElement.style.top = "0px";
+
   // labelRenderer.domElement.style.zIndex = "-1";
   labelRenderer.domElement.style.pointerEvents = "none";
   node.appendChild(labelRenderer.domElement);

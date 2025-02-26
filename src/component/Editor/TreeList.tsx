@@ -18,12 +18,10 @@ import { useUpdateScene } from "../../app/hooks";
 
 const TreeNode = ({
   node,
-
   onToggle,
   resetTextWarning,
 }: {
   node: Object3D;
-
   onToggle: (uuid: string, isExpanded: boolean) => void;
   resetTextWarning: (targetItem: Object3D) => void;
 }) => {
@@ -39,9 +37,7 @@ const TreeNode = ({
     setIsExpanded(!isExpanded);
     resetTextWarning(node);
     setIsSelected(!isSelected);
-    // setCurObj3d(node);
     setSelectedObject(node);
-
     setTransformControls([node]);
     onToggle(node.uuid, !isExpanded);
   };

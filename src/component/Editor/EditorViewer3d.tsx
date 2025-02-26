@@ -1,17 +1,23 @@
 import React, { memo, useEffect, useRef } from "react";
 import createScene, {
   addGridHelper,
-  getCamera,
+  getPerspectiveCamera,
   getLabelRenderer,
   getRenderer,
   getScene,
   getTransfControls,
   setCameraType,
+  getCamera,
 } from "../../three/init3dEditor"; // 初始化
 import { Button, ButtonGroup } from "react-bootstrap";
 import { getThemeColor } from "../../app/config";
 import { TransformControlsMode } from "three/examples/jsm/Addons.js";
-import { Object3D, Vector3 } from "three";
+import {
+  Object3D,
+  OrthographicCamera,
+  PerspectiveCamera,
+  Vector3,
+} from "three";
 import { setClassName } from "../../app/utils";
 import { onWindowResize } from "../../three/utils";
 import { useUpdateScene } from "../../app/hooks";
@@ -20,7 +26,7 @@ function EditorViewer3d() {
   const editorCanvas: React.RefObject<HTMLDivElement> =
     useRef<HTMLDivElement>(null);
 
-  const { updateScene } = useUpdateScene();
+  const { scene, updateScene } = useUpdateScene();
   useEffect(() => {
     if (editorCanvas.current) {
       createScene(editorCanvas.current);
@@ -30,7 +36,7 @@ function EditorViewer3d() {
     window.addEventListener("resize", () =>
       onWindowResize(
         editorCanvas,
-        getCamera(),
+        getPerspectiveCamera(),
         getRenderer(),
         getLabelRenderer()
       )
@@ -40,7 +46,7 @@ function EditorViewer3d() {
       window.removeEventListener("resize", () =>
         onWindowResize(
           editorCanvas,
-          getCamera(),
+          getPerspectiveCamera(),
           getRenderer(),
           getLabelRenderer()
         )
@@ -53,6 +59,7 @@ function EditorViewer3d() {
     const transfControls = getTransfControls();
     transfControls.setMode(modeName);
   }
+
   return (
     <div className="position-relative">
       <div style={{ height: "70vh" }} ref={editorCanvas}></div>

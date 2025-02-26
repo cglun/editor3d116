@@ -2,6 +2,7 @@ import { Camera, Object3D } from "three";
 import {
   getCamera,
   getDivElement,
+  getPerspectiveCamera,
   getScene,
   raycasterSelect,
   setCamera,
@@ -25,7 +26,7 @@ export default function OutlineView() {
   const [_camera, _setCamera] = useState<Camera | any>();
   const { scene, updateScene } = useUpdateScene();
   useEffect(() => {
-    const camera = getCamera();
+    const camera = getPerspectiveCamera();
     _setCamera(camera);
 
     const _scene = getScene();

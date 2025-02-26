@@ -13,17 +13,14 @@ import {
 import { getButtonColor } from "../../app/config";
 import { useState } from "react";
 import { setClassName } from "../../app/utils";
-import {
-  cleaerOldLabel,
-  createCss2dLabel,
-  createCss3dLabel,
-} from "../../three/utils";
+import { createCss2dLabel, createCss3dLabel } from "../../three/utils";
 import { getScene } from "../../three/init3dEditor";
 import { Group } from "three";
 import { CSS2DObject, CSS3DSprite } from "three/examples/jsm/Addons.js";
 import Toast3d from "../../component/common/Toast3d";
 import { APP_COLOR } from "../../app/type";
 import { useUpdateScene } from "../../app/hooks";
+import { ConfigCheck } from "../../component/common/ConfigCheck";
 export const Route = createLazyFileRoute("/editor3d/mark")({
   component: RouteComponent,
 });
@@ -49,27 +46,6 @@ function RouteComponent() {
     // setLabelRenderer1(label3d);
   }
 
-  function ConfigCheck({ label = "标签", configKey = "css2d" }) {
-    const { config3d } = scene.payload.userData;
-    const _configKey = configKey as keyof typeof config3d;
-
-    return (
-      <Form className="ms-2">
-        <Form.Check
-          label={label}
-          type="switch"
-          checked={config3d[_configKey]}
-          onChange={() => {
-            config3d[_configKey] = !config3d[_configKey];
-            updateScene(getScene());
-            if (!config3d[_configKey]) {
-              cleaerOldLabel();
-            }
-          }}
-        />
-      </Form>
-    );
-  }
   const { config3d } = scene.payload.userData;
 
   return (
@@ -121,6 +97,7 @@ function RouteComponent() {
                 disabled={!config3d.css2d}
                 onClick={() => {
                   addMark(createCss2dLabel(inputText, logo));
+                  updateScene(getScene());
                 }}
               >
                 添加2d标记
@@ -139,6 +116,7 @@ function RouteComponent() {
                 disabled={!config3d.css3d}
                 onClick={() => {
                   addMark(createCss3dLabel(inputText, logo));
+                  updateScene(getScene());
                 }}
               >
                 添加3d标记

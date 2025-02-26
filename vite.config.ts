@@ -20,10 +20,10 @@ export default defineConfig({
         "react",
         "react-dom",
         // "@tanstack/react-router",
-        // "bootstrap",
+        //  "bootstrap",
         // "@originjs/vite-plugin-federation",
         //"bootstrap-icons",
-        // "react-bootstrap",
+        //"react-bootstrap",
         // "three",
       ],
       // import "bootstrap/dist/css/bootstrap.css";
