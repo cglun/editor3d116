@@ -236,9 +236,16 @@ export function sceneDeserialize(data: string, item: ItemInfo) {
     };
   });
   let newCamera = new PerspectiveCamera();
-  loader.parse(camera, function (object: PerspectiveCamera | any) {
-    newCamera = object;
-  });
+  debugger;
+  const { x, y, z } = newScene.userData.fiexedCameraPosition;
+  newCamera.position.set(x, y, z);
+
+  // loader.parse(camera, function (object: PerspectiveCamera | any) {
+  //   debugger;
+  //   const { x, y, z } = newScene.userData.fiexedCameraPosition;
+  //   newCamera.position.set(x, y, z);
+  //   newCamera = object;
+  // });
 
   return {
     scene: newScene,

@@ -134,6 +134,7 @@ function ItemInfoCard(props: Props) {
 
         setScene(scene);
         setCamera(camera);
+        //scene.userData.perspectiveCameraPosition = camera.position;
         addGridHelper();
         // 加载完成后，设置标签
         setLabel(scene);

@@ -2,14 +2,12 @@
  *
  * 动画
  */
-import { PerspectiveCamera, Vector3 } from "three";
-import TWEEN, { Tween } from "three/addons/libs/tween.module.js";
+import { Object3D, PerspectiveCamera, Vector3 } from "three";
+import { Tween } from "three/addons/libs/tween.module.js";
 export function cameraTween(
-  camera: PerspectiveCamera | any,
+  camera: PerspectiveCamera | Object3D<any>,
   target: Vector3,
   time: number = 1000
 ) {
-  return new Tween(camera.position)
-    .to(target, time)
-    .easing(TWEEN.Easing.Exponential.InOut);
+  return new Tween(camera.position).to(target, time);
 }

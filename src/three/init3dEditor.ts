@@ -1,8 +1,8 @@
 import {
   BoxHelper,
+  Camera,
   MOUSE,
   Object3D,
-  Object3DEventMap,
   OrthographicCamera,
   PerspectiveCamera,
   Raycaster,
@@ -44,7 +44,7 @@ let scene: Scene,
   transfControls: TransformControls,
   transfControls1: TransformControls,
   transfControls2: TransformControls,
-  perspectiveCameraPosition: Vector3 = new Vector3(-5, 5, 8),
+  // perspectiveCameraPosition: Vector3 = new Vector3(-5, 5, 8),
   labelRenderer2d: CSS2DRenderer,
   labelRenderer3d: CSS3DRenderer;
 
@@ -56,6 +56,8 @@ export const config3d = {
 
 const userData = {
   isSelected: false,
+  perspectiveCameraPosition: new Vector3(-5, 5, 8),
+  fiexedCameraPosition: new Vector3(-5, 5, 8),
   config3d,
 };
 
@@ -88,11 +90,8 @@ export default function createScene(node: HTMLDivElement): void {
     1000
   );
   perspectiveCamera.name = "透视相机";
-  perspectiveCamera.position.set(
-    perspectiveCameraPosition.x,
-    perspectiveCameraPosition.y,
-    perspectiveCameraPosition.z
-  );
+  const { x, y, z } = userData.perspectiveCameraPosition;
+  perspectiveCamera.position.set(x, y, z);
   perspectiveCamera.userData.isSelected = false;
 
   const xxx = 40;
@@ -114,6 +113,7 @@ export default function createScene(node: HTMLDivElement): void {
   renderer.setSize(node.offsetWidth, node.offsetHeight);
   scene = new Scene();
   scene.userData = userData;
+
   node.appendChild(renderer.domElement);
 
   // 初始化轨道控制器
@@ -144,7 +144,7 @@ export default function createScene(node: HTMLDivElement): void {
     labelRenderer3d = createLabelRenderer(node, labelRenderer);
   }
   const tween = cameraTween(perspectiveCamera, new Vector3(-5, 15, 18));
-  // tween.start();
+  tween.start();
   tween.onUpdate(() => {
     console.log("update");
   });
@@ -154,7 +154,7 @@ export default function createScene(node: HTMLDivElement): void {
 
 export function setCameraType(cameraType: string, cameraUp: Vector3) {
   if (cameraType === "PerspectiveCamera") {
-    const { x, y, z } = perspectiveCameraPosition;
+    const { x, y, z } = scene.userData.perspectiveCameraPosition;
     perspectiveCamera.position.set(x, y, z);
     camera = perspectiveCamera;
     camera.lookAt(0, 0, 0);
@@ -165,7 +165,7 @@ export function setCameraType(cameraType: string, cameraUp: Vector3) {
 
   if (cameraType === "OrthographicCamera") {
     if (camera.type === "PerspectiveCamera") {
-      perspectiveCameraPosition = camera.position.clone();
+      scene.userData.perspectiveCameraPosition = camera.position.clone();
     }
 
     camera = orthographicCamera;
@@ -197,10 +197,10 @@ export function setScene(newScene: Scene) {
   scene = newScene;
 }
 
-export function setCamera(camera1: Object3D<Object3DEventMap>) {
-  camera.position.x = camera1.position.x;
-  camera.position.y = camera1.position.y;
-  camera.position.z = camera1.position.z;
+export function setCamera(camera1: Camera) {
+  perspectiveCamera.position.x = camera1.position.x;
+  perspectiveCamera.position.y = camera1.position.y;
+  perspectiveCamera.position.z = camera1.position.z;
 }
 export function getPerspectiveCamera(): PerspectiveCamera {
   return perspectiveCamera;
@@ -292,7 +292,7 @@ export function sceneSerialization(): string {
 
   const result = {
     sceneJsonString: JSON.stringify(scene.toJSON()),
-    cameraJsonString: JSON.stringify(perspectiveCamera.toJSON()),
+    cameraJsonString: JSON.stringify(scene.userData.fiexedCameraPosition),
     modelsJsonString: JSON.stringify(modelList),
     type: "scene",
   };

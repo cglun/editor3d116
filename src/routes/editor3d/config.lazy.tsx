@@ -2,7 +2,11 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 
 import { Button, ListGroup } from "react-bootstrap";
 
-import { getScene } from "../../three/init3dEditor";
+import {
+  getCamera,
+  getPerspectiveCamera,
+  getScene,
+} from "../../three/init3dEditor";
 import { ConfigCheck } from "../../component/common/ConfigCheck";
 import { BoxGeometry, Mesh, MeshLambertMaterial, Vector3 } from "three";
 import { cameraTween } from "../../three/animate";
@@ -22,7 +26,13 @@ function RouteComponent() {
           variant="outline-primary"
           size="sm"
           onClick={() => {
+            const { perspectiveCameraPosition } = getScene().userData;
+
             console.log(getScene());
+            const c = getCamera();
+
+            cameraTween(c, perspectiveCameraPosition).start();
+            // console.log(getPerspectiveCamera());
           }}
         >
           场景
@@ -39,14 +49,15 @@ function RouteComponent() {
             cube.position.set(0, 0.5, 0);
             cube.userData.isSelected = true;
             getScene().add(cube);
-            cameraTween(cube, new Vector3(10, 10, 10))
-              .start()
-              .onComplete(() => {
-                console.log("动画完成");
-                cubeGeometry.dispose();
-                cubeMaterial.dispose();
-                cube.removeFromParent();
-              });
+
+            const cubeGeometry2 = new BoxGeometry(1, 1, 1);
+            const cubeMaterial2 = new MeshLambertMaterial();
+            const cube2 = new Mesh(cubeGeometry2, cubeMaterial2);
+            cube2.name = "cube1";
+            // cube.castShadow = true; // 立方体投射阴影
+            cube2.position.set(0, 0.5, 0);
+            cube2.userData.isSelected = true;
+            getScene().add(cube2);
           }}
         >
           移动

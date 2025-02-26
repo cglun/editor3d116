@@ -1,4 +1,4 @@
-import { Camera, Object3D } from "three";
+import { Camera, Object3D, PerspectiveCamera } from "three";
 import {
   getCamera,
   getDivElement,
@@ -13,7 +13,7 @@ import {
 import { setClassName } from "../../app/utils";
 
 import { SPACE } from "../../app/config";
-import { Accordion, Card, ListGroup } from "react-bootstrap";
+import { Accordion, Button, Card, ListGroup } from "react-bootstrap";
 import { useEffect, useState } from "react";
 
 import ObjectProperty from "./ObjectProperty";
@@ -21,9 +21,12 @@ import { getObjectNameByName } from "../../three/utils";
 import TreeList from "./TreeList";
 
 import { useUpdateScene } from "../../app/hooks";
+import { APP_COLOR } from "../../app/type";
+import Toast3d from "../common/Toast3d";
+import { cameraTween } from "../../three/animate";
 
 export default function OutlineView() {
-  const [_camera, _setCamera] = useState<Camera | any>();
+  const [_camera, _setCamera] = useState<PerspectiveCamera>();
   const { scene, updateScene } = useUpdateScene();
   useEffect(() => {
     const camera = getPerspectiveCamera();
@@ -59,7 +62,7 @@ export default function OutlineView() {
     return (
       object3D && (
         <ListGroup.Item
-          as={"button"}
+          as={"div"}
           className={`d-flex justify-content-between ${object3D.userData.isSelected ? "text-warning" : ""} `}
           onClick={() => {
             // const _object3D = { ...object3D };
@@ -69,7 +72,6 @@ export default function OutlineView() {
               if (object3D.isScene) {
                 object3D.userData.isSelected = !object3D.userData.isSelected;
                 setScene(object3D);
-
                 updateScene(object3D);
               }
               if (object3D.isCamera) {
@@ -88,8 +90,48 @@ export default function OutlineView() {
             ) : (
               <i className={setClassName("box2")}></i>
             )}
-            {SPACE}
-            {getObjectNameByName(object3D)}
+            {SPACE + getObjectNameByName(object3D)}
+            {object3D.isCamera && (
+              <>
+                <>
+                  <Button
+                    className="ms-2"
+                    size="sm"
+                    title="相机初始位置"
+                    variant={APP_COLOR.Secondary}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      const _scene = getScene();
+                      _scene.userData.fiexedCameraPosition =
+                        getPerspectiveCamera().position.clone();
+                      Toast3d("初始位置已设置");
+                    }}
+                  >
+                    固定
+                  </Button>
+                  <Button
+                    className="ms-2"
+                    size="sm"
+                    title="到初始位置"
+                    variant={APP_COLOR.Secondary}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      const _scene = getScene();
+                      const camera = getPerspectiveCamera();
+
+                      const { fiexedCameraPosition } = _scene.userData;
+                      debugger;
+                      cameraTween(camera, fiexedCameraPosition, 500).start();
+                      // camera.position.set(x, y, z);
+                    }}
+                  >
+                    初始
+                  </Button>
+                </>
+              </>
+            )}
           </div>
         </ListGroup.Item>
       )

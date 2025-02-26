@@ -77,3 +77,6 @@ btn-group-sm > .btn,
   background: var(--bs-purple);
   color:var(--bs-primary-bg-subtle);
 }
+.bi-image {
+  cursor: crosshair
+}
