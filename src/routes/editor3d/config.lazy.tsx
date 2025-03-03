@@ -1,12 +1,9 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-
 import { Button, ListGroup } from "react-bootstrap";
-
 import { getCamera, getScene } from "../../three/init3dEditor";
 import { ConfigCheck } from "../../component/common/ConfigCheck";
 import { BoxGeometry, Mesh, MeshLambertMaterial } from "three";
 import { cameraTween } from "../../three/animate";
-
 export const Route = createLazyFileRoute("/editor3d/config")({
   component: RouteComponent,
 });
@@ -57,6 +54,9 @@ function RouteComponent() {
           }}
         >
           移动
+        </Button>
+        <Button variant="outline-primary" size="sm">
+          default
         </Button>
       </ListGroup.Item>
     </ListGroup>

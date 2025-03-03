@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useContext } from "react";
 import {
   Button,
   ButtonGroup,
@@ -30,6 +30,8 @@ import {
 } from "../../three/utils";
 import { useUpdateScene } from "../../app/hooks";
 
+import { MyContext } from "../../app/MyContext";
+
 export interface ItemInfo {
   id: number;
   name: string;
@@ -46,6 +48,10 @@ interface Props {
 function ItemInfoCard(props: Props) {
   const { list, setList, isLoading, error } = props;
   const { updateScene } = useUpdateScene();
+  // const [show, setShow] = useState(false);
+  // const [tourObjectect, setTourSrc] = useState("");
+  const { dispatchTourWindow } = useContext(MyContext);
+
   //错误提示
   if (error.trim().length > 0) {
     return <AlertBase type={APP_COLOR.Warning} text={error} />;
@@ -127,18 +133,17 @@ function ItemInfoCard(props: Props) {
       }
     );
   }
+
   function loadScene(item: ItemInfo) {
     getProjectData(item.id)
       .then((data: any) => {
         const { scene, camera, modelList } = sceneDeserialize(data, item);
-
         setScene(scene);
         setCamera(camera);
         //scene.userData.perspectiveCameraPosition = camera.position;
         addGridHelper();
         // 加载完成后，设置标签
-        setLabel(scene);
-        // updateScene(getScene());
+        setLabel(scene, dispatchTourWindow);
 
         modelList.forEach((item: GlbModel) => {
           loadModelByUrl(item);
@@ -146,6 +151,9 @@ function ItemInfoCard(props: Props) {
       })
       .catch((error) => {
         Toast3d(error, "提示", APP_COLOR.Danger);
+      })
+      .finally(() => {
+        updateScene(getScene());
       });
   }
   function loadMesh(item: ItemInfo) {

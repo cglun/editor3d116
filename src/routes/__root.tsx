@@ -1,7 +1,7 @@
 import React from "react";
 import { createRootRoute } from "@tanstack/react-router";
-import { initScene, MyContext } from "../app/MyContext";
-import { reducerScene } from "../app/reducer";
+import { initScene, initTourWindow, MyContext } from "../app/MyContext";
+import { reducerScene, reducerTour } from "../app/reducer";
 import Editor from "../component/Editor/Index";
 
 export const Route = createRootRoute({
@@ -10,9 +10,15 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   const [scene, dispatchScene] = React.useReducer(reducerScene, initScene);
+  const [tourWindow, dispatchTourWindow] = React.useReducer(
+    reducerTour,
+    initTourWindow
+  );
 
   return (
-    <MyContext.Provider value={{ scene, dispatchScene }}>
+    <MyContext.Provider
+      value={{ scene, dispatchScene, tourWindow, dispatchTourWindow }}
+    >
       <Editor />
     </MyContext.Provider>
   );

@@ -22,6 +22,12 @@ import { ItemInfo } from "../component/Editor/ListCard";
 import { Container, ProgressBar } from "react-bootstrap";
 import Toast3d from "../component/common/Toast3d";
 
+import { initScene, initTourWindow, MyContext } from "../app/MyContext";
+import ModalTour from "../component/common/ModalTour";
+import React from "react";
+import { reducerScene, reducerTour } from "../app/reducer";
+// import { getThemeColor } from "../app/config";
+
 /**
  * 其他应用可以调用此组件，
  * @returns
@@ -38,6 +44,11 @@ export default function Viewer3d({
     HTMLDivElement | any
   >();
   const [progress, setProgress] = useState(0);
+  const [scene, dispatchScene] = React.useReducer(reducerScene, initScene);
+  const [tourWindow, dispatchTourWindow] = React.useReducer(
+    reducerTour,
+    initTourWindow
+  );
 
   function loadScene(item: ItemInfo) {
     getProjectData(item.id)
@@ -45,7 +56,7 @@ export default function Viewer3d({
         const { scene, camera, modelList } = sceneDeserialize(data, item);
         setScene(scene);
         setCamera(camera);
-        setLabel(scene);
+        setLabel(scene, dispatchTourWindow);
         modelList.forEach((item: GlbModel) => {
           loadModelByUrl(item);
         });
@@ -125,13 +136,18 @@ export default function Viewer3d({
   }, [item.id]);
 
   return (
-    <Container fluid>
-      <div className="mb-1 mx-auto" style={{ width: "300px" }}>
-        {progress < 100 && (
-          <ProgressBar now={progress} label={`${progress}%`} />
-        )}
-      </div>
-      <div className="mx-auto" style={canvasStyle} ref={canvas3d}></div>
-    </Container>
+    <MyContext.Provider
+      value={{ scene, dispatchScene, tourWindow, dispatchTourWindow }}
+    >
+      <Container fluid>
+        <div className="mb-1 mx-auto" style={{ width: "300px" }}>
+          {progress < 100 && (
+            <ProgressBar now={progress} label={`${progress}%`} />
+          )}
+        </div>
+        <div className="mx-auto" style={canvasStyle} ref={canvas3d}></div>
+        <ModalTour />
+      </Container>
+    </MyContext.Provider>
   );
 }

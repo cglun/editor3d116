@@ -54,7 +54,7 @@ export const config3d = {
   useTween: true, //是否开启动画
 };
 
-const userData = {
+export const userData = {
   isSelected: false,
   perspectiveCameraPosition: new Vector3(-5, 5, 8),
   fiexedCameraPosition: new Vector3(-5, 5, 8),

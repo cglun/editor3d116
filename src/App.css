@@ -8,7 +8,7 @@
   font-size: 0.8rem;
   margin-bottom: 0;
 }
-.mt-2 .card-header {
+.mt-2 .card-header,.card-pd-header {
   padding: 0 0 0 0.4rem;
 }
 .mt-2 {

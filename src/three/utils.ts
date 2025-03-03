@@ -8,6 +8,7 @@ import {
   WebGLRenderer,
 } from "three";
 import { UserDataType } from "../app/type";
+
 import {
   CSS2DObject,
   CSS2DRenderer,
@@ -118,17 +119,22 @@ export function createLabelRenderer(
   labelRenderer.setSize(node.offsetWidth, node.offsetHeight);
   // const top = node.childNodes[0] as HTMLElement;
   // const tt = top.getBoundingClientRect().top;
-  // debugger;
-
   labelRenderer.domElement.style.position = "absolute";
-
   // labelRenderer.domElement.style.zIndex = "-1";
   labelRenderer.domElement.style.pointerEvents = "none";
   node.appendChild(labelRenderer.domElement);
   return labelRenderer;
 }
-
-function createDiv(logo: string, name: string) {
+//const { tourWindow, dispatchTourWindow } = useContext(MyContext);
+function createDiv(
+  logo: string,
+  name: string,
+  tourObject?: {
+    id: string;
+    title: string;
+  },
+  dispatchTourWindow?: any
+) {
   const div = document.createElement("div");
   div.className = "mark-label";
   const img = document.createElement("i");
@@ -139,19 +145,45 @@ function createDiv(logo: string, name: string) {
   span.textContent = name;
   div.appendChild(span);
 
+  if (tourObject) {
+    const i = document.createElement("i");
+    i.className = setClassName("eye");
+    i.classList.add("ms-2");
+    i.style.cursor = "pointer";
+    i.setAttribute("data-tour-id", tourObject.id);
+    i.addEventListener("click", function () {
+      dispatchTourWindow({
+        type: "tourWindow",
+        payload: {
+          show: true,
+          title: tourObject.title,
+          tourSrc: getTourSrc(tourObject.id),
+        },
+      });
+    });
+    div.appendChild(i);
+  }
+
   return div;
 }
 
-export function createCss3dLabel(name: string, logo: string) {
-  const div = createDiv(logo, name);
+export function createCss3dLabel(
+  name: string,
+  logo: string,
+  tourObjectect?: any,
+  dispatchTourWindow?: any
+) {
+  const div = createDiv(logo, name, tourObjectect, dispatchTourWindow);
   const css3DSprite = new CSS3DSprite(div);
 
   css3DSprite.name = name;
   css3DSprite.position.set(0, 0, 0);
   css3DSprite.scale.set(0.04, 0.04, 0.04);
+
   css3DSprite.userData = {
     type: UserDataType.CSS3DObject,
     labelLogo: logo,
+    tourObjectect: tourObjectect,
   };
   return css3DSprite;
 }
@@ -168,16 +200,22 @@ export function createCss2dLabel(name: string, logo: string) {
   return css2DObject;
 }
 
-export function setLabel(scene: Scene) {
+export function setLabel(scene: Scene, dispatchTourWindow?: any) {
   const MARK_LABEL = scene.getObjectByName("MARK_LABEL");
   if (!MARK_LABEL) {
     return;
   }
+
   cleaerOldLabel();
   const children = MARK_LABEL.children;
   children.forEach((item) => {
     const { type } = item.userData;
-    let label = createCss3dLabel(item.name, item.userData.labelLogo);
+    let label = createCss3dLabel(
+      item.name,
+      item.userData.labelLogo,
+      item.userData.tourObjectect,
+      dispatchTourWindow
+    );
 
     if (type === UserDataType.CSS2DObject) {
       label = createCss2dLabel(item.name, item.userData.labelLogo);
@@ -204,6 +242,16 @@ export function cleaerOldLabel() {
       element.parentNode?.removeChild(element);
     });
   }
+}
+function getTourSrc(tourObjectect: string) {
+  let tourSrc = "/#/preview/";
+  if (tourObjectect) {
+    tourSrc = "/#/preview/" + tourObjectect;
+    if (import.meta.env.DEV) {
+      tourSrc = "http://localhost:5173/#/preview/" + tourObjectect;
+    }
+  }
+  return tourSrc;
 }
 
 export function strToJson(str: string) {
@@ -236,7 +284,7 @@ export function sceneDeserialize(data: string, item: ItemInfo) {
     };
   });
   let newCamera = new PerspectiveCamera();
-  debugger;
+
   const { x, y, z } = newScene.userData.fiexedCameraPosition;
   newCamera.position.set(x, y, z);
 
@@ -254,7 +302,7 @@ export function sceneDeserialize(data: string, item: ItemInfo) {
   };
 }
 
-export function getProjectData(id: number | string) {
+export function getProjectData(id: number) {
   return new Promise((resolve, reject) => {
     _axios
       .get(`/project/getProjectData/${id}`)

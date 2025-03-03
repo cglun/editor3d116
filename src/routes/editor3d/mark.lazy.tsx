@@ -2,6 +2,7 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import {
   Button,
   ButtonGroup,
+  Card,
   Col,
   Container,
   Form,
@@ -11,7 +12,7 @@ import {
 } from "react-bootstrap";
 
 import { getButtonColor } from "../../app/config";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { setClassName } from "../../app/utils";
 import { createCss2dLabel, createCss3dLabel } from "../../three/utils";
 import { getScene } from "../../three/init3dEditor";
@@ -21,14 +22,22 @@ import Toast3d from "../../component/common/Toast3d";
 import { APP_COLOR } from "../../app/type";
 import { useUpdateScene } from "../../app/hooks";
 import { ConfigCheck } from "../../component/common/ConfigCheck";
+import _axios from "../../app/http";
+
+import { MyContext } from "../../app/MyContext";
+
 export const Route = createLazyFileRoute("/editor3d/mark")({
   component: RouteComponent,
 });
+
 function RouteComponent() {
-  const [inputText, setInputText] = useState("mark");
+  const [markName, setMarkName] = useState("mark");
   const [logo, setLogo] = useState<string>("geo-alt");
+  const [listTour, setListTour] = useState([]);
   const buttonColor = getButtonColor();
   const { scene, updateScene } = useUpdateScene();
+  const { dispatchTourWindow } = useContext(MyContext);
+
   function addMark(label: CSS3DSprite | CSS2DObject) {
     const MARK_LABEL = getScene().getObjectByName("MARK_LABEL");
 
@@ -45,6 +54,24 @@ function RouteComponent() {
 
     // setLabelRenderer1(label3d);
   }
+  useEffect(() => {
+    _axios.get("/pano/page?size=1000").then((res) => {
+      if (res.data.code === 200) {
+        const { records } = res.data.result;
+        //records.dispatchTourWindow = dispatchTourWindow;
+        // const _records = records.map((item: any) => {
+        //   Object.assign(item, {
+        //     dispatchTourWindow: dispatchTourWindow,
+        //   });
+        //   return item;
+        // });
+
+        setListTour(records);
+      } else {
+        Toast3d(res.data.message, "提示", APP_COLOR.Danger);
+      }
+    });
+  }, []);
 
   const { config3d } = scene.payload.userData;
 
@@ -70,7 +97,6 @@ function RouteComponent() {
                 className={setClassName(logo)}
                 style={{ fontSize: "1.4rem" }}
               ></i>
-
               <Form.Select
                 className="ms-2"
                 aria-label="logo"
@@ -88,7 +114,7 @@ function RouteComponent() {
             <Form.Control
               placeholder="名称"
               onChange={(e) => {
-                setInputText(e.target.value);
+                setMarkName(e.target.value);
               }}
             />
             <ButtonGroup>
@@ -96,7 +122,7 @@ function RouteComponent() {
                 variant={buttonColor}
                 disabled={!config3d.css2d}
                 onClick={() => {
-                  addMark(createCss2dLabel(inputText, logo));
+                  addMark(createCss2dLabel(markName, logo));
                   updateScene(getScene());
                 }}
               >
@@ -115,7 +141,7 @@ function RouteComponent() {
                 variant={buttonColor}
                 disabled={!config3d.css3d}
                 onClick={() => {
-                  addMark(createCss3dLabel(inputText, logo));
+                  addMark(createCss3dLabel(markName, logo));
                   updateScene(getScene());
                 }}
               >
@@ -125,7 +151,7 @@ function RouteComponent() {
                 variant={buttonColor}
                 disabled={!config3d.css3d}
                 onClick={() => {
-                  Toast3d("待续", "提示", APP_COLOR.Danger);
+                  // Toast3d("待续", "提示", APP_COLOR.Danger);
                 }}
               >
                 一键3d标记
@@ -133,7 +159,40 @@ function RouteComponent() {
             </ButtonGroup>
           </InputGroup>
         </Col>
-        <Col className="ms-2"></Col>
+      </Row>
+      <Row>
+        <Col className="ms-2">
+          {listTour &&
+            config3d.css3d &&
+            listTour.map((item: any, index: number) => {
+              return (
+                <Card style={{ width: "6rem" }} key={index}>
+                  <Card.Header className="card-pd-header ">
+                    {item.title}
+                  </Card.Header>
+                  <Card.Img
+                    src={item.thumbUrl}
+                    alt={item.title}
+                    variant="top"
+                    style={{ cursor: "crosshair" }}
+                    onClick={() => {
+                      addMark(
+                        createCss3dLabel(
+                          item.title,
+                          "geo-alt",
+                          {
+                            id: item.id,
+                            title: item.title,
+                          },
+                          dispatchTourWindow
+                        )
+                      );
+                    }}
+                  ></Card.Img>
+                </Card>
+              );
+            })}
+        </Col>
       </Row>
     </Container>
   );

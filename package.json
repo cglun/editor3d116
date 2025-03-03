@@ -21,9 +21,9 @@
     "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
-    "crypto-js": "^4.2.0",
-    "react": "^18.3.1",
     "react-bootstrap": "^2.10.7",
+    "crypto-js": "^4.2.0",
+    "react": "^18.3.1",    
     "react-dom": "^18.3.1",
     "react-highlight": "^0.15.0",
     "three": "^0.172.0"

@@ -23,6 +23,7 @@ import {
   getScene,
   sceneSerialization,
   setScene,
+  userData,
 } from "../../three/init3dEditor";
 import _axios from "../../app/http";
 import InputBase from "../common/InputBase";
@@ -169,6 +170,7 @@ export default function EditorTop() {
               size="sm"
               onClick={() => {
                 const newScene = new Scene();
+                newScene.userData = userData;
                 setScene(newScene);
                 addGridHelper();
                 addLight();

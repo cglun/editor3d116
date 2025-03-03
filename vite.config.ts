@@ -14,13 +14,14 @@ export default defineConfig({
       exposes: {
         "./Viewer3d": "./src/Viewer3d/Viewer3d.tsx",
         "./init3dViewer": "./src/three/init3dViewer.ts",
+
         //  "./Index": "./src/Hook.tsx",
       },
       shared: [
         "react",
         "react-dom",
         // "@tanstack/react-router",
-        //  "bootstrap",
+        //"bootstrap",
         // "@originjs/vite-plugin-federation",
         //"bootstrap-icons",
         //"react-bootstrap",

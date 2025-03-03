@@ -124,7 +124,7 @@ export default function OutlineView() {
                       const camera = getPerspectiveCamera();
 
                       const { fiexedCameraPosition } = _scene.userData;
-                      debugger;
+
                       cameraTween(camera, fiexedCameraPosition, 500).start();
                       // camera.position.set(x, y, z);
                     }}

@@ -15,6 +15,7 @@ import { Object3D, Vector3 } from "three";
 import { setClassName } from "../../app/utils";
 import { onWindowResize } from "../../three/utils";
 import { useUpdateScene } from "../../app/hooks";
+import ModalTour from "../common/ModalTour";
 
 function EditorViewer3d() {
   const editorCanvas: React.RefObject<HTMLDivElement> =
@@ -27,6 +28,7 @@ function EditorViewer3d() {
       addGridHelper();
     }
     updateScene(getScene().clone());
+
     window.addEventListener("resize", () =>
       onWindowResize(
         editorCanvas,
@@ -124,6 +126,8 @@ function EditorViewer3d() {
           </Button>
         </ButtonGroup>
       </div>
+      {/* <ModalTour show={true} setShow={function () {}} tourSrc={""} /> */}
+      <ModalTour />
     </div>
   );
 }

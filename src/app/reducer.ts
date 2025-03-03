@@ -1,11 +1,11 @@
-import { EditorScene, Toast } from "./MyContext";
+import { EditorScene, TourWindow } from "./MyContext";
 
-export default function reducerToast(toast: Toast, action: Toast): any {
+export function reducerTour(tourWindow: TourWindow, action: TourWindow): any {
   switch (action.type) {
-    case "toast":
-      return { ...toast, toastBody: { ...action.toastBody } };
+    case "tourWindow":
+      return { ...tourWindow, payload: { ...action.payload } };
     default:
-      return toast;
+      return tourWindow;
   }
 }
 
