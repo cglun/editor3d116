@@ -7,15 +7,13 @@ import {
 } from "three";
 
 import {
-  CSS2DRenderer,
-  CSS3DRenderer,
-  OrbitControls,
-} from "three/examples/jsm/Addons.js";
-import {
   createDirectionalLight,
   createGridHelper,
   createLabelRenderer,
 } from "./utils";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer.js";
+import { CSS3DRenderer } from "three/examples/jsm/renderers/CSS3DRenderer.js";
 
 let scene: Scene,
   camera: PerspectiveCamera,
@@ -112,4 +110,21 @@ export function takeScreenshot(width: number, height: number): string {
   renderer.render(scene, camera);
   const screenshot = renderer.domElement.toDataURL("image/png");
   return screenshot;
+}
+
+export function showModelByName(
+  scene: Scene,
+  targetModelName: string,
+  show: boolean
+) {
+  const model = scene.getObjectByName(targetModelName);
+  if (model) {
+    model.traverse((item) => {
+      item.visible = show;
+    });
+
+    if (model.name !== "MODEl_GROUP") {
+      model.visible = show;
+    }
+  }
 }

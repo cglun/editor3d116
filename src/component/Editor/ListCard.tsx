@@ -48,8 +48,6 @@ interface Props {
 function ItemInfoCard(props: Props) {
   const { list, setList, isLoading, error } = props;
   const { updateScene } = useUpdateScene();
-  // const [show, setShow] = useState(false);
-  // const [tourObjectect, setTourSrc] = useState("");
   const { dispatchTourWindow } = useContext(MyContext);
 
   //错误提示

@@ -4,6 +4,7 @@ import { getCamera, getScene } from "../../three/init3dEditor";
 import { ConfigCheck } from "../../component/common/ConfigCheck";
 import { BoxGeometry, Mesh, MeshLambertMaterial } from "three";
 import { cameraTween } from "../../three/animate";
+import { showModelByName, getCamera as cc } from "../../three/init3dViewer";
 export const Route = createLazyFileRoute("/editor3d/config")({
   component: RouteComponent,
 });
@@ -55,8 +56,41 @@ function RouteComponent() {
         >
           移动
         </Button>
-        <Button variant="outline-primary" size="sm">
+        <Button
+          variant="outline-primary"
+          size="sm"
+          onClick={() => {
+            const S = getScene();
+            showModelByName(S, "MODEl_GROUP", false);
+            // showModelByName(S, "A", true);
+          }}
+        >
           default
+        </Button>
+        <Button
+          variant="outline-primary"
+          size="sm"
+          onClick={() => {
+            const S = getScene();
+            // showModelByName(S, "MODEl_GROUP", false);
+            showModelByName(S, "A", true);
+            // const m = S.getObjectByName("A")?.parent;
+            const m = S.getObjectByName("MODEl_GROUP");
+            if (m) {
+              m.visible = true;
+            }
+          }}
+        >
+          SHOW
+        </Button>
+        <Button
+          variant="outline-primary"
+          size="sm"
+          onClick={() => {
+            console.log(cc());
+          }}
+        >
+          SHOW
         </Button>
       </ListGroup.Item>
     </ListGroup>

@@ -24,7 +24,6 @@ import {
   sceneDeserialize,
   setLabel,
 } from "../three/utils";
-
 // import { getThemeColor } from "../app/config";
 
 /**
@@ -35,11 +34,9 @@ import {
 export default function Viewer3d({
   item,
   canvasStyle = { height: "100vh", width: "100vw" },
-  callBack,
 }: {
   item: ItemInfo;
   canvasStyle?: { height: string; width: string };
-  callBack?: any;
 }) {
   const canvas3d: React.RefObject<HTMLDivElement> = useRef<
     HTMLDivElement | any
@@ -50,13 +47,6 @@ export default function Viewer3d({
     reducerTour,
     initTourWindow
   );
-
-  function exportObj() {
-    return {
-      scene: getScene(),
-      camera: getCamera(),
-    };
-  }
 
   function loadScene(item: ItemInfo) {
     getProjectData(item.id)
@@ -71,9 +61,6 @@ export default function Viewer3d({
       })
       .catch((error) => {
         Toast3d(error, "提示", APP_COLOR.Danger);
-      })
-      .finally(() => {
-        callBack && callBack(exportObj());
       });
   }
   function loadMesh(item: ItemInfo) {
@@ -83,9 +70,6 @@ export default function Viewer3d({
       })
       .catch((error) => {
         Toast3d(error, "提示", APP_COLOR.Danger);
-      })
-      .finally(() => {
-        callBack && callBack(exportObj());
       });
   }
 

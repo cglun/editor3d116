@@ -201,12 +201,12 @@ export function createCss2dLabel(name: string, logo: string) {
 }
 
 export function setLabel(scene: Scene, dispatchTourWindow?: any) {
+  cleaerOldLabel();
   const MARK_LABEL = scene.getObjectByName("MARK_LABEL");
   if (!MARK_LABEL) {
     return;
   }
 
-  cleaerOldLabel();
   const children = MARK_LABEL.children;
   children.forEach((item) => {
     const { type } = item.userData;

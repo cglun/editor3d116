@@ -95,6 +95,7 @@ export default function EditorForm({
           >
             <i className={setClassName("camera")}></i> 截图
           </Button>
+
           <Button
             variant={getButtonColor()}
             disabled={imgBase64.trim() === ""}

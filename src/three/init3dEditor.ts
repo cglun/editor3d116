@@ -145,9 +145,6 @@ export default function createScene(node: HTMLDivElement): void {
   }
   const tween = cameraTween(perspectiveCamera, new Vector3(-5, 15, 18));
   tween.start();
-  tween.onUpdate(() => {
-    console.log("update");
-  });
 
   animate();
 }
