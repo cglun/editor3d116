@@ -1,3 +1,5 @@
+import { CodeHighlight } from "@mantine/code-highlight";
+import { MantineProvider } from "@mantine/core";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import Highlight from "react-highlight";
 
@@ -56,5 +58,16 @@ function RouteComponent() {
       到2D项目查看，地址：/src/pages/viewer3d/index.tsx   
     `;
 
-  return <Highlight className="javascript">{code}</Highlight>;
+  return (
+    <MantineProvider>
+      <CodeHighlight
+        style={{
+          padding: "16px",
+        }}
+        code={code}
+        language="javascript"
+        withCopyButton={false}
+      />
+    </MantineProvider>
+  );
 }

@@ -30,11 +30,11 @@
   border-right: 0;
   border-bottom: 0;
 }
-
-.my-card-body {
+ 
+.my-card-body,.mantine-ScrollArea-viewport{
   max-height: 96vh;
-  overflow-y: hidden;
-  overflow-y: scroll;
+  overflow: hidden !important;
+ 
   scrollbar-width: thin;
 }
 .card-body img {

@@ -5,6 +5,8 @@ import Highlight from "react-highlight";
 import { getButtonColor } from "../../app/config";
 import { getScene } from "../../three/init3dEditor";
 import { useUpdateScene } from "../../app/hooks";
+import { CodeHighlight } from "@mantine/code-highlight";
+import { MantineProvider } from "@mantine/core";
 
 export const Route = createLazyFileRoute("/editor3d/script")({
   component: RouteComponent,
@@ -19,7 +21,11 @@ function RouteComponent() {
     setCode(javascript);
     setE(false);
   }, [scene]);
-
+  const exampleCode = `
+  function Button() {
+    return <button>Click me</button>;
+  }
+  `;
   return (
     <Container fluid>
       <Button
@@ -50,10 +56,18 @@ function RouteComponent() {
           />
         </FloatingLabel>
       )}
+
       {!e && (
-        <div style={{ height: "60vh", minHeight: "60vh" }}>
-          <Highlight className="javascript">{code}</Highlight>
-        </div>
+        <MantineProvider>
+          <CodeHighlight
+            style={{
+              padding: "16px",
+            }}
+            code={code}
+            language="javascript"
+            withCopyButton={false}
+          />
+        </MantineProvider>
       )}
     </Container>
   );
