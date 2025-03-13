@@ -123,8 +123,8 @@ export function showModelByName(
       item.visible = show;
     });
 
-    if (model.name !== "MODEl_GROUP") {
-      model.visible = show;
+    if (model.name === "MODEl_GROUP") {
+      model.visible = true;
     }
   }
 }

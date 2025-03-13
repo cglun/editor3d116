@@ -13,7 +13,7 @@ import { getThemeColor } from "../../app/config";
 import { TransformControlsMode } from "three/examples/jsm/Addons.js";
 import { Object3D, Vector3 } from "three";
 import { setClassName } from "../../app/utils";
-import { onWindowResize } from "../../three/utils";
+import { onWindowResize, removeCanvasChild } from "../../three/utils";
 import { useUpdateScene } from "../../app/hooks";
 import ModalTour from "../common/ModalTour";
 
@@ -23,6 +23,7 @@ function EditorViewer3d() {
 
   const { updateScene } = useUpdateScene();
   useEffect(() => {
+    removeCanvasChild(editorCanvas);
     if (editorCanvas.current) {
       createScene(editorCanvas.current);
       addGridHelper();
@@ -38,7 +39,7 @@ function EditorViewer3d() {
       )
     );
     return () => {
-      editorCanvas.current?.children[0].remove();
+      removeCanvasChild(editorCanvas);
       window.removeEventListener("resize", () =>
         onWindowResize(
           editorCanvas,

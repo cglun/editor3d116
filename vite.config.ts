@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 import federation from "@originjs/vite-plugin-federation";
 
+// https://vite.dev/config/
 export default defineConfig({
   plugins: [
     react(),
@@ -19,12 +20,11 @@ export default defineConfig({
   ],
   base: "/editor3d/",
   build: {
-    modulePreload: false,
+    modulePreload: true,
     target: "esnext",
-    minify: false,
+    minify: true,
     cssCodeSplit: false,
     outDir: "../datav_vr_2d/editor3d",
-
     assetsDir: "assets",
     assetsInlineLimit: 4096,
     chunkSizeWarningLimit: 4096,

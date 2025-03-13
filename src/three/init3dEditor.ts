@@ -59,6 +59,7 @@ export const userData = {
   perspectiveCameraPosition: new Vector3(-5, 5, 8),
   fiexedCameraPosition: new Vector3(-5, 5, 8),
   config3d,
+  javascript: "console.log(116)",
 };
 
 export function animate() {
@@ -267,7 +268,6 @@ export function sceneSerialization(): string {
     const childUserData = child.userData;
     if (childUserData.type === UserDataType.GlbModel) {
       const { id, name, position, rotation, scale } = child;
-
       const model: GlbModel = {
         id,
         name,
@@ -286,7 +286,6 @@ export function sceneSerialization(): string {
   });
 
   scene.children = children;
-
   const result = {
     sceneJsonString: JSON.stringify(scene.toJSON()),
     cameraJsonString: JSON.stringify(scene.userData.fiexedCameraPosition),

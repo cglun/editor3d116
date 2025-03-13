@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Container, ProgressBar } from "react-bootstrap";
 import { APP_COLOR, GlbModel, UserDataType } from "../app/type";
 import { Group } from "three";
-import { glbLoader } from "../three/utils";
+import { glbLoader, removeCanvasChild } from "../three/utils";
 import _axios from "../app/http";
 import { ItemInfo } from "../component/Editor/ListCard";
 import Toast3d from "../component/common/Toast3d";
@@ -14,9 +14,11 @@ import createScene, {
   getCamera,
   getRenderer,
   getScene,
+  getControls,
   setCamera,
   setScene,
   getLabelRenderer,
+  showModelByName,
 } from "../three/init3dViewer";
 import {
   getProjectData,
@@ -41,9 +43,8 @@ export default function Viewer3d({
   canvasStyle?: { height: string; width: string };
   callBack?: any;
 }) {
-  const canvas3d: React.RefObject<HTMLDivElement> = useRef<
-    HTMLDivElement | any
-  >();
+  const canvas3d: React.RefObject<HTMLDivElement | any> = useRef();
+
   const [progress, setProgress] = useState(0);
   const [scene, dispatchScene] = React.useReducer(reducerScene, initScene);
   const [tourWindow, dispatchTourWindow] = React.useReducer(
@@ -55,6 +56,8 @@ export default function Viewer3d({
     return {
       scene: getScene(),
       camera: getCamera(),
+      controls: getControls(),
+      showModelByName,
     };
   }
 
@@ -74,6 +77,10 @@ export default function Viewer3d({
       })
       .finally(() => {
         callBack && callBack(exportObj());
+        const { javascript } = getScene().userData;
+        if (javascript) {
+          eval(javascript);
+        }
       });
   }
   function loadMesh(item: ItemInfo) {
@@ -83,9 +90,6 @@ export default function Viewer3d({
       })
       .catch((error) => {
         Toast3d(error, "提示", APP_COLOR.Danger);
-      })
-      .finally(() => {
-        callBack && callBack(exportObj());
       });
   }
 
@@ -132,6 +136,7 @@ export default function Viewer3d({
   }
 
   useEffect(() => {
+    removeCanvasChild(canvas3d);
     if (canvas3d.current) {
       createScene(canvas3d.current);
       item.des === "Scene" ? loadScene(item) : loadMesh(item);
@@ -141,8 +146,7 @@ export default function Viewer3d({
       onWindowResize(canvas3d, getCamera(), getRenderer(), getLabelRenderer())
     );
     return () => {
-      // getDivElement()?.removeChild(getRenderer().domElement);
-      //  canvas3d.current?.children[0].remove();
+      removeCanvasChild(canvas3d);
       window.removeEventListener("resize", () =>
         onWindowResize(canvas3d, getCamera(), getRenderer(), getLabelRenderer())
       );

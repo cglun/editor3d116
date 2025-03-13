@@ -20,6 +20,8 @@ import {
   setScene,
   getScene,
   addGridHelper,
+  getControls,
+  getCamera,
 } from "../../three/init3dEditor";
 import { Group } from "three";
 import {
@@ -31,6 +33,7 @@ import {
 import { useUpdateScene } from "../../app/hooks";
 
 import { MyContext } from "../../app/MyContext";
+import { runScript } from "../../three/scriptDev";
 
 export interface ItemInfo {
   id: number;
@@ -151,7 +154,17 @@ function ItemInfoCard(props: Props) {
         Toast3d(error, "提示", APP_COLOR.Danger);
       })
       .finally(() => {
+        //
         updateScene(getScene());
+        const { javascript } = getScene().userData;
+
+        if (javascript) {
+          getScene();
+          getControls();
+          getCamera();
+          eval(javascript);
+        }
+        runScript();
       });
   }
   function loadMesh(item: ItemInfo) {

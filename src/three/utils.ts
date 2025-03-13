@@ -329,3 +329,12 @@ export function glbLoader() {
   loader.setDRACOLoader(dracoLoader);
   return loader;
 }
+
+export function removeCanvasChild(canvas3d: HTMLDivElement | any) {
+  if (canvas3d.current !== null) {
+    const { children } = canvas3d.current;
+    for (let i = 0; i < children.length; i++) {
+      children[i].remove();
+    }
+  }
+}
