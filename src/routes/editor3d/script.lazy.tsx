@@ -1,7 +1,6 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Button, Container, FloatingLabel, Form } from "react-bootstrap";
-import Highlight from "react-highlight";
 import { getButtonColor } from "../../app/config";
 import { getScene } from "../../three/init3dEditor";
 import { useUpdateScene } from "../../app/hooks";
@@ -21,11 +20,7 @@ function RouteComponent() {
     setCode(javascript);
     setE(false);
   }, [scene]);
-  const exampleCode = `
-  function Button() {
-    return <button>Click me</button>;
-  }
-  `;
+
   return (
     <Container fluid>
       <Button

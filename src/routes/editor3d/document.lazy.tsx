@@ -1,7 +1,6 @@
 import { CodeHighlight } from "@mantine/code-highlight";
 import { MantineProvider } from "@mantine/core";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import Highlight from "react-highlight";
 
 export const Route = createLazyFileRoute("/editor3d/document")({
   component: RouteComponent,
