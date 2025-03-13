@@ -44,7 +44,6 @@ let scene: Scene,
   transfControls: TransformControls,
   transfControls1: TransformControls,
   transfControls2: TransformControls,
-  // perspectiveCameraPosition: Vector3 = new Vector3(-5, 5, 8),
   labelRenderer2d: CSS2DRenderer,
   labelRenderer3d: CSS3DRenderer;
 
@@ -59,7 +58,7 @@ export const userData = {
   perspectiveCameraPosition: new Vector3(-5, 5, 8),
   fiexedCameraPosition: new Vector3(-5, 5, 8),
   config3d,
-  javascript: "console.log(116)",
+  javascript: "",
 };
 
 export function animate() {

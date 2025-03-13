@@ -23,21 +23,23 @@ import { APP_COLOR } from "../../app/type";
 interface Props {
   type: string;
   text: string;
+  className?: string;
 }
 const props: Props = {
+  className: "",
   type: APP_COLOR.Danger,
   text: "内容",
 };
 
 export default function AlertBase(_props: Props = props) {
-  const { type, text } = _props;
+  const { type, text, className } = _props;
   let iconClassName = setClassName("info-circle") + " me-1";
 
   if (type === APP_COLOR.Success) {
     iconClassName = setClassName("check-circle") + " me-1";
   }
   return (
-    <Alert variant={type}>
+    <Alert variant={type} className={className}>
       <i className={setClassName(iconClassName)}></i>
       {text}
     </Alert>

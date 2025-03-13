@@ -32,9 +32,9 @@
 }
  
 .my-card-body,.mantine-ScrollArea-viewport{
-  max-height: 96vh;
-  overflow: hidden !important;
- 
+  min-height: 30vh;
+  height: auto;
+  overflow: hidden !important; 
   scrollbar-width: thin;
 }
 .card-body img {

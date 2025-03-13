@@ -6,6 +6,8 @@ import { getScene } from "../../three/init3dEditor";
 import { useUpdateScene } from "../../app/hooks";
 import { CodeHighlight } from "@mantine/code-highlight";
 import { MantineProvider } from "@mantine/core";
+import AlertBase from "../../component/common/AlertBase";
+import { APP_COLOR } from "../../app/type";
 
 export const Route = createLazyFileRoute("/editor3d/script")({
   component: RouteComponent,
@@ -54,9 +56,16 @@ function RouteComponent() {
 
       {!e && (
         <MantineProvider>
+          <AlertBase
+            className="mt-2"
+            type={APP_COLOR.Secondary}
+            text={
+              "开发调试，可以在【/src/three/scriptDev.ts】中编写脚本进行调试，调试完成后，复制到此处保存!"
+            }
+          ></AlertBase>
           <CodeHighlight
             style={{
-              padding: "16px",
+              padding: "0px 16px 16px 16px",
             }}
             code={code}
             language="javascript"
