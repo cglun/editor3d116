@@ -15,20 +15,22 @@ import { Input3d } from "./Input3d";
 import { InputAttrText } from "./InputAttrText";
 import { InputAttrNumber } from "./InputAttrNumber";
 import { Switch3d } from "./Switch3d";
-
+const step = 0.1;
 function CameraProperty() {
   return <AlertBase type={APP_COLOR.Info} text={"默认属性"} />;
 }
 
-function SceneProperty({ selected3d }: { selected3d: Scene }) {
+function SceneProperty({ scene }: { scene: Scene }) {
   const { updateScene } = useUpdateScene();
+  let bgColor = new Color("#000116");
+  if (scene.background === null) {
+    scene.background = bgColor;
+  } else {
+    bgColor = scene.background as Color;
+  }
 
-  const backgroundColor = selected3d.background?.getHexString()
-    ? selected3d.background?.getHexString()
-    : "000000";
-  const fogColor = selected3d.fog?.color.getHexString()
-    ? selected3d.background?.getHexString()
-    : "000000";
+  const fogColor = scene.fog?.color.getHexString();
+
   return (
     <Container fluid>
       <InputGroup size="sm">
@@ -37,9 +39,9 @@ function SceneProperty({ selected3d }: { selected3d: Scene }) {
           aria-label="Small"
           aria-describedby="inputGroup-sizing-sm"
           type="color"
-          value={"#" + backgroundColor}
+          value={"#" + bgColor.getHexString()}
           onChange={(e) => {
-            selected3d.background = new Color(e.target.value);
+            scene.background = new Color(e.target.value);
             updateScene(getScene());
           }}
         />
@@ -52,30 +54,31 @@ function SceneProperty({ selected3d }: { selected3d: Scene }) {
           type="color"
           value={"#" + fogColor}
           onChange={(e) => {
-            if (selected3d.fog === null) {
-              selected3d.fog = new Fog(e.target.value, 0, 20);
-            } else {
-              selected3d.fog.color = new Color(e.target.value);
+            if (scene.fog === null) {
+              scene.fog = new Fog(new Color(e.target.value), 0, 116);
             }
+            scene.fog.color = new Color(e.target.value);
             updateScene(getScene());
           }}
         />
       </InputGroup>
       <InputAttrNumber
         title={"雾气近端"}
-        selected3d={selected3d.fog}
+        selected3d={scene.fog}
         attr={"near"}
+        step={step}
       ></InputAttrNumber>
       <InputAttrNumber
         title={"雾气远端"}
-        selected3d={selected3d.fog}
+        selected3d={scene.fog}
         attr={"far"}
+        step={step}
       ></InputAttrNumber>
       <Button
         variant={getThemeColor()}
         onClick={() => {
-          selected3d.background = new Color("#000");
-          selected3d.fog = null;
+          scene.background = new Color("#000");
+          scene.fog = null;
           updateScene(getScene());
         }}
       >
@@ -86,7 +89,6 @@ function SceneProperty({ selected3d }: { selected3d: Scene }) {
 }
 
 function CommonProperty({ selected3d }: { selected3d: Object3D | any }) {
-  const step = 0.1;
   return (
     selected3d && (
       <Container fluid>
@@ -137,7 +139,7 @@ export default function IndexChild({
 }) {
   if (selected3d) {
     if (selected3d.isScene) {
-      return <SceneProperty selected3d={selected3d} />;
+      return <SceneProperty scene={selected3d} />;
     }
     if (selected3d.isCamera) {
       return <CameraProperty />;

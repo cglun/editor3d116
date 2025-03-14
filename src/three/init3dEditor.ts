@@ -285,6 +285,11 @@ export function sceneSerialization(): string {
   });
 
   scene.children = children;
+  const sceneSelected = scene.userData.selected3d;
+  if (sceneSelected.type === "Scene") {
+    scene.userData.selected3d = null;
+  }
+
   const result = {
     sceneJsonString: JSON.stringify(scene.toJSON()),
     cameraJsonString: JSON.stringify(scene.userData.fiexedCameraPosition),

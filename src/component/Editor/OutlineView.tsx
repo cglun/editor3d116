@@ -64,7 +64,7 @@ export default function OutlineView() {
     return (
       object3D && (
         <ListGroup.Item
-          as={"div"}
+          as={"button"}
           className={`d-flex justify-content-between ${object3D.userData.isSelected ? "text-warning" : ""} `}
           onClick={() => {
             // const _object3D = { ...object3D };
