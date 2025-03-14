@@ -11,7 +11,7 @@ export const Route = createLazyFileRoute("/editor3d/config")({
 
 function RouteComponent() {
   return (
-    <ListGroup horizontal className="ms-2 mt-2">
+    <ListGroup horizontal className="mt-2">
       <ListGroup.Item>
         <ConfigCheck label="使用动画" configKey="useTween" />
       </ListGroup.Item>
@@ -21,12 +21,8 @@ function RouteComponent() {
           size="sm"
           onClick={() => {
             const { perspectiveCameraPosition } = getScene().userData;
-
-            console.log(getScene());
             const c = getCamera();
-
             cameraTween(c, perspectiveCameraPosition).start();
-            // console.log(getPerspectiveCamera());
           }}
         >
           场景

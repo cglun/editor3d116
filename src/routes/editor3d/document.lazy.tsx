@@ -1,6 +1,7 @@
 import { CodeHighlight } from "@mantine/code-highlight";
 import { MantineProvider } from "@mantine/core";
 import { createLazyFileRoute } from "@tanstack/react-router";
+import { Container } from "react-bootstrap";
 
 export const Route = createLazyFileRoute("/editor3d/document")({
   component: RouteComponent,
@@ -58,18 +59,20 @@ function RouteComponent() {
 
   `;
   return (
-    <MantineProvider>
-      <CodeHighlight
-        style={{
-          padding: "16px",
-          overflowY: "auto",
-          scrollbarWidth: "thin",
-          scrollbarColor: "#ccc #fff",
-        }}
-        code={code}
-        language="javascript"
-        withCopyButton={false}
-      />
-    </MantineProvider>
+    <Container fluid>
+      <MantineProvider>
+        <CodeHighlight
+          style={{
+            padding: "16px",
+            overflowY: "auto",
+            scrollbarWidth: "thin",
+            scrollbarColor: "#ccc #fff",
+          }}
+          code={code}
+          language="javascript"
+          withCopyButton={false}
+        />
+      </MantineProvider>
+    </Container>
   );
 }

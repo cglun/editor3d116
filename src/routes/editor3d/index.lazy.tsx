@@ -6,6 +6,7 @@ import { UploadModel } from "../../component/Editor/UploadModel";
 import ListCard from "../../component/Editor/ListCard";
 import { testData2 } from "../../app/testData";
 import _axios from "../../app/http";
+import { Container } from "react-bootstrap";
 
 export const Route = createLazyFileRoute("/editor3d/")({
   component: ModelList,
@@ -45,7 +46,7 @@ function ModelList() {
   }
 
   return (
-    <div className="d-flex mt-2">
+    <Container fluid className="d-flex mt-2">
       <ListGroup>
         <Serch3d list={list} setFilterList={setFilterList} type="模型" />
         <UploadModel updateList={updateList} />
@@ -56,6 +57,6 @@ function ModelList() {
         isLoading={isLoading}
         error={error}
       ></ListCard>
-    </div>
+    </Container>
   );
 }

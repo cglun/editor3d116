@@ -14,7 +14,7 @@ export function ConfigCheck({
   const { config3d } = scene.payload.userData;
   const _configKey = configKey as keyof typeof config3d;
   return (
-    <Form className="ms-2">
+    <Form>
       <Form.Check
         label={label}
         type="switch"

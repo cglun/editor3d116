@@ -76,10 +76,10 @@ function RouteComponent() {
   const { config3d } = scene.payload.userData;
 
   return (
-    <Container fluid>
+    <Container fluid className="ms-2 mt-2">
       <Row>
-        <Col xl={2}>
-          <ListGroup horizontal className="ms-2 mt-2">
+        <Col xl={12}>
+          <ListGroup horizontal>
             <ListGroup.Item>
               <ConfigCheck label="css2d" configKey="css2d" />
             </ListGroup.Item>
@@ -92,13 +92,12 @@ function RouteComponent() {
       <Row className="mt-2">
         <Col xl={8}>
           <InputGroup className="mb-3">
-            <div className="d-flex ms-2">
+            <div className="d-flex ">
               <i
                 className={setClassName(logo)}
                 style={{ fontSize: "1.4rem" }}
               ></i>
               <Form.Select
-                className="ms-2"
                 aria-label="logo"
                 onChange={(e) => {
                   setLogo(e.target.value);
@@ -161,12 +160,12 @@ function RouteComponent() {
         </Col>
       </Row>
       <Row>
-        <Col className="ms-2">
+        <Col>
           {listTour &&
             config3d.css3d &&
             listTour.map((item: any, index: number) => {
               return (
-                <Card style={{ width: "6rem" }} key={index}>
+                <Card style={{ width: "4.6rem" }} key={index}>
                   <Card.Header className="card-pd-header ">
                     {item.title}
                   </Card.Header>

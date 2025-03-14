@@ -62,10 +62,10 @@ function RouteComponent() {
             text={
               "开发调试，可以在【/src/three/scriptDev.ts】中编写脚本进行调试，调试完成后，复制到此处保存!"
             }
-          ></AlertBase>
+          />
           <CodeHighlight
             style={{
-              padding: "0px 16px 16px 16px",
+              padding: "109px !important",
             }}
             code={code}
             language="javascript"
