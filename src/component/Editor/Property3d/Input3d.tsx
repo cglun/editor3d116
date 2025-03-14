@@ -7,14 +7,16 @@ import { Euler, Vector3 } from "three";
 export function Input3d({
   transform,
   title = "位置",
+  step = 0.1,
 }: {
   transform: Vector3 | Euler;
-  title?: string;
+  title: string;
+  step: number;
 }) {
   if (!transform) {
     return;
   }
-  const step = 0.1;
+
   const [checked, setChecked] = useState(true);
   const [lockValue, setLockValue] = useState(0);
   const _isScale = isScale(title);

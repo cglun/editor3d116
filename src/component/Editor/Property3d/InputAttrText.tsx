@@ -7,11 +7,10 @@ import Form from "react-bootstrap/esm/Form";
 export function InputAttrText({
   title,
   selected3d,
-  attr,
 }: {
   title: string;
   selected3d: Object3D;
-  attr: string;
+  attr: keyof typeof Object3D.prototype;
 }) {
   const [value, setValue] = useState(getObjectNameByName(selected3d));
 
@@ -20,8 +19,7 @@ export function InputAttrText({
   }, [selected3d]);
 
   return (
-    selected3d &&
-    selected3d.hasOwnProperty(attr) && (
+    selected3d && (
       <InputGroup size="sm">
         <InputGroup.Text>{title}</InputGroup.Text>
         <Form.Control

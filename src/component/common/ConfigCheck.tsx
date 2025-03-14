@@ -7,8 +7,8 @@ export function ConfigCheck({
   label = "标签",
   configKey = "css2d",
 }: {
-  label?: string;
-  configKey?: keyof typeof config3d;
+  label: string;
+  configKey: keyof typeof config3d;
 }) {
   const { scene, updateScene } = useUpdateScene();
   const { config3d } = scene.payload.userData;

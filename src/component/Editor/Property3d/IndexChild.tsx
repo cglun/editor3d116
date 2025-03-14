@@ -1,6 +1,6 @@
 import Button from "react-bootstrap/esm/Button";
 import Form from "react-bootstrap/esm/Form";
-import { Color, Fog, Object3D } from "three";
+import { Color, Fog, Object3D, Scene } from "three";
 import { getThemeColor } from "../../../app/config";
 import Card from "react-bootstrap/esm/Card";
 import InputGroup from "react-bootstrap/esm/InputGroup";
@@ -20,7 +20,7 @@ function CameraProperty() {
   return <AlertBase type={APP_COLOR.Info} text={"默认属性"} />;
 }
 
-function SceneProperty({ selected3d }: { selected3d: Object3D | any }) {
+function SceneProperty({ selected3d }: { selected3d: Scene }) {
   const { updateScene } = useUpdateScene();
 
   const backgroundColor = selected3d.background?.getHexString()
@@ -61,16 +61,16 @@ function SceneProperty({ selected3d }: { selected3d: Object3D | any }) {
           }}
         />
       </InputGroup>
-      <AttrInputNumber
+      <InputAttrNumber
         title={"雾气近端"}
         selected3d={selected3d.fog}
         attr={"near"}
-      ></AttrInputNumber>
-      <AttrInputNumber
+      ></InputAttrNumber>
+      <InputAttrNumber
         title={"雾气远端"}
         selected3d={selected3d.fog}
         attr={"far"}
-      ></AttrInputNumber>
+      ></InputAttrNumber>
       <Button
         variant={getThemeColor()}
         onClick={() => {
@@ -86,12 +86,13 @@ function SceneProperty({ selected3d }: { selected3d: Object3D | any }) {
 }
 
 function CommonProperty({ selected3d }: { selected3d: Object3D | any }) {
+  const step = 0.1;
   return (
     selected3d && (
       <Container fluid>
-        <Input3d transform={selected3d.position} title={"位置"}></Input3d>
-        <Input3d transform={selected3d.rotation} title={"旋转"}></Input3d>
-        <Input3d transform={selected3d.scale} title={"缩放"}></Input3d>
+        <Input3d transform={selected3d.position} title={"位置"} step={step} />
+        <Input3d transform={selected3d.rotation} title={"旋转"} step={step} />
+        <Input3d transform={selected3d.scale} title={"缩放"} step={step} />
 
         <Card>
           <Card.Header>其他属性</Card.Header>
@@ -105,6 +106,7 @@ function CommonProperty({ selected3d }: { selected3d: Object3D | any }) {
               title="亮度"
               selected3d={selected3d}
               attr={"intensity"}
+              step={step}
             />
             {!selected3d.isAmbientLight && (
               <ButtonGroup className=" d-flex justify-content-between flex-wrap">
@@ -128,7 +130,7 @@ function CommonProperty({ selected3d }: { selected3d: Object3D | any }) {
   );
 }
 
-export default function Property3dChild({
+export default function IndexChild({
   selected3d,
 }: {
   selected3d: Object3D | any;

@@ -1,20 +1,23 @@
 import { useEffect, useState } from "react";
 import Form from "react-bootstrap/esm/Form";
 import InputGroup from "react-bootstrap/esm/InputGroup";
-import { Object3D } from "three";
+import { Fog, Light, Object3D, Scene } from "three";
 
 export function InputAttrNumber({
   title,
   selected3d,
   attr,
+  step = 0.1,
 }: {
   title: string;
   selected3d: Object3D | any;
-  attr: string;
+  attr:
+    | keyof typeof Scene.prototype
+    | keyof typeof Fog.prototype
+    | keyof typeof Light.prototype;
+  step: number;
 }) {
   const [value, setValue] = useState(0);
-  const step = 0.01;
-
   useEffect(() => {
     if (selected3d) {
       setValue(selected3d[attr]);
