@@ -16,7 +16,7 @@ import { SPACE } from "../../app/config";
 import { Accordion, Button, Card, ListGroup } from "react-bootstrap";
 import { useEffect, useState } from "react";
 
-import ObjectProperty from "./ObjectProperty";
+import ObjectProperty from "./Property3d/Index";
 import { getObjectNameByName } from "../../three/utils";
 import TreeList from "./TreeList";
 
