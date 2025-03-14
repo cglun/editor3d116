@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Container, ProgressBar } from "react-bootstrap";
 import { APP_COLOR, GlbModel, UserDataType } from "../app/type";
 import { Group } from "three";
-import { glbLoader, removeCanvasChild } from "../three/utils";
+import { getModelGroup, glbLoader, removeCanvasChild } from "../three/utils";
 import _axios from "../app/http";
 import { ItemInfo } from "../component/Editor/ListCard";
 import Toast3d from "../component/common/Toast3d";
@@ -100,27 +100,8 @@ export default function Viewer3d({
       model.userData.modelUrl,
       function (gltf) {
         setProgress(100);
-
-        const { position, rotation, scale } = model;
-
-        const group = new Group();
-        group.name = model.name;
-        group.add(...gltf.scene.children);
-        group.userData = {
-          ...model.userData,
-          type: UserDataType.GlbModel,
-        };
-        group.position.set(position.x, position.y, position.z);
-
-        group.position.set(position.x, position.y, position.z);
-
-        // group.rotation.set(rotation._x, rotation._y, rotation._z, "XYZ");
-        group.setRotationFromEuler(rotation);
-        group.scale.set(scale.x, scale.y, scale.z);
-
+        const group = getModelGroup(model, gltf);
         getScene().add(group);
-
-        //  gltfToScene(group);
       },
       function (xhr) {
         progress = parseFloat(

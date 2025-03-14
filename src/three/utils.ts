@@ -1,6 +1,7 @@
 import {
   DirectionalLight,
   GridHelper,
+  Group,
   Object3D,
   ObjectLoader,
   PerspectiveCamera,
@@ -337,4 +338,23 @@ export function removeCanvasChild(canvas3d: HTMLDivElement | any) {
       children[i].remove();
     }
   }
+}
+
+export function getModelGroup(model: Object3D | any, gltf: Scene | any) {
+  const { position, rotation, scale } = model;
+  const group = new Group();
+  group.name = model.name;
+  group.add(...gltf.scene.children);
+  group.userData = {
+    ...model.userData,
+    type: UserDataType.GlbModel,
+  };
+  group.position.set(position.x, position.y, position.z);
+
+  group.position.set(position.x, position.y, position.z);
+
+  // group.rotation.set(rotation._x, rotation._y, rotation._z, "XYZ");
+  group.setRotationFromEuler(rotation);
+  group.scale.set(scale.x, scale.y, scale.z);
+  return group;
 }

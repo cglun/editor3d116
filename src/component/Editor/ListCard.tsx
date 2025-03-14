@@ -29,6 +29,7 @@ import {
   getProjectData,
   sceneDeserialize,
   setLabel,
+  getModelGroup,
 } from "../../three/utils";
 import { useUpdateScene } from "../../app/hooks";
 
@@ -140,12 +141,11 @@ function ItemInfoCard(props: Props) {
       .then((data: any) => {
         const { scene, camera, modelList } = sceneDeserialize(data, item);
         setScene(scene);
+
         setCamera(camera);
-        //scene.userData.perspectiveCameraPosition = camera.position;
         addGridHelper();
         // 加载完成后，设置标签
         setLabel(scene, dispatchTourWindow);
-
         modelList.forEach((item: GlbModel) => {
           loadModelByUrl(item);
         });
@@ -154,10 +154,8 @@ function ItemInfoCard(props: Props) {
         Toast3d(error, "提示", APP_COLOR.Danger);
       })
       .finally(() => {
-        //
         updateScene(getScene());
         const { javascript } = getScene().userData;
-
         if (javascript) {
           getScene();
           getControls();
@@ -190,21 +188,7 @@ function ItemInfoCard(props: Props) {
             show: false,
           },
         });
-
-        const { position, rotation, scale, userData } = model;
-
-        const group = new Group();
-        group.name = model.name;
-        group.add(...gltf.scene.children);
-        group.userData = {
-          ...userData,
-          type: UserDataType.GlbModel,
-        };
-        group.position.set(position.x, position.y, position.z);
-        group.position.set(position.x, position.y, position.z);
-        // group.rotation.set(rotation._x, rotation._y, rotation._z, "XYZ");
-        group.setRotationFromEuler(rotation);
-        group.scale.set(scale.x, scale.y, scale.z);
+        const group = getModelGroup(model, gltf);
         getScene().add(group);
         updateScene(getScene());
       },

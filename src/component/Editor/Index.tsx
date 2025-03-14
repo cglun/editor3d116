@@ -4,7 +4,7 @@ import EditorTop from "./EditorTop";
 import Col from "react-bootstrap/esm/Col";
 
 import BottomNav from "./BottomNav";
-import OutlineView from "./OutlineView";
+import OutlineView from "./OutlineView/Index";
 import EditorViewer3d from "./EditorViewer3d";
 export default function Index() {
   return (
@@ -28,7 +28,7 @@ export default function Index() {
           </Row>
         </Col>
         <Col xl={2} style={{ margin: 0, padding: 0 }} className="my-card-body ">
-          <OutlineView></OutlineView>
+          <OutlineView />
         </Col>
       </Row>
     </Container>

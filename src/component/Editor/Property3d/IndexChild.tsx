@@ -1,14 +1,11 @@
 import Button from "react-bootstrap/esm/Button";
 import Form from "react-bootstrap/esm/Form";
-import { Color, Fog, Object3D, Scene } from "three";
+import { Color, Fog, Object3D } from "three";
 import { getThemeColor } from "../../../app/config";
 import Card from "react-bootstrap/esm/Card";
 import InputGroup from "react-bootstrap/esm/InputGroup";
-
 import ButtonGroup from "react-bootstrap/esm/ButtonGroup";
 import { getScene } from "../../../three/init3dEditor";
-import AlertBase from "../../common/AlertBase";
-import { APP_COLOR } from "../../../app/type";
 import { Container } from "react-bootstrap";
 import { useUpdateScene } from "../../../app/hooks";
 import { Input3d } from "./Input3d";
@@ -16,30 +13,24 @@ import { InputAttrText } from "./InputAttrText";
 import { InputAttrNumber } from "./InputAttrNumber";
 import { Switch3d } from "./Switch3d";
 const step = 0.1;
-function CameraProperty() {
-  return <AlertBase type={APP_COLOR.Info} text={"默认属性"} />;
-}
-
-function SceneProperty({ scene }: { scene: Scene }) {
+function SceneProperty() {
   const { updateScene } = useUpdateScene();
-  let bgColor = new Color("#000116");
-  if (scene.background === null) {
-    scene.background = bgColor;
-  } else {
-    bgColor = scene.background as Color;
+  const scene = getScene();
+  let bgColor = "#000116";
+  if (scene.background !== null) {
+    const bc = scene.background as Color;
+    bgColor = "#" + bc.getHexString();
   }
-
-  const fogColor = scene.fog?.color.getHexString();
-
+  const fogColor = `#${scene.fog?.color.getHexString()}`;
   return (
     <Container fluid>
       <InputGroup size="sm">
         <InputGroup.Text>背景色</InputGroup.Text>
         <Form.Control
-          aria-label="Small"
+          aria-label="small"
           aria-describedby="inputGroup-sizing-sm"
           type="color"
-          value={"#" + bgColor.getHexString()}
+          value={bgColor}
           onChange={(e) => {
             scene.background = new Color(e.target.value);
             updateScene(getScene());
@@ -49,13 +40,13 @@ function SceneProperty({ scene }: { scene: Scene }) {
       <InputGroup size="sm">
         <InputGroup.Text>雾气色</InputGroup.Text>
         <Form.Control
-          aria-label="Small"
+          aria-label="small"
           aria-describedby="inputGroup-sizing-sm"
           type="color"
-          value={"#" + fogColor}
+          value={fogColor}
           onChange={(e) => {
             if (scene.fog === null) {
-              scene.fog = new Fog(new Color(e.target.value), 0, 116);
+              scene.fog = new Fog(bgColor, 0, 116);
             }
             scene.fog.color = new Color(e.target.value);
             updateScene(getScene());
@@ -95,7 +86,6 @@ function CommonProperty({ selected3d }: { selected3d: Object3D | any }) {
         <Input3d transform={selected3d.position} title={"位置"} step={step} />
         <Input3d transform={selected3d.rotation} title={"旋转"} step={step} />
         <Input3d transform={selected3d.scale} title={"缩放"} step={step} />
-
         <Card>
           <Card.Header>其他属性</Card.Header>
           <Card.Body>
@@ -139,10 +129,16 @@ export default function IndexChild({
 }) {
   if (selected3d) {
     if (selected3d.isScene) {
-      return <SceneProperty scene={selected3d} />;
+      return <SceneProperty />;
     }
     if (selected3d.isCamera) {
-      return <CameraProperty />;
+      return (
+        <Input3d
+          transform={selected3d.position}
+          title={"相机位置"}
+          step={step}
+        />
+      );
     }
     return <CommonProperty selected3d={selected3d} />;
   }

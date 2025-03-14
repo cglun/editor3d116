@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Form from "react-bootstrap/esm/Form";
 import InputGroup from "react-bootstrap/esm/InputGroup";
-import { Fog, Light, Object3D, Scene } from "three";
+import { Fog, Light, Object3D, PerspectiveCamera, Scene } from "three";
 
 export function InputAttrNumber({
   title,
@@ -14,7 +14,8 @@ export function InputAttrNumber({
   attr:
     | keyof typeof Scene.prototype
     | keyof typeof Fog.prototype
-    | keyof typeof Light.prototype;
+    | keyof typeof Light.prototype
+    | keyof typeof PerspectiveCamera.prototype;
   step: number;
 }) {
   const [value, setValue] = useState(0);
