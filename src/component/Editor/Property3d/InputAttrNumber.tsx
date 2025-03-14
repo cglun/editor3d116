@@ -5,37 +5,37 @@ import { Object3D } from "three";
 
 export function InputAttrNumber({
   title,
-  selectedObject,
+  selected3d,
   attr,
 }: {
   title: string;
-  selectedObject: Object3D | any;
+  selected3d: Object3D | any;
   attr: string;
 }) {
   const [value, setValue] = useState(0);
   const step = 0.01;
 
   useEffect(() => {
-    if (selectedObject) {
-      setValue(selectedObject[attr]);
+    if (selected3d) {
+      setValue(selected3d[attr]);
     }
-  }, [selectedObject]);
+  }, [selected3d]);
 
   return (
-    selectedObject &&
-    selectedObject.hasOwnProperty(attr) && (
+    selected3d &&
+    selected3d.hasOwnProperty(attr) && (
       <InputGroup size="sm">
         <InputGroup.Text>{title}</InputGroup.Text>
         <Form.Control
           aria-label="Small"
           aria-describedby="inputGroup-sizing-sm"
-          placeholder={selectedObject[attr].toString()}
+          placeholder={selected3d[attr].toString()}
           type="number"
           step={step}
           value={value}
-          title={selectedObject[attr].toString()}
+          title={selected3d[attr].toString()}
           onChange={(e) => {
-            selectedObject[attr] = parseFloat(e.target.value);
+            selected3d[attr] = parseFloat(e.target.value);
             setValue(parseFloat(e.target.value));
           }}
         />

@@ -20,14 +20,14 @@ function CameraProperty() {
   return <AlertBase type={APP_COLOR.Info} text={"默认属性"} />;
 }
 
-function SceneProperty({ selectedObject }: { selectedObject: Object3D | any }) {
+function SceneProperty({ selected3d }: { selected3d: Object3D | any }) {
   const { updateScene } = useUpdateScene();
 
-  const backgroundColor = selectedObject.background?.getHexString()
-    ? selectedObject.background?.getHexString()
+  const backgroundColor = selected3d.background?.getHexString()
+    ? selected3d.background?.getHexString()
     : "000000";
-  const fogColor = selectedObject.fog?.color.getHexString()
-    ? selectedObject.background?.getHexString()
+  const fogColor = selected3d.fog?.color.getHexString()
+    ? selected3d.background?.getHexString()
     : "000000";
   return (
     <Container fluid>
@@ -39,7 +39,7 @@ function SceneProperty({ selectedObject }: { selectedObject: Object3D | any }) {
           type="color"
           value={"#" + backgroundColor}
           onChange={(e) => {
-            selectedObject.background = new Color(e.target.value);
+            selected3d.background = new Color(e.target.value);
             updateScene(getScene());
           }}
         />
@@ -52,10 +52,10 @@ function SceneProperty({ selectedObject }: { selectedObject: Object3D | any }) {
           type="color"
           value={"#" + fogColor}
           onChange={(e) => {
-            if (selectedObject.fog === null) {
-              selectedObject.fog = new Fog(e.target.value, 0, 20);
+            if (selected3d.fog === null) {
+              selected3d.fog = new Fog(e.target.value, 0, 20);
             } else {
-              selectedObject.fog.color = new Color(e.target.value);
+              selected3d.fog.color = new Color(e.target.value);
             }
             updateScene(getScene());
           }}
@@ -63,19 +63,19 @@ function SceneProperty({ selectedObject }: { selectedObject: Object3D | any }) {
       </InputGroup>
       <AttrInputNumber
         title={"雾气近端"}
-        selectedObject={selectedObject.fog}
+        selected3d={selected3d.fog}
         attr={"near"}
       ></AttrInputNumber>
       <AttrInputNumber
         title={"雾气远端"}
-        selectedObject={selectedObject.fog}
+        selected3d={selected3d.fog}
         attr={"far"}
       ></AttrInputNumber>
       <Button
         variant={getThemeColor()}
         onClick={() => {
-          selectedObject.background = new Color("#000");
-          selectedObject.fog = null;
+          selected3d.background = new Color("#000");
+          selected3d.fog = null;
           updateScene(getScene());
         }}
       >
@@ -85,42 +85,38 @@ function SceneProperty({ selectedObject }: { selectedObject: Object3D | any }) {
   );
 }
 
-function CommonProperty({
-  selectedObject,
-}: {
-  selectedObject: Object3D | any;
-}) {
+function CommonProperty({ selected3d }: { selected3d: Object3D | any }) {
   return (
-    selectedObject && (
+    selected3d && (
       <Container fluid>
-        <Input3d transform={selectedObject.position} title={"位置"}></Input3d>
-        <Input3d transform={selectedObject.rotation} title={"旋转"}></Input3d>
-        <Input3d transform={selectedObject.scale} title={"缩放"}></Input3d>
+        <Input3d transform={selected3d.position} title={"位置"}></Input3d>
+        <Input3d transform={selected3d.rotation} title={"旋转"}></Input3d>
+        <Input3d transform={selected3d.scale} title={"缩放"}></Input3d>
 
         <Card>
           <Card.Header>其他属性</Card.Header>
           <Card.Body>
             <InputAttrText
               title={"名称"}
-              selectedObject={selectedObject}
+              selected3d={selected3d}
               attr={"name"}
             />
             <InputAttrNumber
               title="亮度"
-              selectedObject={selectedObject}
+              selected3d={selected3d}
               attr={"intensity"}
             />
-            {!selectedObject.isAmbientLight && (
+            {!selected3d.isAmbientLight && (
               <ButtonGroup className=" d-flex justify-content-between flex-wrap">
                 <Switch3d
                   title={"投射阴影"}
-                  selectedObject={selectedObject}
+                  selected3d={selected3d}
                   attr={"castShadow"}
                 />
 
                 <Switch3d
                   title={"接收阴影"}
-                  selectedObject={selectedObject}
+                  selected3d={selected3d}
                   attr={"receiveShadow"}
                 />
               </ButtonGroup>
@@ -133,17 +129,17 @@ function CommonProperty({
 }
 
 export default function Property3dChild({
-  selectedObject,
+  selected3d,
 }: {
-  selectedObject: Object3D | any;
+  selected3d: Object3D | any;
 }) {
-  if (selectedObject) {
-    if (selectedObject.isScene) {
-      return <SceneProperty selectedObject={selectedObject} />;
+  if (selected3d) {
+    if (selected3d.isScene) {
+      return <SceneProperty selected3d={selected3d} />;
     }
-    if (selectedObject.isCamera) {
+    if (selected3d.isCamera) {
       return <CameraProperty />;
     }
-    return <CommonProperty selectedObject={selectedObject} />;
+    return <CommonProperty selected3d={selected3d} />;
   }
 }

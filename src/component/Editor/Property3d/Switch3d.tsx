@@ -4,20 +4,20 @@ import { Object3D } from "three";
 
 export function Switch3d({
   title,
-  selectedObject,
+  selected3d,
   attr,
 }: {
   title: string;
-  selectedObject: Object3D | any;
+  selected3d: Object3D | any;
   attr: string;
 }) {
-  const [checked, setChecked] = useState(selectedObject[attr]);
+  const [checked, setChecked] = useState(selected3d[attr]);
   useEffect(() => {
-    setChecked(selectedObject[attr]);
-  }, [selectedObject]);
+    setChecked(selected3d[attr]);
+  }, [selected3d]);
 
   return (
-    selectedObject.hasOwnProperty(attr) && (
+    selected3d.hasOwnProperty(attr) && (
       <div className=" d-flex justify-content-between flex-wrap p-1">
         <span>{title}</span>
         <Form className="ms-2">
@@ -25,7 +25,7 @@ export function Switch3d({
             type="switch"
             checked={checked}
             onChange={() => {
-              selectedObject[attr] = !checked;
+              selected3d[attr] = !checked;
               setChecked(!checked);
             }}
           />

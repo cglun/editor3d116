@@ -8,20 +8,16 @@ import Property3dChild from "./Property3dChild";
  * @returns
  */
 
-export default function Index({
-  selectedObject,
-}: {
-  selectedObject: Object3D | any;
-}) {
+export default function Index({ selected3d }: { selected3d: Object3D | any }) {
   return (
-    selectedObject && (
+    selected3d && (
       <Accordion.Item eventKey="1">
         <Accordion.Header>
           <i className={setClassName("menu-button")}></i>
           <span className="px-2 ellipsis-3d">属性</span>
         </Accordion.Header>
         <Accordion.Body>
-          <Property3dChild selectedObject={selectedObject}></Property3dChild>
+          <Property3dChild selected3d={selected3d}></Property3dChild>
         </Accordion.Body>
       </Accordion.Item>
     )

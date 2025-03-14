@@ -199,7 +199,7 @@ export default function OutlineView() {
     }
   }
 
-  const { selectedObject } = scene.payload.userData;
+  const { selected3d } = scene.payload.userData;
 
   return (
     <Accordion defaultActiveKey={["0", "1"]} alwaysOpen>
@@ -257,7 +257,7 @@ export default function OutlineView() {
           </Card>
         </Accordion.Body>
       </Accordion.Item>
-      {selectedObject && <ObjectProperty selectedObject={selectedObject} />}
+      {selected3d && <ObjectProperty selected3d={selected3d} />}
     </Accordion>
   );
 }

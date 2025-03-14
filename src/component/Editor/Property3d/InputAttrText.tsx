@@ -6,22 +6,22 @@ import Form from "react-bootstrap/esm/Form";
 
 export function InputAttrText({
   title,
-  selectedObject,
+  selected3d,
   attr,
 }: {
   title: string;
-  selectedObject: Object3D;
+  selected3d: Object3D;
   attr: string;
 }) {
-  const [value, setValue] = useState(getObjectNameByName(selectedObject));
+  const [value, setValue] = useState(getObjectNameByName(selected3d));
 
   useEffect(() => {
-    setValue(getObjectNameByName(selectedObject));
-  }, [selectedObject]);
+    setValue(getObjectNameByName(selected3d));
+  }, [selected3d]);
 
   return (
-    selectedObject &&
-    selectedObject.hasOwnProperty(attr) && (
+    selected3d &&
+    selected3d.hasOwnProperty(attr) && (
       <InputGroup size="sm">
         <InputGroup.Text>{title}</InputGroup.Text>
         <Form.Control
@@ -32,7 +32,7 @@ export function InputAttrText({
           value={value}
           title={value}
           onChange={(e) => {
-            selectedObject.name = e.target.value;
+            selected3d.name = e.target.value;
             setValue(e.target.value);
           }}
         />

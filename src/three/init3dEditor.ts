@@ -397,5 +397,5 @@ export function setBoxHelper(selectedMesh: Object3D) {
 }
 
 export function setSelectedObject(obj: Object3D) {
-  scene.userData.selectedObject = obj;
+  scene.userData.selected3d = obj;
 }

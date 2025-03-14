@@ -280,7 +280,7 @@ export function sceneDeserialize(data: string, item: ItemInfo) {
       projectName: item.name,
       projectId: item.id,
       canSave: true,
-      selectedObject: null,
+      selected3d: null,
     };
   });
   let newCamera = new PerspectiveCamera();
