@@ -44,7 +44,7 @@ function RouteComponent() {
           <Form.Control
             as="textarea"
             placeholder="编辑中……"
-            style={{ height: "60vh", minHeight: "60vh" }}
+            style={{ height: "100vh" }}
             value={code}
             onChange={(e) => {
               setCode(e.target.value);
@@ -64,10 +64,8 @@ function RouteComponent() {
             }
           />
           <CodeHighlight
-            style={{
-              padding: "109px !important",
-            }}
             code={code}
+            style={{ padding: "2px 10px " }}
             language="javascript"
             withCopyButton={false}
           />

@@ -1,6 +1,5 @@
 import React, { memo, useEffect, useRef } from "react";
 import createScene, {
-  addGridHelper,
   getPerspectiveCamera,
   getLabelRenderer,
   getRenderer,
@@ -16,6 +15,7 @@ import { setClassName } from "../../app/utils";
 import { onWindowResize, removeCanvasChild } from "../../three/utils";
 import { useUpdateScene } from "../../app/hooks";
 import ModalTour from "../common/ModalTour";
+import { createGridHelper } from "../../three/common3d";
 
 function EditorViewer3d() {
   const editorCanvas: React.RefObject<HTMLDivElement> =
@@ -26,7 +26,8 @@ function EditorViewer3d() {
     removeCanvasChild(editorCanvas);
     if (editorCanvas.current) {
       createScene(editorCanvas.current);
-      addGridHelper();
+      const scene = getScene();
+      scene.add(createGridHelper());
     }
     updateScene(getScene().clone());
 

@@ -1,8 +1,6 @@
 import { CodeHighlight } from "@mantine/code-highlight";
 import { MantineProvider } from "@mantine/core";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { Container } from "react-bootstrap";
-
 export const Route = createLazyFileRoute("/editor3d/document")({
   component: RouteComponent,
 });
@@ -29,7 +27,7 @@ function RouteComponent() {
             }
           });
   
-   ————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
   
     二、与3D交互相关的接口
       //1、引入Viewer3d组件
@@ -46,33 +44,20 @@ function RouteComponent() {
       完整事例：
       到2D项目查看，地址：/src/pages/viewer3d/index.tsx       
     
-    ————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 
     三、使用javascript脚本控制与3d交互
      // 1、获取场景、控制器、相机。
       const scene = getScene();
       const controls=getControls();
-      const camera=getCamera();
-      
+      const camera=getCamera();  
        
 
 
   `;
   return (
-    <Container fluid>
-      <MantineProvider>
-        <CodeHighlight
-          style={{
-            padding: "16px",
-            overflowY: "auto",
-            scrollbarWidth: "thin",
-            scrollbarColor: "#ccc #fff",
-          }}
-          code={code}
-          language="javascript"
-          withCopyButton={false}
-        />
-      </MantineProvider>
-    </Container>
+    <MantineProvider>
+      <CodeHighlight code={code} language="javascript" withCopyButton={false} />
+    </MantineProvider>
   );
 }

@@ -12,7 +12,7 @@ export default function BottomNav() {
     }
   }
   return (
-    <Container fluid>
+    <Container fluid style={{ height: "100vh" }}>
       <Nav
         variant="tabs"
         // activeKey="/editor3d"
@@ -55,7 +55,9 @@ export default function BottomNav() {
           </Nav.Link>
         </Nav.Item>
       </Nav>
-      <Outlet />
+      <Container fluid>
+        <Outlet />
+      </Container>
     </Container>
   );
 }

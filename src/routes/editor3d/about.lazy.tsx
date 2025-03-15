@@ -1,5 +1,5 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { Button, ListGroup, ListGroupItem } from "react-bootstrap";
+import { Button, Container, ListGroup, ListGroupItem } from "react-bootstrap";
 import { setClassName } from "../../app/utils";
 import { getThemeColor } from "../../app/config";
 
@@ -12,13 +12,13 @@ export const Route = createLazyFileRoute("/editor3d/about")({
 
 function RouteComponent() {
   return (
-    <div style={{ height: "100vh" }}>
+    <Container fluid style={{ height: "100vh" }}>
       <iframe
         src="/editor3d/static/about.html"
         width={"100%"}
         height={"100%"}
       ></iframe>
-    </div>
+    </Container>
   );
   return (
     // <Button onClick={handleTest} variant={getThemeColor()}>

@@ -31,10 +31,10 @@
   border-bottom: 0;
 }
  
-.my-card-body,.mantine-ScrollArea-viewport{
-  min-height: 30vh;
-  height: auto;
+.my-card-body,.mantine-ScrollArea-viewport{  
+ 
   overflow: hidden !important; 
+ 
   scrollbar-width: thin;
 }
 .card-body img {

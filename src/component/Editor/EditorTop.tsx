@@ -18,17 +18,16 @@ import ModalConfirm3d from "../common/ModalConfirm3d";
 import { Scene } from "three";
 import { APP_COLOR } from "../../app/type";
 import {
-  addGridHelper,
-  addLight,
   getScene,
   sceneSerialization,
   setScene,
-  userData,
 } from "../../three/init3dEditor";
 import _axios from "../../app/http";
 import InputBase from "../common/InputBase";
 import { useUpdateScene } from "../../app/hooks";
 import { Serch3d } from "./Serch3d";
+import { userData } from "../../three/config3d";
+import { createDirectionalLight, createGridHelper } from "../../three/common3d";
 
 export default function EditorTop() {
   initThemeColor();
@@ -171,9 +170,9 @@ export default function EditorTop() {
               onClick={() => {
                 const newScene = new Scene();
                 newScene.userData = userData;
+                newScene.add(createGridHelper());
+                newScene.add(createDirectionalLight());
                 setScene(newScene);
-                addGridHelper();
-                addLight();
                 setSceneIsSave(true);
                 updateScene(newScene);
               }}

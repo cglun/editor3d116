@@ -10,24 +10,19 @@ export default function Index() {
   return (
     <Container fluid>
       <Row>
-        <Col>
-          <EditorTop />
-        </Col>
+        <EditorTop />
       </Row>
       <Row>
-        <Col xl={10} style={{ margin: 0, padding: 0 }}>
+        <Col xl={10}>
           <Row>
-            <Col>
-              <EditorViewer3d />
-            </Col>
+            <EditorViewer3d />
           </Row>
           <Row>
-            <Col>
-              <BottomNav />
-            </Col>
+            <BottomNav />
           </Row>
         </Col>
-        <Col xl={2} style={{ margin: 0, padding: 0 }} className="my-card-body ">
+
+        <Col xl={2}>
           <OutlineView />
         </Col>
       </Row>

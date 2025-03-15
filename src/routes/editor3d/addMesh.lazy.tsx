@@ -22,6 +22,8 @@ import { setClassName } from "../../app/utils";
 
 import _axios from "../../app/http";
 import { useUpdateScene } from "../../app/hooks";
+import { createDirectionalLight, createGridHelper } from "../../three/common3d";
+import { glbLoader } from "../../three/utils";
 
 export const Route = createLazyFileRoute("/editor3d/addMesh")({
   component: RouteComponent,
@@ -75,17 +77,22 @@ function RouteComponent() {
     updateScene(scene);
   }
   function addDirectionalLight() {
-    const directionalLight = new DirectionalLight(0xffffff, 0.5);
-    scene.add(directionalLight);
-    directionalLight.userData.isSelected = true;
-    directionalLight.position.set(3, 3, 3);
-    directionalLight.lookAt(0, 0, 0);
-
+    const directionalLight = createDirectionalLight();
     const helper = new DirectionalLightHelper(directionalLight, 1, 0xffff00);
     helper.userData.isHelper = true;
     helper.position.setFromMatrixPosition(directionalLight.matrixWorld);
     scene.add(helper);
     updateScene(scene);
+  }
+  function addLocalModel() {
+    const url = "/editor3d/static/models/blender.glb";
+    const loader = glbLoader();
+    loader.load(url, function (gltf) {
+      scene.children = gltf.scene.children;
+      scene.add(createDirectionalLight());
+      scene.add(createGridHelper());
+      updateScene(getScene());
+    });
   }
 
   return (
@@ -125,15 +132,7 @@ function RouteComponent() {
               variant={color}
               title="添加glb模型"
               onClick={() => {
-                const scene = getScene();
-                setInterval(() => {
-                  const blender = scene.getObjectByName("blender");
-                  if (blender) {
-                    blender.rotation.y += 0.1;
-                  } else {
-                    addLocalModel();
-                  }
-                }, 50);
+                addLocalModel();
               }}
             >
               猴头

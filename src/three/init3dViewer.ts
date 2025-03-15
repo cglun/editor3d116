@@ -6,14 +6,16 @@ import {
   WebGLRenderer,
 } from "three";
 
-import {
-  createDirectionalLight,
-  createGridHelper,
-  createLabelRenderer,
-} from "./utils";
+import { createLabelRenderer } from "./utils";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer.js";
 import { CSS3DRenderer } from "three/examples/jsm/renderers/CSS3DRenderer.js";
+import {
+  createDirectionalLight,
+  createGridHelper,
+  createPerspectiveCamera,
+} from "./common3d";
+import { userData } from "./config3d";
 
 let scene: Scene,
   camera: PerspectiveCamera,
@@ -36,29 +38,19 @@ function animate() {
 }
 
 export default function createScene(node: HTMLDivElement): void {
-  camera = new PerspectiveCamera(
-    75,
-    node.offsetWidth / node.offsetHeight,
-    0.1,
-    1000
-  );
+  camera = createPerspectiveCamera(node, "截图透视相机");
   camera.position.set(-5, 5, 8);
-  camera.name = "截图透视相机";
+
   renderer = new WebGLRenderer();
   renderer.shadowMap.enabled = true;
   renderer.setSize(node.offsetWidth, node.offsetHeight);
   scene = new Scene();
   node.appendChild(renderer.domElement);
   controls = new OrbitControls(camera, renderer.domElement);
-  scene.add(createDirectionalLight("平行光"));
-  scene.add(createGridHelper("网格辅助"));
-  scene.userData = {
-    isSelected: false,
-    config3d: {
-      css2d: true, //是否开启2d标签
-      css3d: true, //是否开启3d标签
-    },
-  };
+  scene.add(createDirectionalLight());
+  scene.add(createGridHelper());
+
+  scene.userData = userData;
   const { config3d } = scene.userData;
   if (config3d.css2d) {
     const labelRenderer = new CSS2DRenderer();

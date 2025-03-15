@@ -24,13 +24,10 @@ import {
 } from "three/examples/jsm/Addons.js";
 
 import { GlbModel, UserDataType } from "../app/type";
-import {
-  createDirectionalLight,
-  createGridHelper,
-  createLabelRenderer,
-  glbLoader,
-} from "./utils";
+import { createLabelRenderer, glbLoader } from "./utils";
 import { cameraTween } from "./animate";
+import { createPerspectiveCamera } from "./common3d";
+import { userData } from "./config3d";
 
 let scene: Scene,
   camera: PerspectiveCamera | OrthographicCamera,
@@ -46,20 +43,6 @@ let scene: Scene,
   transfControls2: TransformControls,
   labelRenderer2d: CSS2DRenderer,
   labelRenderer3d: CSS3DRenderer;
-
-export const config3d = {
-  css2d: true, //是否开启2d标签
-  css3d: true, //是否开启3d标签
-  useTween: true, //是否开启动画
-};
-
-export const userData = {
-  isSelected: false,
-  perspectiveCameraPosition: new Vector3(-5, 5, 8),
-  fiexedCameraPosition: new Vector3(-5, 5, 8),
-  config3d,
-  javascript: "",
-};
 
 export function animate() {
   const { config3d } = scene.userData;
@@ -77,19 +60,10 @@ export function animate() {
   requestAnimationFrame(animate);
 }
 
-export function addLight(): void {
-  const light = createDirectionalLight("平行光");
-  scene.add(light);
-}
 export default function createScene(node: HTMLDivElement): void {
   divElement = node;
-  perspectiveCamera = new PerspectiveCamera(
-    75,
-    node.offsetWidth / node.offsetHeight,
-    0.1,
-    1000
-  );
-  perspectiveCamera.name = "透视相机";
+  perspectiveCamera = createPerspectiveCamera(node);
+
   const { x, y, z } = userData.perspectiveCameraPosition;
   perspectiveCamera.position.set(x, y, z);
   perspectiveCamera.userData.isSelected = false;
@@ -213,16 +187,6 @@ export function getRenderer(): WebGLRenderer {
   return renderer;
 }
 
-export function addLocalModel() {
-  const url = "/editor3d/static/models/blender.glb";
-  const loader = glbLoader();
-  loader.load(url, function (gltf) {
-    scene.children = gltf.scene.children;
-    addLight();
-    addGridHelper();
-  });
-}
-
 export function gltfToScene(gltf: GLTF) {
   // scene.add(gltf.scene);
   const _gltf = gltf.scene;
@@ -298,10 +262,6 @@ export function sceneSerialization(): string {
   };
   scene.children = oldChildren;
   return JSON.stringify(result);
-}
-
-export function addGridHelper() {
-  scene.add(createGridHelper("网格辅助"));
 }
 
 export function getDivElement() {

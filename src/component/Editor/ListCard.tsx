@@ -19,11 +19,10 @@ import {
   setCamera,
   setScene,
   getScene,
-  addGridHelper,
   getControls,
   getCamera,
 } from "../../three/init3dEditor";
-import { Group } from "three";
+
 import {
   glbLoader,
   getProjectData,
@@ -35,6 +34,7 @@ import { useUpdateScene } from "../../app/hooks";
 
 import { MyContext } from "../../app/MyContext";
 import { runScript } from "../../three/scriptDev";
+import { createGridHelper } from "../../three/common3d";
 
 export interface ItemInfo {
   id: number;
@@ -140,10 +140,10 @@ function ItemInfoCard(props: Props) {
     getProjectData(item.id)
       .then((data: any) => {
         const { scene, camera, modelList } = sceneDeserialize(data, item);
+        scene.add(createGridHelper());
         setScene(scene);
-
         setCamera(camera);
-        addGridHelper();
+
         // 加载完成后，设置标签
         setLabel(scene, dispatchTourWindow);
         modelList.forEach((item: GlbModel) => {
