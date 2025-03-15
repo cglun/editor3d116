@@ -21,7 +21,9 @@ export function InputAttrText({
   return (
     selected3d && (
       <InputGroup size="sm">
-        <InputGroup.Text>{title}</InputGroup.Text>
+        <InputGroup.Text>
+          {title}-{selected3d.id}
+        </InputGroup.Text>
         <Form.Control
           aria-label="Small"
           aria-describedby="inputGroup-sizing-sm"

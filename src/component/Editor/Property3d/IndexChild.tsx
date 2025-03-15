@@ -12,6 +12,7 @@ import { Input3d } from "./Input3d";
 import { InputAttrText } from "./InputAttrText";
 import { InputAttrNumber } from "./InputAttrNumber";
 import { Switch3d } from "./Switch3d";
+import { UserDataType } from "../../../app/type";
 const step = 0.1;
 function SceneProperty() {
   const { updateScene } = useUpdateScene();
@@ -21,7 +22,11 @@ function SceneProperty() {
     const bc = scene.background as Color;
     bgColor = "#" + bc.getHexString();
   }
-  const fogColor = `#${scene.fog?.color.getHexString()}`;
+  let fogColor = "#000116";
+  if (scene.fog !== null) {
+    const fog = scene.fog;
+    fogColor = "#" + fog.color.getHexString();
+  }
   return (
     <Container fluid>
       <InputGroup size="sm">
@@ -32,6 +37,7 @@ function SceneProperty() {
           type="color"
           value={bgColor}
           onChange={(e) => {
+            const scene = getScene();
             scene.background = new Color(e.target.value);
             updateScene(getScene());
           }}
@@ -45,6 +51,7 @@ function SceneProperty() {
           type="color"
           value={fogColor}
           onChange={(e) => {
+            const scene = getScene();
             if (scene.fog === null) {
               scene.fog = new Fog(bgColor, 0, 116);
             }
@@ -58,13 +65,13 @@ function SceneProperty() {
         selected3d={scene.fog}
         attr={"near"}
         step={step}
-      ></InputAttrNumber>
+      />
       <InputAttrNumber
         title={"雾气远端"}
         selected3d={scene.fog}
         attr={"far"}
         step={step}
-      ></InputAttrNumber>
+      />
       <Button
         variant={getThemeColor()}
         onClick={() => {
@@ -80,6 +87,24 @@ function SceneProperty() {
 }
 
 function CommonProperty({ selected3d }: { selected3d: Object3D | any }) {
+  // const { type } = selected3d.parent;
+  // let canSetShadow = true;
+  // // if (type && type === "Scene") {
+  // //   canSetShadow = true;
+  // // }
+
+  // function findTopLevelParent(object) {
+
+  //   canSetShadow =
+  //     object.userData.type === UserDataType.GlbModel ? true : false;
+  //   if (object.parent) {
+  //     return findTopLevelParent(object.parent);
+  //   } else {
+  //     return object; // 如果没有父对象，返回当前对象，即顶层父对象
+  //   }
+  // }
+  // findTopLevelParent(selected3d);
+  // debugger;
   return (
     selected3d && (
       <Container fluid>
@@ -100,7 +125,7 @@ function CommonProperty({ selected3d }: { selected3d: Object3D | any }) {
               attr={"intensity"}
               step={step}
             />
-            {!selected3d.isAmbientLight && (
+            {/* {!selected3d.isAmbientLight && (
               <ButtonGroup className=" d-flex justify-content-between flex-wrap">
                 <Switch3d
                   title={"投射阴影"}
@@ -114,7 +139,7 @@ function CommonProperty({ selected3d }: { selected3d: Object3D | any }) {
                   attr={"receiveShadow"}
                 />
               </ButtonGroup>
-            )}
+            )} */}
           </Card.Body>
         </Card>
       </Container>

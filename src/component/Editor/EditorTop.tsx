@@ -156,7 +156,7 @@ export default function EditorTop() {
     <Container fluid>
       <Row>
         <Col>
-          <Image src="/editor3d/static/images/logo.png" />
+          <Image src="/editor3d/static/images/logo.png" title="logo" />
           <Button variant={themeColor} size="sm" onClick={handleShow}>
             <i className={setClassName("bi me-1 bi-badge-3d")}></i>切换场景
           </Button>

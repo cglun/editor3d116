@@ -2,18 +2,39 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { Button, ListGroup } from "react-bootstrap";
 import { getCamera, getScene } from "../../three/init3dEditor";
 import { ConfigCheck } from "../../component/common/ConfigCheck";
-import { BoxGeometry, Mesh, MeshLambertMaterial } from "three";
+import { BoxGeometry, Light, Mesh, MeshLambertMaterial, Scene } from "three";
 import { cameraTween } from "../../three/animate";
 import { showModelByName, getCamera as cc } from "../../three/init3dViewer";
+
 export const Route = createLazyFileRoute("/editor3d/config")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  function enableShadow(scene: Scene) {
+    const { useShadow } = scene.userData.config3d;
+    scene.traverse((child) => {
+      if (child instanceof Mesh) {
+        child.castShadow = useShadow;
+        child.receiveShadow = useShadow;
+      }
+      if (child instanceof Light) {
+        child.castShadow = useShadow;
+      }
+    });
+  }
+
   return (
     <ListGroup horizontal className="mt-2">
       <ListGroup.Item>
         <ConfigCheck label="使用动画" configKey="useTween" />
+      </ListGroup.Item>
+      <ListGroup.Item>
+        <ConfigCheck
+          label="投射阴影"
+          configKey="useShadow"
+          callBack={() => enableShadow(getScene())}
+        />
       </ListGroup.Item>
       <ListGroup.Item>
         <Button
@@ -23,6 +44,7 @@ function RouteComponent() {
             const { perspectiveCameraPosition } = getScene().userData;
             const c = getCamera();
             cameraTween(c, perspectiveCameraPosition).start();
+            console.log(getScene().userData);
           }}
         >
           场景

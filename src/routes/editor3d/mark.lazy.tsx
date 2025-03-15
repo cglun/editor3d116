@@ -14,7 +14,11 @@ import {
 import { getButtonColor } from "../../app/config";
 import { useContext, useEffect, useState } from "react";
 import { setClassName } from "../../app/utils";
-import { createCss2dLabel, createCss3dLabel } from "../../three/utils";
+import {
+  cleaerOldLabel,
+  createCss2dLabel,
+  createCss3dLabel,
+} from "../../three/utils";
 import { getScene } from "../../three/init3dEditor";
 import { Group } from "three";
 import { CSS2DObject, CSS3DSprite } from "three/examples/jsm/Addons.js";
@@ -81,10 +85,18 @@ function RouteComponent() {
         <Col xl={12}>
           <ListGroup horizontal>
             <ListGroup.Item>
-              <ConfigCheck label="css2d" configKey="css2d" />
+              <ConfigCheck
+                label="css2d"
+                configKey="css2d"
+                callBack={cleaerOldLabel}
+              />
             </ListGroup.Item>
             <ListGroup.Item>
-              <ConfigCheck label="css3d" configKey="css3d" />
+              <ConfigCheck
+                label="css3d"
+                configKey="css3d"
+                callBack={cleaerOldLabel}
+              />
             </ListGroup.Item>
           </ListGroup>
         </Col>

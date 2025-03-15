@@ -1,7 +1,10 @@
 import {
   DirectionalLight,
   GridHelper,
+  Light,
+  Mesh,
   PerspectiveCamera,
+  Scene,
   Vector2,
 } from "three";
 import { UserDataType } from "../app/type";
@@ -35,7 +38,7 @@ export function createDirectionalLight(name = "平行光") {
   light.shadow.camera.bottom = -10;
 
   light.position.set(3, 3, 3);
-  light.castShadow = true; // 开启投射阴影
+  //   light.castShadow = true; // 开启投射阴影
   light.lookAt(0, 0, 0);
   return light;
 }
