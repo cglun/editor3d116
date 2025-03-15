@@ -24,7 +24,7 @@ import {
 } from "three/examples/jsm/Addons.js";
 
 import { GlbModel, UserDataType } from "../app/type";
-import { createLabelRenderer, glbLoader } from "./utils";
+import { createLabelRenderer } from "./utils";
 import { cameraTween } from "./animate";
 import { createPerspectiveCamera } from "./common3d";
 import { userData } from "./config3d";

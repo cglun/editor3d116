@@ -1,5 +1,4 @@
 import {
-  GridHelper,
   Group,
   Object3D,
   ObjectLoader,

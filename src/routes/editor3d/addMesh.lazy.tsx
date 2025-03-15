@@ -1,25 +1,20 @@
+import { useContext } from "react";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import Button from "react-bootstrap/esm/Button";
-
 import {
   AmbientLight,
   BoxGeometry,
-  DirectionalLight,
   DirectionalLightHelper,
   Group,
   Mesh,
   MeshLambertMaterial,
   PlaneGeometry,
 } from "three";
-import { addLocalModel, getScene } from "../../three/init3dEditor";
-
-import { useContext } from "react";
-
+import { getScene } from "../../three/init3dEditor";
 import { ButtonGroup, Card, Container } from "react-bootstrap";
 import { getThemeColor } from "../../app/config";
 import { MyContext } from "../../app/MyContext";
 import { setClassName } from "../../app/utils";
-
 import _axios from "../../app/http";
 import { useUpdateScene } from "../../app/hooks";
 import { createDirectionalLight, createGridHelper } from "../../three/common3d";
@@ -78,6 +73,7 @@ function RouteComponent() {
   }
   function addDirectionalLight() {
     const directionalLight = createDirectionalLight();
+    scene.add(directionalLight);
     const helper = new DirectionalLightHelper(directionalLight, 1, 0xffff00);
     helper.userData.isHelper = true;
     helper.position.setFromMatrixPosition(directionalLight.matrixWorld);

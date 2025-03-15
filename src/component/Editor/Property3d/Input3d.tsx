@@ -60,10 +60,13 @@ export function Input3d({
             placeholder={transform.x.toString()}
             type="number"
             step={step}
-            value={transformX.toString()}
+            value={transformX}
             title={transformX.toString()}
             onChange={(e) => {
               const x = parseFloat(e.target.value);
+              if (Number.isNaN(x)) {
+                return;
+              }
               setValue(x);
               setTransformX(x);
               transform.x = x;
@@ -78,7 +81,7 @@ export function Input3d({
             placeholder={transform.y.toString()}
             type="number"
             step={step}
-            value={transformY.toString()}
+            value={transformY}
             disabled={_isScale && checked}
             title={
               _isScale && checked
@@ -87,6 +90,9 @@ export function Input3d({
             }
             onChange={(e) => {
               const y = parseFloat(e.target.value);
+              if (Number.isNaN(y)) {
+                return;
+              }
               setValue(y);
               setTransformY(y);
               transform.y = y;
@@ -100,7 +106,7 @@ export function Input3d({
             aria-describedby="inputGroup-sizing-sm"
             placeholder={transform.z.toString()}
             type="number"
-            value={transformZ.toString()}
+            value={transformZ}
             step={step}
             disabled={_isScale && checked}
             title={
@@ -110,6 +116,9 @@ export function Input3d({
             }
             onChange={(e) => {
               const z = parseFloat(e.target.value);
+              if (Number.isNaN(z)) {
+                return;
+              }
               setValue(z);
               setTransformZ(z);
               transform.z = z;

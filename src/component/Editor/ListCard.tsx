@@ -10,7 +10,7 @@ import {
 import AlertBase from "../common/AlertBase";
 import { getThemeColor } from "../../app/config";
 import { setClassName } from "../../app/utils";
-import { APP_COLOR, GlbModel, UserDataType } from "../../app/type";
+import { APP_COLOR, GlbModel } from "../../app/type";
 import ModalConfirm3d from "../common/ModalConfirm3d";
 import Toast3d from "../common/Toast3d";
 import EditorForm from "../common/EditorForm";

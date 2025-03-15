@@ -3,7 +3,6 @@ import { Object3D } from "three";
 import {
   getPerspectiveCamera,
   getScene,
-  setScene,
   setSelectedObject,
 } from "../../../three/init3dEditor";
 import { setClassName } from "../../../app/utils";
@@ -17,7 +16,6 @@ import { useUpdateScene } from "../../../app/hooks";
 
 export function OutlineViewCamera({
   object3D,
-  resetTextWarning,
   _setCamera,
 }: {
   object3D: Object3D | any;

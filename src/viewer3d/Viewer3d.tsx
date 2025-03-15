@@ -1,8 +1,7 @@
 import React from "react";
 import { useEffect, useRef, useState } from "react";
 import { Container, ProgressBar } from "react-bootstrap";
-import { APP_COLOR, GlbModel, UserDataType } from "../app/type";
-import { Group } from "three";
+import { APP_COLOR, GlbModel } from "../app/type";
 import { getModelGroup, glbLoader, removeCanvasChild } from "../three/utils";
 import _axios from "../app/http";
 import { ItemInfo } from "../component/Editor/ListCard";

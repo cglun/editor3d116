@@ -2,7 +2,8 @@ import Form from "react-bootstrap/esm/Form";
 import { cleaerOldLabel } from "../../three/utils";
 import { useUpdateScene } from "../../app/hooks";
 import { getScene } from "../../three/init3dEditor";
-import { config3d } from "../../three/init3dEditor";
+import { config3d } from "../../three/config3d";
+
 export function ConfigCheck({
   label = "标签",
   configKey = "css2d",

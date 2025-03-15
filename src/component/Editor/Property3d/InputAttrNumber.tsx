@@ -19,8 +19,9 @@ export function InputAttrNumber({
   step: number;
 }) {
   const [value, setValue] = useState(0);
+
   useEffect(() => {
-    if (selected3d) {
+    if (selected3d && selected3d.hasOwnProperty(attr)) {
       setValue(selected3d[attr]);
     }
   }, [selected3d]);
@@ -36,11 +37,15 @@ export function InputAttrNumber({
           placeholder={selected3d[attr].toString()}
           type="number"
           step={step}
+          title={"属性：" + attr}
           value={value}
-          title={selected3d[attr].toString()}
           onChange={(e) => {
-            selected3d[attr] = parseFloat(e.target.value);
-            setValue(parseFloat(e.target.value));
+            const _value = parseFloat(e.target.value);
+            if (Number.isNaN(_value)) {
+              return;
+            }
+            selected3d[attr] = _value;
+            setValue(_value);
           }}
         />
       </InputGroup>
