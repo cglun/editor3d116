@@ -50,6 +50,11 @@ export default function BottomNav() {
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
+          <Nav.Link eventKey="/editor3d/test">
+            <i className={setClassName("triangle")}></i> 测试
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
           <Nav.Link eventKey="/editor3d/about">
             <i className={setClassName("info-circle")}></i> 关于
           </Nav.Link>

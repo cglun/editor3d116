@@ -17,6 +17,7 @@ import { Route as rootRoute } from './routes/__root'
 // Create Virtual Routes
 
 const Editor3dIndexLazyImport = createFileRoute('/editor3d/')()
+const Editor3dTestLazyImport = createFileRoute('/editor3d/test')()
 const Editor3dScriptLazyImport = createFileRoute('/editor3d/script')()
 const Editor3dMarkLazyImport = createFileRoute('/editor3d/mark')()
 const Editor3dDocumentLazyImport = createFileRoute('/editor3d/document')()
@@ -33,6 +34,12 @@ const Editor3dIndexLazyRoute = Editor3dIndexLazyImport.update({
 } as any).lazy(() =>
   import('./routes/editor3d/index.lazy').then((d) => d.Route),
 )
+
+const Editor3dTestLazyRoute = Editor3dTestLazyImport.update({
+  id: '/editor3d/test',
+  path: '/editor3d/test',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/editor3d/test.lazy').then((d) => d.Route))
 
 const Editor3dScriptLazyRoute = Editor3dScriptLazyImport.update({
   id: '/editor3d/script',
@@ -126,6 +133,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Editor3dScriptLazyImport
       parentRoute: typeof rootRoute
     }
+    '/editor3d/test': {
+      id: '/editor3d/test'
+      path: '/editor3d/test'
+      fullPath: '/editor3d/test'
+      preLoaderRoute: typeof Editor3dTestLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/editor3d/': {
       id: '/editor3d/'
       path: '/editor3d'
@@ -145,6 +159,7 @@ export interface FileRoutesByFullPath {
   '/editor3d/document': typeof Editor3dDocumentLazyRoute
   '/editor3d/mark': typeof Editor3dMarkLazyRoute
   '/editor3d/script': typeof Editor3dScriptLazyRoute
+  '/editor3d/test': typeof Editor3dTestLazyRoute
   '/editor3d': typeof Editor3dIndexLazyRoute
 }
 
@@ -155,6 +170,7 @@ export interface FileRoutesByTo {
   '/editor3d/document': typeof Editor3dDocumentLazyRoute
   '/editor3d/mark': typeof Editor3dMarkLazyRoute
   '/editor3d/script': typeof Editor3dScriptLazyRoute
+  '/editor3d/test': typeof Editor3dTestLazyRoute
   '/editor3d': typeof Editor3dIndexLazyRoute
 }
 
@@ -166,6 +182,7 @@ export interface FileRoutesById {
   '/editor3d/document': typeof Editor3dDocumentLazyRoute
   '/editor3d/mark': typeof Editor3dMarkLazyRoute
   '/editor3d/script': typeof Editor3dScriptLazyRoute
+  '/editor3d/test': typeof Editor3dTestLazyRoute
   '/editor3d/': typeof Editor3dIndexLazyRoute
 }
 
@@ -178,6 +195,7 @@ export interface FileRouteTypes {
     | '/editor3d/document'
     | '/editor3d/mark'
     | '/editor3d/script'
+    | '/editor3d/test'
     | '/editor3d'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -187,6 +205,7 @@ export interface FileRouteTypes {
     | '/editor3d/document'
     | '/editor3d/mark'
     | '/editor3d/script'
+    | '/editor3d/test'
     | '/editor3d'
   id:
     | '__root__'
@@ -196,6 +215,7 @@ export interface FileRouteTypes {
     | '/editor3d/document'
     | '/editor3d/mark'
     | '/editor3d/script'
+    | '/editor3d/test'
     | '/editor3d/'
   fileRoutesById: FileRoutesById
 }
@@ -207,6 +227,7 @@ export interface RootRouteChildren {
   Editor3dDocumentLazyRoute: typeof Editor3dDocumentLazyRoute
   Editor3dMarkLazyRoute: typeof Editor3dMarkLazyRoute
   Editor3dScriptLazyRoute: typeof Editor3dScriptLazyRoute
+  Editor3dTestLazyRoute: typeof Editor3dTestLazyRoute
   Editor3dIndexLazyRoute: typeof Editor3dIndexLazyRoute
 }
 
@@ -217,6 +238,7 @@ const rootRouteChildren: RootRouteChildren = {
   Editor3dDocumentLazyRoute: Editor3dDocumentLazyRoute,
   Editor3dMarkLazyRoute: Editor3dMarkLazyRoute,
   Editor3dScriptLazyRoute: Editor3dScriptLazyRoute,
+  Editor3dTestLazyRoute: Editor3dTestLazyRoute,
   Editor3dIndexLazyRoute: Editor3dIndexLazyRoute,
 }
 
@@ -236,6 +258,7 @@ export const routeTree = rootRoute
         "/editor3d/document",
         "/editor3d/mark",
         "/editor3d/script",
+        "/editor3d/test",
         "/editor3d/"
       ]
     },
@@ -256,6 +279,9 @@ export const routeTree = rootRoute
     },
     "/editor3d/script": {
       "filePath": "editor3d/script.lazy.tsx"
+    },
+    "/editor3d/test": {
+      "filePath": "editor3d/test.lazy.tsx"
     },
     "/editor3d/": {
       "filePath": "editor3d/index.lazy.tsx"

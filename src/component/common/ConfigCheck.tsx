@@ -7,10 +7,12 @@ import { config3d } from "../../three/config3d";
 export function ConfigCheck({
   label = "标签",
   configKey = "css2d",
+  disabled = false,
   callBack,
 }: {
   label: string;
   configKey: keyof typeof config3d;
+  disabled?: boolean;
   callBack?: any;
 }) {
   const { scene, updateScene } = useUpdateScene();
@@ -22,16 +24,12 @@ export function ConfigCheck({
         label={label}
         type="switch"
         checked={config3d[_configKey]}
+        disabled={disabled}
         onChange={() => {
           config3d[_configKey] = !config3d[_configKey];
-
           if (callBack) {
             callBack();
           }
-
-          // if (!config3d[_configKey]) {
-          //   cleaerOldLabel();
-          // }
           updateScene(getScene());
         }}
       />
