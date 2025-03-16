@@ -34,7 +34,7 @@ import { useUpdateScene } from "../../app/hooks";
 
 import { MyContext } from "../../app/MyContext";
 import { runScript } from "../../three/scriptDev";
-import { createGridHelper } from "../../three/common3d";
+import { createGridHelper, enableShadow } from "../../three/common3d";
 
 export interface ItemInfo {
   id: number;
@@ -189,6 +189,8 @@ function ItemInfoCard(props: Props) {
           },
         });
         const group = getModelGroup(model, gltf);
+        //const { useShadow } = getScene().userData.config3d;
+        enableShadow(group);
         getScene().add(group);
         updateScene(getScene());
       },

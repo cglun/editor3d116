@@ -1,6 +1,7 @@
 import {
   DirectionalLight,
   GridHelper,
+  Group,
   Light,
   Mesh,
   PerspectiveCamera,
@@ -8,6 +9,7 @@ import {
   Vector2,
 } from "three";
 import { UserDataType } from "../app/type";
+import { getScene } from "./init3dEditor";
 
 export function createPerspectiveCamera(
   node: HTMLElement,
@@ -52,4 +54,19 @@ export function createGridHelper(name = "网格辅助", wh = new Vector2(10, 10)
   };
   gridHelper.name = name;
   return gridHelper;
+}
+
+export function enableShadow(group: Scene | Group) {
+  const { useShadow } = getScene().userData.config3d;
+  group.traverse((child) => {
+    if (child instanceof Mesh) {
+      if (child.userData.type !== UserDataType.TransformHelper) {
+        child.castShadow = useShadow;
+        child.receiveShadow = useShadow;
+      }
+    }
+    if (child instanceof Light) {
+      child.castShadow = useShadow;
+    }
+  });
 }

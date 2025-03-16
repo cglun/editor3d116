@@ -344,6 +344,7 @@ export function setTransformControls(selectedMesh: Object3D[]) {
     child.userData = userData;
   });
 }
+
 export function setBoxHelper(selectedMesh: Object3D) {
   const BOX_HELPER = scene.getObjectByName("BOX_HELPER") as BoxHelper;
   if (!BOX_HELPER) {

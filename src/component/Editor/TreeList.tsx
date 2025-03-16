@@ -10,13 +10,14 @@ import AlertBase from "../common/AlertBase";
 import Toast3d from "../common/Toast3d";
 import {
   getScene,
+  getTransfControls,
   setSelectedObject,
   setTransformControls,
 } from "../../three/init3dEditor";
 
 import { useUpdateScene } from "../../app/hooks";
 
-const TreeNode = ({
+function TreeNode({
   node,
   onToggle,
   resetTextWarning,
@@ -24,7 +25,7 @@ const TreeNode = ({
   node: Object3D;
   onToggle: (uuid: string, isExpanded: boolean) => void;
   resetTextWarning: (targetItem: Object3D) => void;
-}) => {
+}) {
   if (node.userData.isHelper) {
     return;
   }
@@ -45,7 +46,6 @@ const TreeNode = ({
   const delMesh = (e: Event | any, item: Object3D) => {
     e.stopPropagation();
     e.preventDefault();
-
     ModalConfirm3d(
       {
         title: "删除",
@@ -64,9 +64,11 @@ const TreeNode = ({
         }
 
         targetItem.parent.remove(targetItem);
-
+        const transfControls = getTransfControls();
+        if (transfControls) {
+          transfControls.detach();
+        }
         updateScene(scene);
-
         Toast3d(`【${getObjectNameByName(item)}】已删除`);
       }
     );
@@ -139,15 +141,15 @@ const TreeNode = ({
       )}
     </ListGroupItem>
   );
-};
+}
 
-const TreeList = ({
+function TreeList({
   data,
   resetTextWarning,
 }: {
   data: Object3D[];
   resetTextWarning: (targetItem: Object3D) => void;
-}) => {
+}) {
   return (
     <>
       {data.map((node: Object3D<Object3DEventMap>) => (
@@ -160,6 +162,6 @@ const TreeList = ({
       ))}
     </>
   );
-};
+}
 
 export default memo(TreeList);

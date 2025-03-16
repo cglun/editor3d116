@@ -17,7 +17,11 @@ import { MyContext } from "../../app/MyContext";
 import { setClassName } from "../../app/utils";
 import _axios from "../../app/http";
 import { useUpdateScene } from "../../app/hooks";
-import { createDirectionalLight, createGridHelper } from "../../three/common3d";
+import {
+  createDirectionalLight,
+  createGridHelper,
+  enableShadow,
+} from "../../three/common3d";
 import { glbLoader } from "../../three/utils";
 
 export const Route = createLazyFileRoute("/editor3d/addMesh")({
@@ -40,6 +44,9 @@ function RouteComponent() {
     // cube.castShadow = true; // 立方体投射阴影
     cube.position.set(0, 0.5, 0);
     cube.userData.isSelected = true;
+    const { useShadow } = getScene().userData.config3d;
+    cube.castShadow = useShadow;
+    cube.receiveShadow = useShadow;
     scene.add(cube);
     updateScene(scene);
   }
@@ -59,6 +66,9 @@ function RouteComponent() {
     plane.castShadow = true;
     plane.rotation.x = -Math.PI / 2;
     plane.userData.isSelected = true;
+    const { useShadow } = getScene().userData.config3d;
+    plane.receiveShadow = useShadow;
+    plane.castShadow = useShadow;
     scene.add(plane);
     dispatchScene({
       type: "setScene",
@@ -77,6 +87,8 @@ function RouteComponent() {
     const helper = new DirectionalLightHelper(directionalLight, 1, 0xffff00);
     helper.userData.isHelper = true;
     helper.position.setFromMatrixPosition(directionalLight.matrixWorld);
+    const { useShadow } = getScene().userData.config3d;
+    directionalLight.castShadow = useShadow;
     scene.add(helper);
     updateScene(scene);
   }
@@ -87,6 +99,7 @@ function RouteComponent() {
       scene.children = gltf.scene.children;
       scene.add(createDirectionalLight());
       scene.add(createGridHelper());
+      enableShadow(scene);
       updateScene(getScene());
     });
   }

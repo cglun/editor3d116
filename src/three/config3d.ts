@@ -4,7 +4,7 @@ export const config3d = {
   css2d: true, //是否开启2d标签
   css3d: true, //是否开启3d标签
   useTween: true, //是否开启动画
-  useShadow: false, //是否开启阴影
+  useShadow: true, //是否开启阴影
 };
 export const userData = {
   isSelected: false,
