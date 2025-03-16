@@ -4,15 +4,13 @@ import { Color, Fog, Object3D } from "three";
 import { getThemeColor } from "../../../app/config";
 import Card from "react-bootstrap/esm/Card";
 import InputGroup from "react-bootstrap/esm/InputGroup";
-import ButtonGroup from "react-bootstrap/esm/ButtonGroup";
 import { getScene } from "../../../three/init3dEditor";
 import { Container } from "react-bootstrap";
 import { useUpdateScene } from "../../../app/hooks";
 import { Input3d } from "./Input3d";
 import { InputAttrText } from "./InputAttrText";
 import { InputAttrNumber } from "./InputAttrNumber";
-import { Switch3d } from "./Switch3d";
-import { UserDataType } from "../../../app/type";
+
 const step = 0.1;
 function SceneProperty() {
   const { updateScene } = useUpdateScene();
