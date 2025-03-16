@@ -18,6 +18,7 @@ import createScene, {
   setScene,
   getLabelRenderer,
   showModelByName,
+  getDivElement,
 } from "../three/init3dViewer";
 import {
   getProjectData,
@@ -25,6 +26,11 @@ import {
   sceneDeserialize,
   setLabel,
 } from "../three/utils";
+import {
+  hideBoxHelper,
+  raycasterSelect,
+  setBoxHelper,
+} from "../three/common3d";
 
 // import { getThemeColor } from "../app/config";
 
@@ -120,6 +126,32 @@ export default function Viewer3d({
     if (canvas3d.current) {
       createScene(canvas3d.current);
       item.des === "Scene" ? loadScene(item) : loadMesh(item);
+      const divElement = getDivElement();
+      divElement.addEventListener("click", function (event) {
+        event.stopPropagation();
+        event.preventDefault();
+        const currentObject = raycasterSelect(
+          event,
+          getCamera(),
+          getScene(),
+          divElement
+        );
+        if (currentObject.length > 0) {
+          setBoxHelper(currentObject[0].object, getScene());
+        } else {
+          hideBoxHelper(getScene());
+        }
+
+        return;
+        const scene = getScene();
+        const boxHelper = scene.getObjectByName("BOX_HELPER");
+        if (currentObject.length > 0) {
+          setBoxHelper(currentObject[0].object, getScene());
+          if (boxHelper) boxHelper.visible = true;
+        } else {
+          if (boxHelper) boxHelper.visible = false;
+        }
+      });
     }
 
     window.addEventListener("resize", () =>
@@ -130,6 +162,7 @@ export default function Viewer3d({
       window.removeEventListener("resize", () =>
         onWindowResize(canvas3d, getCamera(), getRenderer(), getLabelRenderer())
       );
+      getDivElement().removeEventListener("click", () => {});
     };
   }, [item.id]);
 

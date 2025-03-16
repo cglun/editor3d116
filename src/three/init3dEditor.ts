@@ -1,6 +1,7 @@
 import {
   BoxHelper,
   Camera,
+  Mesh,
   MOUSE,
   Object3D,
   OrthographicCamera,
@@ -26,7 +27,7 @@ import {
 import { GlbModel, UserDataType } from "../app/type";
 import { createLabelRenderer } from "./utils";
 import { cameraTween } from "./animate";
-import { createPerspectiveCamera } from "./common3d";
+import { createPerspectiveCamera, setBoxHelper } from "./common3d";
 import { userData } from "./config3d";
 
 let scene: Scene,
@@ -295,6 +296,38 @@ export function setDragControls(currentObject: Object3D) {
     }, 100);
   });
 }
+
+//为选中的物体加上变换控件
+export function setTransformControls(selectedMesh: Object3D) {
+  transfControls.addEventListener("dragging-changed", (event) => {
+    controls.enabled = !event.value;
+  });
+  transfControls.addEventListener("change", () => {
+    const boxHelper = scene.getObjectByName("BOX_HELPER") as BoxHelper;
+    if (boxHelper) {
+      boxHelper.update();
+    }
+  });
+  //transfControls.addEventListener("mouseDown", () => {});
+
+  // transfControls.addEventListener("mouseUp", () => {});
+
+  transfControls.attach(selectedMesh);
+
+  setBoxHelper(selectedMesh, scene);
+  const getHelper = transfControls.getHelper();
+  const userData = {
+    type: UserDataType.TransformHelper,
+    isHelper: true,
+    isSelected: false,
+  };
+  getHelper.userData = userData;
+  scene.add(getHelper);
+  getHelper.traverse((child) => {
+    child.userData = userData;
+  });
+}
+
 //射线 拾取物体
 export function raycasterSelect(event: MouseEvent) {
   const raycaster = new Raycaster();
@@ -310,56 +343,6 @@ export function raycasterSelect(event: MouseEvent) {
     return intersects;
   }
   return [];
-}
-
-//为选中的物体加上变换控件
-export function setTransformControls(selectedMesh: Object3D[]) {
-  transfControls.addEventListener("dragging-changed", (event) => {
-    controls.enabled = !event.value;
-  });
-  transfControls.addEventListener("change", () => {
-    const boxHelper = scene.getObjectByName("BOX_HELPER") as BoxHelper;
-    if (boxHelper) {
-      boxHelper.update();
-    }
-  });
-  //transfControls.addEventListener("mouseDown", () => {});
-
-  // transfControls.addEventListener("mouseUp", () => {});
-
-  transfControls.attach(selectedMesh[0]);
-  setBoxHelper(selectedMesh[0]);
-
-  const getHelper = transfControls.getHelper();
-  getHelper.name = "TransformControlsRoot";
-
-  const userData = {
-    type: UserDataType.TransformHelper,
-    isHelper: true,
-    isSelected: false,
-  };
-  getHelper.userData = userData;
-  scene.add(getHelper);
-  getHelper.traverse((child) => {
-    child.userData = userData;
-  });
-}
-
-export function setBoxHelper(selectedMesh: Object3D) {
-  const BOX_HELPER = scene.getObjectByName("BOX_HELPER") as BoxHelper;
-  if (!BOX_HELPER) {
-    const boxHelper = new BoxHelper(selectedMesh, 0xffff00);
-    boxHelper.name = "BOX_HELPER";
-    boxHelper.userData = {
-      type: UserDataType.BoxHelper,
-      isHelper: true,
-      isSelected: false,
-    };
-    scene.add(boxHelper);
-  } else {
-    BOX_HELPER.setFromObject(selectedMesh);
-    BOX_HELPER.update();
-  }
 }
 
 export function setSelectedObject(obj: Object3D) {

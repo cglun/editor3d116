@@ -4,6 +4,8 @@ import {
   getDivElement,
   getPerspectiveCamera,
   getScene,
+  getTopGroup,
+  getTransfControls,
   raycasterSelect,
   setCamera,
   setSelectedObject,
@@ -17,6 +19,7 @@ import TreeList from "../TreeList";
 import { useUpdateScene } from "../../../app/hooks";
 import { OutlineViewCamera } from "./OutlineViewCamera";
 import { OutlineViewScene } from "./OutlineViewScene";
+import { hideBoxHelper } from "../../../three/common3d";
 export default function Index() {
   const [_camera, _setCamera] = useState<
     PerspectiveCamera | OrthographicCamera
@@ -25,15 +28,14 @@ export default function Index() {
   useEffect(() => {
     const camera = getPerspectiveCamera();
     _setCamera(camera);
-
     const _scene = getScene();
     _scene.children = setD2(_scene.children);
     updateScene(getScene());
-    getDivElement().addEventListener("click", function (event) {
+    const divElement = getDivElement();
+    divElement.addEventListener("click", function (event) {
       event.stopPropagation();
       event.preventDefault();
       const currentObject = raycasterSelect(event);
-
       const selectedMesh = [];
       for (let i = 0; i < currentObject.length; i++) {
         const { object } = currentObject[i];
@@ -41,14 +43,20 @@ export default function Index() {
           selectedMesh.push(object);
         }
       }
+      if (selectedMesh.length === 0) {
+        hideBoxHelper(getScene());
+        getTransfControls().detach();
+        return;
+      }
 
       setSelectedObject(selectedMesh[0]);
       updateScene(getScene());
-      setTransformControls(selectedMesh);
+
+      setTransformControls(selectedMesh[0]);
     });
 
     return () => {
-      getDivElement().removeEventListener("click", () => {});
+      divElement.removeEventListener("click", () => {});
     };
   }, []);
 

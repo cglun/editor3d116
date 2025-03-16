@@ -39,7 +39,8 @@ function TreeNode({
     resetTextWarning(node);
     setIsSelected(!isSelected);
     setSelectedObject(node);
-    setTransformControls([node]);
+
+    setTransformControls(node);
     onToggle(node.uuid, !isExpanded);
   };
 

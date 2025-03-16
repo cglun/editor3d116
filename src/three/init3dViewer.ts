@@ -22,6 +22,7 @@ let scene: Scene,
   controls: OrbitControls,
   renderer: WebGLRenderer,
   labelRenderer2d: CSS2DRenderer,
+  divElement: HTMLDivElement,
   labelRenderer3d: CSS3DRenderer;
 
 function animate() {
@@ -38,6 +39,7 @@ function animate() {
 }
 
 export default function createScene(node: HTMLDivElement): void {
+  divElement = node;
   camera = createPerspectiveCamera(node, "截图透视相机");
   camera.position.set(-5, 5, 8);
 
@@ -93,6 +95,9 @@ export function getScene(): Scene {
 
 export function getRenderer() {
   return renderer;
+}
+export function getDivElement() {
+  return divElement;
 }
 
 // 截图,返回图片的base64
