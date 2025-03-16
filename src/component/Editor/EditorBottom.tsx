@@ -3,7 +3,7 @@ import { useNavigate, Outlet, useLocation } from "@tanstack/react-router";
 import { Container, Nav } from "react-bootstrap";
 import { setClassName } from "../../app/utils";
 
-export default function BottomNav() {
+export default function EditorBottom() {
   const navigate = useNavigate();
   const location = useLocation();
   function handleSelect(eventKey: string | null) {
@@ -12,7 +12,7 @@ export default function BottomNav() {
     }
   }
   return (
-    <Container fluid style={{ height: "100vh" }}>
+    <Container fluid style={{ minHeight: "30vh" }}>
       <Nav
         variant="tabs"
         // activeKey="/editor3d"

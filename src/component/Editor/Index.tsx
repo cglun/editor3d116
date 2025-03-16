@@ -2,8 +2,7 @@ import Container from "react-bootstrap/esm/Container";
 import Row from "react-bootstrap/esm/Row";
 import EditorTop from "./EditorTop";
 import Col from "react-bootstrap/esm/Col";
-
-import BottomNav from "./BottomNav";
+import EditorBottom from "./EditorBottom";
 import OutlineView from "./OutlineView/Index";
 import EditorViewer3d from "./EditorViewer3d";
 export default function Index() {
@@ -18,7 +17,7 @@ export default function Index() {
             <EditorViewer3d />
           </Row>
           <Row>
-            <BottomNav />
+            <EditorBottom />
           </Row>
         </Col>
 

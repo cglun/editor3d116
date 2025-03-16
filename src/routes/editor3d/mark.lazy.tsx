@@ -55,8 +55,6 @@ function RouteComponent() {
     if (MARK_LABEL) {
       MARK_LABEL.add(label);
     }
-
-    // setLabelRenderer1(label3d);
   }
   useEffect(() => {
     _axios.get("/pano/page?size=1000").then((res) => {
@@ -177,7 +175,7 @@ function RouteComponent() {
             config3d.css3d &&
             listTour.map((item: any, index: number) => {
               return (
-                <Card style={{ width: "4.6rem" }} key={index}>
+                <Card style={{ width: "6rem" }} key={index}>
                   <Card.Header className="card-pd-header ">
                     {item.title}
                   </Card.Header>

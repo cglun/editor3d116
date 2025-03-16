@@ -26,7 +26,8 @@ export function OutlineViewCamera({
   return (
     object3D && (
       <ListGroup.Item
-        className={`d-flex justify-content-between ${object3D.userData.isSelected ? "text-warning" : ""} `}
+        className={"d-flex justify-content-between"}
+        style={{ cursor: "pointer" }}
         onClick={() => {
           // object3D.userData.isSelected = !object3D.userData.isSelected;
           _setCamera(object3D);

@@ -128,7 +128,6 @@ function EditorViewer3d() {
           </Button>
         </ButtonGroup>
       </div>
-      {/* <ModalTour show={true} setShow={function () {}} tourSrc={""} /> */}
       <ModalTour />
     </div>
   );
