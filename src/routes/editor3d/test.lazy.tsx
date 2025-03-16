@@ -1,13 +1,10 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { Button, ButtonGroup, ListGroup } from "react-bootstrap";
+import { Button, ButtonGroup } from "react-bootstrap";
 import { getCamera, getScene } from "../../three/init3dEditor";
-import { BoxGeometry, Mesh, MeshLambertMaterial, Scene } from "three";
+import { Scene } from "three";
 import { cameraTween } from "../../three/animate";
-import { showModelByName, getCamera as cc } from "../../three/init3dViewer";
-import AlertBase from "../../component/common/AlertBase";
 import Toast3d from "../../component/common/Toast3d";
-import { getButtonColor, getThemeColor } from "../../app/config";
-
+import { getButtonColor } from "../../app/config";
 export const Route = createLazyFileRoute("/editor3d/test")({
   component: RouteComponent,
 });
