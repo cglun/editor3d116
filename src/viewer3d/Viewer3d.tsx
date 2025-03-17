@@ -141,16 +141,6 @@ export default function Viewer3d({
         } else {
           hideBoxHelper(getScene());
         }
-
-        return;
-        const scene = getScene();
-        const boxHelper = scene.getObjectByName("BOX_HELPER");
-        if (currentObject.length > 0) {
-          setBoxHelper(currentObject[0].object, getScene());
-          if (boxHelper) boxHelper.visible = true;
-        } else {
-          if (boxHelper) boxHelper.visible = false;
-        }
       });
     }
 

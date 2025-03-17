@@ -1,7 +1,6 @@
 import {
   BoxHelper,
   Camera,
-  Mesh,
   MOUSE,
   Object3D,
   OrthographicCamera,
@@ -20,15 +19,17 @@ import {
   TransformControls,
   DragControls,
   GLTF,
-  CSS2DRenderer,
-  CSS3DRenderer,
 } from "three/examples/jsm/Addons.js";
 
 import { GlbModel, UserDataType } from "../app/type";
-import { createLabelRenderer } from "./utils";
 import { cameraTween } from "./animate";
-import { createPerspectiveCamera, setBoxHelper } from "./common3d";
-import { userData } from "./config3d";
+import { setBoxHelper } from "./common3d";
+import { extra3d as extra, userData } from "./config3d";
+import {
+  createConfig,
+  createPerspectiveCamera,
+  createRenderer,
+} from "./factory3d";
 
 let scene: Scene,
   camera: PerspectiveCamera | OrthographicCamera,
@@ -42,16 +43,15 @@ let scene: Scene,
   transfControls: TransformControls,
   transfControls1: TransformControls,
   transfControls2: TransformControls,
-  labelRenderer2d: CSS2DRenderer,
-  labelRenderer3d: CSS3DRenderer;
+  extra3d = extra;
 
 export function animate() {
   const { config3d } = scene.userData;
-  if (labelRenderer2d && config3d.css2d) {
-    labelRenderer2d.render(scene, camera);
+  if (extra3d.labelRenderer2d && config3d.css2d) {
+    extra3d.labelRenderer2d.render(scene, camera);
   }
-  if (labelRenderer3d && config3d.css3d) {
-    labelRenderer3d.render(scene, camera);
+  if (extra3d.labelRenderer3d && config3d.css3d) {
+    extra3d.labelRenderer3d.render(scene, camera);
   }
   if (config3d.useTween) {
     TWEEN.update();
@@ -82,10 +82,7 @@ export default function createScene(node: HTMLDivElement): void {
 
   camera = perspectiveCamera;
 
-  renderer = new WebGLRenderer();
-  renderer.shadowMap.enabled = true;
-
-  renderer.setSize(node.offsetWidth, node.offsetHeight);
+  renderer = createRenderer(node);
   scene = new Scene();
   scene.userData = userData;
 
@@ -106,18 +103,21 @@ export default function createScene(node: HTMLDivElement): void {
     renderer.domElement
   );
   transfControls = transfControls1;
-  const { config3d } = scene.userData;
-  if (config3d.css2d) {
-    const labelRenderer = new CSS2DRenderer();
-    labelRenderer.domElement.style.top = "0px";
-    labelRenderer2d = createLabelRenderer(node, labelRenderer);
-    // new OrbitControls(perspectiveCamera, labelRenderer2d.domElement);
-  }
-  if (config3d.css3d) {
-    const labelRenderer = new CSS3DRenderer();
-    labelRenderer.domElement.style.top = "0px";
-    labelRenderer3d = createLabelRenderer(node, labelRenderer);
-  }
+
+  extra3d = createConfig(scene, node);
+
+  // const { config3d } = scene.userData;
+  // if (config3d.css2d) {
+  //   const labelRenderer = new CSS2DRenderer();
+  //   labelRenderer.domElement.style.top = "0px";
+  //   labelRenderer2d = createLabelRenderer(node, labelRenderer);
+  //   // new OrbitControls(perspectiveCamera, labelRenderer2d.domElement);
+  // }
+  // if (config3d.css3d) {
+  //   const labelRenderer = new CSS3DRenderer();
+  //   labelRenderer.domElement.style.top = "0px";
+  //   labelRenderer3d = createLabelRenderer(node, labelRenderer);
+  // }
   const tween = cameraTween(perspectiveCamera, new Vector3(-5, 15, 18));
   tween.start();
 
@@ -269,7 +269,7 @@ export function getDivElement() {
   return divElement;
 }
 export function getLabelRenderer() {
-  return labelRenderer2d;
+  return extra.labelRenderer2d;
 }
 
 export function setDragControls(currentObject: Object3D) {

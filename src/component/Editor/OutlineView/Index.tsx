@@ -4,7 +4,6 @@ import {
   getDivElement,
   getPerspectiveCamera,
   getScene,
-  getTopGroup,
   getTransfControls,
   raycasterSelect,
   setCamera,

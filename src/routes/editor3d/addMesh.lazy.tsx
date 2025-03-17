@@ -17,12 +17,12 @@ import { MyContext } from "../../app/MyContext";
 import { setClassName } from "../../app/utils";
 import _axios from "../../app/http";
 import { useUpdateScene } from "../../app/hooks";
+import { enableShadow } from "../../three/common3d";
+import { glbLoader } from "../../three/utils";
 import {
   createDirectionalLight,
   createGridHelper,
-  enableShadow,
-} from "../../three/common3d";
-import { glbLoader } from "../../three/utils";
+} from "../../three/factory3d";
 
 export const Route = createLazyFileRoute("/editor3d/addMesh")({
   component: RouteComponent,

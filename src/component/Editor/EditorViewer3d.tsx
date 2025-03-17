@@ -15,7 +15,7 @@ import { setClassName } from "../../app/utils";
 import { onWindowResize, removeCanvasChild } from "../../three/utils";
 import { useUpdateScene } from "../../app/hooks";
 import ModalTour from "../common/ModalTour";
-import { createGridHelper } from "../../three/common3d";
+import { createGridHelper } from "../../three/factory3d";
 
 function EditorViewer3d() {
   const editorCanvas: React.RefObject<HTMLDivElement> =

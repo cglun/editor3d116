@@ -1,4 +1,6 @@
 import { Vector3 } from "three";
+import { CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer.js";
+import { CSS3DRenderer } from "three/examples/jsm/renderers/CSS3DRenderer.js";
 
 export const config3d = {
   css2d: true, //是否开启2d标签
@@ -12,4 +14,14 @@ export const userData = {
   fiexedCameraPosition: new Vector3(-5, 5, 8),
   config3d,
   javascript: "",
+};
+
+interface Extra3d {
+  labelRenderer2d: CSS2DRenderer | undefined;
+  labelRenderer3d: CSS3DRenderer | undefined;
+}
+
+export const extra3d: Extra3d = {
+  labelRenderer2d: undefined,
+  labelRenderer3d: undefined,
 };

@@ -27,7 +27,10 @@ import InputBase from "../common/InputBase";
 import { useUpdateScene } from "../../app/hooks";
 import { Serch3d } from "./Serch3d";
 import { userData } from "../../three/config3d";
-import { createDirectionalLight, createGridHelper } from "../../three/common3d";
+import {
+  createDirectionalLight,
+  createGridHelper,
+} from "../../three/factory3d";
 
 export default function EditorTop() {
   initThemeColor();

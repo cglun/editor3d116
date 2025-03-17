@@ -5,47 +5,47 @@ import {
   Scene,
   WebGLRenderer,
 } from "three";
-
+import TWEEN from "three/addons/libs/tween.module.js";
 import { createLabelRenderer } from "./utils";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer.js";
 import { CSS3DRenderer } from "three/examples/jsm/renderers/CSS3DRenderer.js";
 import {
+  createConfig,
   createDirectionalLight,
   createGridHelper,
   createPerspectiveCamera,
-} from "./common3d";
-import { userData } from "./config3d";
+  createRenderer,
+} from "./factory3d";
 
+import { extra3d as extra, userData } from "./config3d";
 let scene: Scene,
   camera: PerspectiveCamera,
   controls: OrbitControls,
   renderer: WebGLRenderer,
-  labelRenderer2d: CSS2DRenderer,
   divElement: HTMLDivElement,
-  labelRenderer3d: CSS3DRenderer;
-
+  extra3d = extra;
 function animate() {
-  requestAnimationFrame(animate);
+  const { config3d } = scene.userData;
+  if (extra3d.labelRenderer2d && config3d.css2d) {
+    extra3d.labelRenderer2d.render(scene, camera);
+  }
+  if (extra3d.labelRenderer3d && config3d.css3d) {
+    extra3d.labelRenderer3d.render(scene, camera);
+  }
+  if (config3d.useTween) {
+    TWEEN.update();
+  }
   controls.update();
   renderer.render(scene, camera);
-  const { config3d } = scene.userData;
-  if (labelRenderer2d && config3d.css2d) {
-    labelRenderer2d.render(scene, camera);
-  }
-  if (labelRenderer3d && config3d.css3d) {
-    labelRenderer3d.render(scene, camera);
-  }
+  requestAnimationFrame(animate);
 }
 
 export default function createScene(node: HTMLDivElement): void {
   divElement = node;
   camera = createPerspectiveCamera(node, "截图透视相机");
   camera.position.set(-5, 5, 8);
-
-  renderer = new WebGLRenderer();
-  renderer.shadowMap.enabled = true;
-  renderer.setSize(node.offsetWidth, node.offsetHeight);
+  renderer = createRenderer(node);
   scene = new Scene();
   node.appendChild(renderer.domElement);
   controls = new OrbitControls(camera, renderer.domElement);
@@ -53,19 +53,7 @@ export default function createScene(node: HTMLDivElement): void {
   scene.add(createGridHelper());
 
   scene.userData = userData;
-  const { config3d } = scene.userData;
-  if (config3d.css2d) {
-    const labelRenderer = new CSS2DRenderer();
-    const top = node.getBoundingClientRect().top;
-    labelRenderer.domElement.style.top = top + "px";
-    labelRenderer2d = createLabelRenderer(node, labelRenderer);
-  }
-  if (config3d.css3d) {
-    const labelRenderer = new CSS3DRenderer();
-    const top = node.getBoundingClientRect().top;
-    labelRenderer.domElement.style.top = top + "px";
-    labelRenderer3d = createLabelRenderer(node, labelRenderer);
-  }
+  extra3d = createConfig(scene, node);
 
   animate();
 }
@@ -74,7 +62,7 @@ export function getControls() {
   return controls;
 }
 export function getLabelRenderer() {
-  return labelRenderer2d;
+  return extra.labelRenderer2d;
 }
 
 export function setScene(newScene: Scene) {
