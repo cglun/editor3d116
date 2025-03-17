@@ -11,6 +11,10 @@ export default function Index() {
       <Row>
         <EditorTop />
       </Row>
+      <div
+        className="sticky-top"
+        style={{ height: "26px", width: "100vw", background: "red" }}
+      ></div>
       <Row>
         <Col xl={10}>
           <Row>
@@ -21,7 +25,7 @@ export default function Index() {
           </Row>
         </Col>
 
-        <Col xl={2}>
+        <Col xl={2} style={{ position: "fixed", right: "0" }}>
           <OutlineView />
         </Col>
       </Row>

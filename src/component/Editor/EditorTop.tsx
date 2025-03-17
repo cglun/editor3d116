@@ -15,23 +15,15 @@ import ListCard from "./ListCard";
 import { testData1 } from "../../app/testData";
 import Toast3d from "../common/Toast3d";
 import ModalConfirm3d from "../common/ModalConfirm3d";
-import { Color, Scene } from "three";
+import { Color } from "three";
 import { APP_COLOR } from "../../app/type";
-import {
-  getScene,
-  sceneSerialization,
-  setScene,
-} from "../../three/init3dEditor";
+import { getScene, sceneSerialization } from "../../three/init3dEditor";
 import _axios from "../../app/http";
 import InputBase from "../common/InputBase";
 import { useUpdateScene } from "../../app/hooks";
 import { Serch3d } from "./Serch3d";
-import { userData } from "../../three/config3d";
-import {
-  createDirectionalLight,
-  createGridHelper,
-  createNewScene,
-} from "../../three/factory3d";
+
+import { createNewScene } from "../../three/factory3d";
 
 export default function EditorTop() {
   //打开场景列表
@@ -151,7 +143,11 @@ export default function EditorTop() {
   }, [showScene]);
 
   return (
-    <Container fluid>
+    <Container
+      fluid
+      className="fixed-top"
+      style={{ backgroundColor: "var(--bs-body-bg)" }}
+    >
       <Row>
         <Col>
           <Image src="/editor3d/static/images/logo.png" title="logo" />
@@ -217,7 +213,7 @@ export default function EditorTop() {
                     onClick={() => {
                       setThemeByBtn(APP_COLOR.Light);
                       const scene = getScene();
-                      scene.background = new Color(0xffffff);
+                      scene.background = new Color("#eee");
                     }}
                   >
                     <i className={setClassName("sun")}></i> 白天模式
@@ -227,7 +223,7 @@ export default function EditorTop() {
                     onClick={() => {
                       setThemeByBtn(APP_COLOR.Dark);
                       const scene = getScene();
-                      scene.background = new Color(0x000116);
+                      scene.background = new Color("#000116");
                     }}
                   >
                     <i className={setClassName("moon-stars")}></i> 黑夜模式
@@ -256,7 +252,6 @@ export default function EditorTop() {
           </>
         </Col>
       </Row>
-
       {showScene && (
         <Offcanvas show={showScene} onHide={handleClose}>
           <Offcanvas.Header closeButton>

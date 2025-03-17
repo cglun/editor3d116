@@ -121,7 +121,7 @@ export default function Index() {
   const { selected3d } = scene.payload.userData;
 
   return (
-    <Accordion defaultActiveKey={["0", "1"]} alwaysOpen>
+    <Accordion defaultActiveKey={["0", "1"]} alwaysOpen style={{}}>
       <Accordion.Item eventKey="0">
         <Accordion.Header>
           <i className={setClassName("archive")}></i>

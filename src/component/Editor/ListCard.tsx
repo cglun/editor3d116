@@ -36,7 +36,6 @@ import { MyContext } from "../../app/MyContext";
 import { runScript } from "../../three/scriptDev";
 import { createGridHelper, createNewScene } from "../../three/factory3d";
 import { enableShadow } from "../../three/common3d";
-import { getButtonColor } from "../../app/config";
 
 export interface ItemInfo {
   id: number;

@@ -96,6 +96,7 @@ export function createConfig(scene: Scene, node: HTMLElement) {
 export function createScene() {
   const scene = new Scene();
   scene.userData = userData;
+  scene.background = new Color("#000116");
   return scene;
 }
 export function createNewScene() {
@@ -103,7 +104,7 @@ export function createNewScene() {
   const newScene = new Scene();
   const { themeColor } = userData.APP_THEME;
   newScene.background =
-    themeColor === APP_COLOR.Dark ? new Color("#000116") : new Color("#fff");
+    themeColor === APP_COLOR.Dark ? new Color("#000116") : new Color("#eee");
   newScene.userData = userData;
   newScene.userData.APP_THEME.sceneCanSave = false;
   newScene.add(createGridHelper());

@@ -20,18 +20,18 @@ function RouteComponent() {
     </Container>
   );
   return (
-    // <Button onClick={handleTest} variant={getThemeColor()}>
+    // <Button onClick={handleTest} variant={''}>
     //   测试
     // </Button>
     <ListGroup>
       <ListGroupItem>
         <a href="https://github.com/cglun/editor3d116" target="_blank">
-          <Button variant={getThemeColor()}>
+          <Button variant={""}>
             <i className="bi bi-github"></i> 源代码
           </Button>
         </a>
         <a href="https://3d.oklun.com" className="ms-2" target="_blank">
-          <Button variant={getThemeColor()}>
+          <Button variant={""}>
             <i className={setClassName("eye")}></i> 预览APP
           </Button>
         </a>
