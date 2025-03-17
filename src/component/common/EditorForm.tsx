@@ -17,6 +17,7 @@ import _axios, { loadAssets } from "../../app/http";
 import { APP_COLOR } from "../../app/type";
 import { useUpdateScene } from "../../app/hooks";
 import { getButtonColor } from "../../app/config";
+import { getScene } from "../../three/init3dEditor";
 
 export default function EditorForm({
   item,
@@ -27,8 +28,9 @@ export default function EditorForm({
 }) {
   const [_item, _setItem] = useState<ItemInfo>({ ...item });
   const [imgBase64, setImgBase64] = useState("");
-  const { scene } = useUpdateScene();
-  let { themeColor } = getThemeByScene(scene);
+  const scene = getScene();
+  //let { themeColor } = getThemeByScene(scene);
+  const { themeColor } = scene.userData.APP_THEME;
   const buttonColor = getButtonColor(themeColor);
 
   const [loadScene, setLoadScene] = useState<boolean>(false);

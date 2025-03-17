@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useUpdateScene } from "../../app/hooks";
 import { getButtonColor } from "../../app/config";
 import { ButtonGroup } from "react-bootstrap";
+import { getScene } from "../../three/init3dEditor";
 export interface ModalConfirm {
   show?: boolean;
   hasButton?: boolean;
@@ -35,10 +36,9 @@ function ModalConfirm({
   callback: () => void;
   update: number;
 }) {
-  const { scene } = useUpdateScene();
-  let { themeColor } = getThemeByScene(scene);
+  const scene = getScene();
+  const { themeColor } = scene.userData.APP_THEME;
   const buttonColor = getButtonColor(themeColor);
-
   const [show, setShow] = useState(confirmButton.show);
   useEffect(() => {
     setShow(confirmButton.show);

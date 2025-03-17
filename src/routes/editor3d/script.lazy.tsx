@@ -8,6 +8,7 @@ import { CodeHighlight } from "@mantine/code-highlight";
 import { MantineProvider } from "@mantine/core";
 import AlertBase from "../../component/common/AlertBase";
 import { APP_COLOR } from "../../app/type";
+import { getThemeByScene } from "../../app/utils";
 
 export const Route = createLazyFileRoute("/editor3d/script")({
   component: RouteComponent,
@@ -15,6 +16,8 @@ export const Route = createLazyFileRoute("/editor3d/script")({
 
 function RouteComponent() {
   const { scene } = useUpdateScene();
+  let { themeColor } = getThemeByScene(scene);
+  const buttonColor = getButtonColor(themeColor);
   const { javascript } = scene.payload.userData;
   const [code, setCode] = useState(javascript);
   const [e, setE] = useState(false);
@@ -28,7 +31,7 @@ function RouteComponent() {
       <Button
         className="mt-2"
         size="sm"
-        variant={getButtonColor()}
+        variant={buttonColor}
         onClick={() => {
           setE(!e);
         }}
