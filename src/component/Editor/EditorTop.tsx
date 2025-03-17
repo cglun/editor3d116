@@ -30,6 +30,7 @@ import { userData } from "../../three/config3d";
 import {
   createDirectionalLight,
   createGridHelper,
+  createNewScene,
 } from "../../three/factory3d";
 
 export default function EditorTop() {
@@ -165,17 +166,7 @@ export default function EditorTop() {
               variant={themeColor}
               size="sm"
               onClick={() => {
-                const newScene = new Scene();
-                const scene = getScene();
-                const { themeColor } = scene.userData.APP_THEME;
-                newScene.background =
-                  themeColor === APP_COLOR.Dark
-                    ? new Color("#000116")
-                    : new Color("#fff");
-                newScene.userData = userData;
-                newScene.add(createGridHelper());
-                newScene.add(createDirectionalLight());
-                setScene(newScene);
+                const newScene = createNewScene();
                 updateScene(newScene);
               }}
             >

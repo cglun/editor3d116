@@ -196,6 +196,7 @@ function RouteComponent() {
                           dispatchTourWindow
                         )
                       );
+                      updateScene(getScene());
                     }}
                   ></Card.Img>
                 </Card>

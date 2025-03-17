@@ -1,4 +1,5 @@
 import {
+  Color,
   DirectionalLight,
   GridHelper,
   PerspectiveCamera,
@@ -12,10 +13,11 @@ import {
   CSS3DRenderer,
   CSS3DSprite,
 } from "three/examples/jsm/Addons.js";
-import { UserDataType } from "../app/type";
-import { getTourSrc } from "./utils";
+import { APP_COLOR, UserDataType } from "../app/type";
+import { cleaerOldLabel, getTourSrc } from "./utils";
 import { userData } from "./config3d";
 import { setClassName } from "../app/utils";
+import { setScene } from "./init3dEditor";
 
 export function createPerspectiveCamera(
   node: HTMLElement,
@@ -95,6 +97,19 @@ export function createScene() {
   const scene = new Scene();
   scene.userData = userData;
   return scene;
+}
+export function createNewScene() {
+  cleaerOldLabel();
+  const newScene = new Scene();
+  const { themeColor } = userData.APP_THEME;
+  newScene.background =
+    themeColor === APP_COLOR.Dark ? new Color("#000116") : new Color("#fff");
+  newScene.userData = userData;
+  newScene.userData.APP_THEME.sceneCanSave = false;
+  newScene.add(createGridHelper());
+  newScene.add(createDirectionalLight());
+  setScene(newScene);
+  return newScene;
 }
 
 export function createCss2dLabel(name: string, logo: string) {

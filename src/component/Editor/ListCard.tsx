@@ -34,7 +34,7 @@ import { useUpdateScene } from "../../app/hooks";
 
 import { MyContext } from "../../app/MyContext";
 import { runScript } from "../../three/scriptDev";
-import { createGridHelper } from "../../three/factory3d";
+import { createGridHelper, createNewScene } from "../../three/factory3d";
 import { enableShadow } from "../../three/common3d";
 import { getButtonColor } from "../../app/config";
 
@@ -87,6 +87,8 @@ function ItemInfoCard(props: Props) {
               const newList = list.filter((_, i) => i !== index);
               setList(newList);
               Toast3d(`【${item.name}】已删除`);
+              const newScene = createNewScene();
+              updateScene(newScene);
             } else {
               Toast3d(res.data, "提示", APP_COLOR.Warning);
             }
