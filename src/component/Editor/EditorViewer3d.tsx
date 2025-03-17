@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useRef } from "react";
-import createScene, {
+import initScene, {
   getPerspectiveCamera,
   getLabelRenderer,
   getRenderer,
@@ -25,7 +25,7 @@ function EditorViewer3d() {
   useEffect(() => {
     removeCanvasChild(editorCanvas);
     if (editorCanvas.current) {
-      createScene(editorCanvas.current);
+      initScene(editorCanvas.current);
       const scene = getScene();
       scene.add(createGridHelper());
     }

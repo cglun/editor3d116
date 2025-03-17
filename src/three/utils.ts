@@ -65,7 +65,7 @@ export function onWindowResize(
   canvas: React.RefObject<HTMLDivElement>,
   camera: PerspectiveCamera,
   renderer: WebGLRenderer,
-  labelRenderer: CSS2DRenderer | null
+  labelRenderer: CSS2DRenderer | undefined
 ) {
   if (canvas.current !== null) {
     const width = canvas.current.offsetWidth;

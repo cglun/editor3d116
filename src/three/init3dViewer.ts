@@ -3,6 +3,7 @@ import {
   Object3DEventMap,
   PerspectiveCamera,
   Scene,
+  Vector3,
   WebGLRenderer,
 } from "three";
 import TWEEN from "three/addons/libs/tween.module.js";
@@ -19,6 +20,8 @@ import {
 } from "./factory3d";
 
 import { extra3d as extra, userData } from "./config3d";
+import { commonAnimate } from "./common3d";
+
 let scene: Scene,
   camera: PerspectiveCamera,
   controls: OrbitControls,
@@ -26,22 +29,10 @@ let scene: Scene,
   divElement: HTMLDivElement,
   extra3d = extra;
 function animate() {
-  const { config3d } = scene.userData;
-  if (extra3d.labelRenderer2d && config3d.css2d) {
-    extra3d.labelRenderer2d.render(scene, camera);
-  }
-  if (extra3d.labelRenderer3d && config3d.css3d) {
-    extra3d.labelRenderer3d.render(scene, camera);
-  }
-  if (config3d.useTween) {
-    TWEEN.update();
-  }
-  controls.update();
-  renderer.render(scene, camera);
+  commonAnimate(scene, camera, controls, renderer, extra3d);
   requestAnimationFrame(animate);
 }
-
-export default function createScene(node: HTMLDivElement): void {
+export default function initScene(node: HTMLDivElement): void {
   divElement = node;
   camera = createPerspectiveCamera(node, "截图透视相机");
   camera.position.set(-5, 5, 8);
@@ -54,7 +45,6 @@ export default function createScene(node: HTMLDivElement): void {
 
   scene.userData = userData;
   extra3d = createConfig(scene, node);
-
   animate();
 }
 
@@ -72,6 +62,16 @@ export function setCamera(_camera: Object3D<Object3DEventMap>) {
   camera.position.x = _camera.position.x;
   camera.position.y = _camera.position.y;
   camera.position.z = _camera.position.z;
+}
+export function getAll() {
+  return {
+    scene,
+    camera,
+    controls,
+    renderer,
+    divElement,
+    extra3d,
+  };
 }
 export function getCamera() {
   return camera;

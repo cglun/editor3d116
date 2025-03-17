@@ -16,7 +16,7 @@ export const userData = {
   javascript: "",
 };
 
-interface Extra3d {
+export interface Extra3d {
   labelRenderer2d: CSS2DRenderer | undefined;
   labelRenderer3d: CSS3DRenderer | undefined;
 }

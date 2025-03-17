@@ -9,6 +9,7 @@ import {
 import { CSS2DRenderer, CSS3DRenderer } from "three/examples/jsm/Addons.js";
 import { UserDataType } from "../app/type";
 import { createLabelRenderer } from "./utils";
+import { userData } from "./config3d";
 export function createPerspectiveCamera(
   node: HTMLElement,
   cameraName = "透视相机"
@@ -20,6 +21,10 @@ export function createPerspectiveCamera(
     1000
   );
   camera.name = cameraName;
+  const { x, y, z } = userData.perspectiveCameraPosition;
+  camera.position.set(x, y, z);
+  camera.userData.isSelected = false;
+
   return camera;
 }
 
@@ -78,3 +83,5 @@ export function createConfig(scene: Scene, node: HTMLElement) {
   }
   return { labelRenderer2d, labelRenderer3d };
 }
+
+export function initScene() {}

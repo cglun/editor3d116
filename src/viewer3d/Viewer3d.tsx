@@ -6,10 +6,10 @@ import { getModelGroup, glbLoader, removeCanvasChild } from "../three/utils";
 import _axios from "../app/http";
 import { ItemInfo } from "../component/Editor/ListCard";
 import Toast3d from "../component/common/Toast3d";
-import { initScene, initTourWindow, MyContext } from "../app/MyContext";
+import { initEditorScene, initTourWindow, MyContext } from "../app/MyContext";
 import ModalTour from "../component/common/ModalTour";
 import { reducerScene, reducerTour } from "../app/reducer";
-import createScene, {
+import initScene, {
   getCamera,
   getRenderer,
   getScene,
@@ -19,6 +19,7 @@ import createScene, {
   getLabelRenderer,
   showModelByName,
   getDivElement,
+  getAll,
 } from "../three/init3dViewer";
 import {
   getProjectData,
@@ -51,7 +52,10 @@ export default function Viewer3d({
   const canvas3d: React.RefObject<HTMLDivElement | any> = useRef();
 
   const [progress, setProgress] = useState(0);
-  const [scene, dispatchScene] = React.useReducer(reducerScene, initScene);
+  const [scene, dispatchScene] = React.useReducer(
+    reducerScene,
+    initEditorScene
+  );
   const [tourWindow, dispatchTourWindow] = React.useReducer(
     reducerTour,
     initTourWindow
@@ -62,6 +66,7 @@ export default function Viewer3d({
       scene: getScene(),
       camera: getCamera(),
       controls: getControls(),
+      all: getAll(),
       showModelByName,
     };
   }
@@ -124,7 +129,7 @@ export default function Viewer3d({
   useEffect(() => {
     removeCanvasChild(canvas3d);
     if (canvas3d.current) {
-      createScene(canvas3d.current);
+      initScene(canvas3d.current);
       item.des === "Scene" ? loadScene(item) : loadMesh(item);
       const divElement = getDivElement();
       divElement.addEventListener("click", function (event) {

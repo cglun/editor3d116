@@ -12,7 +12,7 @@ export type TourWindow = {
   };
 };
 
-export const initScene: EditorScene = {
+export const initEditorScene: EditorScene = {
   type: "scene",
   payload: new Scene(),
 };
@@ -31,7 +31,7 @@ export const MyContext = createContext<{
   tourWindow: TourWindow;
   dispatchTourWindow: React.Dispatch<TourWindow>;
 }>({
-  scene: initScene,
+  scene: initEditorScene,
   dispatchScene: () => {},
   tourWindow: initTourWindow,
   dispatchTourWindow: () => {},

@@ -1,16 +1,23 @@
 import {
   BoxHelper,
   Camera,
+  Controls,
   Group,
   Light,
   Mesh,
   Object3D,
+  OrthographicCamera,
+  PerspectiveCamera,
   Raycaster,
   Scene,
   Vector2,
+  WebGLRenderer,
 } from "three";
 import { UserDataType } from "../app/type";
 import { getScene } from "./init3dEditor";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import TWEEN from "three/addons/libs/tween.module.js";
+import { Extra3d } from "./config3d";
 
 export function enableShadow(group: Scene | Group) {
   const { useShadow } = getScene().userData.config3d;
@@ -72,4 +79,25 @@ export function hideBoxHelper(scene: Scene) {
   if (boxHelper) {
     boxHelper.visible = false;
   }
+}
+
+export function commonAnimate(
+  scene: Scene,
+  camera: PerspectiveCamera | OrthographicCamera,
+  controls: any,
+  renderer: WebGLRenderer,
+  extra3d: Extra3d
+) {
+  const { config3d } = scene.userData;
+  if (extra3d.labelRenderer2d && config3d.css2d) {
+    extra3d.labelRenderer2d.render(scene, camera);
+  }
+  if (extra3d.labelRenderer3d && config3d.css3d) {
+    extra3d.labelRenderer3d.render(scene, camera);
+  }
+  if (config3d.useTween) {
+    TWEEN.update();
+  }
+  controls.update();
+  renderer.render(scene, camera);
 }

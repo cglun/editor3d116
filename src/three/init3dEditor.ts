@@ -23,7 +23,7 @@ import {
 
 import { GlbModel, UserDataType } from "../app/type";
 import { cameraTween } from "./animate";
-import { setBoxHelper } from "./common3d";
+import { setBoxHelper, commonAnimate } from "./common3d";
 import { extra3d as extra, userData } from "./config3d";
 import {
   createConfig,
@@ -45,30 +45,26 @@ let scene: Scene,
   transfControls2: TransformControls,
   extra3d = extra;
 
-export function animate() {
-  const { config3d } = scene.userData;
-  if (extra3d.labelRenderer2d && config3d.css2d) {
-    extra3d.labelRenderer2d.render(scene, camera);
-  }
-  if (extra3d.labelRenderer3d && config3d.css3d) {
-    extra3d.labelRenderer3d.render(scene, camera);
-  }
-  if (config3d.useTween) {
-    TWEEN.update();
-  }
-  controls.update();
-  renderer.render(scene, camera);
+export function getAll() {
+  return {
+    scene,
+    camera,
+    controls,
+    renderer,
+    divElement,
+    extra3d,
+  };
+}
+
+function animate() {
+  commonAnimate(scene, camera, controls, renderer, extra3d);
   requestAnimationFrame(animate);
 }
 
-export default function createScene(node: HTMLDivElement): void {
+export default function initScene(node: HTMLDivElement): void {
   divElement = node;
   perspectiveCamera = createPerspectiveCamera(node);
-
-  const { x, y, z } = userData.perspectiveCameraPosition;
-  perspectiveCamera.position.set(x, y, z);
-  perspectiveCamera.userData.isSelected = false;
-
+  camera = perspectiveCamera;
   const xxx = 40;
   orthographicCamera = new OrthographicCamera(
     node.offsetWidth / -xxx,
@@ -79,9 +75,6 @@ export default function createScene(node: HTMLDivElement): void {
     1000
   );
   orthographicCamera.name = "正交相机";
-
-  camera = perspectiveCamera;
-
   renderer = createRenderer(node);
   scene = new Scene();
   scene.userData = userData;
@@ -103,21 +96,8 @@ export default function createScene(node: HTMLDivElement): void {
     renderer.domElement
   );
   transfControls = transfControls1;
-
   extra3d = createConfig(scene, node);
 
-  // const { config3d } = scene.userData;
-  // if (config3d.css2d) {
-  //   const labelRenderer = new CSS2DRenderer();
-  //   labelRenderer.domElement.style.top = "0px";
-  //   labelRenderer2d = createLabelRenderer(node, labelRenderer);
-  //   // new OrbitControls(perspectiveCamera, labelRenderer2d.domElement);
-  // }
-  // if (config3d.css3d) {
-  //   const labelRenderer = new CSS3DRenderer();
-  //   labelRenderer.domElement.style.top = "0px";
-  //   labelRenderer3d = createLabelRenderer(node, labelRenderer);
-  // }
   const tween = cameraTween(perspectiveCamera, new Vector3(-5, 15, 18));
   tween.start();
 
