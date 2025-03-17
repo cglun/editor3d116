@@ -3,23 +3,21 @@ import {
   Object3DEventMap,
   PerspectiveCamera,
   Scene,
-  Vector3,
   WebGLRenderer,
 } from "three";
-import TWEEN from "three/addons/libs/tween.module.js";
-import { createLabelRenderer } from "./utils";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer.js";
-import { CSS3DRenderer } from "three/examples/jsm/renderers/CSS3DRenderer.js";
+
+import { OrbitControls } from "three/examples/jsm/Addons.js";
+
 import {
   createConfig,
   createDirectionalLight,
   createGridHelper,
   createPerspectiveCamera,
   createRenderer,
+  createScene,
 } from "./factory3d";
 
-import { extra3d as extra, userData } from "./config3d";
+import { extra3d as extra } from "./config3d";
 import { commonAnimate } from "./common3d";
 
 let scene: Scene,
@@ -35,15 +33,14 @@ function animate() {
 export default function initScene(node: HTMLDivElement): void {
   divElement = node;
   camera = createPerspectiveCamera(node, "截图透视相机");
-  camera.position.set(-5, 5, 8);
-  renderer = createRenderer(node);
-  scene = new Scene();
-  node.appendChild(renderer.domElement);
-  controls = new OrbitControls(camera, renderer.domElement);
+  camera.position.set(-3, 3, 5);
+  scene = createScene();
   scene.add(createDirectionalLight());
   scene.add(createGridHelper());
+  renderer = createRenderer(node);
+  node.appendChild(renderer.domElement);
+  controls = new OrbitControls(camera, renderer.domElement);
 
-  scene.userData = userData;
   extra3d = createConfig(scene, node);
   animate();
 }
@@ -54,7 +51,6 @@ export function getControls() {
 export function getLabelRenderer() {
   return extra.labelRenderer2d;
 }
-
 export function setScene(newScene: Scene) {
   scene = newScene;
 }

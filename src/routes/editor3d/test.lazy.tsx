@@ -5,13 +5,17 @@ import { Scene } from "three";
 import { cameraTween } from "../../three/animate";
 import Toast3d from "../../component/common/Toast3d";
 import { getButtonColor } from "../../app/config";
+import { getThemeByScene } from "../../app/utils";
+import { useUpdateScene } from "../../app/hooks";
 export const Route = createLazyFileRoute("/editor3d/test")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const btnColor = getButtonColor();
   const { useTween } = getScene().userData.config3d;
+  const { scene } = useUpdateScene();
+  let { themeColor } = getThemeByScene(scene);
+  const btnColor = getButtonColor(themeColor);
 
   return (
     <ButtonGroup className="mt-2 ms-2" size="sm">

@@ -6,7 +6,8 @@ import Form from "react-bootstrap/esm/Form";
 import InputGroup from "react-bootstrap/esm/InputGroup";
 
 import { getButtonColor } from "../../app/config";
-import { setClassName } from "../../app/utils";
+import { getThemeByScene, setClassName } from "../../app/utils";
+import { useUpdateScene } from "../../app/hooks";
 
 export function Serch3d({
   list,
@@ -19,7 +20,11 @@ export function Serch3d({
 }) {
   const [name, setName] = useState("");
   const placeholder = `请输入${type}名称`;
-  const color = getButtonColor();
+
+  const { scene } = useUpdateScene();
+  let { themeColor } = getThemeByScene(scene);
+  const buttonColor = getButtonColor(themeColor);
+
   return (
     <ListGroup.Item>
       <InputGroup>
@@ -43,7 +48,7 @@ export function Serch3d({
           }}
         />
         <Button
-          variant={color}
+          variant={buttonColor}
           id="button-addon2"
           title="搜索"
           onClick={() => {

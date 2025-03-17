@@ -1,7 +1,6 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { Button, Container, ListGroup, ListGroupItem } from "react-bootstrap";
 import { setClassName } from "../../app/utils";
-import { getThemeColor } from "../../app/config";
 
 import { APP_COLOR } from "../../app/type";
 import AlertBase from "../../component/common/AlertBase";

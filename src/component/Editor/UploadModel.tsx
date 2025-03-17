@@ -5,16 +5,20 @@ import { Euler, Vector3 } from "three";
 import { getButtonColor } from "../../app/config";
 import { useRef, useState } from "react";
 import Toast3d from "../common/Toast3d";
-import { setClassName } from "../../app/utils";
+import { getThemeByScene, setClassName } from "../../app/utils";
 import _axios from "../../app/http";
 import { APP_COLOR, GlbModel } from "../../app/type";
+import { useUpdateScene } from "../../app/hooks";
 
 export function UploadModel({ updateList = (_time: number) => {} }) {
-  const color = getButtonColor();
   let fileRef = useRef<any>(null);
   const [curFile, setCurFile] = useState<File | null>(null);
   const [btn, setBtn] = useState<boolean>(true);
   const [progress, setProgress] = useState<number>(100);
+  const { scene } = useUpdateScene();
+  let { themeColor } = getThemeByScene(scene);
+  const buttonColor = getButtonColor(themeColor);
+
   async function handleUpload() {
     if (curFile) {
       const formData = new FormData();
@@ -114,7 +118,7 @@ export function UploadModel({ updateList = (_time: number) => {} }) {
     <ListGroupItem>
       {btn ? (
         <Form.Group controlId="formFile">
-          <Button variant={color} className="custom-file-upload">
+          <Button variant={buttonColor} className="custom-file-upload">
             <Form.Label
               className="custom-file-progress"
               style={{ cursor: "pointer", marginBottom: 0 }}
@@ -152,8 +156,7 @@ export function UploadModel({ updateList = (_time: number) => {} }) {
       )}
       <ButtonGroup size="sm" className="mt-2">
         <Button
-          variant={color}
-          id="button-addon1"
+          variant={buttonColor}
           disabled={btn}
           onClick={() => {
             fileRef.current = null;
@@ -164,8 +167,7 @@ export function UploadModel({ updateList = (_time: number) => {} }) {
           <i className={setClassName("trash2")}></i>清空
         </Button>
         <Button
-          variant={color}
-          id="button-addon2"
+          variant={buttonColor}
           onClick={() => {
             handleUpload();
           }}

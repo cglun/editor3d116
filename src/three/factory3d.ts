@@ -6,10 +6,17 @@ import {
   Vector2,
   WebGLRenderer,
 } from "three";
-import { CSS2DRenderer, CSS3DRenderer } from "three/examples/jsm/Addons.js";
+import {
+  CSS2DObject,
+  CSS2DRenderer,
+  CSS3DRenderer,
+  CSS3DSprite,
+} from "three/examples/jsm/Addons.js";
 import { UserDataType } from "../app/type";
-import { createLabelRenderer } from "./utils";
+import { getTourSrc } from "./utils";
 import { userData } from "./config3d";
+import { setClassName } from "../app/utils";
+
 export function createPerspectiveCamera(
   node: HTMLElement,
   cameraName = "透视相机"
@@ -84,4 +91,97 @@ export function createConfig(scene: Scene, node: HTMLElement) {
   return { labelRenderer2d, labelRenderer3d };
 }
 
-export function initScene() {}
+export function createScene() {
+  const scene = new Scene();
+  scene.userData = userData;
+  return scene;
+}
+
+export function createCss2dLabel(name: string, logo: string) {
+  const div = createDiv(logo, name);
+  const css2DObject = new CSS2DObject(div);
+  css2DObject.name = name;
+  css2DObject.userData = {
+    type: UserDataType.CSS2DObject,
+    labelLogo: logo,
+  };
+
+  return css2DObject;
+}
+
+export function createLabelRenderer(
+  node: HTMLElement,
+  renderer: CSS2DRenderer | CSS3DRenderer
+) {
+  const labelRenderer = renderer;
+  labelRenderer.setSize(node.offsetWidth, node.offsetHeight);
+  // const top = node.childNodes[0] as HTMLElement;
+  // const tt = top.getBoundingClientRect().top;
+  labelRenderer.domElement.style.position = "absolute";
+  // labelRenderer.domElement.style.zIndex = "-1";
+  labelRenderer.domElement.style.pointerEvents = "none";
+  node.appendChild(labelRenderer.domElement);
+  return labelRenderer;
+}
+
+function createDiv(
+  logo: string,
+  name: string,
+  tourObject?: {
+    id: string;
+    title: string;
+  },
+  dispatchTourWindow?: any
+) {
+  const div = document.createElement("div");
+  div.className = "mark-label";
+  const img = document.createElement("i");
+  img.className = setClassName(logo);
+  div.appendChild(img);
+
+  const span = document.createElement("span");
+  span.textContent = name;
+  div.appendChild(span);
+
+  if (tourObject) {
+    const i = document.createElement("i");
+    i.className = setClassName("eye");
+    i.classList.add("ms-2");
+    i.style.cursor = "pointer";
+    i.setAttribute("data-tour-id", tourObject.id);
+    i.addEventListener("click", function () {
+      dispatchTourWindow({
+        type: "tourWindow",
+        payload: {
+          show: true,
+          title: tourObject.title,
+          tourSrc: getTourSrc(tourObject.id),
+        },
+      });
+    });
+    div.appendChild(i);
+  }
+
+  return div;
+}
+
+export function createCss3dLabel(
+  name: string,
+  logo: string,
+  tourObjectect?: any,
+  dispatchTourWindow?: any
+) {
+  const div = createDiv(logo, name, tourObjectect, dispatchTourWindow);
+  const css3DSprite = new CSS3DSprite(div);
+
+  css3DSprite.name = name;
+  css3DSprite.position.set(0, 0, 0);
+  css3DSprite.scale.set(0.04, 0.04, 0.04);
+
+  css3DSprite.userData = {
+    type: UserDataType.CSS3DObject,
+    labelLogo: logo,
+    tourObjectect: tourObjectect,
+  };
+  return css3DSprite;
+}

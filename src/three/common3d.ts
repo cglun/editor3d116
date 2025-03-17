@@ -1,7 +1,6 @@
 import {
   BoxHelper,
   Camera,
-  Controls,
   Group,
   Light,
   Mesh,
@@ -15,7 +14,6 @@ import {
 } from "three";
 import { UserDataType } from "../app/type";
 import { getScene } from "./init3dEditor";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import TWEEN from "three/addons/libs/tween.module.js";
 import { Extra3d } from "./config3d";
 

@@ -1,7 +1,7 @@
 import Button from "react-bootstrap/esm/Button";
 import Form from "react-bootstrap/esm/Form";
 import { Color, Fog, Object3D } from "three";
-import { getThemeColor } from "../../../app/config";
+import { getTheme } from "../../../app/config";
 import Card from "react-bootstrap/esm/Card";
 import InputGroup from "react-bootstrap/esm/InputGroup";
 import { getScene } from "../../../three/init3dEditor";
@@ -10,19 +10,22 @@ import { useUpdateScene } from "../../../app/hooks";
 import { Input3d } from "./Input3d";
 import { InputAttrText } from "./InputAttrText";
 import { InputAttrNumber } from "./InputAttrNumber";
+import { getThemeByScene } from "../../../app/utils";
 
 const step = 0.1;
 function SceneProperty() {
-  const { updateScene } = useUpdateScene();
-  const scene = getScene();
+  const { scene, updateScene } = useUpdateScene();
+  let { themeColor } = getThemeByScene(scene);
+
+  const _scene = getScene();
   let bgColor = "#000116";
-  if (scene.background !== null) {
-    const bc = scene.background as Color;
+  if (_scene.background !== null) {
+    const bc = _scene.background as Color;
     bgColor = "#" + bc.getHexString();
   }
   let fogColor = "#000116";
-  if (scene.fog !== null) {
-    const fog = scene.fog;
+  if (_scene.fog !== null) {
+    const fog = _scene.fog;
     fogColor = "#" + fog.color.getHexString();
   }
   return (
@@ -35,8 +38,8 @@ function SceneProperty() {
           type="color"
           value={bgColor}
           onChange={(e) => {
-            const scene = getScene();
-            scene.background = new Color(e.target.value);
+            const _scene = getScene();
+            _scene.background = new Color(e.target.value);
             updateScene(getScene());
           }}
         />
@@ -49,32 +52,32 @@ function SceneProperty() {
           type="color"
           value={fogColor}
           onChange={(e) => {
-            const scene = getScene();
-            if (scene.fog === null) {
-              scene.fog = new Fog(bgColor, 0, 116);
+            const _scene = getScene();
+            if (_scene.fog === null) {
+              _scene.fog = new Fog(bgColor, 0, 116);
             }
-            scene.fog.color = new Color(e.target.value);
+            _scene.fog.color = new Color(e.target.value);
             updateScene(getScene());
           }}
         />
       </InputGroup>
       <InputAttrNumber
         title={"雾气近端"}
-        selected3d={scene.fog}
+        selected3d={_scene.fog}
         attr={"near"}
         step={step}
       />
       <InputAttrNumber
         title={"雾气远端"}
-        selected3d={scene.fog}
+        selected3d={_scene.fog}
         attr={"far"}
         step={step}
       />
       <Button
-        variant={getThemeColor()}
+        variant={themeColor}
         onClick={() => {
-          scene.background = new Color("#000");
-          scene.fog = null;
+          _scene.background = new Color("#000");
+          _scene.fog = null;
           updateScene(getScene());
         }}
       >

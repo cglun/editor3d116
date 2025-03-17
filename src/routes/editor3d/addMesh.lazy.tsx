@@ -12,9 +12,9 @@ import {
 } from "three";
 import { getScene } from "../../three/init3dEditor";
 import { ButtonGroup, Card, Container } from "react-bootstrap";
-import { getThemeColor } from "../../app/config";
+
 import { MyContext } from "../../app/MyContext";
-import { setClassName } from "../../app/utils";
+import { getThemeByScene, setClassName } from "../../app/utils";
 import _axios from "../../app/http";
 import { useUpdateScene } from "../../app/hooks";
 import { enableShadow } from "../../three/common3d";
@@ -29,11 +29,12 @@ export const Route = createLazyFileRoute("/editor3d/addMesh")({
 });
 
 function RouteComponent() {
-  const color = getThemeColor();
+  // const { color } = getTheme();
 
-  const scene = getScene();
+  const _scene = getScene();
   const { dispatchScene } = useContext(MyContext);
-  const { updateScene } = useUpdateScene();
+  const { scene, updateScene } = useUpdateScene();
+  let { themeColor } = getThemeByScene(scene);
 
   function addBox() {
     // 创建立方体
@@ -47,14 +48,14 @@ function RouteComponent() {
     const { useShadow } = getScene().userData.config3d;
     cube.castShadow = useShadow;
     cube.receiveShadow = useShadow;
-    scene.add(cube);
-    updateScene(scene);
+    _scene.add(cube);
+    updateScene(_scene);
   }
   function addAmbientLight() {
     const light = new AmbientLight(0xffffff, 0.5);
-    scene.add(light);
+    _scene.add(light);
     light.userData.isSelected = true;
-    updateScene(scene);
+    updateScene(_scene);
   }
   function addPlane() {
     // 创建地面
@@ -69,37 +70,37 @@ function RouteComponent() {
     const { useShadow } = getScene().userData.config3d;
     plane.receiveShadow = useShadow;
     plane.castShadow = useShadow;
-    scene.add(plane);
+    _scene.add(plane);
     dispatchScene({
       type: "setScene",
-      payload: scene,
+      payload: _scene,
     });
   }
   function addGroup() {
     const group = new Group();
     group.userData.isSelected = true;
-    scene.add(group);
-    updateScene(scene);
+    _scene.add(group);
+    updateScene(_scene);
   }
   function addDirectionalLight() {
     const directionalLight = createDirectionalLight();
-    scene.add(directionalLight);
+    _scene.add(directionalLight);
     const helper = new DirectionalLightHelper(directionalLight, 1, 0xffff00);
     helper.userData.isHelper = true;
     helper.position.setFromMatrixPosition(directionalLight.matrixWorld);
     const { useShadow } = getScene().userData.config3d;
     directionalLight.castShadow = useShadow;
-    scene.add(helper);
-    updateScene(scene);
+    _scene.add(helper);
+    updateScene(_scene);
   }
   function addLocalModel() {
     const url = "/editor3d/static/models/blender.glb";
     const loader = glbLoader();
     loader.load(url, function (gltf) {
-      scene.children = gltf.scene.children;
-      scene.add(createDirectionalLight());
-      scene.add(createGridHelper());
-      enableShadow(scene);
+      _scene.children = gltf.scene.children;
+      _scene.add(createDirectionalLight());
+      _scene.add(createGridHelper());
+      enableShadow(_scene);
       updateScene(getScene());
     });
   }
@@ -113,7 +114,7 @@ function RouteComponent() {
         <Card.Body className="pt-1">
           <ButtonGroup>
             <Button
-              variant={color}
+              variant={themeColor}
               onClick={() => {
                 addBox();
               }}
@@ -121,7 +122,7 @@ function RouteComponent() {
               立方体
             </Button>
             <Button
-              variant={color}
+              variant={themeColor}
               onClick={() => {
                 addPlane();
               }}
@@ -129,7 +130,7 @@ function RouteComponent() {
               平面
             </Button>
             <Button
-              variant={color}
+              variant={themeColor}
               onClick={() => {
                 addGroup();
               }}
@@ -138,7 +139,7 @@ function RouteComponent() {
             </Button>
 
             <Button
-              variant={color}
+              variant={themeColor}
               title="添加glb模型"
               onClick={() => {
                 addLocalModel();
@@ -156,7 +157,7 @@ function RouteComponent() {
         <Card.Body className="pt-1">
           <ButtonGroup>
             <Button
-              variant={color}
+              variant={themeColor}
               title="可以投射阴影"
               onClick={() => {
                 addDirectionalLight();
@@ -165,7 +166,7 @@ function RouteComponent() {
               面光
             </Button>
             <Button
-              variant={color}
+              variant={themeColor}
               title="不能投射阴影"
               onClick={() => {
                 addAmbientLight();

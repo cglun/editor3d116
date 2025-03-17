@@ -1,9 +1,11 @@
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import { getThemeColor } from "../../app/config";
-import { setClassName } from "../../app/utils";
+import { getThemeByScene, setClassName } from "../../app/utils";
 import { createRoot } from "react-dom/client";
 import { useEffect, useState } from "react";
+import { useUpdateScene } from "../../app/hooks";
+import { getButtonColor } from "../../app/config";
+import { ButtonGroup } from "react-bootstrap";
 export interface ModalConfirm {
   show?: boolean;
   hasButton?: boolean;
@@ -33,7 +35,10 @@ function ModalConfirm({
   callback: () => void;
   update: number;
 }) {
-  const themeColor = getThemeColor();
+  const { scene } = useUpdateScene();
+  let { themeColor } = getThemeByScene(scene);
+  const buttonColor = getButtonColor(themeColor);
+
   const [show, setShow] = useState(confirmButton.show);
   useEffect(() => {
     setShow(confirmButton.show);
@@ -57,18 +62,20 @@ function ModalConfirm({
         <Modal.Body>{body}</Modal.Body>
         {confirmButton.hasButton && (
           <Modal.Footer>
-            <Button variant={themeColor} onClick={onClose}>
-              <i className={setClassName("x-circle")}></i> 取消
-            </Button>
-            <Button
-              variant={themeColor}
-              onClick={() => {
-                callback();
-                onClose();
-              }}
-            >
-              <i className={setClassName("check-circle")}></i> 确定
-            </Button>
+            <ButtonGroup>
+              <Button variant={buttonColor} onClick={onClose}>
+                <i className={setClassName("x-circle")}></i> 取消
+              </Button>
+              <Button
+                variant={buttonColor}
+                onClick={() => {
+                  callback();
+                  onClose();
+                }}
+              >
+                <i className={setClassName("check-circle")}></i> 确定
+              </Button>
+            </ButtonGroup>
           </Modal.Footer>
         )}
       </Modal>

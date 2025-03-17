@@ -13,12 +13,9 @@ import {
 
 import { getButtonColor } from "../../app/config";
 import { useContext, useEffect, useState } from "react";
-import { setClassName } from "../../app/utils";
-import {
-  cleaerOldLabel,
-  createCss2dLabel,
-  createCss3dLabel,
-} from "../../three/utils";
+import { getThemeByScene, setClassName } from "../../app/utils";
+import { cleaerOldLabel } from "../../three/utils";
+
 import { getScene } from "../../three/init3dEditor";
 import { Group } from "three";
 import { CSS2DObject, CSS3DSprite } from "three/examples/jsm/Addons.js";
@@ -29,6 +26,7 @@ import { ConfigCheck } from "../../component/common/ConfigCheck";
 import _axios from "../../app/http";
 
 import { MyContext } from "../../app/MyContext";
+import { createCss2dLabel, createCss3dLabel } from "../../three/factory3d";
 
 export const Route = createLazyFileRoute("/editor3d/mark")({
   component: RouteComponent,
@@ -38,9 +36,11 @@ function RouteComponent() {
   const [markName, setMarkName] = useState("mark");
   const [logo, setLogo] = useState<string>("geo-alt");
   const [listTour, setListTour] = useState([]);
-  const buttonColor = getButtonColor();
+  //const themeColor = getButtonColor();
   const { scene, updateScene } = useUpdateScene();
   const { dispatchTourWindow } = useContext(MyContext);
+
+  let { themeColor } = getThemeByScene(scene);
 
   function addMark(label: CSS3DSprite | CSS2DObject) {
     const MARK_LABEL = getScene().getObjectByName("MARK_LABEL");
@@ -128,7 +128,7 @@ function RouteComponent() {
             />
             <ButtonGroup>
               <Button
-                variant={buttonColor}
+                variant={getButtonColor(themeColor)}
                 disabled={!config3d.css2d}
                 onClick={() => {
                   addMark(createCss2dLabel(markName, logo));
@@ -138,7 +138,7 @@ function RouteComponent() {
                 添加2d标记
               </Button>
               <Button
-                variant={buttonColor}
+                variant={getButtonColor(themeColor)}
                 disabled={!config3d.css2d}
                 onClick={() => {
                   Toast3d("待续", "提示", APP_COLOR.Danger);
@@ -147,7 +147,7 @@ function RouteComponent() {
                 一键2d标记
               </Button>
               <Button
-                variant={buttonColor}
+                variant={getButtonColor(themeColor)}
                 disabled={!config3d.css3d}
                 onClick={() => {
                   addMark(createCss3dLabel(markName, logo));
@@ -157,7 +157,7 @@ function RouteComponent() {
                 添加3d标记
               </Button>
               <Button
-                variant={buttonColor}
+                variant={getButtonColor(themeColor)}
                 disabled={!config3d.css3d}
                 onClick={() => {
                   // Toast3d("待续", "提示", APP_COLOR.Danger);

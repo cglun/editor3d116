@@ -1,6 +1,6 @@
 import { Vector3 } from "three";
-import { CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer.js";
-import { CSS3DRenderer } from "three/examples/jsm/renderers/CSS3DRenderer.js";
+import { CSS2DRenderer, CSS3DRenderer } from "three/examples/jsm/Addons.js";
+import { APP_COLOR } from "../app/type";
 
 export const config3d = {
   css2d: true, //是否开启2d标签
@@ -14,6 +14,11 @@ export const userData = {
   fiexedCameraPosition: new Vector3(-5, 5, 8),
   config3d,
   javascript: "",
+  APP_THEME: {
+    themeColor: APP_COLOR.Dark,
+    iconFill: "",
+    sceneCanSave: false,
+  },
 };
 
 export interface Extra3d {

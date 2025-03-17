@@ -8,8 +8,8 @@ import {
   Spinner,
 } from "react-bootstrap";
 import AlertBase from "../common/AlertBase";
-import { getThemeColor } from "../../app/config";
-import { setClassName } from "../../app/utils";
+
+import { getThemeByScene, setClassName } from "../../app/utils";
 import { APP_COLOR, GlbModel } from "../../app/type";
 import ModalConfirm3d from "../common/ModalConfirm3d";
 import Toast3d from "../common/Toast3d";
@@ -36,6 +36,7 @@ import { MyContext } from "../../app/MyContext";
 import { runScript } from "../../three/scriptDev";
 import { createGridHelper } from "../../three/factory3d";
 import { enableShadow } from "../../three/common3d";
+import { getButtonColor } from "../../app/config";
 
 export interface ItemInfo {
   id: number;
@@ -52,7 +53,9 @@ interface Props {
 }
 function ItemInfoCard(props: Props) {
   const { list, setList, isLoading, error } = props;
-  const { updateScene } = useUpdateScene();
+  const { scene, updateScene } = useUpdateScene();
+  let { themeColor } = getThemeByScene(scene);
+
   const { dispatchTourWindow } = useContext(MyContext);
 
   //错误提示
@@ -258,14 +261,14 @@ function ItemInfoCard(props: Props) {
 
               <ButtonGroup aria-label="Basic example" className="mt-2">
                 <Button
-                  variant={getThemeColor()}
+                  variant={themeColor}
                   size="sm"
                   onClick={() => editorBtn(item, index)}
                 >
                   <i className={setClassName("pencil")} title="编辑"></i>
                 </Button>
                 <Button
-                  variant={getThemeColor()}
+                  variant={themeColor}
                   size="sm"
                   onClick={() => deleteBtn(item, index)}
                 >

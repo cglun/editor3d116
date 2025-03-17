@@ -9,45 +9,22 @@ import {
 import { UserDataType } from "../app/type";
 
 import {
-  CSS2DObject,
   CSS2DRenderer,
-  CSS3DRenderer,
-  CSS3DSprite,
   DRACOLoader,
   GLTFLoader,
 } from "three/examples/jsm/Addons.js";
-import { setClassName } from "../app/utils";
+
 import { ItemInfo } from "../component/Editor/ListCard";
 import _axios from "../app/http";
+import { createCss2dLabel, createCss3dLabel } from "./factory3d";
 
 export function getObjectNameByName(object3D: Object3D): string {
   return object3D.name.trim() === "" ? object3D.type : object3D.name;
 }
 
-export function hasClass(obj: any, className: string) {
-  return obj.classList.contains(className);
-}
-
-export function toggleClass(currentSelectDiv: any, className: string) {
-  currentSelectDiv.classList.contains(className)
-    ? currentSelectDiv.classList.add(className)
-    : currentSelectDiv.classList.remove(className);
-}
-
-export function toggleAttribute(
-  currentSelectDiv: any,
-  attribute: string,
-  value: string
-) {
-  currentSelectDiv.getAttribute(attribute)?.includes(value)
-    ? currentSelectDiv.removeAttribute(attribute)
-    : currentSelectDiv.setAttribute(attribute, value);
-}
-
 //base64转码
 export function base64(file: File) {
   const reader = new FileReader();
-
   return new Promise((resolve, reject) => {
     reader.onload = () => {
       resolve(reader.result);
@@ -55,10 +32,6 @@ export function base64(file: File) {
     reader.onerror = reject;
     reader.readAsDataURL(file);
   });
-}
-
-export function hasAttribute(obj: any, attribute: string, includes: string) {
-  return obj.getAttribute(attribute)?.includes(includes);
 }
 
 export function onWindowResize(
@@ -77,95 +50,6 @@ export function onWindowResize(
       labelRenderer.setSize(width, height);
     }
   }
-}
-
-export function createLabelRenderer(
-  node: HTMLElement,
-  renderer: CSS2DRenderer | CSS3DRenderer
-) {
-  const labelRenderer = renderer;
-  labelRenderer.setSize(node.offsetWidth, node.offsetHeight);
-  // const top = node.childNodes[0] as HTMLElement;
-  // const tt = top.getBoundingClientRect().top;
-  labelRenderer.domElement.style.position = "absolute";
-  // labelRenderer.domElement.style.zIndex = "-1";
-  labelRenderer.domElement.style.pointerEvents = "none";
-  node.appendChild(labelRenderer.domElement);
-  return labelRenderer;
-}
-//const { tourWindow, dispatchTourWindow } = useContext(MyContext);
-function createDiv(
-  logo: string,
-  name: string,
-  tourObject?: {
-    id: string;
-    title: string;
-  },
-  dispatchTourWindow?: any
-) {
-  const div = document.createElement("div");
-  div.className = "mark-label";
-  const img = document.createElement("i");
-  img.className = setClassName(logo);
-  div.appendChild(img);
-
-  const span = document.createElement("span");
-  span.textContent = name;
-  div.appendChild(span);
-
-  if (tourObject) {
-    const i = document.createElement("i");
-    i.className = setClassName("eye");
-    i.classList.add("ms-2");
-    i.style.cursor = "pointer";
-    i.setAttribute("data-tour-id", tourObject.id);
-    i.addEventListener("click", function () {
-      dispatchTourWindow({
-        type: "tourWindow",
-        payload: {
-          show: true,
-          title: tourObject.title,
-          tourSrc: getTourSrc(tourObject.id),
-        },
-      });
-    });
-    div.appendChild(i);
-  }
-
-  return div;
-}
-
-export function createCss3dLabel(
-  name: string,
-  logo: string,
-  tourObjectect?: any,
-  dispatchTourWindow?: any
-) {
-  const div = createDiv(logo, name, tourObjectect, dispatchTourWindow);
-  const css3DSprite = new CSS3DSprite(div);
-
-  css3DSprite.name = name;
-  css3DSprite.position.set(0, 0, 0);
-  css3DSprite.scale.set(0.04, 0.04, 0.04);
-
-  css3DSprite.userData = {
-    type: UserDataType.CSS3DObject,
-    labelLogo: logo,
-    tourObjectect: tourObjectect,
-  };
-  return css3DSprite;
-}
-
-export function createCss2dLabel(name: string, logo: string) {
-  const div = createDiv(logo, name);
-  const css2DObject = new CSS2DObject(div);
-  css2DObject.name = name;
-  css2DObject.userData = {
-    type: UserDataType.CSS2DObject,
-    labelLogo: logo,
-  };
-
-  return css2DObject;
 }
 
 export function setLabel(scene: Scene, dispatchTourWindow?: any) {
@@ -211,7 +95,7 @@ export function cleaerOldLabel() {
     });
   }
 }
-function getTourSrc(tourObjectect: string) {
+export function getTourSrc(tourObjectect: string) {
   let tourSrc = "/#/preview/";
   if (tourObjectect) {
     tourSrc = "/#/preview/" + tourObjectect;

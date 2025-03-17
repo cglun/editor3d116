@@ -11,24 +11,22 @@ import {
   Vector3,
   WebGLRenderer,
 } from "three";
-import TWEEN from "three/addons/libs/tween.module.js";
+
 import {
-  GLTFLoader,
-  DRACOLoader,
   OrbitControls,
   TransformControls,
   DragControls,
-  GLTF,
 } from "three/examples/jsm/Addons.js";
 
 import { GlbModel, UserDataType } from "../app/type";
 import { cameraTween } from "./animate";
 import { setBoxHelper, commonAnimate } from "./common3d";
-import { extra3d as extra, userData } from "./config3d";
+import { extra3d as extra } from "./config3d";
 import {
   createConfig,
   createPerspectiveCamera,
   createRenderer,
+  createScene,
 } from "./factory3d";
 
 let scene: Scene,
@@ -63,8 +61,13 @@ function animate() {
 
 export default function initScene(node: HTMLDivElement): void {
   divElement = node;
+  //透视相机
   perspectiveCamera = createPerspectiveCamera(node);
   camera = perspectiveCamera;
+  const tween = cameraTween(camera, new Vector3(-5, 15, 18));
+  tween.start();
+
+  //正交相机
   const xxx = 40;
   orthographicCamera = new OrthographicCamera(
     node.offsetWidth / -xxx,
@@ -75,12 +78,9 @@ export default function initScene(node: HTMLDivElement): void {
     1000
   );
   orthographicCamera.name = "正交相机";
+  scene = createScene();
   renderer = createRenderer(node);
-  scene = new Scene();
-  scene.userData = userData;
-
   node.appendChild(renderer.domElement);
-
   // 初始化轨道控制器
   controls1 = new OrbitControls(perspectiveCamera, renderer.domElement);
   controls2 = new OrbitControls(orthographicCamera, renderer.domElement);
@@ -98,116 +98,13 @@ export default function initScene(node: HTMLDivElement): void {
   transfControls = transfControls1;
   extra3d = createConfig(scene, node);
 
-  const tween = cameraTween(perspectiveCamera, new Vector3(-5, 15, 18));
-  tween.start();
-
   animate();
-}
-
-export function setCameraType(cameraType: string, cameraUp: Vector3) {
-  if (cameraType === "PerspectiveCamera") {
-    const { x, y, z } = scene.userData.perspectiveCameraPosition;
-    perspectiveCamera.position.set(x, y, z);
-    camera = perspectiveCamera;
-    camera.lookAt(0, 0, 0);
-    transfControls = transfControls1;
-    transfControls2.getHelper().visible = false;
-    controls = controls1;
-  }
-
-  if (cameraType === "OrthographicCamera") {
-    if (camera.type === "PerspectiveCamera") {
-      scene.userData.perspectiveCameraPosition = camera.position.clone();
-    }
-
-    camera = orthographicCamera;
-    const { x, y, z } = cameraUp;
-
-    const bl = 40;
-    camera.position.x = x * bl;
-    camera.position.y = y * bl;
-    camera.position.z = z * bl;
-    camera.lookAt(0, 0, 0);
-    transfControls = transfControls2;
-    transfControls1.getHelper().visible = false;
-
-    controls2.mouseButtons = {
-      LEFT: MOUSE.LEFT,
-      MIDDLE: MOUSE.DOLLY,
-      RIGHT: MOUSE.LEFT,
-    };
-    controls = controls2;
-  }
-}
-export function getControls() {
-  return controls;
-}
-export function getTransfControls() {
-  return transfControls;
-}
-export function setScene(newScene: Scene) {
-  scene = newScene;
-}
-
-export function setCamera(camera1: Camera) {
-  perspectiveCamera.position.x = camera1.position.x;
-  perspectiveCamera.position.y = camera1.position.y;
-  perspectiveCamera.position.z = camera1.position.z;
-}
-export function getPerspectiveCamera(): PerspectiveCamera {
-  return perspectiveCamera;
-}
-export function getCamera(): PerspectiveCamera | OrthographicCamera {
-  return camera;
-}
-export function getScene(): Scene {
-  return scene;
-}
-
-export function getRenderer(): WebGLRenderer {
-  return renderer;
-}
-
-export function gltfToScene(gltf: GLTF) {
-  // scene.add(gltf.scene);
-  const _gltf = gltf.scene;
-  const children = [...gltf.scene.children];
-  for (let i = 0; i < children.length; i++) {
-    const element = children[i];
-    element.userData = {
-      ...element.userData,
-      ..._gltf.userData,
-      type: UserDataType.GlbModel,
-    };
-    scene.add(element);
-  }
-}
-
-export function addGlb1(modelUrl = "/editor3d/static/models/blender.glb") {
-  const dracoLoader = new DRACOLoader();
-  dracoLoader.setDecoderPath("/editor3d/static/js/draco/gltf/");
-  //const loader = new GLTFLoader(new LoadingManager());
-  const loader = new GLTFLoader();
-  loader.setDRACOLoader(dracoLoader);
-
-  return new Promise((resolve) => {
-    loader.load(modelUrl, (gltf) => {
-      const children = gltf.scene.children;
-      for (let i = 0; i < children.length; i++) {
-        const element = children[i];
-        element.userData.type = UserDataType.GlbModel;
-        scene.children.push(element);
-      }
-      resolve(gltf);
-    });
-  });
 }
 
 // 场景序列化
 export function sceneSerialization(): string {
   const modelList: GlbModel[] = [];
   const oldChildren = [...scene.children];
-
   const children = scene.children.filter((child: Object3D | any) => {
     const childUserData = child.userData;
     if (childUserData.type === UserDataType.GlbModel) {
@@ -243,13 +140,6 @@ export function sceneSerialization(): string {
   };
   scene.children = oldChildren;
   return JSON.stringify(result);
-}
-
-export function getDivElement() {
-  return divElement;
-}
-export function getLabelRenderer() {
-  return extra.labelRenderer2d;
 }
 
 export function setDragControls(currentObject: Object3D) {
@@ -289,11 +179,8 @@ export function setTransformControls(selectedMesh: Object3D) {
     }
   });
   //transfControls.addEventListener("mouseDown", () => {});
-
   // transfControls.addEventListener("mouseUp", () => {});
-
   transfControls.attach(selectedMesh);
-
   setBoxHelper(selectedMesh, scene);
   const getHelper = transfControls.getHelper();
   const userData = {
@@ -325,6 +212,75 @@ export function raycasterSelect(event: MouseEvent) {
   return [];
 }
 
+export function getControls() {
+  return controls;
+}
+export function getTransfControls() {
+  return transfControls;
+}
+export function getPerspectiveCamera(): PerspectiveCamera {
+  return perspectiveCamera;
+}
+export function getCamera(): PerspectiveCamera | OrthographicCamera {
+  return camera;
+}
+export function setCamera(_camera: Camera) {
+  perspectiveCamera.position.x = _camera.position.x;
+  perspectiveCamera.position.y = _camera.position.y;
+  perspectiveCamera.position.z = _camera.position.z;
+}
+export function getScene(): Scene {
+  return scene;
+}
+export function setScene(newScene: Scene) {
+  scene = newScene;
+}
+
+export function getRenderer(): WebGLRenderer {
+  return renderer;
+}
+export function getDivElement() {
+  return divElement;
+}
+export function getLabelRenderer() {
+  return extra.labelRenderer2d;
+}
 export function setSelectedObject(obj: Object3D) {
   scene.userData.selected3d = obj;
+}
+
+export function setCameraType(cameraType: string, cameraUp: Vector3) {
+  if (cameraType === "PerspectiveCamera") {
+    const { x, y, z } = scene.userData.perspectiveCameraPosition;
+    perspectiveCamera.position.set(x, y, z);
+    camera = perspectiveCamera;
+    camera.lookAt(0, 0, 0);
+    transfControls = transfControls1;
+    transfControls2.getHelper().visible = false;
+    controls = controls1;
+  }
+
+  if (cameraType === "OrthographicCamera") {
+    if (camera.type === "PerspectiveCamera") {
+      scene.userData.perspectiveCameraPosition = camera.position.clone();
+    }
+
+    camera = orthographicCamera;
+    const { x, y, z } = cameraUp;
+
+    const bl = 40;
+    camera.position.x = x * bl;
+    camera.position.y = y * bl;
+    camera.position.z = z * bl;
+    camera.lookAt(0, 0, 0);
+    transfControls = transfControls2;
+    transfControls1.getHelper().visible = false;
+
+    controls2.mouseButtons = {
+      LEFT: MOUSE.LEFT,
+      MIDDLE: MOUSE.DOLLY,
+      RIGHT: MOUSE.LEFT,
+    };
+    controls = controls2;
+  }
 }

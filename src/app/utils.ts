@@ -1,13 +1,18 @@
 /**
  * 工具类
  */
-import { iconIsFill } from "./config";
+
+import { getScene } from "../three/init3dEditor";
+import { EditorScene } from "./MyContext";
+import { userData } from "../three/config3d";
 
 export function setClassName(className: string): string {
-  if (iconIsFill) {
-    return `bi bi-${className}-fill`;
+  const scene = getScene();
+  let iconFill = "";
+  if (scene) {
+    iconFill = scene.userData.APP_THEME.iconFill;
   }
-  return `bi bi-${className}`;
+  return `bi bi-${className}${iconFill}`;
 }
 
 export function base64ToBlob(base64: string, mimeType = "image/png") {
@@ -32,4 +37,12 @@ export function blobToFile(blob: Blob, fileName: string) {
     console.warn("File constructor not available, returning Blob instead.");
     return blob;
   }
+}
+
+export function getThemeByScene(scene: EditorScene) {
+  let theme = userData.APP_THEME;
+  if (scene.payload.userData.APP_THEME) {
+    theme = scene.payload.userData.APP_THEME;
+  }
+  return theme;
 }

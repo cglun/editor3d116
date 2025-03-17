@@ -5,11 +5,18 @@ import Form from "react-bootstrap/esm/Form";
 import { Button, ButtonGroup, Card, Container } from "react-bootstrap";
 import Viewer3d from "../../viewer3d/Viewer3d";
 import Toast3d from "./Toast3d";
-import { getButtonColor } from "../../app/config";
-import { base64ToBlob, blobToFile, setClassName } from "../../app/utils";
+
+import {
+  base64ToBlob,
+  blobToFile,
+  getThemeByScene,
+  setClassName,
+} from "../../app/utils";
 import { takeScreenshot } from "../../three/init3dViewer";
 import _axios, { loadAssets } from "../../app/http";
 import { APP_COLOR } from "../../app/type";
+import { useUpdateScene } from "../../app/hooks";
+import { getButtonColor } from "../../app/config";
 
 export default function EditorForm({
   item,
@@ -20,6 +27,9 @@ export default function EditorForm({
 }) {
   const [_item, _setItem] = useState<ItemInfo>({ ...item });
   const [imgBase64, setImgBase64] = useState("");
+  const { scene } = useUpdateScene();
+  let { themeColor } = getThemeByScene(scene);
+  const buttonColor = getButtonColor(themeColor);
 
   const [loadScene, setLoadScene] = useState<boolean>(false);
   useEffect(() => {
@@ -73,9 +83,9 @@ export default function EditorForm({
         ) : (
           <i className="bi bi-image" style={{ fontSize: "11.6rem" }}></i>
         )}
-        <ButtonGroup className="mt-2">
+        <ButtonGroup className="mt-2" size="sm">
           <Button
-            variant={getButtonColor()}
+            variant={buttonColor}
             onClick={() => {
               setLoadScene(true);
               //useUpdateScene()
@@ -85,7 +95,7 @@ export default function EditorForm({
           </Button>
 
           <Button
-            variant={getButtonColor()}
+            variant={buttonColor}
             disabled={!loadScene}
             onClick={() => {
               const imgBase64 = takeScreenshot(300, 300);
@@ -97,7 +107,7 @@ export default function EditorForm({
           </Button>
 
           <Button
-            variant={getButtonColor()}
+            variant={buttonColor}
             disabled={imgBase64.trim() === ""}
             onClick={() => {
               const blob = base64ToBlob(imgBase64, "image/png");

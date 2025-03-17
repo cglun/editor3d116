@@ -9,13 +9,13 @@ import {
   Image,
   Container,
 } from "react-bootstrap";
-import { setClassName } from "../../app/utils";
-import { getThemeColor, initThemeColor, setThemeColor } from "../../app/config";
+import { getThemeByScene, setClassName } from "../../app/utils";
+
 import ListCard from "./ListCard";
 import { testData1 } from "../../app/testData";
 import Toast3d from "../common/Toast3d";
 import ModalConfirm3d from "../common/ModalConfirm3d";
-import { Scene } from "three";
+import { Color, Scene } from "three";
 import { APP_COLOR } from "../../app/type";
 import {
   getScene,
@@ -33,28 +33,15 @@ import {
 } from "../../three/factory3d";
 
 export default function EditorTop() {
-  initThemeColor();
-  const themeColor = getThemeColor();
   //打开场景列表
   const [showScene, setShowScene] = useState(false);
   const handleClose = () => setShowScene(false);
   const handleShow = () => setShowScene(true);
-
-  const [appTheme, setAppTheme] = useState(themeColor);
-  const { updateScene } = useUpdateScene();
-  const [sceneIsSave, setSceneIsSave] = useState(true);
-
-  useEffect(() => {
-    const scene = getScene();
-
-    if (scene?.userData.canSave) {
-      setSceneIsSave(!scene.userData.canSave);
-    }
-  }, [getScene()]);
-
+  const { scene, updateScene } = useUpdateScene();
+  let { themeColor, iconFill, sceneCanSave } = getThemeByScene(scene);
+  document.body.setAttribute("data-bs-theme", themeColor);
   function saveScene() {
     const dataJson = sceneSerialization();
-
     _axios
       .post("/project/update/", {
         id: getScene().userData.projectId,
@@ -72,16 +59,23 @@ export default function EditorTop() {
         Toast3d("错误:" + error, "提示", APP_COLOR.Warning);
       });
   }
-  function setTheme(color: string) {
+  function setThemeByBtn(color: APP_COLOR) {
     document.body.setAttribute("data-bs-theme", color);
-    localStorage.setItem("app_theme", color);
-    setThemeColor(color);
-    setAppTheme(color);
+    const scene = getScene();
+    const { APP_THEME } = scene.userData;
+    APP_THEME.themeColor = color;
+    updateScene(scene);
+  }
+  function setThemeIcons(color: string) {
+    const scene = getScene();
+    const { APP_THEME } = scene.userData;
+    APP_THEME.iconFill = color;
+    updateScene(scene);
   }
 
   function saveAsNewScene() {
     const scene = getScene();
-
+    scene.userData.APP_THEME.sceneCanSave = true;
     function getValue(sceneName: string, des: string) {
       scene.userData.sceneName = sceneName;
       scene.userData.des = des;
@@ -172,11 +166,16 @@ export default function EditorTop() {
               size="sm"
               onClick={() => {
                 const newScene = new Scene();
+                const scene = getScene();
+                const { themeColor } = scene.userData.APP_THEME;
+                newScene.background =
+                  themeColor === APP_COLOR.Dark
+                    ? new Color("#000116")
+                    : new Color("#fff");
                 newScene.userData = userData;
                 newScene.add(createGridHelper());
                 newScene.add(createDirectionalLight());
                 setScene(newScene);
-                setSceneIsSave(true);
                 updateScene(newScene);
               }}
             >
@@ -185,7 +184,7 @@ export default function EditorTop() {
             <Button
               variant={themeColor}
               size="sm"
-              disabled={sceneIsSave}
+              disabled={!sceneCanSave}
               onClick={() => {
                 saveScene();
               }}
@@ -213,7 +212,7 @@ export default function EditorTop() {
                 variant={themeColor}
                 size="sm"
               >
-                {appTheme === "light" ? (
+                {themeColor === "light" ? (
                   <i className={setClassName("sun")}></i>
                 ) : (
                   <i className={setClassName("moon-stars")}></i>
@@ -222,20 +221,45 @@ export default function EditorTop() {
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
-                <Dropdown.Item
-                  onClick={() => {
-                    setTheme("light");
-                  }}
-                >
-                  <i className={setClassName("sun")}></i>白天
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    setTheme("dark");
-                  }}
-                >
-                  <i className={setClassName("moon-stars")}></i>黑夜
-                </Dropdown.Item>
+                {themeColor === APP_COLOR.Dark ? (
+                  <Dropdown.Item
+                    onClick={() => {
+                      setThemeByBtn(APP_COLOR.Light);
+                      const scene = getScene();
+                      scene.background = new Color(0xffffff);
+                    }}
+                  >
+                    <i className={setClassName("sun")}></i> 白天模式
+                  </Dropdown.Item>
+                ) : (
+                  <Dropdown.Item
+                    onClick={() => {
+                      setThemeByBtn(APP_COLOR.Dark);
+                      const scene = getScene();
+                      scene.background = new Color(0x000116);
+                    }}
+                  >
+                    <i className={setClassName("moon-stars")}></i> 黑夜模式
+                  </Dropdown.Item>
+                )}
+                {iconFill === "-fill" ? (
+                  <Dropdown.Item
+                    onClick={() => {
+                      setThemeIcons("");
+                    }}
+                  >
+                    <i className={"bi bi-emoji-expressionless"}></i> 空心图标
+                  </Dropdown.Item>
+                ) : (
+                  <Dropdown.Item
+                    onClick={() => {
+                      setThemeIcons("-fill");
+                    }}
+                  >
+                    <i className={"bi bi-emoji-expressionless-fill"}></i>{" "}
+                    填充图标
+                  </Dropdown.Item>
+                )}
               </Dropdown.Menu>
             </Dropdown>
           </>

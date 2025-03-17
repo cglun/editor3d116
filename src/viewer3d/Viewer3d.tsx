@@ -33,8 +33,6 @@ import {
   setBoxHelper,
 } from "../three/common3d";
 
-// import { getThemeColor } from "../app/config";
-
 /**
  * 其他应用可以调用此组件，
  * @returns
