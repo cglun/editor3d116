@@ -8,56 +8,39 @@ import { CodeHighlight } from "@mantine/code-highlight";
 import { MantineProvider } from "@mantine/core";
 import AlertBase from "../../component/common/AlertBase";
 import { APP_COLOR } from "../../app/type";
-import { getThemeByScene } from "../../app/utils";
-
 export const Route = createLazyFileRoute("/editor3d/script")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
   const { scene } = useUpdateScene();
-  let { themeColor } = getThemeByScene(scene);
-  const buttonColor = getButtonColor(themeColor);
   const { javascript } = scene.payload.userData;
   const [code, setCode] = useState(javascript);
-  const [e, setE] = useState(false);
+  const [editable, setEditable] = useState(false);
   useEffect(() => {
     setCode(javascript);
-    setE(false);
+    setEditable(false);
   }, [scene]);
 
   return (
     <Container fluid>
-      <Button
-        className="mt-2"
-        size="sm"
-        variant={buttonColor}
-        onClick={() => {
-          setE(!e);
-        }}
-      >
-        {e ? "返回" : "编辑"}
-      </Button>
-      {e && (
-        <FloatingLabel
-          className="mt-2"
-          controlId="floatingTextarea2"
-          label="编辑中……"
-        >
+      {editable ? (
+        <FloatingLabel controlId="floatingTextarea2" label="编辑中……">
           <Form.Control
             as="textarea"
             placeholder="编辑中……"
             style={{ height: "100vh" }}
             value={code}
+            onMouseLeave={() => {
+              setEditable(!editable);
+            }}
             onChange={(e) => {
               setCode(e.target.value);
               getScene().userData.javascript = e.target.value;
             }}
           />
         </FloatingLabel>
-      )}
-
-      {!e && (
+      ) : (
         <MantineProvider>
           <AlertBase
             className="mt-2"
@@ -68,9 +51,19 @@ function RouteComponent() {
           />
           <CodeHighlight
             code={code}
-            style={{ padding: "2px 10px " }}
+            style={{
+              padding: "2px 10px ",
+              cursor: "text",
+              borderWidth: "1px",
+              borderStyle: "dashed",
+              borderColor: "var(--bs-card-border-color)",
+              borderRadius: "4px",
+            }}
             language="javascript"
             withCopyButton={false}
+            onClick={() => {
+              setEditable(!editable);
+            }}
           />
         </MantineProvider>
       )}

@@ -86,8 +86,11 @@ function ItemInfoCard(props: Props) {
               const newList = list.filter((_, i) => i !== index);
               setList(newList);
               Toast3d(`【${item.name}】已删除`);
-              const newScene = createNewScene();
-              updateScene(newScene);
+              const { projectId } = getScene().userData;
+              if (item.id === projectId) {
+                const newScene = createNewScene();
+                updateScene(newScene);
+              }
             } else {
               Toast3d(res.data, "提示", APP_COLOR.Warning);
             }

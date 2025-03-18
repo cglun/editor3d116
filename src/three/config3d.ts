@@ -13,7 +13,8 @@ export const userData = {
   perspectiveCameraPosition: new Vector3(-5, 5, 8),
   fiexedCameraPosition: new Vector3(-5, 5, 8),
   config3d,
-  javascript: "",
+  javascript: `//const scene = getScene(); 
+  console.log("116");`,
   APP_THEME: {
     themeColor: APP_COLOR.Dark,
     iconFill: "",

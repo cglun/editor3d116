@@ -21,27 +21,32 @@ export default function EditorBottom() {
       >
         <Nav.Item>
           <Nav.Link eventKey="/editor3d">
-            <i className={setClassName("box")}></i> 模型列表
+            <i className={setClassName("box")}></i> 模型
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
           <Nav.Link eventKey="/editor3d/addMesh">
-            <i className={setClassName("patch-plus")}></i> 添加网格
+            <i className={setClassName("patch-plus")}></i> 几何体
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
           <Nav.Link eventKey="/editor3d/mark">
-            <i className={setClassName("pin-map")}></i> 点位标注
+            <i className={setClassName("pin-map")}></i> 标注
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link eventKey="/editor3d/script">
+            <i className="bi bi-filetype-js"></i> 脚本
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link eventKey="/editor3d/effects">
+            <i className={"bi bi-stars"}></i> 特效
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
           <Nav.Link eventKey="/editor3d/config">
             <i className={setClassName("gear")}></i> 配置
-          </Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link eventKey="/editor3d/script">
-            <i className="bi bi-code"></i> 脚本
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
