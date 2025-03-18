@@ -28,6 +28,7 @@ import {
   setLabel,
 } from "../three/utils";
 import {
+  enableShadow,
   hideBoxHelper,
   raycasterSelect,
   setBoxHelper,
@@ -104,12 +105,14 @@ export default function Viewer3d({
   function loadModelByUrl(model: GlbModel) {
     const loader = glbLoader();
     let progress = 0;
+
     loader.load(
       model.userData.modelUrl,
       function (gltf) {
         setProgress(100);
         const group = getModelGroup(model, gltf);
         getScene().add(group);
+        enableShadow(getScene());
       },
       function (xhr) {
         progress = parseFloat(

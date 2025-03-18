@@ -84,14 +84,14 @@ function RouteComponent() {
           <ListGroup horizontal>
             <ListGroup.Item>
               <ConfigCheck
-                label="css2d"
+                label="2D标签"
                 configKey="css2d"
                 callBack={cleaerOldLabel}
               />
             </ListGroup.Item>
             <ListGroup.Item>
               <ConfigCheck
-                label="css3d"
+                label="3D标签"
                 configKey="css3d"
                 callBack={cleaerOldLabel}
               />

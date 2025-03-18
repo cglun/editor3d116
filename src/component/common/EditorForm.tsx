@@ -5,12 +5,10 @@ import Form from "react-bootstrap/esm/Form";
 import { Button, ButtonGroup, Card, Container } from "react-bootstrap";
 import Viewer3d from "../../viewer3d/Viewer3d";
 import Toast3d from "./Toast3d";
-
 import { base64ToBlob, blobToFile, setClassName } from "../../app/utils";
 import { takeScreenshot } from "../../three/init3dViewer";
 import _axios, { loadAssets } from "../../app/http";
 import { APP_COLOR } from "../../app/type";
-
 import { getButtonColor } from "../../app/config";
 import { getScene } from "../../three/init3dEditor";
 
@@ -70,7 +68,7 @@ export default function EditorForm({
           <Viewer3d
             canvasStyle={{ height: "300px", width: "300px" }}
             item={item}
-          ></Viewer3d>
+          />
         ) : _item.cover?.trim().length > 0 ? (
           <Card.Img
             style={{ height: "300px", width: "300px" }}
@@ -85,7 +83,6 @@ export default function EditorForm({
             variant={buttonColor}
             onClick={() => {
               setLoadScene(true);
-              //useUpdateScene()
             }}
           >
             <i className={setClassName("box")}></i> 使用场景
@@ -122,7 +119,6 @@ export default function EditorForm({
                     Toast3d(res.data.message, "提示", APP_COLOR.Warning);
                     return;
                   }
-
                   const item = { ..._item, cover: res.data.result.url };
                   _setItem(item);
                   Toast3d(res.data.message, "提示", APP_COLOR.Success);

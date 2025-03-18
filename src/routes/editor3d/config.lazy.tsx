@@ -12,7 +12,7 @@ function RouteComponent() {
   return (
     <ListGroup horizontal className="mt-2">
       <ListGroup.Item>
-        <ConfigCheck label="使用动画" configKey="useTween" />
+        <ConfigCheck label="启用Tween" configKey="useTween" />
       </ListGroup.Item>
       <ListGroup.Item>
         <ConfigCheck

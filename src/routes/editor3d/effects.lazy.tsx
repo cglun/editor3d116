@@ -5,5 +5,5 @@ export const Route = createLazyFileRoute("/editor3d/effects")({
 });
 
 function RouteComponent() {
-  return <div>Hello "/editor3d/efects"116</div>;
+  return <div>还没有</div>;
 }

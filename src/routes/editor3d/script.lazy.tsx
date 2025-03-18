@@ -1,7 +1,6 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Button, Container, FloatingLabel, Form } from "react-bootstrap";
-import { getButtonColor } from "../../app/config";
+import { Container, FloatingLabel, Form } from "react-bootstrap";
 import { getScene } from "../../three/init3dEditor";
 import { useUpdateScene } from "../../app/hooks";
 import { CodeHighlight } from "@mantine/code-highlight";

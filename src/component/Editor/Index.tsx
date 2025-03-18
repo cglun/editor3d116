@@ -10,11 +10,8 @@ export default function Index() {
     <Container fluid>
       <Row>
         <EditorTop />
+        <div className="sticky-top" style={{ height: "30px" }}></div>
       </Row>
-      <div
-        className="sticky-top"
-        style={{ height: "26px", width: "100vw", background: "red" }}
-      ></div>
       <Row>
         <Col xl={10}>
           <Row>

@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import {
-  Row,
-  Col,
   Button,
   ButtonGroup,
   Dropdown,
   Offcanvas,
   Image,
-  Container,
+  Navbar,
+  Nav,
 } from "react-bootstrap";
 import { getThemeByScene, setClassName } from "../../app/utils";
 
@@ -42,7 +41,6 @@ export default function EditorTop() {
       })
       .then((res) => {
         if (res.data.code === 200) {
-          // setSceneIsSave(false);
           Toast3d("保存成功");
         } else {
           Toast3d(res.data.message, "提示", APP_COLOR.Warning);
@@ -143,24 +141,28 @@ export default function EditorTop() {
   }, [showScene]);
 
   return (
-    <Container
-      fluid
-      className="fixed-top"
-      style={{ backgroundColor: "var(--bs-body-bg)" }}
+    <Navbar
+      expand="xxl"
+      fixed="top"
+      className="bg-body-tertiary"
+      style={{ padding: 0 }}
     >
-      <Row>
-        <Col>
-          <Image src="/editor3d/static/images/logo.png" title="logo" />
-          <Button variant={themeColor} size="sm" onClick={handleShow}>
-            <i className={setClassName("bi me-1 bi-badge-3d")}></i>切换场景
-          </Button>
-        </Col>
-
-        <Col className="d-flex justify-content-end">
-          <ButtonGroup aria-label="Basic example">
+      <Navbar.Brand style={{ padding: 0, marginRight: "0" }}>
+        <Image src="/editor3d/static/images/logo.png" title="logo" />
+      </Navbar.Brand>
+      <Navbar.Toggle aria-controls="basic-navbar-nav" />
+      <Navbar.Collapse id="basic-navbar-nav">
+        <Nav className="me-auto">
+          <ButtonGroup size="sm">
+            <Button variant={themeColor} onClick={handleShow}>
+              <i className={setClassName("bi  bi-badge-3d")}></i> 切换场景
+            </Button>
+          </ButtonGroup>
+        </Nav>
+        <Nav className="me-2">
+          <ButtonGroup aria-label="Basic example" size="sm">
             <Button
               variant={themeColor}
-              size="sm"
               onClick={() => {
                 const newScene = createNewScene();
                 updateScene(newScene);
@@ -170,7 +172,6 @@ export default function EditorTop() {
             </Button>
             <Button
               variant={themeColor}
-              size="sm"
               disabled={!sceneCanSave}
               onClick={() => {
                 saveScene();
@@ -180,78 +181,80 @@ export default function EditorTop() {
             </Button>
             <Button
               variant={themeColor}
-              size="sm"
               onClick={() => {
                 saveAsNewScene();
               }}
             >
               <i className={setClassName("floppy2")}></i> 场景另存
             </Button>
+            <Button
+              as="div"
+              variant={themeColor}
+              style={{ paddingLeft: "0", paddingRight: "0" }}
+            >
+              <Dropdown className="d-inline">
+                <Dropdown.Toggle
+                  id="dropdown-autoclose-true"
+                  variant={themeColor}
+                  size="sm"
+                >
+                  {themeColor === "light" ? (
+                    <i className={setClassName("sun")}></i>
+                  ) : (
+                    <i className={setClassName("moon-stars")}></i>
+                  )}
+                  主题
+                </Dropdown.Toggle>
 
+                <Dropdown.Menu>
+                  {themeColor === APP_COLOR.Dark ? (
+                    <Dropdown.Item
+                      onClick={() => {
+                        setThemeByBtn(APP_COLOR.Light);
+                        const scene = getScene();
+                        scene.background = new Color("#eee");
+                      }}
+                    >
+                      <i className={setClassName("sun")}></i> 白天模式
+                    </Dropdown.Item>
+                  ) : (
+                    <Dropdown.Item
+                      onClick={() => {
+                        setThemeByBtn(APP_COLOR.Dark);
+                        const scene = getScene();
+                        scene.background = new Color("#000116");
+                      }}
+                    >
+                      <i className={setClassName("moon-stars")}></i> 黑夜模式
+                    </Dropdown.Item>
+                  )}
+                  {iconFill === "-fill" ? (
+                    <Dropdown.Item
+                      onClick={() => {
+                        setThemeIcons("");
+                      }}
+                    >
+                      <i className={"bi bi-emoji-expressionless"}></i> 空心图标
+                    </Dropdown.Item>
+                  ) : (
+                    <Dropdown.Item
+                      onClick={() => {
+                        setThemeIcons("-fill");
+                      }}
+                    >
+                      <i className={"bi bi-emoji-expressionless-fill"}></i>
+                      填充图标
+                    </Dropdown.Item>
+                  )}
+                </Dropdown.Menu>
+              </Dropdown>
+            </Button>
             <Button variant={themeColor} size="sm">
               <i className={setClassName("dash-circle")}></i> 待续
             </Button>
           </ButtonGroup>
-          <>
-            <Dropdown className="d-inline">
-              <Dropdown.Toggle
-                id="dropdown-autoclose-true"
-                variant={themeColor}
-                size="sm"
-              >
-                {themeColor === "light" ? (
-                  <i className={setClassName("sun")}></i>
-                ) : (
-                  <i className={setClassName("moon-stars")}></i>
-                )}
-                模式
-              </Dropdown.Toggle>
-
-              <Dropdown.Menu>
-                {themeColor === APP_COLOR.Dark ? (
-                  <Dropdown.Item
-                    onClick={() => {
-                      setThemeByBtn(APP_COLOR.Light);
-                      const scene = getScene();
-                      scene.background = new Color("#eee");
-                    }}
-                  >
-                    <i className={setClassName("sun")}></i> 白天模式
-                  </Dropdown.Item>
-                ) : (
-                  <Dropdown.Item
-                    onClick={() => {
-                      setThemeByBtn(APP_COLOR.Dark);
-                      const scene = getScene();
-                      scene.background = new Color("#000116");
-                    }}
-                  >
-                    <i className={setClassName("moon-stars")}></i> 黑夜模式
-                  </Dropdown.Item>
-                )}
-                {iconFill === "-fill" ? (
-                  <Dropdown.Item
-                    onClick={() => {
-                      setThemeIcons("");
-                    }}
-                  >
-                    <i className={"bi bi-emoji-expressionless"}></i> 空心图标
-                  </Dropdown.Item>
-                ) : (
-                  <Dropdown.Item
-                    onClick={() => {
-                      setThemeIcons("-fill");
-                    }}
-                  >
-                    <i className={"bi bi-emoji-expressionless-fill"}></i>{" "}
-                    填充图标
-                  </Dropdown.Item>
-                )}
-              </Dropdown.Menu>
-            </Dropdown>
-          </>
-        </Col>
-      </Row>
+        </Nav>
+      </Navbar.Collapse>
       {showScene && (
         <Offcanvas show={showScene} onHide={handleClose}>
           <Offcanvas.Header closeButton>
@@ -270,6 +273,6 @@ export default function EditorTop() {
           </Offcanvas.Body>
         </Offcanvas>
       )}
-    </Container>
+    </Navbar>
   );
 }
