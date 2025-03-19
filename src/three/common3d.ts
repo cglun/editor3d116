@@ -82,6 +82,7 @@ export interface AnimateProps {
   renderer: WebGLRenderer;
   extra3d: Extra3d;
   parameters3d: typeof parameters;
+  biaoji: string;
 }
 export function commonAnimate({
   scene,
@@ -90,6 +91,7 @@ export function commonAnimate({
   renderer,
   extra3d,
   parameters3d,
+  biaoji,
 }: AnimateProps) {
   const { css2d, css3d, useTween, FPS } = scene.userData.config3d;
   const { clock } = parameters3d;
@@ -103,12 +105,14 @@ export function commonAnimate({
     TWEEN.update();
   }
   const T = clock.getDelta();
-  controls.update();
+
   parameters3d.timeS = parameters3d.timeS + T;
   const renderT = 1 / FPS;
-  if (parameters3d.timeS > renderT) {
+  if (parameters3d.timeS >= renderT) {
     renderer.render(scene, camera); //执行渲染操作
-
+    //  console.log(FPS, biaoji);
+    //clock.stop();
+    controls.update();
     //renderer.render每执行一次，timeS置0
     parameters3d.timeS = 0;
   }

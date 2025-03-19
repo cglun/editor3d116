@@ -63,6 +63,7 @@ function animate() {
     renderer,
     extra3d,
     parameters3d,
+    biaoji: "editor",
   };
   commonAnimate(animateProps);
   requestAnimationFrame(animate);
