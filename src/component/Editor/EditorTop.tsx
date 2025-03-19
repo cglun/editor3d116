@@ -142,7 +142,7 @@ export default function EditorTop() {
 
   return (
     <Navbar
-      expand="xxl"
+      expand="lg"
       fixed="top"
       className="bg-body-tertiary"
       style={{ padding: 0 }}

@@ -20,8 +20,13 @@ import {
 
 import { GlbModel, UserDataType } from "../app/type";
 import { cameraTween } from "./animate";
-import { setBoxHelper, commonAnimate } from "./common3d";
-import { extra3d as extra } from "./config3d";
+import {
+  setBoxHelper,
+  commonAnimate,
+  animateProps,
+  AnimateProps,
+} from "./common3d";
+import { extra3d as extra, parameters } from "./config3d";
 import {
   createConfig,
   createPerspectiveCamera,
@@ -41,7 +46,8 @@ let scene: Scene,
   transfControls: TransformControls,
   transfControls1: TransformControls,
   transfControls2: TransformControls,
-  extra3d = extra;
+  extra3d = extra,
+  parameters3d = parameters;
 
 export function getAll() {
   return {
@@ -55,7 +61,15 @@ export function getAll() {
 }
 
 function animate() {
-  commonAnimate(scene, camera, controls, renderer, extra3d);
+  const animateProps: AnimateProps = {
+    scene,
+    camera,
+    controls,
+    renderer,
+    extra3d,
+    parameters3d,
+  };
+  commonAnimate(animateProps);
   requestAnimationFrame(animate);
 }
 

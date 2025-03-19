@@ -2,6 +2,8 @@ import Form from "react-bootstrap/esm/Form";
 import { useUpdateScene } from "../../app/hooks";
 import { getScene } from "../../three/init3dEditor";
 import { config3d } from "../../three/config3d";
+
+import InputGroup from "react-bootstrap/esm/InputGroup";
 export function ConfigCheck({
   label = "label",
   configKey = "css2d",
@@ -23,21 +25,23 @@ export function ConfigCheck({
     getScene().userData.config3d[_configKey] = true;
   }
   return (
-    <Form>
-      <Form.Check
-        label={label}
-        type="switch"
-        checked={checked}
-        disabled={disabled}
-        onChange={() => {
-          const _config3d = getScene().userData.config3d;
-          _config3d[_configKey] = !_config3d[_configKey];
-          if (callBack) {
-            callBack();
-          }
-          updateScene(getScene());
-        }}
-      ></Form.Check>
-    </Form>
+    <InputGroup size="sm">
+      <Form.Text>
+        <Form.Check
+          label={label}
+          type="switch"
+          checked={checked}
+          disabled={disabled}
+          onChange={() => {
+            const _config3d = getScene().userData.config3d;
+            _config3d[_configKey] = !_config3d[_configKey];
+            if (callBack) {
+              callBack();
+            }
+            updateScene(getScene());
+          }}
+        ></Form.Check>
+      </Form.Text>
+    </InputGroup>
   );
 }

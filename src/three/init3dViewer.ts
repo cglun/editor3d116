@@ -17,17 +17,26 @@ import {
   createScene,
 } from "./factory3d";
 
-import { extra3d as extra } from "./config3d";
-import { commonAnimate } from "./common3d";
+import { extra3d as extra, parameters } from "./config3d";
+import { AnimateProps, commonAnimate } from "./common3d";
 
 let scene: Scene,
   camera: PerspectiveCamera,
   controls: OrbitControls,
   renderer: WebGLRenderer,
   divElement: HTMLDivElement,
-  extra3d = extra;
+  extra3d = extra,
+  parameters3d = parameters;
 function animate() {
-  commonAnimate(scene, camera, controls, renderer, extra3d);
+  const animateProps: AnimateProps = {
+    scene,
+    camera,
+    controls,
+    renderer,
+    extra3d,
+    parameters3d,
+  };
+  commonAnimate(animateProps);
   requestAnimationFrame(animate);
 }
 export default function initScene(node: HTMLDivElement): void {
@@ -40,7 +49,6 @@ export default function initScene(node: HTMLDivElement): void {
   renderer = createRenderer(node);
   node.appendChild(renderer.domElement);
   controls = new OrbitControls(camera, renderer.domElement);
-
   extra3d = createConfig(scene, node);
   animate();
 }

@@ -1,4 +1,4 @@
-import { Vector3 } from "three";
+import { Clock, Vector3 } from "three";
 import { CSS2DRenderer, CSS3DRenderer } from "three/examples/jsm/Addons.js";
 import { APP_COLOR } from "../app/type";
 
@@ -7,6 +7,7 @@ export const config3d = {
   css3d: true, //是否开启3d标签
   useTween: true, //是否开启动画
   useShadow: true, //是否开启阴影
+  FPS: 24, //帧率
 };
 export const userData = {
   isSelected: false,
@@ -21,7 +22,10 @@ export const userData = {
     sceneCanSave: false,
   },
 };
-
+export const parameters = {
+  clock: new Clock(),
+  timeS: 0,
+};
 export interface Extra3d {
   labelRenderer2d: CSS2DRenderer | undefined;
   labelRenderer3d: CSS3DRenderer | undefined;

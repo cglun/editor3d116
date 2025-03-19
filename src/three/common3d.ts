@@ -1,6 +1,8 @@
 import {
+  AmbientLight,
   BoxHelper,
   Camera,
+  DirectionalLight,
   Group,
   Light,
   Mesh,
@@ -15,19 +17,18 @@ import {
 import { UserDataType } from "../app/type";
 import { getScene } from "./init3dEditor";
 import TWEEN from "three/addons/libs/tween.module.js";
-import { Extra3d } from "./config3d";
+import { Extra3d, parameters } from "./config3d";
 
 export function enableShadow(group: Scene | Group) {
   const { useShadow } = getScene().userData.config3d;
-  group.traverse((child) => {
-    if (child instanceof Mesh) {
-      if (child.userData.type !== UserDataType.TransformHelper) {
+  group.traverse((child: Object3D) => {
+    if (child.type !== "AmbientLight") {
+      if (child.hasOwnProperty("castShadow")) {
         child.castShadow = useShadow;
+      }
+      if (child.hasOwnProperty("receiveShadow")) {
         child.receiveShadow = useShadow;
       }
-    }
-    if (child instanceof Light) {
-      child.castShadow = useShadow;
     }
   });
 }
@@ -78,24 +79,40 @@ export function hideBoxHelper(scene: Scene) {
     boxHelper.visible = false;
   }
 }
-
-export function commonAnimate(
-  scene: Scene,
-  camera: PerspectiveCamera | OrthographicCamera,
-  controls: any,
-  renderer: WebGLRenderer,
-  extra3d: Extra3d
-) {
-  const { config3d } = scene.userData;
-  if (extra3d.labelRenderer2d && config3d.css2d) {
+export interface AnimateProps {
+  scene: Scene;
+  camera: PerspectiveCamera | OrthographicCamera;
+  controls: any;
+  renderer: WebGLRenderer;
+  extra3d: Extra3d;
+  parameters3d: typeof parameters;
+}
+export function commonAnimate({
+  scene,
+  camera,
+  controls,
+  renderer,
+  extra3d,
+  parameters3d,
+}: AnimateProps) {
+  const { css2d, css3d, useTween, FPS } = scene.userData.config3d;
+  const { clock } = parameters3d;
+  if (extra3d.labelRenderer2d && css2d) {
     extra3d.labelRenderer2d.render(scene, camera);
   }
-  if (extra3d.labelRenderer3d && config3d.css3d) {
+  if (extra3d.labelRenderer3d && css3d) {
     extra3d.labelRenderer3d.render(scene, camera);
   }
-  if (config3d.useTween) {
+  if (useTween) {
     TWEEN.update();
   }
-  controls.update();
-  renderer.render(scene, camera);
+  const T = clock.getDelta();
+  parameters3d.timeS = parameters3d.timeS + T;
+  const renderT = 1 / FPS;
+  if (parameters3d.timeS > renderT) {
+    renderer.render(scene, camera); //执行渲染操作
+    controls.update();
+    //renderer.render每执行一次，timeS置0
+    parameters3d.timeS = 0;
+  }
 }
