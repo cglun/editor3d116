@@ -20,12 +20,7 @@ import {
 
 import { GlbModel, UserDataType } from "../app/type";
 import { cameraTween } from "./animate";
-import {
-  setBoxHelper,
-  commonAnimate,
-  animateProps,
-  AnimateProps,
-} from "./common3d";
+import { setBoxHelper, commonAnimate, AnimateProps } from "./common3d";
 import { extra3d as extra, parameters } from "./config3d";
 import {
   createConfig,
