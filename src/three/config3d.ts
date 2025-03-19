@@ -7,7 +7,7 @@ export const config3d = {
   css3d: true, //是否开启3d标签
   useTween: true, //是否开启动画
   useShadow: true, //是否开启阴影
-  FPS: 24, //帧率
+  FPS: 30, //帧率
 };
 export const userData = {
   isSelected: false,

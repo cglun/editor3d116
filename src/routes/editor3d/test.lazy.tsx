@@ -4,8 +4,7 @@ import { getCamera, getScene } from "../../three/init3dEditor";
 import { Scene } from "three";
 import { cameraTween } from "../../three/animate";
 import Toast3d from "../../component/common/Toast3d";
-import { getButtonColor } from "../../app/config";
-import { getThemeByScene } from "../../app/utils";
+import { getButtonColor, getThemeByScene } from "../../app/utils";
 import { useUpdateScene } from "../../app/hooks";
 export const Route = createLazyFileRoute("/editor3d/test")({
   component: RouteComponent,

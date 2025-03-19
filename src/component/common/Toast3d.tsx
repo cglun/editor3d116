@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Toast as BootToast } from "react-bootstrap";
 import { createRoot } from "react-dom/client";
 import { APP_COLOR, DELAY } from "../../app/type";
-import { setClassName } from "../../app/utils";
+import { setClassName, getButtonColor } from "../../app/utils";
 /**
  * 消息提示
  * 用法：Toast3d("成功添加");

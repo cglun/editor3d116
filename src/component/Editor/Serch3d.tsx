@@ -5,8 +5,7 @@ import Button from "react-bootstrap/esm/Button";
 import Form from "react-bootstrap/esm/Form";
 import InputGroup from "react-bootstrap/esm/InputGroup";
 
-import { getButtonColor } from "../../app/config";
-import { getThemeByScene, setClassName } from "../../app/utils";
+import { getButtonColor, getThemeByScene, setClassName } from "../../app/utils";
 import { useUpdateScene } from "../../app/hooks";
 
 export function Serch3d({

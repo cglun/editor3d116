@@ -7,7 +7,7 @@ import {
 } from "../../../three/init3dEditor";
 import { setClassName } from "../../../app/utils";
 import { getObjectNameByName } from "../../../three/utils";
-import { SPACE } from "../../../app/config";
+import { SPACE } from "../../../app/utils";
 import Button from "react-bootstrap/esm/Button";
 import { APP_COLOR } from "../../../app/type";
 import Toast3d from "../../common/Toast3d";

@@ -1,11 +1,7 @@
 import {
-  AmbientLight,
   BoxHelper,
   Camera,
-  DirectionalLight,
   Group,
-  Light,
-  Mesh,
   Object3D,
   OrthographicCamera,
   PerspectiveCamera,

@@ -3,7 +3,7 @@ import ListGroup from "react-bootstrap/esm/ListGroup";
 import { getScene, setSelectedObject } from "../../../three/init3dEditor";
 import { setClassName } from "../../../app/utils";
 import { getObjectNameByName } from "../../../three/utils";
-import { SPACE } from "../../../app/config";
+import { SPACE } from "../../../app/utils";
 
 import { useUpdateScene } from "../../../app/hooks";
 

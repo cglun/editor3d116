@@ -5,11 +5,16 @@ import Form from "react-bootstrap/esm/Form";
 import { Button, ButtonGroup, Card, Container } from "react-bootstrap";
 import Viewer3d from "../../viewer3d/Viewer3d";
 import Toast3d from "./Toast3d";
-import { base64ToBlob, blobToFile, setClassName } from "../../app/utils";
+import {
+  base64ToBlob,
+  blobToFile,
+  getButtonColor,
+  setClassName,
+} from "../../app/utils";
 import { takeScreenshot } from "../../three/init3dViewer";
 import _axios, { loadAssets } from "../../app/http";
 import { APP_COLOR } from "../../app/type";
-import { getButtonColor } from "../../app/config";
+
 import { getScene } from "../../three/init3dEditor";
 
 export default function EditorForm({

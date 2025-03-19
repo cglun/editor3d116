@@ -2,10 +2,10 @@ import { ButtonGroup, ListGroupItem, ProgressBar } from "react-bootstrap";
 import Button from "react-bootstrap/esm/Button";
 import Form from "react-bootstrap/esm/Form";
 import { Euler, Vector3 } from "three";
-import { getButtonColor } from "../../app/config";
+
 import { useRef, useState } from "react";
 import Toast3d from "../common/Toast3d";
-import { getThemeByScene, setClassName } from "../../app/utils";
+import { getButtonColor, getThemeByScene, setClassName } from "../../app/utils";
 import _axios from "../../app/http";
 import { APP_COLOR, GlbModel } from "../../app/type";
 import { useUpdateScene } from "../../app/hooks";

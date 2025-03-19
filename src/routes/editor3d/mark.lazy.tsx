@@ -10,12 +10,9 @@ import {
   ListGroup,
   Row,
 } from "react-bootstrap";
-
-import { getButtonColor } from "../../app/config";
 import { useContext, useEffect, useState } from "react";
-import { getThemeByScene, setClassName } from "../../app/utils";
+import { getButtonColor, getThemeByScene, setClassName } from "../../app/utils";
 import { cleaerOldLabel } from "../../three/utils";
-
 import { getScene } from "../../three/init3dEditor";
 import { Group } from "three";
 import { CSS2DObject, CSS3DSprite } from "three/examples/jsm/Addons.js";
@@ -36,7 +33,7 @@ function RouteComponent() {
   const [markName, setMarkName] = useState("mark");
   const [logo, setLogo] = useState<string>("geo-alt");
   const [listTour, setListTour] = useState([]);
-  //const themeColor = getButtonColor();
+
   const { scene, updateScene } = useUpdateScene();
   const { dispatchTourWindow } = useContext(MyContext);
 
@@ -60,14 +57,6 @@ function RouteComponent() {
     _axios.get("/pano/page?size=1000").then((res) => {
       if (res.data.code === 200) {
         const { records } = res.data.result;
-        //records.dispatchTourWindow = dispatchTourWindow;
-        // const _records = records.map((item: any) => {
-        //   Object.assign(item, {
-        //     dispatchTourWindow: dispatchTourWindow,
-        //   });
-        //   return item;
-        // });
-
         setListTour(records);
       } else {
         Toast3d(res.data.message, "提示", APP_COLOR.Danger);

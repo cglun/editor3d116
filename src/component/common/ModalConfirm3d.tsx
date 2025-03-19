@@ -1,10 +1,9 @@
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import { setClassName } from "../../app/utils";
+import { setClassName, getButtonColor } from "../../app/utils";
 import { createRoot } from "react-dom/client";
 import { useEffect, useState } from "react";
 
-import { getButtonColor } from "../../app/config";
 import { ButtonGroup } from "react-bootstrap";
 import { getScene } from "../../three/init3dEditor";
 export interface ModalConfirm {

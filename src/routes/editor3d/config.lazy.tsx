@@ -42,9 +42,10 @@ function RouteComponent() {
               updateScene(getScene());
             }}
           >
-            <option value={24}>24</option>
-            <option value={30}>30</option>
-            <option value={60}>60</option>
+            <option value={24}>24 (垃圾)</option>
+            <option value={30}>30 (一般)</option>
+            <option value={60}>60 (推荐)</option>
+            <option value={120}>120 (流畅)</option>
           </Form.Select>
         </InputGroup>
       </ListGroup.Item>
