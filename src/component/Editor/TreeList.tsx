@@ -1,6 +1,6 @@
 import React, { memo, useState } from "react";
 import { Button, Container, ListGroupItem } from "react-bootstrap";
-import { setClassName, getButtonColor } from "../../app/utils";
+import { setClassName } from "../../app/utils";
 import { getObjectNameByName } from "../../three/utils";
 import { SPACE } from "../../app/utils";
 import { APP_COLOR, UserDataType } from "../../app/type";

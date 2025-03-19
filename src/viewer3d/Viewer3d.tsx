@@ -112,6 +112,8 @@ export default function Viewer3d({
         setProgress(100);
         const group = getModelGroup(model, gltf);
         getScene().add(group);
+        console.log(getScene());
+
         enableShadow(getScene());
       },
       function (xhr) {

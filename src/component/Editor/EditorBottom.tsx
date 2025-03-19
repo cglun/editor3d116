@@ -1,6 +1,6 @@
 import { useNavigate, Outlet, useLocation } from "@tanstack/react-router";
 import { Container, Nav } from "react-bootstrap";
-import { setClassName, getButtonColor } from "../../app/utils";
+import { setClassName } from "../../app/utils";
 export default function EditorBottom() {
   const navigate = useNavigate();
   const location = useLocation();

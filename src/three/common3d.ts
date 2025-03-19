@@ -103,11 +103,12 @@ export function commonAnimate({
     TWEEN.update();
   }
   const T = clock.getDelta();
+  controls.update();
   parameters3d.timeS = parameters3d.timeS + T;
   const renderT = 1 / FPS;
   if (parameters3d.timeS > renderT) {
     renderer.render(scene, camera); //执行渲染操作
-    controls.update();
+
     //renderer.render每执行一次，timeS置0
     parameters3d.timeS = 0;
   }

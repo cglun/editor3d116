@@ -36,6 +36,7 @@ function animate() {
     extra3d,
     parameters3d,
   };
+
   commonAnimate(animateProps);
   requestAnimationFrame(animate);
 }
