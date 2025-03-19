@@ -35,7 +35,6 @@ function animate() {
     renderer,
     extra3d,
     parameters3d,
-    biaoji: "viewer",
   };
 
   commonAnimate(animateProps);

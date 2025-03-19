@@ -11,12 +11,11 @@ import {
   WebGLRenderer,
 } from "three";
 import { UserDataType } from "../app/type";
-import { getScene } from "./init3dEditor";
 import TWEEN from "three/addons/libs/tween.module.js";
 import { Extra3d, parameters } from "./config3d";
 
-export function enableShadow(group: Scene | Group) {
-  const { useShadow } = getScene().userData.config3d;
+export function enableShadow(group: Scene | Group, context: Scene) {
+  const { useShadow } = context.userData.config3d;
   group.traverse((child: Object3D) => {
     if (child.type !== "AmbientLight") {
       if (child.hasOwnProperty("castShadow")) {
@@ -82,7 +81,6 @@ export interface AnimateProps {
   renderer: WebGLRenderer;
   extra3d: Extra3d;
   parameters3d: typeof parameters;
-  biaoji: string;
 }
 export function commonAnimate({
   scene,
@@ -91,7 +89,6 @@ export function commonAnimate({
   renderer,
   extra3d,
   parameters3d,
-  biaoji,
 }: AnimateProps) {
   const { css2d, css3d, useTween, FPS } = scene.userData.config3d;
   const { clock } = parameters3d;
@@ -105,15 +102,11 @@ export function commonAnimate({
     TWEEN.update();
   }
   const T = clock.getDelta();
-
   parameters3d.timeS = parameters3d.timeS + T;
   const renderT = 1 / FPS;
   if (parameters3d.timeS >= renderT) {
-    renderer.render(scene, camera); //执行渲染操作
-    //  console.log(FPS, biaoji);
-    //clock.stop();
     controls.update();
-    //renderer.render每执行一次，timeS置0
+    renderer.render(scene, camera); //执行渲染操作
     parameters3d.timeS = 0;
   }
 }

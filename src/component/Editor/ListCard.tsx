@@ -198,7 +198,7 @@ function ItemInfoCard(props: Props) {
         });
         const group = getModelGroup(model, gltf);
         //const { useShadow } = getScene().userData.config3d;
-        enableShadow(group);
+        enableShadow(group, getScene());
         getScene().add(group);
         updateScene(getScene());
       },

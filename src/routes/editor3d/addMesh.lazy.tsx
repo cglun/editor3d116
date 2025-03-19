@@ -100,7 +100,7 @@ function RouteComponent() {
       _scene.children = gltf.scene.children;
       _scene.add(createDirectionalLight());
       _scene.add(createGridHelper());
-      enableShadow(_scene);
+      enableShadow(_scene, getScene());
       updateScene(getScene());
     });
   }

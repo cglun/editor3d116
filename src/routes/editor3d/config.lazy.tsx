@@ -25,7 +25,7 @@ function RouteComponent() {
           <ConfigCheck
             label="投射阴影"
             configKey="useShadow"
-            callBack={() => enableShadow(getScene())}
+            callBack={() => enableShadow(getScene(), getScene())}
           />
         </InputGroup>
       </ListGroup.Item>
@@ -42,10 +42,11 @@ function RouteComponent() {
               updateScene(getScene());
             }}
           >
-            <option value={24}>24 (垃圾)</option>
-            <option value={30}>30 (一般)</option>
-            <option value={60}>60 (推荐)</option>
-            <option value={120}>120 (流畅)</option>
+            <option value={6}>6 (垃圾)</option>
+            <option value={24}>24 (能用)</option>
+            <option value={30}>30 (够用)</option>
+            <option value={60}>60 (好用)</option>
+            <option value={120}>120 (顶级)</option>
           </Form.Select>
         </InputGroup>
       </ListGroup.Item>

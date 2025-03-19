@@ -96,11 +96,6 @@ export default function Viewer3d({
     getProjectData(item.id)
       .then((res: any) => {
         loadModelByUrl(JSON.parse(res));
-
-        if (item.des === "Mesh") {
-          //无法理解的BUG，帧率设置大，就不会卡顿，设置为60就会卡顿，不知道为什么，其他一切正常;
-          getScene().userData.config3d.FPS = 360;
-        }
       })
       .catch((error) => {
         Toast3d(error, "提示", APP_COLOR.Danger);
@@ -117,9 +112,11 @@ export default function Viewer3d({
         setProgress(100);
         const group = getModelGroup(model, gltf);
         getScene().add(group);
-        console.log(getScene());
-
-        enableShadow(getScene());
+        if (item.des === "Mesh") {
+          //无法理解的BUG，帧率设置大，就不会卡顿，设置为60就会卡顿，不知道为什么，其他一切正常;
+          getScene().userData.config3d.FPS = 360;
+        }
+        enableShadow(getScene(), getScene());
       },
       function (xhr) {
         progress = parseFloat(

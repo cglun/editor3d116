@@ -9,7 +9,7 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   const [item] = React.useState({
-    id: 222,
+    id: 234,
     name: "立方体",
     des: "Scene",
     cover: "",
