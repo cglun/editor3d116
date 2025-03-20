@@ -13,7 +13,6 @@ import {
 import { UserDataType } from "../app/type";
 import TWEEN from "three/addons/libs/tween.module.js";
 import { enableScreenshot, Extra3d, parameters } from "./config3d";
-import { getScene } from "./init3dViewer";
 
 export function enableShadow(group: Scene | Group, context: Scene) {
   const { useShadow } = context.userData.config3d;
