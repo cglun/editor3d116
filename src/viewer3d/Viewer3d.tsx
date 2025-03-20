@@ -33,6 +33,7 @@ import {
   raycasterSelect,
   setBoxHelper,
 } from "../three/common3d";
+import { enableScreenshot, setEnableScreenshot } from "../three/config3d";
 
 /**
  * 其他应用可以调用此组件，
@@ -70,6 +71,7 @@ export default function Viewer3d({
     };
   }
 
+  let modelNum = 0;
   function loadScene(item: ItemInfo) {
     getProjectData(item.id)
       .then((data: any) => {
@@ -77,6 +79,7 @@ export default function Viewer3d({
         setScene(scene);
         setCamera(camera);
         setLabel(scene, dispatchTourWindow);
+        modelNum = modelList.length;
         modelList.forEach((item: GlbModel) => {
           loadModelByUrl(item);
         });
@@ -87,6 +90,9 @@ export default function Viewer3d({
       .finally(() => {
         callBack && callBack(exportObj());
         const { javascript } = getScene().userData;
+        if (enableScreenshot.enable) {
+          setEnableScreenshot(true);
+        }
         if (javascript) {
           eval(javascript);
         }
@@ -112,11 +118,14 @@ export default function Viewer3d({
         setProgress(100);
         const group = getModelGroup(model, gltf);
         getScene().add(group);
-        if (item.des === "Mesh") {
-          //无法理解的BUG，帧率设置大，就不会卡顿，设置为60就会卡顿，不知道为什么，其他一切正常;
-          getScene().userData.config3d.FPS = 360;
+        modelNum--;
+        if (modelNum <= 0) {
+          // 加载完成全部模型， 设置阴影
+          enableShadow(getScene(), getScene());
         }
-        enableShadow(getScene(), getScene());
+        if (enableScreenshot.enable) {
+          setEnableScreenshot(true);
+        }
       },
       function (xhr) {
         progress = parseFloat(
@@ -158,11 +167,11 @@ export default function Viewer3d({
       onWindowResize(canvas3d, getCamera(), getRenderer(), getLabelRenderer())
     );
     return () => {
-      removeCanvasChild(canvas3d);
       window.removeEventListener("resize", () =>
         onWindowResize(canvas3d, getCamera(), getRenderer(), getLabelRenderer())
       );
       getDivElement().removeEventListener("click", () => {});
+      removeCanvasChild(canvas3d);
     };
   }, [item.id]);
 

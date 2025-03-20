@@ -12,7 +12,8 @@ import {
 } from "three";
 import { UserDataType } from "../app/type";
 import TWEEN from "three/addons/libs/tween.module.js";
-import { Extra3d, parameters } from "./config3d";
+import { enableScreenshot, Extra3d, parameters } from "./config3d";
+import { getScene } from "./init3dViewer";
 
 export function enableShadow(group: Scene | Group, context: Scene) {
   const { useShadow } = context.userData.config3d;
@@ -92,19 +93,24 @@ export function commonAnimate({
 }: AnimateProps) {
   const { css2d, css3d, useTween, FPS } = scene.userData.config3d;
   const { clock } = parameters3d;
-  if (extra3d.labelRenderer2d && css2d) {
-    extra3d.labelRenderer2d.render(scene, camera);
-  }
-  if (extra3d.labelRenderer3d && css3d) {
-    extra3d.labelRenderer3d.render(scene, camera);
-  }
-  if (useTween) {
-    TWEEN.update();
-  }
+
   const T = clock.getDelta();
   parameters3d.timeS = parameters3d.timeS + T;
-  const renderT = 1 / FPS;
+  let renderT = 1 / FPS;
+  // 如果截图,帧率拉满
+  if (enableScreenshot.enable) {
+    renderT = enableScreenshot.renderTime;
+  }
   if (parameters3d.timeS >= renderT) {
+    if (extra3d.labelRenderer2d && css2d) {
+      extra3d.labelRenderer2d.render(scene, camera);
+    }
+    if (extra3d.labelRenderer3d && css3d) {
+      extra3d.labelRenderer3d.render(scene, camera);
+    }
+    if (useTween) {
+      TWEEN.update();
+    }
     controls.update();
     renderer.render(scene, camera); //执行渲染操作
     parameters3d.timeS = 0;

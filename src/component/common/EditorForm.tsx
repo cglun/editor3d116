@@ -17,6 +17,8 @@ import { APP_COLOR } from "../../app/type";
 
 import { getScene } from "../../three/init3dEditor";
 
+import { setEnableScreenshot } from "../../three/config3d";
+
 export default function EditorForm({
   item,
   getNewItem,
@@ -30,10 +32,12 @@ export default function EditorForm({
   //let { themeColor } = getThemeByScene(scene);
   const { themeColor } = scene.userData.APP_THEME;
   const buttonColor = getButtonColor(themeColor);
-
   const [loadScene, setLoadScene] = useState<boolean>(false);
   useEffect(() => {
     getNewItem(_item);
+    return () => {
+      setEnableScreenshot(false);
+    };
   }, [_item]);
 
   return (
@@ -88,6 +92,7 @@ export default function EditorForm({
             variant={buttonColor}
             onClick={() => {
               setLoadScene(true);
+              setEnableScreenshot(true);
             }}
           >
             <i className={setClassName("box")}></i> 使用场景
