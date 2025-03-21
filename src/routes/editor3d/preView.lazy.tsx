@@ -5,20 +5,21 @@ import { setEnableScreenshot } from "../../three/config3d";
 import _axios from "../../app/http";
 import { testData2 } from "../../app/testData";
 import { Button, ButtonGroup, ListGroup, ListGroupItem } from "react-bootstrap";
+import AlertBase from "../../component/common/AlertBase";
+import { APP_COLOR } from "../../app/type";
 
 export const Route = createLazyFileRoute("/editor3d/preView")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const [item] = React.useState({
+  const [list, setList] = React.useState(testData2);
+  const [_item, _setItem] = React.useState({
     id: 242,
     name: "立方体",
     des: "Scene",
     cover: "",
   });
-
-  const [list, setList] = React.useState(testData2);
 
   useEffect(() => {
     _axios.post("/project/pageList/", { size: 1000 }).then((res) => {
@@ -34,6 +35,7 @@ function RouteComponent() {
           }
         });
         setList(sceneList);
+        _setItem(sceneList[0]);
       }
     });
   }, []);
@@ -44,13 +46,20 @@ function RouteComponent() {
       <ButtonGroup size="sm">
         {list.map((item) => {
           return (
-            <Button variant="dark" key={item.id}>
-              {item.name}
+            <Button
+              variant="dark"
+              key={item.id}
+              disabled={item.id === _item.id}
+              onClick={() => {
+                _setItem(item);
+              }}
+            >
+              {item.name}【{item.id}】
             </Button>
           );
         })}
       </ButtonGroup>
-      <Viewer3d item={item} />;
+      <Viewer3d item={_item} />;
     </>
   );
 }
