@@ -17,6 +17,7 @@ import {
 import { ItemInfo } from "../component/Editor/ListCard";
 import _axios from "../app/http";
 import { createCss2dLabel, createCss3dLabel } from "./factory3d";
+import { setTextureBackground } from "./common3d";
 
 export function getObjectNameByName(object3D: Object3D): string {
   return object3D.name.trim() === "" ? object3D.type : object3D.name;
@@ -126,6 +127,10 @@ export function sceneDeserialize(data: string, item: ItemInfo) {
     newScene.children = children;
     newScene.fog = fog;
     newScene.background = background;
+    const backgroundHDR = userData.backgroundHDR;
+    if (backgroundHDR !== "none") {
+      setTextureBackground(newScene, backgroundHDR);
+    }
 
     newScene.userData = {
       ...userData,
@@ -191,15 +196,26 @@ export function removeCanvasChild(canvas3d: HTMLDivElement | any) {
   }
 }
 
-export function getModelGroup(model: Object3D | any, gltf: Scene | any) {
+export function getModelGroup(
+  model: Object3D | any,
+  gltf: Scene | any,
+  context: Scene
+) {
   const { position, rotation, scale } = model;
+  let MODEL_GROUP = context.getObjectByName("MODEL_GROUP");
+  if (!MODEL_GROUP) {
+    MODEL_GROUP = new Group();
+    MODEL_GROUP.name = "MODEL_GROUP";
+    context.add(MODEL_GROUP);
+  }
 
   const scene = gltf.scene;
   if (scene.children.length === 1) {
     scene.position.set(position.x, position.y, position.z);
     scene.setRotationFromEuler(rotation);
     scene.scale.set(scale.x, scale.y, scale.z);
-    return scene.children[0];
+    MODEL_GROUP.add(scene.children[0]);
+    return MODEL_GROUP;
   }
   const group = new Group();
   group.name = model.name;
@@ -213,5 +229,6 @@ export function getModelGroup(model: Object3D | any, gltf: Scene | any) {
   // group.rotation.set(rotation._x, rotation._y, rotation._z, "XYZ");
   group.setRotationFromEuler(rotation);
   group.scale.set(scale.x, scale.y, scale.z);
-  return group;
+  MODEL_GROUP.add(group);
+  return MODEL_GROUP;
 }

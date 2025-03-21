@@ -1,16 +1,18 @@
 import Button from "react-bootstrap/esm/Button";
 import Form from "react-bootstrap/esm/Form";
-import { Color, Fog, Object3D } from "three";
+import { Color, Fog, Object3D, Texture } from "three";
 
 import Card from "react-bootstrap/esm/Card";
 import InputGroup from "react-bootstrap/esm/InputGroup";
 import { getScene } from "../../../three/init3dEditor";
-import { Container } from "react-bootstrap";
+import { ButtonGroup, Container } from "react-bootstrap";
 import { useUpdateScene } from "../../../app/hooks";
 import { Input3d } from "./Input3d";
 import { InputAttrText } from "./InputAttrText";
 import { InputAttrNumber } from "./InputAttrNumber";
-import { getThemeByScene } from "../../../app/utils";
+import { getButtonColor, getThemeByScene } from "../../../app/utils";
+import AlertBase from "../../common/AlertBase";
+import { setTextureBackground } from "../../../three/common3d";
 
 const step = 0.1;
 function SceneProperty() {
@@ -18,32 +20,79 @@ function SceneProperty() {
   let { themeColor } = getThemeByScene(scene);
 
   const _scene = getScene();
+
   let bgColor = "#000116";
-  if (_scene.background !== null) {
-    const bc = _scene.background as Color;
-    bgColor = "#" + bc.getHexString();
+  const background = _scene.background as Color | Texture;
+  if (background !== null) {
+    const bc = background;
+    if (bc instanceof Color) {
+      bgColor = "#" + bc.getHexString();
+    }
   }
   let fogColor = "#000116";
   if (_scene.fog !== null) {
     const fog = _scene.fog;
     fogColor = "#" + fog.color.getHexString();
   }
+
+  function setBgColor() {
+    return (
+      <>
+        <InputGroup size="sm">
+          <InputGroup.Text>背景色</InputGroup.Text>
+          <Form.Control
+            aria-label="small"
+            aria-describedby="inputGroup-sizing-sm"
+            type="color"
+            value={bgColor}
+            onChange={(e) => {
+              _scene.background = new Color(e.target.value);
+              _scene.userData.backgroundHDR = "none";
+              updateScene(getScene());
+            }}
+          />
+        </InputGroup>
+
+        <InputGroup size="sm">
+          <InputGroup.Text>背景图</InputGroup.Text>
+          <Form.Select
+            aria-label="Default select example"
+            value={_scene.userData.backgroundHDR}
+            onChange={(e: any) => {
+              const type = e.target.value;
+              if (type === "none") {
+                _scene.background = new Color(bgColor);
+                _scene.environment = null;
+                _scene.userData.backgroundHDR = "none";
+              }
+              _scene.userData.backgroundHDR = e.target.value;
+              setTextureBackground(_scene, e.target.value);
+              updateScene(getScene());
+            }}
+          >
+            <option value="venice_sunset_1k.hdr">环境贴图一</option>
+            <option value="spruit_sunrise_1k.hdr">环境贴图二</option>
+            <option value="none">背景色</option>
+          </Form.Select>
+        </InputGroup>
+        {background instanceof Texture && (
+          <InputAttrNumber
+            title={"模糊度"}
+            selected3d={_scene}
+            attr={"backgroundBlurriness"}
+            step={step}
+          />
+        )}
+      </>
+    );
+  }
+
   return (
     <Container fluid>
-      <InputGroup size="sm">
-        <InputGroup.Text>背景色</InputGroup.Text>
-        <Form.Control
-          aria-label="small"
-          aria-describedby="inputGroup-sizing-sm"
-          type="color"
-          value={bgColor}
-          onChange={(e) => {
-            const _scene = getScene();
-            _scene.background = new Color(e.target.value);
-            updateScene(getScene());
-          }}
-        />
-      </InputGroup>
+      {/* {background instanceof Color ? setBgColor() : "texture"} */}
+      <AlertBase type={themeColor} text={"背景色和背景图，只选其一"} />
+      {setBgColor()}
+
       <InputGroup size="sm">
         <InputGroup.Text>雾气色</InputGroup.Text>
         <Form.Control
@@ -57,6 +106,7 @@ function SceneProperty() {
               _scene.fog = new Fog(bgColor, 0, 116);
             }
             _scene.fog.color = new Color(e.target.value);
+
             updateScene(getScene());
           }}
         />
@@ -74,7 +124,8 @@ function SceneProperty() {
         step={step}
       />
       <Button
-        variant={themeColor}
+        variant={getButtonColor(themeColor)}
+        size="sm"
         onClick={() => {
           _scene.background = new Color("#000");
           _scene.fog = null;

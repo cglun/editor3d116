@@ -116,7 +116,7 @@ export default function Viewer3d({
       model.userData.modelUrl,
       function (gltf) {
         setProgress(100);
-        const group = getModelGroup(model, gltf);
+        const group = getModelGroup(model, gltf, getScene());
         getScene().add(group);
         modelNum--;
         if (modelNum <= 0) {

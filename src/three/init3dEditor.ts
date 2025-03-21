@@ -1,12 +1,15 @@
 import {
   BoxHelper,
   Camera,
+  Color,
+  DataTexture,
   MOUSE,
   Object3D,
   OrthographicCamera,
   PerspectiveCamera,
   Raycaster,
   Scene,
+  Texture,
   Vector2,
   Vector3,
   WebGLRenderer,
@@ -139,6 +142,12 @@ export function sceneSerialization(): string {
   // const sceneSelected = scene.userData.selected3d;
   // if (sceneSelected !== null && sceneSelected?.type === "Scene") {}
   scene.userData.selected3d = null;
+  const background = scene.background as DataTexture;
+
+  if (background !== null && background.isTexture) {
+    scene.background = null;
+    scene.environment = null;
+  }
   const result = {
     sceneJsonString: JSON.stringify(scene.toJSON()),
     cameraJsonString: JSON.stringify(scene.userData.fiexedCameraPosition),
@@ -146,6 +155,11 @@ export function sceneSerialization(): string {
     type: "scene",
   };
   scene.children = oldChildren;
+
+  if (background !== null && background.isTexture) {
+    scene.background = background;
+    scene.environment = background;
+  }
   return JSON.stringify(result);
 }
 

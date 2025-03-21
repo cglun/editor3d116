@@ -1,6 +1,7 @@
 import { Clock, Vector3 } from "three";
 import { CSS2DRenderer, CSS3DRenderer } from "three/examples/jsm/Addons.js";
 import { APP_COLOR } from "../app/type";
+import { backgroundBlurriness } from "three/tsl";
 
 export const enableScreenshot = {
   enable: false,
@@ -19,10 +20,10 @@ export const config3d = {
 };
 export const userData = {
   isSelected: false,
-
   perspectiveCameraPosition: new Vector3(-5, 5, 8),
   fiexedCameraPosition: new Vector3(-5, 5, 8),
   config3d,
+  backgroundHDR: "venice_sunset_1k.hdr",
   javascript: `//const scene = getScene(); 
   console.log("116");`,
   APP_THEME: {

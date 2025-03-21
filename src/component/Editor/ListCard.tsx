@@ -36,6 +36,8 @@ import { MyContext } from "../../app/MyContext";
 import { runScript } from "../../three/scriptDev";
 import { createGridHelper, createNewScene } from "../../three/factory3d";
 import { enableShadow } from "../../three/common3d";
+import { RGBELoader } from "three/examples/jsm/Addons.js";
+import { EquirectangularReflectionMapping } from "three";
 
 export interface ItemInfo {
   id: number;
@@ -149,6 +151,7 @@ function ItemInfoCard(props: Props) {
       .then((data: any) => {
         const { scene, camera, modelList } = sceneDeserialize(data, item);
         scene.add(createGridHelper());
+
         setScene(scene);
         setCamera(camera);
 
@@ -196,7 +199,7 @@ function ItemInfoCard(props: Props) {
             show: false,
           },
         });
-        const group = getModelGroup(model, gltf);
+        const group = getModelGroup(model, gltf, getScene());
         //const { useShadow } = getScene().userData.config3d;
         enableShadow(group, getScene());
         getScene().add(group);

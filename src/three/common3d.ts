@@ -1,6 +1,7 @@
 import {
   BoxHelper,
   Camera,
+  EquirectangularReflectionMapping,
   Group,
   Object3D,
   OrthographicCamera,
@@ -13,8 +14,9 @@ import {
 import { UserDataType } from "../app/type";
 import TWEEN from "three/addons/libs/tween.module.js";
 import { enableScreenshot, Extra3d, parameters } from "./config3d";
+import { RGBELoader } from "three/examples/jsm/Addons.js";
 
-export function enableShadow(group: Scene | Group, context: Scene) {
+export function enableShadow(group: Scene | Group | Object3D, context: Scene) {
   const { useShadow } = context.userData.config3d;
   group.traverse((child: Object3D) => {
     if (child.type !== "AmbientLight") {
@@ -114,4 +116,16 @@ export function commonAnimate({
     renderer.render(scene, camera); //执行渲染操作
     parameters3d.timeS = 0;
   }
+}
+export function setTextureBackground(
+  scene: Scene,
+  hdrName = "venice_sunset_1k.hdr"
+) {
+  const rgbeLoader = new RGBELoader();
+  rgbeLoader.load("public/static/hdr/" + hdrName, (texture) => {
+    texture.mapping = EquirectangularReflectionMapping;
+    scene.background = texture;
+    scene.backgroundBlurriness = 0; // @TODO: Needs PMREM
+    scene.environment = texture;
+  });
 }

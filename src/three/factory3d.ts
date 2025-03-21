@@ -2,6 +2,7 @@ import {
   Color,
   DirectionalLight,
   DirectionalLightHelper,
+  EquirectangularReflectionMapping,
   GridHelper,
   PerspectiveCamera,
   Scene,
@@ -13,12 +14,14 @@ import {
   CSS2DRenderer,
   CSS3DRenderer,
   CSS3DSprite,
+  RGBELoader,
 } from "three/examples/jsm/Addons.js";
 import { APP_COLOR, UserDataType } from "../app/type";
 import { cleaerOldLabel, getTourSrc } from "./utils";
 import { userData } from "./config3d";
 import { setClassName } from "../app/utils";
 import { setScene } from "./init3dEditor";
+import { setTextureBackground } from "./common3d";
 
 export function createPerspectiveCamera(
   node: HTMLElement,
@@ -99,7 +102,8 @@ export function createConfig(scene: Scene, node: HTMLElement) {
 export function createScene() {
   const scene = new Scene();
   scene.userData = userData;
-  scene.background = new Color("#000116");
+  //scene.background = new Color("#000116");
+  setTextureBackground(scene);
   return scene;
 }
 export function createNewScene() {
