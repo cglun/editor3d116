@@ -107,7 +107,7 @@ export function createScene() {
 export function createNewScene() {
   cleaerOldLabel();
   const newScene = new Scene();
-  const { themeColor } = userData.APP_THEME;
+  //const { themeColor } = userData.APP_THEME;
   // newScene.background =
   //   themeColor === APP_COLOR.Dark ? new Color("#000116") : new Color("#eee");
   setTextureBackground(newScene);
