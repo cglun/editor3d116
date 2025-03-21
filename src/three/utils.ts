@@ -193,15 +193,21 @@ export function removeCanvasChild(canvas3d: HTMLDivElement | any) {
 
 export function getModelGroup(model: Object3D | any, gltf: Scene | any) {
   const { position, rotation, scale } = model;
+
+  const scene = gltf.scene;
+  if (scene.children.length === 1) {
+    scene.position.set(position.x, position.y, position.z);
+    scene.setRotationFromEuler(rotation);
+    scene.scale.set(scale.x, scale.y, scale.z);
+    return scene.children[0];
+  }
   const group = new Group();
   group.name = model.name;
-  group.add(...gltf.scene.children);
+  group.add(...scene.children);
   group.userData = {
     ...model.userData,
     type: UserDataType.GlbModel,
   };
-  group.position.set(position.x, position.y, position.z);
-
   group.position.set(position.x, position.y, position.z);
 
   // group.rotation.set(rotation._x, rotation._y, rotation._z, "XYZ");

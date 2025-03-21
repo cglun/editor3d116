@@ -12,17 +12,17 @@ import {
 } from "three";
 import { getScene } from "../../three/init3dEditor";
 import { ButtonGroup, Card, Container } from "react-bootstrap";
-
 import { MyContext } from "../../app/MyContext";
 import { getThemeByScene, setClassName } from "../../app/utils";
 import _axios from "../../app/http";
 import { useUpdateScene } from "../../app/hooks";
-import { enableShadow } from "../../three/common3d";
-import { glbLoader } from "../../three/utils";
 import {
   createDirectionalLight,
+  createDirectionalLightHelper,
   createGridHelper,
 } from "../../three/factory3d";
+import { enableShadow } from "../../three/common3d";
+import { glbLoader } from "../../three/utils";
 
 export const Route = createLazyFileRoute("/editor3d/addMesh")({
   component: RouteComponent,
@@ -51,6 +51,25 @@ function RouteComponent() {
     _scene.add(cube);
     updateScene(_scene);
   }
+  function addLocalModel() {
+    const url = "/editor3d/static/models/blender.glb";
+    const loader = glbLoader();
+    loader.load(url, function (gltf) {
+      const _scene = getScene();
+      const group = new Group();
+      group.name = "猴子";
+      group.add(...gltf.scene.children);
+      _scene.add(group);
+      const light = createDirectionalLight();
+      _scene.add(light);
+      // const helper = createDirectionalLightHelper(light);
+      // _scene.add(helper);
+      _scene.add(createGridHelper());
+      enableShadow(_scene, getScene());
+      updateScene(getScene());
+    });
+  }
+
   function addAmbientLight() {
     const light = new AmbientLight(0xffffff, 0.5);
     _scene.add(light);
@@ -93,17 +112,6 @@ function RouteComponent() {
     _scene.add(helper);
     updateScene(_scene);
   }
-  function addLocalModel() {
-    const url = "/editor3d/static/models/blender.glb";
-    const loader = glbLoader();
-    loader.load(url, function (gltf) {
-      _scene.children = gltf.scene.children;
-      _scene.add(createDirectionalLight());
-      _scene.add(createGridHelper());
-      enableShadow(_scene, getScene());
-      updateScene(getScene());
-    });
-  }
 
   return (
     <Container fluid className="d-flex flex-wrap pt-2">
@@ -137,10 +145,8 @@ function RouteComponent() {
             >
               组
             </Button>
-
             <Button
               variant={themeColor}
-              title="添加glb模型"
               onClick={() => {
                 addLocalModel();
               }}

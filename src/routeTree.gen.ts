@@ -19,6 +19,7 @@ import { Route as rootRoute } from './routes/__root'
 const Editor3dIndexLazyImport = createFileRoute('/editor3d/')()
 const Editor3dTestLazyImport = createFileRoute('/editor3d/test')()
 const Editor3dScriptLazyImport = createFileRoute('/editor3d/script')()
+const Editor3dPreViewLazyImport = createFileRoute('/editor3d/preView')()
 const Editor3dMarkLazyImport = createFileRoute('/editor3d/mark')()
 const Editor3dEffectsLazyImport = createFileRoute('/editor3d/effects')()
 const Editor3dDocumentLazyImport = createFileRoute('/editor3d/document')()
@@ -48,6 +49,14 @@ const Editor3dScriptLazyRoute = Editor3dScriptLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() =>
   import('./routes/editor3d/script.lazy').then((d) => d.Route),
+)
+
+const Editor3dPreViewLazyRoute = Editor3dPreViewLazyImport.update({
+  id: '/editor3d/preView',
+  path: '/editor3d/preView',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/editor3d/preView.lazy').then((d) => d.Route),
 )
 
 const Editor3dMarkLazyRoute = Editor3dMarkLazyImport.update({
@@ -142,6 +151,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Editor3dMarkLazyImport
       parentRoute: typeof rootRoute
     }
+    '/editor3d/preView': {
+      id: '/editor3d/preView'
+      path: '/editor3d/preView'
+      fullPath: '/editor3d/preView'
+      preLoaderRoute: typeof Editor3dPreViewLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/editor3d/script': {
       id: '/editor3d/script'
       path: '/editor3d/script'
@@ -175,6 +191,7 @@ export interface FileRoutesByFullPath {
   '/editor3d/document': typeof Editor3dDocumentLazyRoute
   '/editor3d/effects': typeof Editor3dEffectsLazyRoute
   '/editor3d/mark': typeof Editor3dMarkLazyRoute
+  '/editor3d/preView': typeof Editor3dPreViewLazyRoute
   '/editor3d/script': typeof Editor3dScriptLazyRoute
   '/editor3d/test': typeof Editor3dTestLazyRoute
   '/editor3d': typeof Editor3dIndexLazyRoute
@@ -187,6 +204,7 @@ export interface FileRoutesByTo {
   '/editor3d/document': typeof Editor3dDocumentLazyRoute
   '/editor3d/effects': typeof Editor3dEffectsLazyRoute
   '/editor3d/mark': typeof Editor3dMarkLazyRoute
+  '/editor3d/preView': typeof Editor3dPreViewLazyRoute
   '/editor3d/script': typeof Editor3dScriptLazyRoute
   '/editor3d/test': typeof Editor3dTestLazyRoute
   '/editor3d': typeof Editor3dIndexLazyRoute
@@ -200,6 +218,7 @@ export interface FileRoutesById {
   '/editor3d/document': typeof Editor3dDocumentLazyRoute
   '/editor3d/effects': typeof Editor3dEffectsLazyRoute
   '/editor3d/mark': typeof Editor3dMarkLazyRoute
+  '/editor3d/preView': typeof Editor3dPreViewLazyRoute
   '/editor3d/script': typeof Editor3dScriptLazyRoute
   '/editor3d/test': typeof Editor3dTestLazyRoute
   '/editor3d/': typeof Editor3dIndexLazyRoute
@@ -214,6 +233,7 @@ export interface FileRouteTypes {
     | '/editor3d/document'
     | '/editor3d/effects'
     | '/editor3d/mark'
+    | '/editor3d/preView'
     | '/editor3d/script'
     | '/editor3d/test'
     | '/editor3d'
@@ -225,6 +245,7 @@ export interface FileRouteTypes {
     | '/editor3d/document'
     | '/editor3d/effects'
     | '/editor3d/mark'
+    | '/editor3d/preView'
     | '/editor3d/script'
     | '/editor3d/test'
     | '/editor3d'
@@ -236,6 +257,7 @@ export interface FileRouteTypes {
     | '/editor3d/document'
     | '/editor3d/effects'
     | '/editor3d/mark'
+    | '/editor3d/preView'
     | '/editor3d/script'
     | '/editor3d/test'
     | '/editor3d/'
@@ -249,6 +271,7 @@ export interface RootRouteChildren {
   Editor3dDocumentLazyRoute: typeof Editor3dDocumentLazyRoute
   Editor3dEffectsLazyRoute: typeof Editor3dEffectsLazyRoute
   Editor3dMarkLazyRoute: typeof Editor3dMarkLazyRoute
+  Editor3dPreViewLazyRoute: typeof Editor3dPreViewLazyRoute
   Editor3dScriptLazyRoute: typeof Editor3dScriptLazyRoute
   Editor3dTestLazyRoute: typeof Editor3dTestLazyRoute
   Editor3dIndexLazyRoute: typeof Editor3dIndexLazyRoute
@@ -261,6 +284,7 @@ const rootRouteChildren: RootRouteChildren = {
   Editor3dDocumentLazyRoute: Editor3dDocumentLazyRoute,
   Editor3dEffectsLazyRoute: Editor3dEffectsLazyRoute,
   Editor3dMarkLazyRoute: Editor3dMarkLazyRoute,
+  Editor3dPreViewLazyRoute: Editor3dPreViewLazyRoute,
   Editor3dScriptLazyRoute: Editor3dScriptLazyRoute,
   Editor3dTestLazyRoute: Editor3dTestLazyRoute,
   Editor3dIndexLazyRoute: Editor3dIndexLazyRoute,
@@ -282,6 +306,7 @@ export const routeTree = rootRoute
         "/editor3d/document",
         "/editor3d/effects",
         "/editor3d/mark",
+        "/editor3d/preView",
         "/editor3d/script",
         "/editor3d/test",
         "/editor3d/"
@@ -304,6 +329,9 @@ export const routeTree = rootRoute
     },
     "/editor3d/mark": {
       "filePath": "editor3d/mark.lazy.tsx"
+    },
+    "/editor3d/preView": {
+      "filePath": "editor3d/preView.lazy.tsx"
     },
     "/editor3d/script": {
       "filePath": "editor3d/script.lazy.tsx"

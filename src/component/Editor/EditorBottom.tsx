@@ -53,6 +53,11 @@ export default function EditorBottom() {
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
+          <Nav.Link eventKey="/editor3d/preView">
+            <i className={setClassName("eye")}></i> 预览
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
           <Nav.Link eventKey="/editor3d/test">
             <i className={setClassName("triangle")}></i> 测试
           </Nav.Link>
