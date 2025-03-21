@@ -63,7 +63,8 @@ function SceneProperty() {
               if (type === "none") {
                 _scene.background = new Color(bgColor);
                 _scene.environment = null;
-                _scene.userData.backgroundHDR = "none";
+                updateScene(getScene());
+                return;
               }
               _scene.userData.backgroundHDR = e.target.value;
               setTextureBackground(_scene, e.target.value);
