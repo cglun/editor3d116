@@ -18,7 +18,6 @@ import _axios from "../../app/http";
 import { useUpdateScene } from "../../app/hooks";
 import {
   createDirectionalLight,
-  createDirectionalLightHelper,
   createGridHelper,
 } from "../../three/factory3d";
 import { enableShadow } from "../../three/common3d";

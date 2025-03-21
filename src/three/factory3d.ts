@@ -2,7 +2,6 @@ import {
   Color,
   DirectionalLight,
   DirectionalLightHelper,
-  EquirectangularReflectionMapping,
   GridHelper,
   PerspectiveCamera,
   Scene,
@@ -14,10 +13,9 @@ import {
   CSS2DRenderer,
   CSS3DRenderer,
   CSS3DSprite,
-  RGBELoader,
 } from "three/examples/jsm/Addons.js";
 import { APP_COLOR, UserDataType } from "../app/type";
-import { cleaerOldLabel, getTourSrc } from "./utils";
+import { cleaerOldLabel, createGroupIfNotExist, getTourSrc } from "./utils";
 import { userData } from "./config3d";
 import { setClassName } from "../app/utils";
 import { setScene } from "./init3dEditor";
@@ -110,11 +108,17 @@ export function createNewScene() {
   cleaerOldLabel();
   const newScene = new Scene();
   const { themeColor } = userData.APP_THEME;
-  newScene.background =
-    themeColor === APP_COLOR.Dark ? new Color("#000116") : new Color("#eee");
+  // newScene.background =
+  //   themeColor === APP_COLOR.Dark ? new Color("#000116") : new Color("#eee");
+  setTextureBackground(newScene);
   newScene.userData = userData;
   newScene.userData.APP_THEME.sceneCanSave = false;
-  newScene.add(createGridHelper());
+
+  const HELPER_GROUP = createGroupIfNotExist(newScene, "HELPER_GROUP");
+
+  HELPER_GROUP.add(createGridHelper());
+  newScene.add(HELPER_GROUP);
+
   newScene.add(createDirectionalLight());
   setScene(newScene);
   return newScene;

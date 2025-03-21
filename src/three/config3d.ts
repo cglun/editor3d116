@@ -1,7 +1,6 @@
 import { Clock, Vector3 } from "three";
 import { CSS2DRenderer, CSS3DRenderer } from "three/examples/jsm/Addons.js";
 import { APP_COLOR } from "../app/type";
-import { backgroundBlurriness } from "three/tsl";
 
 export const enableScreenshot = {
   enable: false,

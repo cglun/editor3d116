@@ -12,9 +12,8 @@ import {
 } from "react-bootstrap";
 import { useContext, useEffect, useState } from "react";
 import { getButtonColor, getThemeByScene, setClassName } from "../../app/utils";
-import { cleaerOldLabel } from "../../three/utils";
+import { cleaerOldLabel, createGroupIfNotExist } from "../../three/utils";
 import { getScene } from "../../three/init3dEditor";
-import { Group } from "three";
 import { CSS2DObject, CSS3DSprite } from "three/examples/jsm/Addons.js";
 import Toast3d from "../../component/common/Toast3d";
 import { APP_COLOR } from "../../app/type";
@@ -40,18 +39,10 @@ function RouteComponent() {
   let { themeColor } = getThemeByScene(scene);
 
   function addMark(label: CSS3DSprite | CSS2DObject) {
-    const MARK_LABEL = getScene().getObjectByName("MARK_LABEL");
-
     const scene = getScene();
-    if (!MARK_LABEL) {
-      const group = new Group();
-      group.name = "MARK_LABEL";
-      group.add(label);
-      scene.add(group);
-    }
-    if (MARK_LABEL) {
-      MARK_LABEL.add(label);
-    }
+    const MARK_LABEL_GROUP = createGroupIfNotExist(scene, "MARK_LABEL_GROUP");
+    MARK_LABEL_GROUP.add(label);
+    scene.add(MARK_LABEL_GROUP);
   }
   useEffect(() => {
     _axios.get("/pano/page?size=1000").then((res) => {

@@ -5,7 +5,7 @@ import { Color, Fog, Object3D, Texture } from "three";
 import Card from "react-bootstrap/esm/Card";
 import InputGroup from "react-bootstrap/esm/InputGroup";
 import { getScene } from "../../../three/init3dEditor";
-import { ButtonGroup, Container } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import { useUpdateScene } from "../../../app/hooks";
 import { Input3d } from "./Input3d";
 import { InputAttrText } from "./InputAttrText";
@@ -79,6 +79,7 @@ function SceneProperty() {
         {background instanceof Texture && (
           <InputAttrNumber
             title={"模糊度"}
+            min={0}
             selected3d={_scene}
             attr={"backgroundBlurriness"}
             step={step}
@@ -114,12 +115,14 @@ function SceneProperty() {
       </InputGroup>
       <InputAttrNumber
         title={"雾气近端"}
+        min={0}
         selected3d={_scene.fog}
         attr={"near"}
         step={step}
       />
       <InputAttrNumber
         title={"雾气远端"}
+        min={0}
         selected3d={_scene.fog}
         attr={"far"}
         step={step}
@@ -174,6 +177,7 @@ function CommonProperty({ selected3d }: { selected3d: Object3D | any }) {
             />
             <InputAttrNumber
               title="亮度"
+              min={0}
               selected3d={selected3d}
               attr={"intensity"}
               step={step}

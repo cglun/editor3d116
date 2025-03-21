@@ -7,10 +7,12 @@ export function InputAttrNumber({
   title,
   selected3d,
   attr,
+  min,
   step = 0.1,
 }: {
   title: string;
   selected3d: Object3D | any;
+  min?: number;
   attr:
     | keyof typeof Scene.prototype
     | keyof typeof Fog.prototype
@@ -39,6 +41,7 @@ export function InputAttrNumber({
           step={step}
           title={"属性：" + attr}
           value={value}
+          min={min}
           onChange={(e) => {
             const _value = parseFloat(e.target.value);
             if (Number.isNaN(_value)) {

@@ -29,6 +29,7 @@ import {
   sceneDeserialize,
   setLabel,
   getModelGroup,
+  createGroupIfNotExist,
 } from "../../three/utils";
 import { useUpdateScene } from "../../app/hooks";
 
@@ -36,8 +37,6 @@ import { MyContext } from "../../app/MyContext";
 import { runScript } from "../../three/scriptDev";
 import { createGridHelper, createNewScene } from "../../three/factory3d";
 import { enableShadow } from "../../three/common3d";
-import { RGBELoader } from "three/examples/jsm/Addons.js";
-import { EquirectangularReflectionMapping } from "three";
 
 export interface ItemInfo {
   id: number;
@@ -146,17 +145,22 @@ function ItemInfoCard(props: Props) {
     );
   }
 
+  let modelNum = 0;
   function loadScene(item: ItemInfo) {
     getProjectData(item.id)
       .then((data: any) => {
         const { scene, camera, modelList } = sceneDeserialize(data, item);
-        scene.add(createGridHelper());
+        const HELPER_GROUP = createGroupIfNotExist(scene, "HELPER_GROUP");
+
+        HELPER_GROUP.add(createGridHelper());
+        scene.add(HELPER_GROUP);
 
         setScene(scene);
         setCamera(camera);
 
         // 加载完成后，设置标签
         setLabel(scene, dispatchTourWindow);
+        modelNum = modelList.length;
         modelList.forEach((item: GlbModel) => {
           loadModelByUrl(item);
         });
@@ -165,15 +169,16 @@ function ItemInfoCard(props: Props) {
         Toast3d(error, "提示", APP_COLOR.Danger);
       })
       .finally(() => {
-        updateScene(getScene());
         const { javascript } = getScene().userData;
-        if (javascript) {
+        if (javascript && modelNum <= 1) {
+          updateScene(getScene());
           getScene();
           getControls();
           getCamera();
           eval(javascript);
+          runScript();
         }
-        runScript();
+        modelNum--;
       });
   }
   function loadMesh(item: ItemInfo) {
@@ -183,6 +188,18 @@ function ItemInfoCard(props: Props) {
       })
       .catch((error) => {
         Toast3d(error, "提示", APP_COLOR.Danger);
+      })
+      .finally(() => {
+        const { javascript } = getScene().userData;
+        if (javascript && modelNum <= 1) {
+          updateScene(getScene());
+          getScene();
+          getControls();
+          getCamera();
+          eval(javascript);
+          runScript();
+        }
+        modelNum--;
       });
   }
 

@@ -4,9 +4,7 @@ import React, { useEffect } from "react";
 import { setEnableScreenshot } from "../../three/config3d";
 import _axios from "../../app/http";
 import { testData2 } from "../../app/testData";
-import { Button, ButtonGroup, ListGroup, ListGroupItem } from "react-bootstrap";
-import AlertBase from "../../component/common/AlertBase";
-import { APP_COLOR } from "../../app/type";
+import { Button, ButtonGroup } from "react-bootstrap";
 
 export const Route = createLazyFileRoute("/editor3d/preView")({
   component: RouteComponent,
@@ -22,6 +20,7 @@ function RouteComponent() {
   });
 
   useEffect(() => {
+    setEnableScreenshot(true);
     _axios.post("/project/pageList/", { size: 1000 }).then((res) => {
       if ((res.data.code = 200)) {
         const message = res.data.message;
@@ -40,7 +39,6 @@ function RouteComponent() {
     });
   }, []);
 
-  setEnableScreenshot(true);
   return (
     <>
       <ButtonGroup size="sm">

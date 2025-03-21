@@ -47,6 +47,8 @@ export default function EditorTop() {
         }
       })
       .catch((error) => {
+        console.error(error);
+
         Toast3d("错误:" + error, "提示", APP_COLOR.Warning);
       });
   }

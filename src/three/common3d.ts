@@ -15,6 +15,7 @@ import { UserDataType } from "../app/type";
 import TWEEN from "three/addons/libs/tween.module.js";
 import { enableScreenshot, Extra3d, parameters } from "./config3d";
 import { RGBELoader } from "three/examples/jsm/Addons.js";
+import { createGroupIfNotExist } from "./utils";
 
 export function enableShadow(group: Scene | Group | Object3D, context: Scene) {
   const { useShadow } = context.userData.config3d;
@@ -53,6 +54,8 @@ export function raycasterSelect(
 }
 
 export function setBoxHelper(selectedMesh: Object3D, scene: Scene) {
+  const HELPER_GROUP = createGroupIfNotExist(scene, "HELPER_GROUP");
+
   const BOX_HELPER = scene.getObjectByName("BOX_HELPER") as BoxHelper;
   if (!BOX_HELPER) {
     const boxHelper = new BoxHelper(selectedMesh, 0xffff00);
@@ -62,12 +65,13 @@ export function setBoxHelper(selectedMesh: Object3D, scene: Scene) {
       isHelper: true,
       isSelected: false,
     };
-    scene.add(boxHelper);
+    HELPER_GROUP.add(boxHelper);
   } else {
     BOX_HELPER.visible = true;
     BOX_HELPER.setFromObject(selectedMesh);
     BOX_HELPER.update();
   }
+  scene.add(HELPER_GROUP);
 }
 // 显示或隐藏BOX_HELPER
 export function hideBoxHelper(scene: Scene) {
@@ -117,6 +121,7 @@ export function commonAnimate({
     parameters3d.timeS = 0;
   }
 }
+//环境贴图设置
 export function setTextureBackground(
   scene: Scene,
   hdrName = "venice_sunset_1k.hdr"

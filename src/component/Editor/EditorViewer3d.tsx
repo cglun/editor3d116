@@ -12,7 +12,11 @@ import { Button, ButtonGroup } from "react-bootstrap";
 import { TransformControlsMode } from "three/examples/jsm/Addons.js";
 import { Object3D, Vector3 } from "three";
 import { getThemeByScene, setClassName } from "../../app/utils";
-import { onWindowResize, removeCanvasChild } from "../../three/utils";
+import {
+  createGroupIfNotExist,
+  onWindowResize,
+  removeCanvasChild,
+} from "../../three/utils";
 import { useUpdateScene } from "../../app/hooks";
 import ModalTour from "../common/ModalTour";
 import { createGridHelper } from "../../three/factory3d";
@@ -29,7 +33,10 @@ function EditorViewer3d() {
     if (editorCanvas.current) {
       initScene(editorCanvas.current);
       const scene = getScene();
-      scene.add(createGridHelper());
+      const HELPER_GROUP = createGroupIfNotExist(scene, "HELPER_GROUP");
+
+      HELPER_GROUP.add(createGridHelper());
+      scene.add(HELPER_GROUP);
     }
     updateScene(getScene().clone());
 

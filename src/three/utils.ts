@@ -55,12 +55,13 @@ export function onWindowResize(
 
 export function setLabel(scene: Scene, dispatchTourWindow?: any) {
   cleaerOldLabel();
-  const MARK_LABEL = scene.getObjectByName("MARK_LABEL");
-  if (!MARK_LABEL) {
+  // const MARK_LABEL_GROUP = scene.getObjectByName("MARK_LABEL_GROUP");
+  const MARK_LABEL_GROUP = createGroupIfNotExist(scene, "MARK_LABEL_GROUP");
+  if (!MARK_LABEL_GROUP) {
     return;
   }
 
-  const children = MARK_LABEL.children;
+  const children = MARK_LABEL_GROUP.children;
   children.forEach((item) => {
     const { type } = item.userData;
     let label = createCss3dLabel(
@@ -76,7 +77,7 @@ export function setLabel(scene: Scene, dispatchTourWindow?: any) {
     const { x, y, z } = item.position;
     label.position.set(x, y, z);
     item.userData.needDelete = true;
-    MARK_LABEL.add(label);
+    MARK_LABEL_GROUP.add(label);
   });
 
   const labelList = children.filter((item) => {
@@ -85,7 +86,7 @@ export function setLabel(scene: Scene, dispatchTourWindow?: any) {
     }
   });
 
-  MARK_LABEL.children = labelList;
+  MARK_LABEL_GROUP.children = labelList;
 }
 //删除之前的标签
 export function cleaerOldLabel() {
@@ -231,4 +232,17 @@ export function getModelGroup(
   group.scale.set(scale.x, scale.y, scale.z);
   MODEL_GROUP.add(group);
   return MODEL_GROUP;
+}
+
+export function createGroupIfNotExist(contextScene: Scene, name: string) {
+  const group = contextScene.getObjectByName(name);
+  if (group !== undefined) {
+    return group;
+  }
+  const _group = new Group();
+  _group.name = name;
+  if (name === "HELPER_GROUP") {
+    _group.userData.isHelper = true;
+  }
+  return _group;
 }

@@ -19,6 +19,7 @@ import {
 
 import { extra3d as extra, parameters } from "./config3d";
 import { AnimateProps, commonAnimate } from "./common3d";
+import { createGroupIfNotExist } from "./utils";
 
 let scene: Scene,
   camera: PerspectiveCamera,
@@ -46,7 +47,11 @@ export default function initScene(node: HTMLDivElement): void {
   camera.position.set(-3, 3, 5);
   scene = createScene();
   scene.add(createDirectionalLight());
-  scene.add(createGridHelper());
+  const HELPER_GROUP = createGroupIfNotExist(scene, "HELPER_GROUP");
+
+  HELPER_GROUP.add(createGridHelper());
+  scene.add(HELPER_GROUP);
+
   renderer = createRenderer(node);
   node.appendChild(renderer.domElement);
   controls = new OrbitControls(camera, renderer.domElement);
