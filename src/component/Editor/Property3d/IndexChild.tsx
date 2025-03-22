@@ -28,7 +28,6 @@ function SceneProperty() {
   //const enableColor = background instanceof Color;
   const [enableColor, setEnableColor] = useState(background instanceof Color);
 
-  //const enableTexture = _scene.userData.backgroundHDR.asBackground;
   // const [checked, setChecked] = useState(background instanceof Texture);
 
   if (background !== null) {
@@ -60,6 +59,7 @@ function SceneProperty() {
     );
   }
   function setBgColorTexture() {
+    const enableTexture = _scene.userData.backgroundHDR.asBackground;
     return (
       <>
         <Form>
@@ -67,7 +67,7 @@ function SceneProperty() {
             className="border"
             label="贴图作为背景"
             type="switch"
-            checked={_scene.userData.backgroundHDR.asBackground}
+            checked={enableTexture}
             onChange={() => {
               const { backgroundHDR } = _scene.userData;
               backgroundHDR.asBackground = !backgroundHDR.asBackground;
@@ -95,9 +95,26 @@ function SceneProperty() {
           title={"模糊度"}
           min={0}
           max={1}
-          disabled={!_scene.userData.backgroundHDR.asBackground}
+          disabled={!enableTexture}
           selected3d={_scene}
           attr={"backgroundBlurriness"}
+          step={step}
+        />
+        <InputAttrNumber
+          title={"透明度"}
+          min={0}
+          max={1}
+          disabled={!enableTexture}
+          selected3d={_scene}
+          attr={"backgroundIntensity"}
+          step={step}
+        />
+        <InputAttrNumber
+          title={"光强度"}
+          min={0}
+          disabled={!enableTexture}
+          selected3d={_scene}
+          attr={"environmentIntensity"}
           step={step}
         />
       </>
