@@ -273,7 +273,10 @@ export function setSelectedObject(obj: Object3D) {
 export function setCameraType(cameraType: string, cameraUp: Vector3) {
   if (cameraType === "PerspectiveCamera") {
     const { x, y, z } = scene.userData.perspectiveCameraPosition;
-    perspectiveCamera.position.set(x, y, z);
+    // perspectiveCamera.position.set(x, y, z);
+    const tween = cameraTween(camera, new Vector3(x, y, z));
+    tween.start();
+
     camera = perspectiveCamera;
     camera.lookAt(0, 0, 0);
     transfControls = transfControls1;

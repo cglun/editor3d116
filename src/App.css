@@ -1,9 +1,7 @@
 .container-fluid {
   padding: 0;
 }
-.card-body {
-  padding: 0 0.2rem 0.2rem 0;
-}
+ 
 .card-text {
   font-size: 0.8rem;
   margin-bottom: 0;
@@ -37,9 +35,7 @@
  
   scrollbar-width: thin;
 }
-.card-body img {
-  width: 6rem;
-}
+ 
 .row {
   --bs-gutter-x: 0;
 }

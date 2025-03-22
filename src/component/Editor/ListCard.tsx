@@ -257,21 +257,34 @@ function ItemInfoCard(props: Props) {
   return (
     <Container fluid className="d-flex flex-wrap">
       {list.map((item: ItemInfo, index: number) => {
+        let selectStyle = "";
+        if (item.des === "Scene") {
+          if (scene.payload.userData.projectId === item.id) {
+            selectStyle = "bg-success";
+          }
+        }
         return (
           <Card className="ms-2 mt-2" key={index}>
-            <Card.Header style={{ width: "6rem" }} title={item.name}>
+            <Card.Header
+              style={{ width: "6rem" }}
+              title={item.name}
+              className={selectStyle}
+            >
               {item.name.trim() === "" ? (
                 <span className="text-warning"> 未命名</span>
               ) : (
                 item.name
               )}
             </Card.Header>
-            <Card.Body className="d-flex flex-column text-center">
+            <Card.Body
+              className="d-flex flex-column text-center"
+              style={{ padding: "0" }}
+            >
               {item.cover?.trim().length > 0 ? (
                 <Card.Img
                   src={loadAssets(item.cover)}
                   variant="top"
-                  style={{ cursor: "crosshair" }}
+                  style={{ cursor: "crosshair", width: "6rem" }}
                   onClick={() => {
                     item.des === "Scene" ? loadScene(item) : loadMesh(item);
                   }}

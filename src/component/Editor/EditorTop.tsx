@@ -231,7 +231,10 @@ export default function EditorTop() {
                       onClick={() => {
                         setThemeByBtn(APP_COLOR.Light);
                         const scene = getScene();
-                        scene.background = new Color("#eee");
+                        const enableColor = scene.background instanceof Color;
+                        if (enableColor) {
+                          scene.background = new Color("#eee");
+                        }
                       }}
                     >
                       <i className={setClassName("sun")}></i> 白天模式
@@ -241,7 +244,11 @@ export default function EditorTop() {
                       onClick={() => {
                         setThemeByBtn(APP_COLOR.Dark);
                         const scene = getScene();
-                        scene.background = new Color("#000116");
+                        // const { asBackground } = scene.userData.backgroundHDR;
+                        const enableColor = scene.background instanceof Color;
+                        if (enableColor) {
+                          scene.background = new Color("#000116");
+                        }
                       }}
                     >
                       <i className={setClassName("moon-stars")}></i> 黑夜模式
