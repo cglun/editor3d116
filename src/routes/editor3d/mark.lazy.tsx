@@ -41,8 +41,8 @@ function RouteComponent() {
   function addMark(label: CSS3DSprite | CSS2DObject) {
     const scene = getScene();
     const MARK_LABEL_GROUP = createGroupIfNotExist(scene, "MARK_LABEL_GROUP");
-    MARK_LABEL_GROUP.add(label);
-    scene.add(MARK_LABEL_GROUP);
+    MARK_LABEL_GROUP?.add(label);
+    MARK_LABEL_GROUP && scene.add(MARK_LABEL_GROUP);
   }
   useEffect(() => {
     _axios.get("/pano/page?size=1000").then((res) => {

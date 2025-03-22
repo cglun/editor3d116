@@ -1,10 +1,10 @@
 import {
   BoxHelper,
   Camera,
+  Color,
   DataTexture,
   MOUSE,
   Object3D,
-  Object3DEventMap,
   OrthographicCamera,
   PerspectiveCamera,
   Raycaster,
@@ -109,64 +109,64 @@ export default function initScene(node: HTMLDivElement): void {
   );
   transfControls = transfControls1;
   extra3d = createConfig(scene, node);
-
   animate();
 }
 
 // 场景序列化
 export function sceneSerialization(): string {
+  scene.userData.selected3d = undefined;
+  const sceneCopy = scene.clone();
   const modelList: GlbModel[] = [];
-  let oldChildren: Object3D<Object3DEventMap>[] = [];
-  let MODEL_GROUP = createGroupIfNotExist(scene, "MODEL_GROUP");
-  const HELPER_GROUP = createGroupIfNotExist(scene, "HELPER_GROUP");
 
-  HELPER_GROUP.children = [];
+  let MODEL_GROUP = createGroupIfNotExist(sceneCopy, "MODEL_GROUP");
+  const HELPER_GROUP = createGroupIfNotExist(sceneCopy, "HELPER_GROUP");
+  if (HELPER_GROUP) {
+    HELPER_GROUP.children = [];
+  }
   const existModelGroup = MODEL_GROUP && MODEL_GROUP.children;
 
   if (existModelGroup) {
-    oldChildren = [...MODEL_GROUP.children];
-    const children = MODEL_GROUP.children.filter((child: Object3D | any) => {
-      const childUserData = child.userData;
-      if (childUserData.type === UserDataType.GlbModel) {
-        const { id, name, position, rotation, scale } = child;
-        const model: GlbModel = {
-          id,
-          name,
-          position,
-          rotation,
-          scale,
-          userData: child.userData,
-        };
-        modelList.push(model);
-      }
+    MODEL_GROUP.children.forEach((child) => {
+      const { id, name, position, rotation, scale } = child;
+      const model: GlbModel = {
+        id,
+        name,
+        position,
+        rotation,
+        scale,
+        userData: child.userData,
+      };
+      modelList.push(model);
     });
-
-    MODEL_GROUP.children = children;
+    MODEL_GROUP.children = [];
   }
 
   // const sceneSelected = scene.userData.selected3d;
   // if (sceneSelected !== null && sceneSelected?.type === "Scene") {}
-  scene.userData.selected3d = null;
-  const background = scene.background as DataTexture;
 
-  if (background !== null && background.isTexture) {
-    scene.background = null;
-    scene.environment = null;
+  const background = sceneCopy.background as Color | DataTexture;
+  const isColor = background !== null && background instanceof Color;
+  // const isTexture = background !== null && background instanceof DataTexture;
+  sceneCopy.background = null;
+  sceneCopy.environment = null;
+
+  if (isColor) {
+    sceneCopy.background = background;
+    sceneCopy.userData.backgroundHDR = undefined;
   }
+
   const result = {
-    sceneJsonString: JSON.stringify(scene.toJSON()),
-    cameraJsonString: JSON.stringify(scene.userData.fiexedCameraPosition),
+    sceneJsonString: JSON.stringify(sceneCopy.toJSON()),
+    cameraJsonString: JSON.stringify(sceneCopy.userData.fiexedCameraPosition),
     modelsJsonString: JSON.stringify(modelList),
     type: "scene",
   };
 
-  if (background !== null && background.isTexture) {
-    scene.background = background;
-    scene.environment = background;
-  }
-  if (existModelGroup) {
-    MODEL_GROUP.children = oldChildren;
-  }
+  // scene.background = background;
+  // if (isTexture) {
+  //   scene.environment = background;
+  // }
+
   return JSON.stringify(result);
 }
 
@@ -219,8 +219,8 @@ export function setTransformControls(selectedMesh: Object3D) {
     isSelected: false,
   };
   getHelper.userData = userData;
-  HELPER_GROUP.add(getHelper);
-  scene.add(HELPER_GROUP);
+  HELPER_GROUP?.add(getHelper);
+  HELPER_GROUP && scene.add(HELPER_GROUP);
   getHelper.traverse((child) => {
     child.userData = userData;
   });

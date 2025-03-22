@@ -151,15 +151,14 @@ function ItemInfoCard(props: Props) {
       .then((data: any) => {
         const { scene, camera, modelList } = sceneDeserialize(data, item);
         const HELPER_GROUP = createGroupIfNotExist(scene, "HELPER_GROUP");
-
-        HELPER_GROUP.add(createGridHelper());
-        scene.add(HELPER_GROUP);
-
+        HELPER_GROUP?.add(createGridHelper());
+        HELPER_GROUP && scene.add(HELPER_GROUP);
         setScene(scene);
         setCamera(camera);
 
         // 加载完成后，设置标签
         setLabel(scene, dispatchTourWindow);
+
         modelNum = modelList.length;
         modelList.forEach((item: GlbModel) => {
           loadModelByUrl(item);
@@ -206,6 +205,7 @@ function ItemInfoCard(props: Props) {
   function loadModelByUrl(model: GlbModel | any) {
     const loader = glbLoader();
     let progress = 0;
+
     loader.load(
       model.userData.modelUrl,
       function (gltf) {
@@ -216,7 +216,9 @@ function ItemInfoCard(props: Props) {
             show: false,
           },
         });
+
         const group = getModelGroup(model, gltf, getScene());
+
         //const { useShadow } = getScene().userData.config3d;
         enableShadow(group, getScene());
         getScene().add(group);

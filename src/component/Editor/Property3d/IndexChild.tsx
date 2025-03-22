@@ -13,6 +13,8 @@ import { InputAttrNumber } from "./InputAttrNumber";
 import { getButtonColor, getThemeByScene } from "../../../app/utils";
 import AlertBase from "../../common/AlertBase";
 import { setTextureBackground } from "../../../three/common3d";
+import { useState } from "react";
+import { userData } from "../../../three/config3d";
 
 const step = 0.1;
 function SceneProperty() {
@@ -23,10 +25,15 @@ function SceneProperty() {
 
   let bgColor = "#000116";
   const background = _scene.background as Color | Texture;
+  //const enableColor = background instanceof Color;
+  const [enableColor, setEnableColor] = useState(background instanceof Color);
+
+  //const enableTexture = _scene.userData.backgroundHDR.asBackground;
+  // const [checked, setChecked] = useState(background instanceof Texture);
+
   if (background !== null) {
-    const bc = background;
-    if (bc instanceof Color) {
-      bgColor = "#" + bc.getHexString();
+    if (background instanceof Color) {
+      bgColor = "#" + background.getHexString();
     }
   }
   let fogColor = "#000116";
@@ -34,67 +41,99 @@ function SceneProperty() {
     const fog = _scene.fog;
     fogColor = "#" + fog.color.getHexString();
   }
-
-  function setBgColor() {
+  function setBgColorColor() {
+    return (
+      <InputGroup size="sm">
+        <InputGroup.Text>背景色</InputGroup.Text>
+        <Form.Control
+          aria-label="small"
+          aria-describedby="inputGroup-sizing-sm"
+          type="color"
+          value={bgColor}
+          onChange={(e) => {
+            _scene.background = new Color(e.target.value);
+            _scene.environment = null;
+            updateScene(getScene());
+          }}
+        />
+      </InputGroup>
+    );
+  }
+  function setBgColorTexture() {
     return (
       <>
-        <InputGroup size="sm">
-          <InputGroup.Text>背景色</InputGroup.Text>
-          <Form.Control
-            aria-label="small"
-            aria-describedby="inputGroup-sizing-sm"
-            type="color"
-            value={bgColor}
-            onChange={(e) => {
-              _scene.background = new Color(e.target.value);
-              _scene.userData.backgroundHDR = "none";
+        <Form>
+          <Form.Check
+            className="border"
+            label="贴图作为背景"
+            type="switch"
+            checked={_scene.userData.backgroundHDR.asBackground}
+            onChange={() => {
+              const { backgroundHDR } = _scene.userData;
+              backgroundHDR.asBackground = !backgroundHDR.asBackground;
+              setTextureBackground(_scene);
               updateScene(getScene());
             }}
           />
-        </InputGroup>
-
+        </Form>
         <InputGroup size="sm">
           <InputGroup.Text>背景图</InputGroup.Text>
           <Form.Select
             aria-label="Default select example"
-            value={_scene.userData.backgroundHDR}
+            value={_scene.userData.backgroundHDR.name}
             onChange={(e: any) => {
-              const type = e.target.value;
-              if (type === "none") {
-                _scene.background = new Color(bgColor);
-                _scene.environment = null;
-                updateScene(getScene());
-                return;
-              }
-              _scene.userData.backgroundHDR = e.target.value;
-              setTextureBackground(_scene, e.target.value);
+              _scene.userData.backgroundHDR.name = e.target.value;
+              setTextureBackground(_scene);
               updateScene(getScene());
             }}
           >
             <option value="venice_sunset_1k.hdr">环境贴图一</option>
             <option value="spruit_sunrise_1k.hdr">环境贴图二</option>
-            <option value="none">背景色</option>
           </Form.Select>
         </InputGroup>
-        {background instanceof Texture && (
-          <InputAttrNumber
-            title={"模糊度"}
-            min={0}
-            selected3d={_scene}
-            attr={"backgroundBlurriness"}
-            step={step}
-          />
-        )}
+        <InputAttrNumber
+          title={"模糊度"}
+          min={0}
+          max={1}
+          disabled={!_scene.userData.backgroundHDR.asBackground}
+          selected3d={_scene}
+          attr={"backgroundBlurriness"}
+          step={step}
+        />
       </>
     );
   }
-
   return (
     <Container fluid>
-      {/* {background instanceof Color ? setBgColor() : "texture"} */}
       <AlertBase type={themeColor} text={"背景色和背景图，只选其一"} />
-      {setBgColor()}
+      <Button
+        className="mb-2"
+        variant={getButtonColor(themeColor)}
+        size="sm"
+        onClick={() => {
+          setEnableColor(!enableColor);
 
+          // if (!backgroundHDR) {}
+          _scene.userData.backgroundHDR = userData.backgroundHDR;
+          const { backgroundHDR } = _scene.userData;
+          backgroundHDR.asBackground = !backgroundHDR.asBackground;
+          if (!backgroundHDR.asBackground) {
+            _scene.background = new Color(bgColor);
+            _scene.environment = null;
+          }
+          if (backgroundHDR.asBackground) {
+            // const textureName = "venice_sunset_1k.hdr";
+            // _scene.userData.backgroundHDR.name = textureName;
+
+            _scene.userData.backgroundHDR.asBackground = true;
+            setTextureBackground(_scene);
+          }
+          updateScene(getScene());
+        }}
+      >
+        {enableColor ? "使用贴图" : "使用颜色"}
+      </Button>
+      {enableColor ? setBgColorColor() : setBgColorTexture()}
       <InputGroup size="sm">
         <InputGroup.Text>雾气色</InputGroup.Text>
         <Form.Control

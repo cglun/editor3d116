@@ -65,13 +65,13 @@ export function setBoxHelper(selectedMesh: Object3D, scene: Scene) {
       isHelper: true,
       isSelected: false,
     };
-    HELPER_GROUP.add(boxHelper);
+    HELPER_GROUP?.add(boxHelper);
   } else {
     BOX_HELPER.visible = true;
     BOX_HELPER.setFromObject(selectedMesh);
     BOX_HELPER.update();
   }
-  scene.add(HELPER_GROUP);
+  HELPER_GROUP && scene.add(HELPER_GROUP);
 }
 // 显示或隐藏BOX_HELPER
 export function hideBoxHelper(scene: Scene) {
@@ -122,15 +122,16 @@ export function commonAnimate({
   }
 }
 //环境贴图设置
-export function setTextureBackground(
-  scene: Scene,
-  hdrName = "venice_sunset_1k.hdr"
-) {
+export function setTextureBackground(scene: Scene) {
   const rgbeLoader = new RGBELoader();
-  rgbeLoader.load("public/static/hdr/" + hdrName, (texture) => {
+  const { backgroundHDR } = scene.userData;
+  rgbeLoader.load("public/static/hdr/" + backgroundHDR.name, (texture) => {
     texture.mapping = EquirectangularReflectionMapping;
-    scene.background = texture;
-    scene.backgroundBlurriness = 0; // @TODO: Needs PMREM
+    scene.background = null;
+    if (backgroundHDR.asBackground) {
+      scene.background = texture;
+      scene.backgroundBlurriness = 0; // @TODO: Needs PMREM
+    }
     scene.environment = texture;
   });
 }

@@ -1,5 +1,4 @@
 import {
-  Color,
   DirectionalLight,
   DirectionalLightHelper,
   GridHelper,
@@ -14,7 +13,7 @@ import {
   CSS3DRenderer,
   CSS3DSprite,
 } from "three/examples/jsm/Addons.js";
-import { APP_COLOR, UserDataType } from "../app/type";
+import { UserDataType } from "../app/type";
 import { cleaerOldLabel, createGroupIfNotExist, getTourSrc } from "./utils";
 import { userData } from "./config3d";
 import { setClassName } from "../app/utils";
@@ -110,14 +109,14 @@ export function createNewScene() {
   //const { themeColor } = userData.APP_THEME;
   // newScene.background =
   //   themeColor === APP_COLOR.Dark ? new Color("#000116") : new Color("#eee");
-  setTextureBackground(newScene);
+
   newScene.userData = userData;
   newScene.userData.APP_THEME.sceneCanSave = false;
-
+  setTextureBackground(newScene);
   const HELPER_GROUP = createGroupIfNotExist(newScene, "HELPER_GROUP");
 
-  HELPER_GROUP.add(createGridHelper());
-  newScene.add(HELPER_GROUP);
+  HELPER_GROUP?.add(createGridHelper());
+  HELPER_GROUP && newScene.add(HELPER_GROUP);
 
   newScene.add(createDirectionalLight());
   setScene(newScene);

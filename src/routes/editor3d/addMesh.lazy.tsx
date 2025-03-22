@@ -4,7 +4,6 @@ import Button from "react-bootstrap/esm/Button";
 import {
   AmbientLight,
   BoxGeometry,
-  DirectionalLightHelper,
   Group,
   Mesh,
   MeshLambertMaterial,
@@ -102,13 +101,20 @@ function RouteComponent() {
   }
   function addDirectionalLight() {
     const directionalLight = createDirectionalLight();
-    _scene.add(directionalLight);
-    const helper = new DirectionalLightHelper(directionalLight, 1, 0xffff00);
-    helper.userData.isHelper = true;
-    helper.position.setFromMatrixPosition(directionalLight.matrixWorld);
-    const { useShadow } = getScene().userData.config3d;
+    const { useShadow } = _scene.userData.config3d;
     directionalLight.castShadow = useShadow;
-    _scene.add(helper);
+    _scene.add(directionalLight);
+    // const helper = new DirectionalLightHelper(directionalLight, 1, 0xffff00);
+    // helper.userData.isHelper = true;
+    // //helper.position.copy(directionalLight.position);
+
+    // helper.position.setFromMatrixPosition(directionalLight.matrixWorld);
+
+    // const HELPER_GROUP = createGroupIfNotExist(_scene, "HELPER_GROUP");
+    // HELPER_GROUP?.add(helper);
+    // HELPER_GROUP && _scene.add(HELPER_GROUP);
+    // const helper = createDirectionalLightHelper(directionalLight);
+    // _scene.add(helper);
     updateScene(_scene);
   }
 

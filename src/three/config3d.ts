@@ -22,7 +22,10 @@ export const userData = {
   perspectiveCameraPosition: new Vector3(-5, 5, 8),
   fiexedCameraPosition: new Vector3(-5, 5, 8),
   config3d,
-  backgroundHDR: "venice_sunset_1k.hdr",
+  backgroundHDR: {
+    name: "venice_sunset_1k.hdr",
+    asBackground: true,
+  },
   javascript: `//const scene = getScene(); 
   console.log("116");`,
   APP_THEME: {

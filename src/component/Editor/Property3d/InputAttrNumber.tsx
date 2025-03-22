@@ -8,17 +8,21 @@ export function InputAttrNumber({
   selected3d,
   attr,
   min,
+  max,
   step = 0.1,
+  disabled = false,
 }: {
   title: string;
   selected3d: Object3D | any;
   min?: number;
+  max?: number;
   attr:
     | keyof typeof Scene.prototype
     | keyof typeof Fog.prototype
     | keyof typeof Light.prototype
     | keyof typeof PerspectiveCamera.prototype;
   step: number;
+  disabled?: boolean;
 }) {
   const [value, setValue] = useState(0);
 
@@ -42,6 +46,8 @@ export function InputAttrNumber({
           title={"属性：" + attr}
           value={value}
           min={min}
+          max={max}
+          disabled={disabled}
           onChange={(e) => {
             const _value = parseFloat(e.target.value);
             if (Number.isNaN(_value)) {

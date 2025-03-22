@@ -34,9 +34,8 @@ function EditorViewer3d() {
       initScene(editorCanvas.current);
       const scene = getScene();
       const HELPER_GROUP = createGroupIfNotExist(scene, "HELPER_GROUP");
-
-      HELPER_GROUP.add(createGridHelper());
-      scene.add(HELPER_GROUP);
+      HELPER_GROUP?.add(createGridHelper());
+      HELPER_GROUP && scene.add(HELPER_GROUP);
     }
     updateScene(getScene().clone());
 

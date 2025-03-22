@@ -48,9 +48,8 @@ export default function initScene(node: HTMLDivElement): void {
   scene = createScene();
   scene.add(createDirectionalLight());
   const HELPER_GROUP = createGroupIfNotExist(scene, "HELPER_GROUP");
-
-  HELPER_GROUP.add(createGridHelper());
-  scene.add(HELPER_GROUP);
+  HELPER_GROUP?.add(createGridHelper());
+  HELPER_GROUP && scene.add(HELPER_GROUP);
 
   renderer = createRenderer(node);
   node.appendChild(renderer.domElement);

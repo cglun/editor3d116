@@ -128,10 +128,6 @@ export function sceneDeserialize(data: string, item: ItemInfo) {
     newScene.children = children;
     newScene.fog = fog;
     newScene.background = background;
-    const backgroundHDR = userData.backgroundHDR;
-    if (backgroundHDR !== "none") {
-      setTextureBackground(newScene, backgroundHDR);
-    }
 
     newScene.userData = {
       ...userData,
@@ -140,6 +136,10 @@ export function sceneDeserialize(data: string, item: ItemInfo) {
       canSave: true,
       selected3d: null,
     };
+    const backgroundHDR = userData.backgroundHDR;
+    if (backgroundHDR) {
+      setTextureBackground(newScene);
+    }
   });
   let newCamera = new PerspectiveCamera();
 
@@ -203,7 +203,9 @@ export function getModelGroup(
   context: Scene
 ) {
   const { position, rotation, scale } = model;
-  let MODEL_GROUP = context.getObjectByName("MODEL_GROUP");
+  let MODEL_GROUP = createGroupIfNotExist(context, "MODEL_GROUP");
+  // let MODEL_GROUP = context.getObjectByName("MODEL_GROUP");
+
   if (!MODEL_GROUP) {
     MODEL_GROUP = new Group();
     MODEL_GROUP.name = "MODEL_GROUP";
@@ -212,10 +214,16 @@ export function getModelGroup(
 
   const scene = gltf.scene;
   if (scene.children.length === 1) {
-    scene.position.set(position.x, position.y, position.z);
-    scene.setRotationFromEuler(rotation);
-    scene.scale.set(scale.x, scale.y, scale.z);
-    MODEL_GROUP.add(scene.children[0]);
+    const gltfmModel = scene.children[0];
+    gltfmModel.position.set(position.x, position.y, position.z);
+    gltfmModel.setRotationFromEuler(rotation);
+    gltfmModel.scale.set(scale.x, scale.y, scale.z);
+
+    gltfmModel.userData = {
+      ...model.userData,
+      type: UserDataType.GlbModel,
+    };
+    MODEL_GROUP.add(gltfmModel);
     return MODEL_GROUP;
   }
   const group = new Group();
@@ -234,15 +242,23 @@ export function getModelGroup(
   return MODEL_GROUP;
 }
 
-export function createGroupIfNotExist(contextScene: Scene, name: string) {
-  const group = contextScene.getObjectByName(name);
+export function createGroupIfNotExist(
+  contextScene: Scene,
+  name: string,
+  createGroup: boolean = true
+): Object3D | undefined {
+  let group = contextScene.getObjectByName(name);
+
   if (group !== undefined) {
     return group;
   }
-  const _group = new Group();
-  _group.name = name;
-  if (name === "HELPER_GROUP") {
-    _group.userData.isHelper = true;
+  if (createGroup) {
+    group = new Group();
+    group.name = name;
+    if (name === "HELPER_GROUP") {
+      group.userData.isHelper = true;
+    }
+    return group;
   }
-  return _group;
+  return undefined;
 }
