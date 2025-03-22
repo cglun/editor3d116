@@ -7,6 +7,8 @@ import {
   Image,
   Navbar,
   Nav,
+  Badge,
+  Stack,
 } from "react-bootstrap";
 import { getThemeByScene, setClassName } from "../../app/utils";
 
@@ -16,7 +18,11 @@ import Toast3d from "../common/Toast3d";
 import ModalConfirm3d from "../common/ModalConfirm3d";
 import { Color } from "three";
 import { APP_COLOR } from "../../app/type";
-import { getScene, sceneSerialization } from "../../three/init3dEditor";
+import {
+  getScene,
+  sceneSerialization,
+  setScene,
+} from "../../three/init3dEditor";
 import _axios from "../../app/http";
 import InputBase from "../common/InputBase";
 import { useUpdateScene } from "../../app/hooks";
@@ -32,6 +38,7 @@ export default function EditorTop() {
   const { scene, updateScene } = useUpdateScene();
   let { themeColor, iconFill, sceneCanSave } = getThemeByScene(scene);
   document.body.setAttribute("data-bs-theme", themeColor);
+
   function saveScene() {
     const dataJson = sceneSerialization();
     _axios
@@ -42,6 +49,7 @@ export default function EditorTop() {
       .then((res) => {
         if (res.data.code === 200) {
           Toast3d("保存成功");
+          updateScene(getScene());
         } else {
           Toast3d(res.data.message, "提示", APP_COLOR.Warning);
         }
@@ -115,6 +123,7 @@ export default function EditorTop() {
 
   useEffect(() => {
     setIsLoading(true);
+
     _axios
       .post("/project/pageList/", { size: 1000 })
       .then((res) => {
@@ -159,7 +168,14 @@ export default function EditorTop() {
             <Button variant={themeColor} onClick={handleShow}>
               <i className={setClassName("bi  bi-badge-3d")}></i> 切换场景
             </Button>
-          </ButtonGroup>
+          </ButtonGroup>{" "}
+          {scene.payload.userData.sceneName && (
+            <Stack direction="horizontal" gap={2}>
+              <Badge bg={APP_COLOR.Secondary}>
+                当前：{scene.payload.userData.sceneName}
+              </Badge>
+            </Stack>
+          )}
         </Nav>
         <Nav className="me-2">
           <ButtonGroup aria-label="Basic example" size="sm">
@@ -167,6 +183,7 @@ export default function EditorTop() {
               variant={themeColor}
               onClick={() => {
                 const newScene = createNewScene();
+                setScene(newScene);
                 updateScene(newScene);
               }}
             >
@@ -251,8 +268,14 @@ export default function EditorTop() {
                 </Dropdown.Menu>
               </Dropdown>
             </Button>
-            <Button variant={themeColor} size="sm">
-              <i className={setClassName("dash-circle")}></i> 待续
+            <Button
+              variant={themeColor}
+              onClick={() => {
+                Toast3d("待续", "提示", APP_COLOR.Warning);
+                //  window.open("/editor3d/", "_blank");
+              }}
+            >
+              <i className={setClassName("camera-video")}></i> 教程
             </Button>
           </ButtonGroup>
         </Nav>

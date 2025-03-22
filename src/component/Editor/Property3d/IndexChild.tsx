@@ -64,7 +64,7 @@ function SceneProperty() {
       <>
         <Form className="border px-2">
           <Form.Check
-            label="贴图作为背景"
+            label="使用HDR作为背景"
             type="switch"
             checked={enableTexture}
             onChange={() => {
@@ -187,7 +187,7 @@ function SceneProperty() {
         variant={getButtonColor(themeColor)}
         size="sm"
         onClick={() => {
-          _scene.background = new Color("#000");
+          // _scene.background = new Color("#000");
           _scene.fog = null;
           updateScene(getScene());
         }}

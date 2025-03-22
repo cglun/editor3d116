@@ -141,15 +141,11 @@ export function sceneSerialization(): string {
     MODEL_GROUP.children = [];
   }
 
-  // const sceneSelected = scene.userData.selected3d;
-  // if (sceneSelected !== null && sceneSelected?.type === "Scene") {}
-
+  // 处理背景
   const background = sceneCopy.background as Color | DataTexture;
   const isColor = background !== null && background instanceof Color;
-  // const isTexture = background !== null && background instanceof DataTexture;
   sceneCopy.background = null;
   sceneCopy.environment = null;
-
   if (isColor) {
     sceneCopy.background = background;
     sceneCopy.userData.backgroundHDR = undefined;
@@ -157,15 +153,9 @@ export function sceneSerialization(): string {
 
   const result = {
     sceneJsonString: JSON.stringify(sceneCopy.toJSON()),
-    cameraJsonString: JSON.stringify(sceneCopy.userData.fiexedCameraPosition),
     modelsJsonString: JSON.stringify(modelList),
     type: "scene",
   };
-
-  // scene.background = background;
-  // if (isTexture) {
-  //   scene.environment = background;
-  // }
 
   return JSON.stringify(result);
 }

@@ -140,7 +140,7 @@ function RouteComponent() {
                 variant={getButtonColor(themeColor)}
                 disabled={!config3d.css3d}
                 onClick={() => {
-                  // Toast3d("待续", "提示", APP_COLOR.Danger);
+                  Toast3d("待续", "提示", APP_COLOR.Danger);
                 }}
               >
                 一键3d标记

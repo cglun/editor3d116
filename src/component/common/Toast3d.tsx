@@ -37,7 +37,7 @@ function App116({ update, _toast }: { update: number; _toast: Toast }) {
         <strong className="me-auto ">{title}</strong>
       </BootToast.Header>
       <BootToast.Body
-        className={type.toString() === "Dark" ? "text-white" : ""}
+        className={type.toString() === APP_COLOR.Warning ? "text-dark" : ""}
       >
         {content}
       </BootToast.Body>

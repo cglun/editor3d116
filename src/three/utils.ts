@@ -109,14 +109,13 @@ export function getTourSrc(tourObjectect: string) {
 }
 
 export function strToJson(str: string) {
-  const json = JSON.parse(str);
-  const { sceneJsonString, cameraJsonString, modelsJsonString, type } = json;
+  const { sceneJsonString, modelsJsonString, type } = JSON.parse(str);
   const scene: Scene = JSON.parse(sceneJsonString);
-  const camera: PerspectiveCamera = JSON.parse(cameraJsonString);
+
   const models = JSON.parse(modelsJsonString);
 
   const loader = new ObjectLoader();
-  return { scene, camera, models, type, loader };
+  return { scene, models, type, loader };
 }
 
 //反序列化
@@ -125,28 +124,30 @@ export function sceneDeserialize(data: string, item: ItemInfo) {
 
   let newScene = new Scene();
   loader.parse(scene, function (object: Scene | any) {
-    // const { children, fog, background, userData } = object;
+    const { userData } = object;
 
     // newScene.children = children;
     // newScene.fog = fog;
     // newScene.background = background;
-
-    // newScene.userData = {
-    //   ...userData,
-    //   projectName: item.name,
-    //   projectId: item.id,
-    //   canSave: true,
-    //   selected3d: null,
-    // };
     newScene = object;
+    newScene.userData = {
+      ...userData,
+      projectName: item.name,
+      projectId: item.id,
+      canSave: true,
+      selected3d: null,
+    };
+
     const backgroundHDR = object.userData.backgroundHDR;
     if (backgroundHDR) {
       setTextureBackground(newScene);
     }
   });
+
   let newCamera = new PerspectiveCamera();
 
   const { x, y, z } = newScene.userData.fiexedCameraPosition;
+
   newCamera.position.set(x, y, z);
   return {
     scene: newScene,

@@ -17,7 +17,7 @@ import { UserDataType } from "../app/type";
 import { cleaerOldLabel, createGroupIfNotExist, getTourSrc } from "./utils";
 import { userData } from "./config3d";
 import { setClassName } from "../app/utils";
-import { getScene, setScene } from "./init3dEditor";
+import { getScene } from "./init3dEditor";
 import { setTextureBackground } from "./common3d";
 
 export function createPerspectiveCamera(
@@ -121,7 +121,7 @@ export function createNewScene() {
   HELPER_GROUP && newScene.add(HELPER_GROUP);
 
   newScene.add(createDirectionalLight());
-  setScene(newScene);
+
   return newScene;
 }
 

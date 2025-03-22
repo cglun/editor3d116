@@ -90,6 +90,7 @@ function ItemInfoCard(props: Props) {
               const { projectId } = getScene().userData;
               if (item.id === projectId) {
                 const newScene = createNewScene();
+                setScene(newScene);
                 updateScene(newScene);
               }
             } else {
