@@ -166,7 +166,7 @@ export default function EditorTop() {
         <Nav className="me-auto">
           <ButtonGroup size="sm">
             <Button variant={themeColor} onClick={handleShow}>
-              <i className={setClassName("bi  bi-badge-3d")}></i> 切换场景
+              <i className={setClassName("badge-3d")}></i> 切换场景
             </Button>
           </ButtonGroup>{" "}
           {scene.payload.userData.sceneName && (
