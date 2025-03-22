@@ -17,7 +17,7 @@ import { UserDataType } from "../app/type";
 import { cleaerOldLabel, createGroupIfNotExist, getTourSrc } from "./utils";
 import { userData } from "./config3d";
 import { setClassName } from "../app/utils";
-import { setScene } from "./init3dEditor";
+import { getScene, setScene } from "./init3dEditor";
 import { setTextureBackground } from "./common3d";
 
 export function createPerspectiveCamera(
@@ -53,6 +53,8 @@ export function createDirectionalLight(name = "平行光") {
   light.shadow.camera.bottom = -10;
   light.position.set(3, 3, 3);
   //   light.castShadow = true; // 开启投射阴影
+  const { useShadow } = getScene().userData.config3d;
+  light.castShadow = useShadow;
   light.lookAt(0, 0, 0);
   return light;
 }

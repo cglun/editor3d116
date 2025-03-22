@@ -58,8 +58,7 @@ function RouteComponent() {
       group.name = "猴子";
       group.add(...gltf.scene.children);
       _scene.add(group);
-      const light = createDirectionalLight();
-      _scene.add(light);
+
       // const helper = createDirectionalLightHelper(light);
       // _scene.add(helper);
       _scene.add(createGridHelper());
@@ -101,8 +100,7 @@ function RouteComponent() {
   }
   function addDirectionalLight() {
     const directionalLight = createDirectionalLight();
-    const { useShadow } = _scene.userData.config3d;
-    directionalLight.castShadow = useShadow;
+
     _scene.add(directionalLight);
     // const helper = new DirectionalLightHelper(directionalLight, 1, 0xffff00);
     // helper.userData.isHelper = true;

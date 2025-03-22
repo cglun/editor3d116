@@ -128,6 +128,7 @@ export function setTextureBackground(scene: Scene) {
   rgbeLoader.load("public/static/hdr/" + backgroundHDR.name, (texture) => {
     texture.mapping = EquirectangularReflectionMapping;
     scene.background = null;
+
     if (backgroundHDR.asBackground) {
       scene.background = texture;
       scene.backgroundBlurriness = 0; // @TODO: Needs PMREM

@@ -62,9 +62,8 @@ function SceneProperty() {
     const enableTexture = _scene.userData.backgroundHDR.asBackground;
     return (
       <>
-        <Form>
+        <Form className="border px-2">
           <Form.Check
-            className="border"
             label="贴图作为背景"
             type="switch"
             checked={enableTexture}
@@ -80,6 +79,7 @@ function SceneProperty() {
           <InputGroup.Text>背景图</InputGroup.Text>
           <Form.Select
             aria-label="Default select example"
+            disabled={!enableTexture}
             value={_scene.userData.backgroundHDR.name}
             onChange={(e: any) => {
               _scene.userData.backgroundHDR.name = e.target.value;

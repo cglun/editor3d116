@@ -19,7 +19,10 @@ import {
 } from "../../three/utils";
 import { useUpdateScene } from "../../app/hooks";
 import ModalTour from "../common/ModalTour";
-import { createGridHelper } from "../../three/factory3d";
+import {
+  createDirectionalLight,
+  createGridHelper,
+} from "../../three/factory3d";
 
 function EditorViewer3d() {
   const editorCanvas: React.RefObject<HTMLDivElement> =
@@ -34,6 +37,9 @@ function EditorViewer3d() {
       initScene(editorCanvas.current);
       const scene = getScene();
       const HELPER_GROUP = createGroupIfNotExist(scene, "HELPER_GROUP");
+      const light = createDirectionalLight();
+
+      scene.add(light);
       HELPER_GROUP?.add(createGridHelper());
       HELPER_GROUP && scene.add(HELPER_GROUP);
     }

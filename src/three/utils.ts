@@ -122,21 +122,24 @@ export function strToJson(str: string) {
 //反序列化
 export function sceneDeserialize(data: string, item: ItemInfo) {
   const { scene, models, loader } = strToJson(data);
-  const newScene = new Scene();
-  loader.parse(scene, function (object: Scene | any) {
-    const { children, fog, background, userData } = object;
-    newScene.children = children;
-    newScene.fog = fog;
-    newScene.background = background;
 
-    newScene.userData = {
-      ...userData,
-      projectName: item.name,
-      projectId: item.id,
-      canSave: true,
-      selected3d: null,
-    };
-    const backgroundHDR = userData.backgroundHDR;
+  let newScene = new Scene();
+  loader.parse(scene, function (object: Scene | any) {
+    // const { children, fog, background, userData } = object;
+
+    // newScene.children = children;
+    // newScene.fog = fog;
+    // newScene.background = background;
+
+    // newScene.userData = {
+    //   ...userData,
+    //   projectName: item.name,
+    //   projectId: item.id,
+    //   canSave: true,
+    //   selected3d: null,
+    // };
+    newScene = object;
+    const backgroundHDR = object.userData.backgroundHDR;
     if (backgroundHDR) {
       setTextureBackground(newScene);
     }
@@ -145,14 +148,6 @@ export function sceneDeserialize(data: string, item: ItemInfo) {
 
   const { x, y, z } = newScene.userData.fiexedCameraPosition;
   newCamera.position.set(x, y, z);
-
-  // loader.parse(camera, function (object: PerspectiveCamera | any) {
-  //   debugger;
-  //   const { x, y, z } = newScene.userData.fiexedCameraPosition;
-  //   newCamera.position.set(x, y, z);
-  //   newCamera = object;
-  // });
-
   return {
     scene: newScene,
     camera: newCamera,
