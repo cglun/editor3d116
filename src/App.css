@@ -1,3 +1,6 @@
+body{
+  scrollbar-width: 'none' !important;
+}
 .container-fluid {
   padding: 0;
 }
@@ -5,6 +8,9 @@
 .card-text {
   font-size: 0.8rem;
   margin-bottom: 0;
+}
+.card-body {
+  padding: 0 0.2rem 0.2rem 0;
 }
 .mt-2 .card-header,.card-pd-header {
   padding: 0 0 0 0.4rem;
@@ -75,4 +81,11 @@ btn-group-sm > .btn,
 }
 .bi-image {
   cursor: crosshair
+}
+.input-group input{
+  overscroll-behavior:contain;
+  touch-action: none;
+}
+#editor-canvas canvas{
+  width: 100% !important
 }

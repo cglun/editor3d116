@@ -21,14 +21,14 @@ import { APP_COLOR } from "../../app/type";
 // }
 
 interface Props {
-  type: string;
   text: string;
+  type?: string;
   className?: string;
 }
 const props: Props = {
-  className: "",
-  type: APP_COLOR.Danger,
   text: "内容",
+  type: APP_COLOR.Danger,
+  className: "",
 };
 
 export default function AlertBase(_props: Props = props) {

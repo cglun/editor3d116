@@ -7,7 +7,7 @@ import initScene, {
   getTransfControls,
   setCameraType,
 } from "../../three/init3dEditor"; // 初始化
-import { Button, ButtonGroup } from "react-bootstrap";
+import { Button, ButtonGroup, Container } from "react-bootstrap";
 
 import { TransformControlsMode } from "three/examples/jsm/Addons.js";
 import { Object3D, Vector3 } from "three";
@@ -72,77 +72,84 @@ function EditorViewer3d() {
   }
 
   return (
-    <div className="position-relative">
-      <div style={{ height: "70vh" }} ref={editorCanvas}></div>
-      <div className="position-absolute" style={{ left: "1rem", top: "1rem" }}>
-        <ButtonGroup>
-          <Button
-            variant={themeColor}
-            title="移动"
-            onClick={() => {
-              setMode("translate");
-            }}
-          >
-            <i className="bi bi-arrows-move"></i>
-          </Button>
-          <Button
-            variant={themeColor}
-            title="旋转"
-            onClick={() => {
-              setMode("rotate");
-            }}
-          >
-            <i className="bi bi-arrow-repeat"></i>
-          </Button>
-          <Button
-            variant={themeColor}
-            title="缩放"
-            onClick={() => {
-              setMode("scale");
-            }}
-          >
-            <i className="bi bi-arrows-angle-expand"></i>
-          </Button>
-          <Button
-            variant={themeColor}
-            title="顶视"
-            onClick={() => {
-              setCameraType("OrthographicCamera", new Vector3(0, 1, 0));
-            }}
-          >
-            <i className="bi bi-align-top"></i>
-          </Button>
-          <Button
-            variant={themeColor}
-            title="前视"
-            onClick={() => {
-              setCameraType("OrthographicCamera", new Vector3(0, 0, 1));
-            }}
-          >
-            <i className="bi bi-align-middle"></i>
-          </Button>
-          <Button
-            variant={themeColor}
-            title="左视"
-            onClick={() => {
-              setCameraType("OrthographicCamera", new Vector3(1, 0, 0));
-            }}
-          >
-            <i className="bi bi-align-start"></i>
-          </Button>
-          <Button
-            variant={themeColor}
-            title="透视"
-            onClick={() => {
-              setCameraType("PerspectiveCamera", Object3D.DEFAULT_UP);
-            }}
-          >
-            <i className={setClassName("box")}></i>
-          </Button>
-        </ButtonGroup>
-      </div>
+    <Container fluid>
+      <ButtonGroup
+        className="sticky-top"
+        style={{ left: "1rem", top: "2.4rem" }}
+      >
+        <Button
+          variant={themeColor}
+          title="移动"
+          onClick={() => {
+            setMode("translate");
+          }}
+        >
+          <i className="bi bi-arrows-move"></i>
+        </Button>
+        <Button
+          variant={themeColor}
+          title="旋转"
+          onClick={() => {
+            setMode("rotate");
+          }}
+        >
+          <i className="bi bi-arrow-repeat"></i>
+        </Button>
+        <Button
+          variant={themeColor}
+          title="缩放"
+          onClick={() => {
+            setMode("scale");
+          }}
+        >
+          <i className="bi bi-arrows-angle-expand"></i>
+        </Button>
+        <Button
+          variant={themeColor}
+          title="顶视"
+          onClick={() => {
+            setCameraType("OrthographicCamera", new Vector3(0, 1, 0));
+          }}
+        >
+          <i className="bi bi-align-top"></i>
+        </Button>
+        <Button
+          variant={themeColor}
+          title="前视"
+          onClick={() => {
+            setCameraType("OrthographicCamera", new Vector3(0, 0, 1));
+          }}
+        >
+          <i className="bi bi-align-middle"></i>
+        </Button>
+        <Button
+          variant={themeColor}
+          title="左视"
+          onClick={() => {
+            setCameraType("OrthographicCamera", new Vector3(1, 0, 0));
+          }}
+        >
+          <i className="bi bi-align-start"></i>
+        </Button>
+        <Button
+          variant={themeColor}
+          title="透视"
+          onClick={() => {
+            setCameraType("PerspectiveCamera", Object3D.DEFAULT_UP);
+          }}
+        >
+          <i className={setClassName("box")}></i>
+        </Button>
+      </ButtonGroup>
+
+      <Container
+        id="editor-canvas"
+        fluid
+        style={{ height: "70vh", marginTop: "-2.4rem" }}
+        ref={editorCanvas}
+      ></Container>
       <ModalTour />
-    </div>
+    </Container>
   );
 }
 export default memo(EditorViewer3d);

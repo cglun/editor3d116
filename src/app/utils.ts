@@ -53,3 +53,11 @@ export function getThemeByScene(scene: EditorScene) {
   }
   return theme;
 }
+
+export function fixedEditorLleft(fixed = true) {
+  const editorLeft = document.getElementById("editor-left");
+  editorLeft?.classList.remove("position-fixed");
+  if (fixed) {
+    editorLeft?.classList.add("position-fixed");
+  }
+}

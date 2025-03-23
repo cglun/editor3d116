@@ -9,6 +9,7 @@ import {
   Nav,
   Badge,
   Stack,
+  Container,
 } from "react-bootstrap";
 import { getThemeByScene, setClassName } from "../../app/utils";
 
@@ -152,159 +153,164 @@ export default function EditorTop() {
   }, [showScene]);
 
   return (
-    <Navbar
-      expand="lg"
-      fixed="top"
-      className="bg-body-tertiary"
-      style={{ padding: 0 }}
-    >
-      <Navbar.Brand style={{ padding: 0, marginRight: "0" }}>
-        <Image src="/editor3d/static/images/logo.png" title="logo" />
-      </Navbar.Brand>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="me-auto">
-          <ButtonGroup size="sm">
-            <Button variant={themeColor} onClick={handleShow}>
-              <i className={setClassName("badge-3d")}></i> 切换场景
-            </Button>
-          </ButtonGroup>{" "}
-          {scene.payload.userData.sceneName && (
-            <Stack direction="horizontal" gap={2}>
-              <Badge bg={APP_COLOR.Secondary}>
-                当前：{scene.payload.userData.sceneName}
-              </Badge>
-            </Stack>
-          )}
-        </Nav>
-        <Nav className="me-2">
-          <ButtonGroup aria-label="Basic example" size="sm">
-            <Button
-              variant={themeColor}
-              onClick={() => {
-                const newScene = createNewScene();
-                setScene(newScene);
-                updateScene(newScene);
-              }}
-            >
-              <i className={setClassName("plus-square")}></i> 新建场景
-            </Button>
-            <Button
-              variant={themeColor}
-              disabled={!sceneCanSave}
-              onClick={() => {
-                saveScene();
-              }}
-            >
-              <i className={setClassName("floppy")}></i> 保存场景
-            </Button>
-            <Button
-              variant={themeColor}
-              onClick={() => {
-                saveAsNewScene();
-              }}
-            >
-              <i className={setClassName("floppy2")}></i> 场景另存
-            </Button>
-            <Button
-              as="div"
-              variant={themeColor}
-              style={{ paddingLeft: "0", paddingRight: "0" }}
-            >
-              <Dropdown className="d-inline">
-                <Dropdown.Toggle
-                  id="dropdown-autoclose-true"
-                  variant={themeColor}
-                  size="sm"
-                >
-                  {themeColor === "light" ? (
-                    <i className={setClassName("sun")}></i>
-                  ) : (
-                    <i className={setClassName("moon-stars")}></i>
-                  )}
-                  主题
-                </Dropdown.Toggle>
+    <Container fluid>
+      <div style={{ height: "2rem" }}> </div>
+      <Navbar
+        expand="lg"
+        fixed="top"
+        className="bg-body-tertiary"
+        style={{ padding: 0 }}
+      >
+        {" "}
+        <Navbar.Brand style={{ padding: 0, marginRight: "0" }}>
+          <Image src="/editor3d/static/images/logo.png" title="logo" />
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="me-auto">
+            <ButtonGroup size="sm">
+              <Button variant={themeColor} onClick={handleShow}>
+                <i className={setClassName("badge-3d")}></i> 切换场景
+              </Button>
+            </ButtonGroup>{" "}
+            {scene.payload.userData.sceneName && (
+              <Stack direction="horizontal" gap={2}>
+                <Badge bg={APP_COLOR.Secondary}>
+                  当前：{scene.payload.userData.sceneName}
+                </Badge>
+              </Stack>
+            )}
+          </Nav>
+          <Nav className="me-2">
+            <ButtonGroup aria-label="Basic example" size="sm">
+              <Button
+                variant={themeColor}
+                onClick={() => {
+                  const newScene = createNewScene();
+                  setScene(newScene);
+                  updateScene(newScene);
+                }}
+              >
+                <i className={setClassName("plus-square")}></i> 新建场景
+              </Button>
+              <Button
+                variant={themeColor}
+                disabled={!sceneCanSave}
+                onClick={() => {
+                  saveScene();
+                }}
+              >
+                <i className={setClassName("floppy")}></i> 保存场景
+              </Button>
+              <Button
+                variant={themeColor}
+                onClick={() => {
+                  saveAsNewScene();
+                }}
+              >
+                <i className={setClassName("floppy2")}></i> 场景另存
+              </Button>
+              <Button
+                as="div"
+                variant={themeColor}
+                style={{ paddingLeft: "0", paddingRight: "0" }}
+              >
+                <Dropdown className="d-inline">
+                  <Dropdown.Toggle
+                    id="dropdown-autoclose-true"
+                    variant={themeColor}
+                    size="sm"
+                  >
+                    {themeColor === "light" ? (
+                      <i className={setClassName("sun")}></i>
+                    ) : (
+                      <i className={setClassName("moon-stars")}></i>
+                    )}
+                    主题
+                  </Dropdown.Toggle>
 
-                <Dropdown.Menu>
-                  {themeColor === APP_COLOR.Dark ? (
-                    <Dropdown.Item
-                      onClick={() => {
-                        setThemeByBtn(APP_COLOR.Light);
-                        const scene = getScene();
-                        const enableColor = scene.background instanceof Color;
-                        if (enableColor) {
-                          scene.background = new Color("#eee");
-                        }
-                      }}
-                    >
-                      <i className={setClassName("sun")}></i> 白天模式
-                    </Dropdown.Item>
-                  ) : (
-                    <Dropdown.Item
-                      onClick={() => {
-                        setThemeByBtn(APP_COLOR.Dark);
-                        const scene = getScene();
-                        // const { asBackground } = scene.userData.backgroundHDR;
-                        const enableColor = scene.background instanceof Color;
-                        if (enableColor) {
-                          scene.background = new Color("#000116");
-                        }
-                      }}
-                    >
-                      <i className={setClassName("moon-stars")}></i> 黑夜模式
-                    </Dropdown.Item>
-                  )}
-                  {iconFill === "-fill" ? (
-                    <Dropdown.Item
-                      onClick={() => {
-                        setThemeIcons("");
-                      }}
-                    >
-                      <i className={"bi bi-emoji-expressionless"}></i> 空心图标
-                    </Dropdown.Item>
-                  ) : (
-                    <Dropdown.Item
-                      onClick={() => {
-                        setThemeIcons("-fill");
-                      }}
-                    >
-                      <i className={"bi bi-emoji-expressionless-fill"}></i>
-                      填充图标
-                    </Dropdown.Item>
-                  )}
-                </Dropdown.Menu>
-              </Dropdown>
-            </Button>
-            <Button
-              variant={themeColor}
-              onClick={() => {
-                Toast3d("待续", "提示", APP_COLOR.Warning);
-                //  window.open("/editor3d/", "_blank");
-              }}
-            >
-              <i className={setClassName("camera-video")}></i> 教程
-            </Button>
-          </ButtonGroup>
-        </Nav>
-      </Navbar.Collapse>
-      {showScene && (
-        <Offcanvas show={showScene} onHide={handleClose}>
-          <Offcanvas.Header closeButton>
-            <Offcanvas.Title>
-              <i className={setClassName("badge-3d")}></i> 所有场景
-            </Offcanvas.Title>
-          </Offcanvas.Header>
-          <Offcanvas.Body>
-            <Serch3d list={list} setFilterList={setFilterList} type="场景" />
-            <ListCard
-              list={filterList}
-              setList={setFilterList}
-              isLoading={isLoading}
-              error={error}
-            ></ListCard>
-          </Offcanvas.Body>
-        </Offcanvas>
-      )}
-    </Navbar>
+                  <Dropdown.Menu>
+                    {themeColor === APP_COLOR.Dark ? (
+                      <Dropdown.Item
+                        onClick={() => {
+                          setThemeByBtn(APP_COLOR.Light);
+                          const scene = getScene();
+                          const enableColor = scene.background instanceof Color;
+                          if (enableColor) {
+                            scene.background = new Color("#eee");
+                          }
+                        }}
+                      >
+                        <i className={setClassName("sun")}></i> 白天模式
+                      </Dropdown.Item>
+                    ) : (
+                      <Dropdown.Item
+                        onClick={() => {
+                          setThemeByBtn(APP_COLOR.Dark);
+                          const scene = getScene();
+                          // const { asBackground } = scene.userData.backgroundHDR;
+                          const enableColor = scene.background instanceof Color;
+                          if (enableColor) {
+                            scene.background = new Color("#000116");
+                          }
+                        }}
+                      >
+                        <i className={setClassName("moon-stars")}></i> 黑夜模式
+                      </Dropdown.Item>
+                    )}
+                    {iconFill === "-fill" ? (
+                      <Dropdown.Item
+                        onClick={() => {
+                          setThemeIcons("");
+                        }}
+                      >
+                        <i className={"bi bi-emoji-expressionless"}></i>{" "}
+                        空心图标
+                      </Dropdown.Item>
+                    ) : (
+                      <Dropdown.Item
+                        onClick={() => {
+                          setThemeIcons("-fill");
+                        }}
+                      >
+                        <i className={"bi bi-emoji-expressionless-fill"}></i>
+                        填充图标
+                      </Dropdown.Item>
+                    )}
+                  </Dropdown.Menu>
+                </Dropdown>
+              </Button>
+              <Button
+                variant={themeColor}
+                onClick={() => {
+                  Toast3d("待续", "提示", APP_COLOR.Warning);
+                  //  window.open("/editor3d/", "_blank");
+                }}
+              >
+                <i className={setClassName("camera-video")}></i> 教程
+              </Button>
+            </ButtonGroup>
+          </Nav>
+        </Navbar.Collapse>
+        {showScene && (
+          <Offcanvas show={showScene} onHide={handleClose}>
+            <Offcanvas.Header closeButton>
+              <Offcanvas.Title>
+                <i className={setClassName("badge-3d")}></i> 所有场景
+              </Offcanvas.Title>
+            </Offcanvas.Header>
+            <Offcanvas.Body>
+              <Serch3d list={list} setFilterList={setFilterList} type="场景" />
+              <ListCard
+                list={filterList}
+                setList={setFilterList}
+                isLoading={isLoading}
+                error={error}
+              ></ListCard>
+            </Offcanvas.Body>
+          </Offcanvas>
+        )}
+      </Navbar>
+    </Container>
   );
 }

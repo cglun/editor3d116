@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Form from "react-bootstrap/esm/Form";
 import InputGroup from "react-bootstrap/esm/InputGroup";
 import { Fog, Light, Object3D, PerspectiveCamera, Scene } from "three";
+import { fixedEditorLleft } from "../../../app/utils";
 
 export function InputAttrNumber({
   title,

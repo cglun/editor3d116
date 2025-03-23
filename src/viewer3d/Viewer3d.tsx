@@ -180,7 +180,10 @@ export default function Viewer3d({
       value={{ scene, dispatchScene, tourWindow, dispatchTourWindow }}
     >
       <Container fluid>
-        <div className="mb-1 mx-auto" style={{ width: "300px" }}>
+        <div
+          className="mb-1 mx-auto position-relative"
+          style={{ width: "300px" }}
+        >
           {progress < 100 && (
             <ProgressBar now={progress} label={`${progress}%`} />
           )}

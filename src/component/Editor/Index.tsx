@@ -10,10 +10,9 @@ export default function Index() {
     <Container fluid>
       <Row>
         <EditorTop />
-        <div className="sticky-top" style={{ height: "30px" }}></div>
       </Row>
       <Row>
-        <Col xl={10}>
+        <Col xl={10} id="editor-left">
           <Row>
             <EditorViewer3d />
           </Row>
@@ -22,7 +21,7 @@ export default function Index() {
           </Row>
         </Col>
 
-        <Col xl={2} style={{ position: "fixed", right: "0" }}>
+        <Col xl={2} className="position-fixed" style={{ right: "0" }}>
           <OutlineView />
         </Col>
       </Row>
