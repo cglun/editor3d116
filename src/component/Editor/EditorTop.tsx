@@ -43,6 +43,8 @@ export default function EditorTop() {
   const { scene, updateScene } = useUpdateScene();
   let { themeColor, iconFill, sceneCanSave } = getThemeByScene(scene);
   document.body.setAttribute("data-bs-theme", themeColor);
+  const logoUrl = new URL("/public/static/images/logo.png", import.meta.url)
+    .href;
 
   function saveScene() {
     const dataJson = sceneSerialization();
@@ -166,7 +168,7 @@ export default function EditorTop() {
         style={{ padding: 0 }}
       >
         <Navbar.Brand style={{ padding: 0, marginRight: "0" }}>
-          <Image src="/editor3d/static/images/logo.png" title="logo" />
+          <Image src={logoUrl} title="logo" />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">

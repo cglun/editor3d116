@@ -125,14 +125,17 @@ export function commonAnimate({
 export function setTextureBackground(scene: Scene) {
   const rgbeLoader = new RGBELoader();
   const { backgroundHDR } = scene.userData;
-  rgbeLoader.load("static/hdr/" + backgroundHDR.name, (texture) => {
-    texture.mapping = EquirectangularReflectionMapping;
-    scene.background = null;
+  rgbeLoader.load(
+    "/editor3d/public/static/hdr/" + backgroundHDR.name,
+    (texture) => {
+      texture.mapping = EquirectangularReflectionMapping;
+      scene.background = null;
 
-    if (backgroundHDR.asBackground) {
-      scene.background = texture;
-      // scene.backgroundBlurriness = 0; // @TODO: Needs PMREM
+      if (backgroundHDR.asBackground) {
+        scene.background = texture;
+        // scene.backgroundBlurriness = 0; // @TODO: Needs PMREM
+      }
+      scene.environment = texture;
     }
-    scene.environment = texture;
-  });
+  );
 }

@@ -13,7 +13,7 @@ function RouteComponent() {
   return (
     <Container fluid style={{ height: "100vh" }}>
       <iframe
-        src="/editor3d/static/about.html"
+        src="/editor3d/public/static/about.html"
         width={"100%"}
         height={"100%"}
       ></iframe>

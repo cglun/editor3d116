@@ -177,7 +177,7 @@ export function getProjectData(id: number) {
 
 export function glbLoader() {
   const dracoLoader = new DRACOLoader();
-  dracoLoader.setDecoderPath("/editor3d/static/js/draco/gltf/");
+  dracoLoader.setDecoderPath("/public/static/js/draco/gltf/");
   //const loader = new GLTFLoader(new LoadingManager());
   const loader = new GLTFLoader();
   loader.setDRACOLoader(dracoLoader);

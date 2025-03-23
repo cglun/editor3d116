@@ -50,7 +50,7 @@ function RouteComponent() {
     updateScene(_scene);
   }
   function addLocalModel() {
-    const url = "/editor3d/static/models/blender.glb";
+    const url = "/editor3d/public/static/models/blender.glb";
     const loader = glbLoader();
     loader.load(url, function (gltf) {
       const _scene = getScene();

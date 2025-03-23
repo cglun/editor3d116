@@ -17,6 +17,7 @@ export default defineConfig({
     }),
   ],
   base: "/editor3d/",
+  publicDir: "/public/",
   build: {
     modulePreload: true,
     target: "esnext",
