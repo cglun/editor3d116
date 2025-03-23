@@ -145,9 +145,12 @@ export function createLabelRenderer(
   labelRenderer.setSize(node.offsetWidth, node.offsetHeight);
   // const top = node.childNodes[0] as HTMLElement;
   // const tt = top.getBoundingClientRect().top;
-  labelRenderer.domElement.style.position = "absolute";
-  // labelRenderer.domElement.style.zIndex = "-1";
-  labelRenderer.domElement.style.pointerEvents = "none";
+  const renderDom = labelRenderer.domElement;
+  renderDom.style.position = "absolute";
+  //renderDom.style.zIndex = "-1";
+  renderDom.style.pointerEvents = "none";
+  renderDom.classList.add("label-renderer");
+  //renderDom.style.top = `${window.scrollY}px`;
   node.appendChild(labelRenderer.domElement);
   return labelRenderer;
 }

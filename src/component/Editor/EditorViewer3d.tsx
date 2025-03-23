@@ -144,6 +144,7 @@ function EditorViewer3d() {
 
       <Container
         id="editor-canvas"
+        className="position-relative"
         fluid
         style={{ height: "70vh", marginTop: "-2.4rem" }}
         ref={editorCanvas}

@@ -10,11 +10,7 @@ import { useUpdateScene } from "../../../app/hooks";
 import { Input3d } from "./Input3d";
 import { InputAttrText } from "./InputAttrText";
 import { InputAttrNumber } from "./InputAttrNumber";
-import {
-  fixedEditorLleft,
-  getButtonColor,
-  getThemeByScene,
-} from "../../../app/utils";
+import { getButtonColor, getThemeByScene } from "../../../app/utils";
 import AlertBase from "../../common/AlertBase";
 import { setTextureBackground } from "../../../three/common3d";
 import { useState } from "react";
