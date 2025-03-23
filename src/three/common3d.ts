@@ -125,7 +125,7 @@ export function commonAnimate({
 export function setTextureBackground(scene: Scene) {
   const rgbeLoader = new RGBELoader();
   const { backgroundHDR } = scene.userData;
-  rgbeLoader.load("public/static/hdr/" + backgroundHDR.name, (texture) => {
+  rgbeLoader.load("static/hdr/" + backgroundHDR.name, (texture) => {
     texture.mapping = EquirectangularReflectionMapping;
     scene.background = null;
 
