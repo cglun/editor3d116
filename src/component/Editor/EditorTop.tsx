@@ -297,7 +297,10 @@ export default function EditorTop() {
                 variant={themeColor}
                 onClick={() => {
                   Toast3d("待续", "提示", APP_COLOR.Warning);
-                  //  window.open("/editor3d/", "_blank");
+                  window.open(
+                    "https://pan.xunlei.com/s/VOM1WYs9m_wKSBf8MM7ZhKMjA1?pwd=76k8#",
+                    "_blank"
+                  );
                 }}
               >
                 <i className={setClassName("camera-video")}></i> 教程
