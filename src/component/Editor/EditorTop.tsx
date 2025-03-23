@@ -174,9 +174,10 @@ export default function EditorTop() {
             <ButtonGroup size="sm">
               <Button
                 variant={themeColor}
-                onClick={() => handleShow}
+                onClick={handleShow}
                 onMouseEnter={() => {
                   fixedEditorLleft();
+                  // handleShow();
                 }}
                 onMouseLeave={() => {
                   fixedEditorLleft(false);

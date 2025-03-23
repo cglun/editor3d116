@@ -45,14 +45,19 @@ function RouteComponent() {
   }, []);
 
   return (
-    <>
+    <div
+      onMouseLeave={() => {
+        const element = document.getElementById("root");
+        element?.scrollIntoView();
+      }}
+    >
       {/* <AlertBase type={APP_COLOR.Secondary} text={"测试"} /> */}
       <div
         id="pre-view-top"
         style={{ height: "2rem", scrollBehavior: "smooth" }}
       ></div>
 
-      <ButtonGroup size="sm">
+      {/* <ButtonGroup size="sm">
         <Button
           variant={APP_COLOR.Info}
           onClick={() => {
@@ -77,7 +82,7 @@ function RouteComponent() {
             style={{ fontSize: "1.16rem" }}
           ></i>
         </Button>
-      </ButtonGroup>
+      </ButtonGroup> */}
       <ButtonGroup size="sm">
         {list.map((item) => {
           return (
@@ -94,11 +99,14 @@ function RouteComponent() {
           );
         })}
       </ButtonGroup>
-      <Viewer3d item={_item} />
       <div
-        id="pre-view-bottom"
-        style={{ height: "2rem", scrollBehavior: "smooth" }}
-      ></div>
-    </>
+        onMouseEnter={() => {
+          const element = document.getElementById("pre-view-top");
+          element?.scrollIntoView();
+        }}
+      >
+        <Viewer3d item={_item} />
+      </div>
+    </div>
   );
 }

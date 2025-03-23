@@ -131,7 +131,7 @@ export function setTextureBackground(scene: Scene) {
 
     if (backgroundHDR.asBackground) {
       scene.background = texture;
-      scene.backgroundBlurriness = 0; // @TODO: Needs PMREM
+      // scene.backgroundBlurriness = 0; // @TODO: Needs PMREM
     }
     scene.environment = texture;
   });
