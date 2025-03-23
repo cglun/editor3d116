@@ -5,9 +5,6 @@ import { setEnableScreenshot } from "../../three/config3d";
 import _axios from "../../app/http";
 import { testData2 } from "../../app/testData";
 import { Button, ButtonGroup } from "react-bootstrap";
-import { setClassName } from "../../app/utils";
-
-import { APP_COLOR } from "../../app/type";
 
 export const Route = createLazyFileRoute("/editor3d/preView")({
   component: RouteComponent,

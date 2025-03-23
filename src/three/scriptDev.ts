@@ -1,3 +1,5 @@
+import { getScene } from "./init3dEditor";
+
 //脚本开发在这里进行调试，调试完成后，把【开始】到【结束】之间的代码复制到脚本中！
 export function runScript() {
   if (import.meta.env.MODE === "production") {
@@ -12,6 +14,13 @@ export function runScript() {
   //     blender.rotation.y += 0.5;
   //   }, 50);
   // }
+
+  // const Icosphere = getScene().getObjectByName("Icosphere");
+  // setInterval(() => {
+  //   if (Icosphere) {
+  //     Icosphere.rotation.y += 0.5;
+  //   }
+  // }, 200);
 
   //===============结束==================//
 }

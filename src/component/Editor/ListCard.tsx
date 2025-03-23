@@ -161,24 +161,15 @@ function ItemInfoCard(props: Props) {
         setLabel(scene, dispatchTourWindow);
 
         modelNum = modelList.length;
+        if (modelNum === 0) {
+          runScript();
+        }
         modelList.forEach((item: GlbModel) => {
           loadModelByUrl(item);
         });
       })
       .catch((error) => {
         Toast3d(error, "提示", APP_COLOR.Danger);
-      })
-      .finally(() => {
-        const { javascript } = getScene().userData;
-        if (javascript && modelNum <= 1) {
-          updateScene(getScene());
-          getScene();
-          getControls();
-          getCamera();
-          eval(javascript);
-          runScript();
-        }
-        modelNum--;
       });
   }
   function loadMesh(item: ItemInfo) {
@@ -188,18 +179,6 @@ function ItemInfoCard(props: Props) {
       })
       .catch((error) => {
         Toast3d(error, "提示", APP_COLOR.Danger);
-      })
-      .finally(() => {
-        const { javascript } = getScene().userData;
-        if (javascript && modelNum <= 1) {
-          updateScene(getScene());
-          getScene();
-          getControls();
-          getCamera();
-          eval(javascript);
-          runScript();
-        }
-        modelNum--;
       });
   }
 
@@ -223,7 +202,19 @@ function ItemInfoCard(props: Props) {
         //const { useShadow } = getScene().userData.config3d;
         enableShadow(group, getScene());
         getScene().add(group);
-        updateScene(getScene());
+
+        if (modelNum <= 1) {
+          updateScene(getScene());
+          getScene();
+          getControls();
+          getCamera();
+          runScript();
+          const { javascript } = getScene().userData;
+          if (javascript) {
+            eval(javascript);
+          }
+        }
+        modelNum--;
       },
       function (xhr) {
         progress = parseFloat(

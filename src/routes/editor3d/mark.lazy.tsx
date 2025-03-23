@@ -150,12 +150,12 @@ function RouteComponent() {
         </Col>
       </Row>
       <Row>
-        <Col>
+        <Col className="d-flex   flex-wrap">
           {listTour &&
             config3d.css3d &&
             listTour.map((item: any, index: number) => {
               return (
-                <Card style={{ width: "6rem" }} key={index}>
+                <Card className="ms-2" style={{ width: "6rem" }} key={index}>
                   <Card.Header className="card-pd-header ">
                     {item.title}
                   </Card.Header>
