@@ -11,7 +11,11 @@ import {
   Stack,
   Container,
 } from "react-bootstrap";
-import { getThemeByScene, setClassName } from "../../app/utils";
+import {
+  fixedEditorLleft,
+  getThemeByScene,
+  setClassName,
+} from "../../app/utils";
 
 import ListCard from "./ListCard";
 import { testData1 } from "../../app/testData";
@@ -161,7 +165,6 @@ export default function EditorTop() {
         className="bg-body-tertiary"
         style={{ padding: 0 }}
       >
-        {" "}
         <Navbar.Brand style={{ padding: 0, marginRight: "0" }}>
           <Image src="/editor3d/static/images/logo.png" title="logo" />
         </Navbar.Brand>
@@ -169,7 +172,16 @@ export default function EditorTop() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <ButtonGroup size="sm">
-              <Button variant={themeColor} onClick={handleShow}>
+              <Button
+                variant={themeColor}
+                onClick={() => handleShow}
+                onMouseEnter={() => {
+                  fixedEditorLleft();
+                }}
+                onMouseLeave={() => {
+                  fixedEditorLleft(false);
+                }}
+              >
                 <i className={setClassName("badge-3d")}></i> 切换场景
               </Button>
             </ButtonGroup>{" "}
@@ -306,7 +318,7 @@ export default function EditorTop() {
                 setList={setFilterList}
                 isLoading={isLoading}
                 error={error}
-              ></ListCard>
+              />
             </Offcanvas.Body>
           </Offcanvas>
         )}
