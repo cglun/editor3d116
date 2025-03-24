@@ -20,6 +20,9 @@ import { createGroupIfNotExist } from "./utils";
 export function enableShadow(group: Scene | Group | Object3D, context: Scene) {
   const { useShadow } = context.userData.config3d;
   group.traverse((child: Object3D) => {
+    if (child.userData.isHelper) {
+      return;
+    }
     if (child.type !== "AmbientLight") {
       if (child.hasOwnProperty("castShadow")) {
         child.castShadow = useShadow;
@@ -121,21 +124,33 @@ export function commonAnimate({
     parameters3d.timeS = 0;
   }
 }
+import venice_sunset_1k from "/static/file3d/hdr/venice_sunset_1k.hdr?url";
+import spruit_sunrise_1k from "/static/file3d/hdr/spruit_sunrise_1k.hdr?url";
+
 //环境贴图设置
 export function setTextureBackground(scene: Scene) {
   const rgbeLoader = new RGBELoader();
   const { backgroundHDR } = scene.userData;
-  rgbeLoader.load(
-    "/editor3d/public/static/hdr/" + backgroundHDR.name,
-    (texture) => {
-      texture.mapping = EquirectangularReflectionMapping;
-      scene.background = null;
 
-      if (backgroundHDR.asBackground) {
-        scene.background = texture;
-        // scene.backgroundBlurriness = 0; // @TODO: Needs PMREM
-      }
-      scene.environment = texture;
+  //开发正常，打包后，有问题
+  // const hdr = new URL(
+  //   `/static/file3d/hdr/${backgroundHDR.name}`,
+  //   import.meta.url
+  // ).href;
+
+  const hdr = {
+    "venice_sunset_1k.hdr": venice_sunset_1k,
+    "spruit_sunrise_1k.hdr": spruit_sunrise_1k,
+  };
+
+  const name = backgroundHDR.name as keyof typeof hdr;
+  rgbeLoader.load(hdr[name], (texture) => {
+    texture.mapping = EquirectangularReflectionMapping;
+    scene.background = null;
+    if (backgroundHDR.asBackground) {
+      scene.background = texture;
+      // scene.backgroundBlurriness = 0; // @TODO: Needs PMREM
     }
-  );
+    scene.environment = texture;
+  });
 }

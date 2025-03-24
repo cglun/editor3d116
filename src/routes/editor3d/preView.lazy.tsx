@@ -13,7 +13,7 @@ export const Route = createLazyFileRoute("/editor3d/preView")({
 function RouteComponent() {
   const [list, setList] = React.useState(testData2);
   const [_item, _setItem] = React.useState({
-    id: 242,
+    id: 296,
     name: "立方体",
     des: "Scene",
     cover: "",

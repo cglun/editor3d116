@@ -37,7 +37,9 @@ function EditorViewer3d() {
       initScene(editorCanvas.current);
       const scene = getScene();
       const HELPER_GROUP = createGroupIfNotExist(scene, "HELPER_GROUP");
+      const { useShadow } = getScene().userData.config3d;
       const light = createDirectionalLight();
+      light.castShadow = useShadow;
 
       scene.add(light);
       HELPER_GROUP?.add(createGridHelper());
@@ -143,9 +145,9 @@ function EditorViewer3d() {
       </ButtonGroup>
 
       <Container
+        fluid
         id="editor-canvas"
         className="position-relative"
-        fluid
         style={{ height: "70vh", marginTop: "-2.4rem" }}
         ref={editorCanvas}
       ></Container>

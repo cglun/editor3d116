@@ -20,19 +20,15 @@ import { APP_COLOR } from "../../app/type";
 //   return <Alert variant={type}>{text}</Alert>;
 // }
 
-interface Props {
+export default function AlertBase({
+  text = "内容",
+  type = APP_COLOR.Danger,
+  className = "",
+}: {
   text: string;
-  type?: string;
+  type?: APP_COLOR;
   className?: string;
-}
-const props: Props = {
-  text: "内容",
-  type: APP_COLOR.Danger,
-  className: "",
-};
-
-export default function AlertBase(_props: Props = props) {
-  const { type, text, className } = _props;
+}) {
   let iconClassName = setClassName("info-circle") + " me-1";
 
   if (type === APP_COLOR.Success) {

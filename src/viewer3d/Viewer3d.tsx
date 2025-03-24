@@ -34,6 +34,7 @@ import {
   setBoxHelper,
 } from "../three/common3d";
 import { enableScreenshot, setEnableScreenshot } from "../three/config3d";
+import { runScript } from "../three/scriptDev";
 
 /**
  * 其他应用可以调用此组件，
@@ -80,6 +81,9 @@ export default function Viewer3d({
         setCamera(camera);
         setLabel(scene, dispatchTourWindow);
         modelNum = modelList.length;
+        if (modelNum === 0) {
+          runScript(); // 运行脚本
+        }
         modelList.forEach((item: GlbModel) => {
           loadModelByUrl(item);
         });
@@ -117,15 +121,23 @@ export default function Viewer3d({
       function (gltf) {
         setProgress(100);
         const group = getModelGroup(model, gltf, getScene());
+        enableShadow(group, getScene());
         getScene().add(group);
-        modelNum--;
-        if (modelNum <= 0) {
-          // 加载完成全部模型， 设置阴影
-          enableShadow(getScene(), getScene());
+
+        if (modelNum <= 1) {
+          getScene();
+          getControls();
+          getCamera();
+          runScript();
+          const { javascript } = getScene().userData;
+          if (javascript) {
+            eval(javascript);
+          }
         }
         if (enableScreenshot.enable) {
           setEnableScreenshot(true);
         }
+        modelNum--;
       },
       function (xhr) {
         progress = parseFloat(

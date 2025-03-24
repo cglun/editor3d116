@@ -162,7 +162,7 @@ function ItemInfoCard(props: Props) {
 
         modelNum = modelList.length;
         if (modelNum === 0) {
-          runScript();
+          runScript(); // 运行脚本
         }
         modelList.forEach((item: GlbModel) => {
           loadModelByUrl(item);
@@ -198,8 +198,6 @@ function ItemInfoCard(props: Props) {
         });
 
         const group = getModelGroup(model, gltf, getScene());
-
-        //const { useShadow } = getScene().userData.config3d;
         enableShadow(group, getScene());
         getScene().add(group);
 

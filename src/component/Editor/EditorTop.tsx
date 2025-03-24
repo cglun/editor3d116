@@ -168,7 +168,7 @@ export default function EditorTop() {
         style={{ padding: 0 }}
       >
         <Navbar.Brand style={{ padding: 0, marginRight: "0" }}>
-          <Image src={logoUrl} title="logo" />
+          <Image style={{ width: "1.6rem" }} src={logoUrl} title="logo" />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">

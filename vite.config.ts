@@ -11,15 +11,16 @@ export default defineConfig({
       filename: "remoteEntry.js",
       exposes: {
         "./Viewer3d": "./src/Viewer3d/Viewer3d.tsx",
-        "./init3dViewer": "./src/three/init3dViewer.ts",
+        // "./init3dViewer": "./src/three/init3dViewer.ts",
       },
       shared: ["react", "react-dom"],
     }),
   ],
   base: "/editor3d/",
-  publicDir: "/public/",
+  // publicDir: "/public/",
   build: {
     modulePreload: true,
+    copyPublicDir: true,
     target: "esnext",
     minify: true,
     cssCodeSplit: false,
@@ -31,15 +32,10 @@ export default defineConfig({
       transformMixedEsModules: true,
     },
     rollupOptions: {
+      //  external: [new RegExp(".hdr")],
       output: {
         assetFileNames: "assets/[name].[ext]",
-        chunkFileNames: (parameter) => {
-          if (parameter.name.includes("xx")) {
-            return "assets/[name].js";
-          } else {
-            return "assets/[name]-[hash].js";
-          }
-        },
+        chunkFileNames: "assets/[name]-[hash].js",
         entryFileNames: "assets/[name].js",
       },
     },

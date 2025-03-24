@@ -46,7 +46,10 @@ export default function initScene(node: HTMLDivElement): void {
   camera = createPerspectiveCamera(node, "截图透视相机");
   camera.position.set(-3, 3, 5);
   scene = createScene();
-  scene.add(createDirectionalLight());
+  const { useShadow } = getScene().userData.config3d;
+  const light = createDirectionalLight();
+  light.castShadow = useShadow;
+  scene.add(light);
   const HELPER_GROUP = createGroupIfNotExist(scene, "HELPER_GROUP");
   HELPER_GROUP?.add(createGridHelper());
   HELPER_GROUP && scene.add(HELPER_GROUP);

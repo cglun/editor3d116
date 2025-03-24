@@ -1,4 +1,4 @@
-import { getScene } from "./init3dEditor";
+//import { getScene } from "./init3dEditor";
 
 //脚本开发在这里进行调试，调试完成后，把【开始】到【结束】之间的代码复制到脚本中！
 export function runScript() {

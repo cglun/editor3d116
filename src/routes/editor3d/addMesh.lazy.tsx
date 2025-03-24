@@ -50,9 +50,13 @@ function RouteComponent() {
     updateScene(_scene);
   }
   function addLocalModel() {
-    const url = "/editor3d/public/static/models/blender.glb";
+    const blender = new URL(
+      `/public/static/file3d/models/blender.glb`,
+      import.meta.url
+    ).href;
+
     const loader = glbLoader();
-    loader.load(url, function (gltf) {
+    loader.load(blender, function (gltf) {
       const _scene = getScene();
       const group = new Group();
       group.name = "猴子";
@@ -99,9 +103,10 @@ function RouteComponent() {
     updateScene(_scene);
   }
   function addDirectionalLight() {
-    const directionalLight = createDirectionalLight();
-
-    _scene.add(directionalLight);
+    const { useShadow } = getScene().userData.config3d;
+    const light = createDirectionalLight();
+    light.castShadow = useShadow;
+    _scene.add(light);
     // const helper = new DirectionalLightHelper(directionalLight, 1, 0xffff00);
     // helper.userData.isHelper = true;
     // //helper.position.copy(directionalLight.position);

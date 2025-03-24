@@ -10,13 +10,10 @@ export const Route = createLazyFileRoute("/editor3d/about")({
 });
 
 function RouteComponent() {
+  const href = new URL("/public/static/about.html", import.meta.url).href;
   return (
     <Container fluid style={{ height: "100vh" }}>
-      <iframe
-        src="/editor3d/public/static/about.html"
-        width={"100%"}
-        height={"100%"}
-      ></iframe>
+      <iframe src={href} width={"100%"} height={"100%"}></iframe>
     </Container>
   );
   return (
