@@ -17,9 +17,9 @@ import initScene, {
   setCamera,
   setScene,
   getLabelRenderer,
-  showModelByName,
   getDivElement,
   getAll,
+  getActionList,
 } from "../three/init3dViewer";
 import {
   getProjectData,
@@ -68,7 +68,7 @@ export default function Viewer3d({
       camera: getCamera(),
       controls: getControls(),
       all: getAll(),
-      showModelByName,
+      getActionList,
     };
   }
 

@@ -46,8 +46,23 @@ export default function EditorTop() {
   const logoUrl = new URL("/public/static/images/logo.png", import.meta.url)
     .href;
 
+  function notJavascript() {
+    const { javascript } = getScene().userData;
+    try {
+      eval(javascript);
+    } catch (error) {
+      Toast3d("查看控制台!", "脚本错误", APP_COLOR.Danger);
+      console.error(error);
+      return true;
+    }
+  }
+
   function saveScene() {
     const dataJson = sceneSerialization();
+    if (notJavascript()) {
+      return;
+    }
+
     _axios
       .post("/project/update/", {
         id: getScene().userData.projectId,
@@ -82,6 +97,9 @@ export default function EditorTop() {
   }
 
   function saveAsNewScene() {
+    if (notJavascript()) {
+      return;
+    }
     const scene = getScene();
     scene.userData.APP_THEME.sceneCanSave = true;
     function getValue(sceneName: string, des: string) {

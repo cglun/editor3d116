@@ -125,3 +125,36 @@ export function showModelByName(
     }
   }
 }
+
+export interface ActionInfo {
+  name: string;
+  id: string;
+  handler: () => void;
+}
+export function getActionList(): ActionInfo[] {
+  const scene = getScene();
+  scene.userData.projectId;
+  return [
+    {
+      name: "场景ID",
+      id: "id1",
+      handler: () => {
+        console.log(scene.userData.projectId);
+      },
+    },
+    {
+      name: "场景名称",
+      id: "id2",
+      handler: () => {
+        console.log(scene.userData.projectName);
+      },
+    },
+    {
+      name: "功能3",
+      id: "id3",
+      handler: () => {
+        console.log("功能3");
+      },
+    },
+  ];
+}

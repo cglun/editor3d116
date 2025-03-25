@@ -5,6 +5,8 @@ import { setEnableScreenshot } from "../../three/config3d";
 import _axios from "../../app/http";
 import { testData2 } from "../../app/testData";
 import { Button, ButtonGroup } from "react-bootstrap";
+import { useUpdateScene } from "../../app/hooks";
+import { getButtonColor, getThemeByScene } from "../../app/utils";
 
 export const Route = createLazyFileRoute("/editor3d/preView")({
   component: RouteComponent,
@@ -18,6 +20,9 @@ function RouteComponent() {
     des: "Scene",
     cover: "",
   });
+  const { scene } = useUpdateScene();
+  let { themeColor } = getThemeByScene(scene);
+  const btnColor = getButtonColor(themeColor);
 
   useEffect(() => {
     setEnableScreenshot(true);
@@ -84,14 +89,14 @@ function RouteComponent() {
         {list.map((item) => {
           return (
             <Button
-              variant="dark"
+              variant={btnColor}
               key={item.id}
               disabled={item.id === _item.id}
               onClick={() => {
                 _setItem(item);
               }}
             >
-              {item.name}【{item.id}】
+              id_{item.id}_{item.name}
             </Button>
           );
         })}
