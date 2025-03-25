@@ -21,7 +21,7 @@ function ModelList() {
   const [updateTime, setUpdateTime] = React.useState(0);
   useEffect(() => {
     setIsLoading(true);
-    _axios.post("/project/pageList/", { size: 1000 }).then((res) => {
+    _axios.post("/project/pageList/", { size: 1000 }).then((res: any) => {
       if ((res.data.code = 200)) {
         const message = res.data.message;
         if (message) {

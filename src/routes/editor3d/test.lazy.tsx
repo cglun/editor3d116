@@ -14,7 +14,7 @@ export const Route = createLazyFileRoute("/editor3d/test")({
 function RouteComponent() {
   const { useTween } = getScene().userData.config3d;
   const { scene } = useUpdateScene();
-  let { themeColor } = getThemeByScene(scene);
+  const { themeColor } = getThemeByScene(scene);
   const btnColor = getButtonColor(themeColor);
 
   return (

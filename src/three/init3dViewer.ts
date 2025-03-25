@@ -26,8 +26,8 @@ let scene: Scene,
   controls: OrbitControls,
   renderer: WebGLRenderer,
   divElement: HTMLDivElement,
-  extra3d = extra,
-  parameters3d = parameters;
+  extra3d = extra;
+const parameters3d = parameters;
 function animate() {
   const animateProps: AnimateProps = {
     scene,
@@ -52,7 +52,9 @@ export default function initScene(node: HTMLDivElement): void {
   scene.add(light);
   const HELPER_GROUP = createGroupIfNotExist(scene, "HELPER_GROUP");
   HELPER_GROUP?.add(createGridHelper());
-  HELPER_GROUP && scene.add(HELPER_GROUP);
+  if (HELPER_GROUP) {
+    scene.add(HELPER_GROUP);
+  }
 
   renderer = createRenderer(node);
   node.appendChild(renderer.domElement);

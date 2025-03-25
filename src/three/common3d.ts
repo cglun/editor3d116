@@ -74,7 +74,9 @@ export function setBoxHelper(selectedMesh: Object3D, scene: Scene) {
     BOX_HELPER.setFromObject(selectedMesh);
     BOX_HELPER.update();
   }
-  HELPER_GROUP && scene.add(HELPER_GROUP);
+  if (HELPER_GROUP) {
+    scene.add(HELPER_GROUP);
+  }
 }
 // 显示或隐藏BOX_HELPER
 export function hideBoxHelper(scene: Scene) {

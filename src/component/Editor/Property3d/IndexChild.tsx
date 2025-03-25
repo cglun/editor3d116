@@ -19,7 +19,7 @@ import { userData } from "../../../three/config3d";
 const step = 0.1;
 function SceneProperty() {
   const { scene, updateScene } = useUpdateScene();
-  let { themeColor } = getThemeByScene(scene);
+  const { themeColor } = getThemeByScene(scene);
 
   const _scene = getScene();
 

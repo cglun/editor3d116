@@ -13,7 +13,7 @@ export function ConfigCheck({
   label: string;
   configKey: keyof typeof config3d;
   disabled?: boolean;
-  callBack?: any;
+  callBack?: () => void;
 }) {
   const { scene, updateScene } = useUpdateScene();
   const _configKey = configKey as keyof typeof config3d;

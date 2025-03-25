@@ -13,7 +13,7 @@ import { getScene } from "../../three/init3dEditor";
 import { ButtonGroup, Card, Container } from "react-bootstrap";
 import { MyContext } from "../../app/MyContext";
 import { getThemeByScene, setClassName } from "../../app/utils";
-import _axios from "../../app/http";
+
 import { useUpdateScene } from "../../app/hooks";
 import {
   createDirectionalLight,
@@ -32,7 +32,7 @@ function RouteComponent() {
   const _scene = getScene();
   const { dispatchScene } = useContext(MyContext);
   const { scene, updateScene } = useUpdateScene();
-  let { themeColor } = getThemeByScene(scene);
+  const { themeColor } = getThemeByScene(scene);
 
   function addBox() {
     // 创建立方体

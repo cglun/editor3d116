@@ -8,7 +8,7 @@ const SECRET_IV = CryptoJS.enc.Utf8.parse("e3bbe7e3ba84431a");
  * @param data
  * @returns {string}
  */
-export const encrypt = (data: any, type: string = "default") => {
+export const encrypt = (data: any, type: string = "default"): string => {
   if (typeof data === "object") {
     try {
       data = JSON.stringify(data);

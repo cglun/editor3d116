@@ -19,6 +19,7 @@ import { userData } from "./config3d";
 import { setClassName } from "../app/utils";
 
 import { setTextureBackground } from "./common3d";
+import { TourWindow } from "../app/MyContext";
 
 export function createPerspectiveCamera(
   node: HTMLElement,
@@ -163,7 +164,7 @@ function createDiv(
     id: string;
     title: string;
   },
-  dispatchTourWindow?: any
+  dispatchTourWindow?: React.Dispatch<TourWindow>
 ) {
   const div = document.createElement("div");
   div.className = "mark-label";
@@ -182,14 +183,15 @@ function createDiv(
     i.style.cursor = "pointer";
     i.setAttribute("data-tour-id", tourObject.id);
     i.addEventListener("click", function () {
-      dispatchTourWindow({
-        type: "tourWindow",
-        payload: {
-          show: true,
-          title: tourObject.title,
-          tourSrc: getTourSrc(tourObject.id),
-        },
-      });
+      dispatchTourWindow &&
+        dispatchTourWindow({
+          type: "tourWindow",
+          payload: {
+            show: true,
+            title: tourObject.title,
+            tourSrc: getTourSrc(tourObject.id),
+          },
+        });
     });
     div.appendChild(i);
   }

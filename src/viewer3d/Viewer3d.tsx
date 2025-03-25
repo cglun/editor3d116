@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import { Container, ProgressBar } from "react-bootstrap";
 import { APP_COLOR, GlbModel } from "../app/type";
 import { getModelGroup, glbLoader, removeCanvasChild } from "../three/utils";
-import _axios from "../app/http";
 import { ItemInfo } from "../component/Editor/ListCard";
 import Toast3d from "../component/common/Toast3d";
 import { initEditorScene, initTourWindow, MyContext } from "../app/MyContext";
@@ -48,7 +47,7 @@ export default function Viewer3d({
 }: {
   item: ItemInfo;
   canvasStyle?: { height: string; width: string };
-  callBack?: any;
+  callBack?: (exportObj: Object) => void;
 }) {
   const canvas3d: React.RefObject<HTMLDivElement | any> = useRef();
 
@@ -92,7 +91,9 @@ export default function Viewer3d({
         Toast3d(error, "提示", APP_COLOR.Danger);
       })
       .finally(() => {
-        callBack && callBack(exportObj());
+        if (callBack) {
+          callBack(exportObj());
+        }
         const { javascript } = getScene().userData;
         if (enableScreenshot.enable) {
           setEnableScreenshot(true);

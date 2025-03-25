@@ -13,13 +13,15 @@ export function Input3d({
   title: string;
   step: number;
 }) {
-  if (!transform) {
-    return;
-  }
-
   const [checked, setChecked] = useState(true);
   const [lockValue, setLockValue] = useState(0);
   const _isScale = isScale(title);
+  if (!transform) {
+    return;
+  }
+  const [transformX, setTransformX] = useState(transform.x);
+  const [transformY, setTransformY] = useState(transform.y);
+  const [transformZ, setTransformZ] = useState(transform.z);
   function setValue(value: number) {
     if (checked && _isScale) {
       setLockValue(value);
@@ -32,9 +34,7 @@ export function Input3d({
   function isScale(title: string) {
     return "缩放" === title ? true : false;
   }
-  const [transformX, setTransformX] = useState(transform.x);
-  const [transformY, setTransformY] = useState(transform.y);
-  const [transformZ, setTransformZ] = useState(transform.z);
+
   return (
     <Card>
       <Card.Header className="d-flex justify-content-between">

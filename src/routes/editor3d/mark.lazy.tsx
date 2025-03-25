@@ -36,7 +36,7 @@ function RouteComponent() {
   const { scene, updateScene } = useUpdateScene();
   const { dispatchTourWindow } = useContext(MyContext);
 
-  let { themeColor } = getThemeByScene(scene);
+  const { themeColor } = getThemeByScene(scene);
 
   function addMark(label: CSS3DSprite | CSS2DObject) {
     const scene = getScene();

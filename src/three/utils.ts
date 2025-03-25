@@ -18,6 +18,7 @@ import { ItemInfo } from "../component/Editor/ListCard";
 import _axios from "../app/http";
 import { createCss2dLabel, createCss3dLabel } from "./factory3d";
 import { setTextureBackground } from "./common3d";
+import { TourWindow } from "../app/MyContext";
 
 export function getObjectNameByName(object3D: Object3D): string {
   return object3D.name.trim() === "" ? object3D.type : object3D.name;
@@ -53,7 +54,10 @@ export function onWindowResize(
   }
 }
 
-export function setLabel(scene: Scene, dispatchTourWindow?: any) {
+export function setLabel(
+  scene: Scene,
+  dispatchTourWindow?: React.Dispatch<TourWindow>
+) {
   cleaerOldLabel();
   // const MARK_LABEL_GROUP = scene.getObjectByName("MARK_LABEL_GROUP");
   const MARK_LABEL_GROUP = createGroupIfNotExist(scene, "MARK_LABEL_GROUP");
@@ -144,7 +148,7 @@ export function sceneDeserialize(data: string, item: ItemInfo) {
     }
   });
 
-  let newCamera = new PerspectiveCamera();
+  const newCamera = new PerspectiveCamera();
 
   const { x, y, z } = newScene.userData.fiexedCameraPosition;
 

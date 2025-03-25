@@ -210,7 +210,9 @@ export function setTransformControls(selectedMesh: Object3D) {
   };
   getHelper.userData = userData;
   HELPER_GROUP?.add(getHelper);
-  HELPER_GROUP && scene.add(HELPER_GROUP);
+  if (HELPER_GROUP) {
+    scene.add(HELPER_GROUP);
+  }
   getHelper.traverse((child) => {
     child.userData = userData;
   });

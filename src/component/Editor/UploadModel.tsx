@@ -11,12 +11,12 @@ import { APP_COLOR, GlbModel } from "../../app/type";
 import { useUpdateScene } from "../../app/hooks";
 
 export function UploadModel({ updateList = (_time: number) => {} }) {
-  let fileRef = useRef<any>(null);
+  const fileRef = useRef<any>(null);
   const [curFile, setCurFile] = useState<File | null>(null);
   const [btn, setBtn] = useState<boolean>(true);
   const [progress, setProgress] = useState<number>(100);
   const { scene } = useUpdateScene();
-  let { themeColor } = getThemeByScene(scene);
+  const { themeColor } = getThemeByScene(scene);
   const buttonColor = getButtonColor(themeColor);
 
   async function handleUpload() {

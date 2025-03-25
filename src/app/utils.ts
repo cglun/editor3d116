@@ -39,9 +39,9 @@ export function blobToFile(blob: Blob, fileName: string) {
   // 在浏览器环境中，可以使用File构造函数来创建File对象
   try {
     return new File([blob], fileName, { type: blob.type });
-  } catch (e) {
+  } catch (error) {
     // 如果File构造函数不可用（例如在某些Node.js环境中），则直接返回Blob
-    console.warn("File constructor not available, returning Blob instead.");
+    console.warn(error);
     return blob;
   }
 }

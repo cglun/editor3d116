@@ -29,7 +29,7 @@ export default function EditorForm({
   const [_item, _setItem] = useState<ItemInfo>({ ...item });
   const [imgBase64, setImgBase64] = useState("");
   const scene = getScene();
-  //let { themeColor } = getThemeByScene(scene);
+  //const { themeColor } = getThemeByScene(scene);
   const { themeColor } = scene.userData.APP_THEME;
   const buttonColor = getButtonColor(themeColor);
   const [loadScene, setLoadScene] = useState<boolean>(false);

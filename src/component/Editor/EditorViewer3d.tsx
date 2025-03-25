@@ -29,7 +29,7 @@ function EditorViewer3d() {
     useRef<HTMLDivElement>(null);
 
   const { scene, updateScene } = useUpdateScene();
-  let { themeColor } = getThemeByScene(scene);
+  const { themeColor } = getThemeByScene(scene);
 
   useEffect(() => {
     removeCanvasChild(editorCanvas);
@@ -43,7 +43,9 @@ function EditorViewer3d() {
 
       scene.add(light);
       HELPER_GROUP?.add(createGridHelper());
-      HELPER_GROUP && scene.add(HELPER_GROUP);
+      if (HELPER_GROUP) {
+        scene.add(HELPER_GROUP);
+      }
     }
     updateScene(getScene().clone());
 

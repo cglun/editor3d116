@@ -21,7 +21,7 @@ export function Serch3d({
   const placeholder = `请输入${type}名称`;
 
   const { scene } = useUpdateScene();
-  let { themeColor } = getThemeByScene(scene);
+  const { themeColor } = getThemeByScene(scene);
   const buttonColor = getButtonColor(themeColor);
 
   return (

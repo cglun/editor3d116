@@ -41,7 +41,7 @@ export default function EditorTop() {
   const handleClose = () => setShowScene(false);
   const handleShow = () => setShowScene(true);
   const { scene, updateScene } = useUpdateScene();
-  let { themeColor, iconFill, sceneCanSave } = getThemeByScene(scene);
+  const { themeColor, iconFill, sceneCanSave } = getThemeByScene(scene);
   document.body.setAttribute("data-bs-theme", themeColor);
   const logoUrl = new URL("/public/static/images/logo.png", import.meta.url)
     .href;

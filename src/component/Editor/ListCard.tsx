@@ -54,7 +54,7 @@ interface Props {
 function ItemInfoCard(props: Props) {
   const { list, setList, isLoading, error } = props;
   const { scene, updateScene } = useUpdateScene();
-  let { themeColor } = getThemeByScene(scene);
+  const { themeColor } = getThemeByScene(scene);
 
   const { dispatchTourWindow } = useContext(MyContext);
 
@@ -153,7 +153,9 @@ function ItemInfoCard(props: Props) {
         const { scene, camera, modelList } = sceneDeserialize(data, item);
         const HELPER_GROUP = createGroupIfNotExist(scene, "HELPER_GROUP");
         HELPER_GROUP?.add(createGridHelper());
-        HELPER_GROUP && scene.add(HELPER_GROUP);
+        if (HELPER_GROUP) {
+          scene.add(HELPER_GROUP);
+        }
         setScene(scene);
         setCamera(camera);
 
