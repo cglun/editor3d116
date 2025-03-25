@@ -18,7 +18,6 @@ import initScene, {
   getLabelRenderer,
   getDivElement,
   getAll,
-  getActionList,
 } from "../three/init3dViewer";
 import {
   getProjectData,
@@ -26,14 +25,10 @@ import {
   sceneDeserialize,
   setLabel,
 } from "../three/utils";
-import {
-  enableShadow,
-  hideBoxHelper,
-  raycasterSelect,
-  setBoxHelper,
-} from "../three/common3d";
+import { enableShadow, raycasterSelect } from "../three/common3d";
 import { enableScreenshot, setEnableScreenshot } from "../three/config3d";
 import { runScript } from "../three/scriptDev";
+import { getActionList } from "./viewer3dUtils";
 
 /**
  * 其他应用可以调用此组件，
@@ -76,13 +71,18 @@ export default function Viewer3d({
     getProjectData(item.id)
       .then((data: any) => {
         const { scene, camera, modelList } = sceneDeserialize(data, item);
+
         setScene(scene);
         setCamera(camera);
         setLabel(scene, dispatchTourWindow);
         modelNum = modelList.length;
         if (modelNum === 0) {
           runScript(); // 运行脚本
+          if (callBack) {
+            callBack(exportObj());
+          }
         }
+
         modelList.forEach((item: GlbModel) => {
           loadModelByUrl(item);
         });
@@ -91,9 +91,6 @@ export default function Viewer3d({
         Toast3d(error, "提示", APP_COLOR.Danger);
       })
       .finally(() => {
-        if (callBack) {
-          callBack(exportObj());
-        }
         const { javascript } = getScene().userData;
         if (enableScreenshot.enable) {
           setEnableScreenshot(true);
@@ -130,6 +127,7 @@ export default function Viewer3d({
           getControls();
           getCamera();
           runScript();
+          callBack && callBack(exportObj());
           const { javascript } = getScene().userData;
           if (javascript) {
             eval(javascript);
@@ -169,10 +167,15 @@ export default function Viewer3d({
           divElement
         );
         if (currentObject.length > 0) {
-          setBoxHelper(currentObject[0].object, getScene());
-        } else {
-          hideBoxHelper(getScene());
+          console.log(currentObject[0].object.name);
         }
+        // console.log(currentObject[0].object);
+
+        // if (currentObject.length > 0) {
+        //   setBoxHelper(currentObject[0].object, getScene());
+        // } else {
+        //   hideBoxHelper(getScene());
+        // }
       });
     }
 

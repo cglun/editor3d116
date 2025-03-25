@@ -11,7 +11,6 @@ import { OrbitControls } from "three/examples/jsm/Addons.js";
 import {
   createConfig,
   createDirectionalLight,
-  createGridHelper,
   createPerspectiveCamera,
   createRenderer,
   createScene,
@@ -19,7 +18,6 @@ import {
 
 import { extra3d as extra, parameters } from "./config3d";
 import { AnimateProps, commonAnimate } from "./common3d";
-import { createGroupIfNotExist } from "./utils";
 
 let scene: Scene,
   camera: PerspectiveCamera,
@@ -50,11 +48,6 @@ export default function initScene(node: HTMLDivElement): void {
   const light = createDirectionalLight();
   light.castShadow = useShadow;
   scene.add(light);
-  const HELPER_GROUP = createGroupIfNotExist(scene, "HELPER_GROUP");
-  HELPER_GROUP?.add(createGridHelper());
-  if (HELPER_GROUP) {
-    scene.add(HELPER_GROUP);
-  }
 
   renderer = createRenderer(node);
   node.appendChild(renderer.domElement);
@@ -109,54 +102,4 @@ export function takeScreenshot(width: number, height: number): string {
   renderer.render(scene, camera);
   const screenshot = renderer.domElement.toDataURL("image/png");
   return screenshot;
-}
-
-export function showModelByName(
-  scene: Scene,
-  targetModelName: string,
-  show: boolean
-) {
-  const model = scene.getObjectByName(targetModelName);
-  if (model) {
-    model.traverse((item) => {
-      item.visible = show;
-    });
-
-    if (model.name === "MODEl_GROUP") {
-      model.visible = true;
-    }
-  }
-}
-
-export interface ActionInfo {
-  name: string;
-  id: string;
-  handler: () => void;
-}
-export function getActionList(): ActionInfo[] {
-  const scene = getScene();
-  scene.userData.projectId;
-  return [
-    {
-      name: "场景ID",
-      id: "id1",
-      handler: () => {
-        console.log(scene.userData.projectId);
-      },
-    },
-    {
-      name: "场景名称",
-      id: "id2",
-      handler: () => {
-        console.log(scene.userData.projectName);
-      },
-    },
-    {
-      name: "功能3",
-      id: "id3",
-      handler: () => {
-        console.log("功能3");
-      },
-    },
-  ];
 }

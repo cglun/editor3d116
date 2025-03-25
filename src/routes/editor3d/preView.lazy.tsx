@@ -7,6 +7,7 @@ import { testData2 } from "../../app/testData";
 import { Button, ButtonGroup } from "react-bootstrap";
 import { useUpdateScene } from "../../app/hooks";
 import { getButtonColor, getThemeByScene } from "../../app/utils";
+import { ActionItem } from "../../viewer3d/viewer3dUtils";
 
 export const Route = createLazyFileRoute("/editor3d/preView")({
   component: RouteComponent,
@@ -21,8 +22,9 @@ function RouteComponent() {
     cover: "",
   });
   const { scene } = useUpdateScene();
-  let { themeColor } = getThemeByScene(scene);
+  const { themeColor } = getThemeByScene(scene);
   const btnColor = getButtonColor(themeColor);
+  const [actionList, setActionList] = React.useState<any[]>([]);
 
   useEffect(() => {
     setEnableScreenshot(true);
@@ -45,6 +47,11 @@ function RouteComponent() {
       }
     });
   }, []);
+
+  function callBack(incetance: any) {
+    const actionList = incetance.getActionList();
+    setActionList(actionList);
+  }
 
   return (
     <div
@@ -101,13 +108,30 @@ function RouteComponent() {
           );
         })}
       </ButtonGroup>
+
+      <ButtonGroup size="sm" className="ms-2">
+        {actionList &&
+          actionList.map((item: ActionItem) => {
+            return (
+              <Button
+                variant={btnColor}
+                key={item.id}
+                onClick={() => {
+                  item.handler();
+                }}
+              >
+                {item.name}
+              </Button>
+            );
+          })}
+      </ButtonGroup>
       <div
         onMouseEnter={() => {
           const element = document.getElementById("pre-view-top");
           element?.scrollIntoView();
         }}
       >
-        <Viewer3d item={_item} />
+        <Viewer3d item={_item} callBack={callBack} />
       </div>
     </div>
   );

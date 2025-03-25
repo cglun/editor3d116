@@ -242,8 +242,9 @@ export function getModelGroup(
   return MODEL_GROUP;
 }
 
+//创建group,如果group不存在,则创建group
 export function createGroupIfNotExist(
-  contextScene: Scene,
+  contextScene: Scene | Group | Object3D,
   name: string,
   createGroup: boolean = true
 ): Object3D | undefined {
