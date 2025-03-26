@@ -1,7 +1,6 @@
 import Button from "react-bootstrap/esm/Button";
 import Form from "react-bootstrap/esm/Form";
-import { Color, Fog, Object3D, Texture } from "three";
-
+import { Color, Fog, Light, Scene, Texture } from "three";
 import Card from "react-bootstrap/esm/Card";
 import InputGroup from "react-bootstrap/esm/InputGroup";
 import { getScene } from "../../../three/init3dEditor";
@@ -15,6 +14,7 @@ import AlertBase from "../../common/AlertBase";
 import { setTextureBackground } from "../../../three/common3d";
 import { useState } from "react";
 import { userData } from "../../../three/config3d";
+import { EditorObjec } from "../../../app/type";
 
 const step = 0.1;
 function SceneProperty() {
@@ -81,7 +81,7 @@ function SceneProperty() {
             aria-label="Default select example"
             disabled={!enableTexture}
             value={_scene.userData.backgroundHDR.name}
-            onChange={(e: any) => {
+            onChange={(e) => {
               _scene.userData.backgroundHDR.name = e.target.value;
               setTextureBackground(_scene);
               updateScene(getScene());
@@ -169,17 +169,19 @@ function SceneProperty() {
           }}
         />
       </InputGroup>
+
       <InputAttrNumber
         title={"雾气近端"}
         min={0}
-        selected3d={_scene.fog}
+        selected3d={_scene.fog as Fog}
         attr={"near"}
         step={step}
       />
+
       <InputAttrNumber
         title={"雾气远端"}
         min={0}
-        selected3d={_scene.fog}
+        selected3d={_scene.fog as Fog}
         attr={"far"}
         step={step}
       />
@@ -198,7 +200,7 @@ function SceneProperty() {
   );
 }
 
-function CommonProperty({ selected3d }: { selected3d: Object3D | any }) {
+function CommonProperty({ selected3d }: { selected3d: EditorObjec }) {
   // const { type } = selected3d.parent;
   // let canSetShadow = true;
   // // if (type && type === "Scene") {
@@ -234,7 +236,7 @@ function CommonProperty({ selected3d }: { selected3d: Object3D | any }) {
             <InputAttrNumber
               title="亮度"
               min={0}
-              selected3d={selected3d}
+              selected3d={selected3d as Light}
               attr={"intensity"}
               step={step}
             />
@@ -263,21 +265,17 @@ function CommonProperty({ selected3d }: { selected3d: Object3D | any }) {
 export default function IndexChild({
   selected3d,
 }: {
-  selected3d: Object3D | any;
+  selected3d: EditorObjec;
 }) {
-  if (selected3d) {
-    if (selected3d.isScene) {
-      return <SceneProperty />;
-    }
-    if (selected3d.isCamera) {
-      return (
-        <Input3d
-          transform={selected3d.position}
-          title={"相机位置"}
-          step={step}
-        />
-      );
-    }
-    return <CommonProperty selected3d={selected3d} />;
+  console.log(selected3d instanceof Scene, selected3d);
+
+  if (selected3d.type === "Scene") {
+    return <SceneProperty />;
   }
+  if (selected3d.type === "PerspectiveCamera") {
+    return (
+      <Input3d transform={selected3d.position} title={"相机位置"} step={step} />
+    );
+  }
+  return <CommonProperty selected3d={selected3d} />;
 }

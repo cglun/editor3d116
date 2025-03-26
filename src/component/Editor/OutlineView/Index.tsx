@@ -29,7 +29,7 @@ export default function Index() {
     _setCamera(camera);
     const _scene = getScene();
     _scene.children = setD2(_scene.children);
-    updateScene(getScene());
+
     const divElement = getDivElement();
     divElement.addEventListener("click", function (event) {
       event.stopPropagation();
@@ -134,11 +134,12 @@ export default function Index() {
             </Card.Header>
             <Card.Body>
               <ListGroup>
-                <OutlineViewCamera
-                  object3D={_camera}
-                  resetTextWarning={resetTextWarning}
-                  _setCamera={_setCamera}
-                />
+                {_camera && (
+                  <OutlineViewCamera
+                    object3D={_camera}
+                    _setCamera={_setCamera}
+                  />
+                )}
               </ListGroup>
             </Card.Body>
           </Card>

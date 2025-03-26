@@ -268,7 +268,7 @@ export function getDivElement() {
 export function getLabelRenderer() {
   return extra.labelRenderer2d;
 }
-export function setSelectedObject(obj: Object3D) {
+export function setSelectedObject<T>(obj: T) {
   scene.userData.selected3d = obj;
 }
 

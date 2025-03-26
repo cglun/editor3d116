@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import Form from "react-bootstrap/esm/Form";
 import InputGroup from "react-bootstrap/esm/InputGroup";
-import { Fog, Light, Object3D, PerspectiveCamera, Scene } from "three";
 
-export function InputAttrNumber({
+import { useUpdateScene } from "../../../app/hooks";
+
+// 严格约束泛型 T，确保 T 的所有属性值类型为 number
+export function InputAttrNumber<T>({
   title,
   selected3d,
   attr,
@@ -13,22 +15,19 @@ export function InputAttrNumber({
   disabled = false,
 }: {
   title: string;
-  selected3d: Object3D | any;
+  selected3d: T;
   min?: number;
   max?: number;
-  attr:
-    | keyof typeof Scene.prototype
-    | keyof typeof Fog.prototype
-    | keyof typeof Light.prototype
-    | keyof typeof PerspectiveCamera.prototype;
+  attr: keyof T;
   step: number;
   disabled?: boolean;
 }) {
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState<number>(0);
+  const { updateScene } = useUpdateScene();
 
   useEffect(() => {
     if (selected3d && selected3d.hasOwnProperty(attr)) {
-      setValue(selected3d[attr]);
+      setValue(selected3d[attr] as number);
     }
   }, [selected3d]);
 
@@ -40,10 +39,10 @@ export function InputAttrNumber({
         <Form.Control
           aria-label="Small"
           aria-describedby="inputGroup-sizing-sm"
-          placeholder={selected3d[attr].toString()}
+          placeholder={"属性：" + attr.toString()}
           type="number"
           step={step}
-          title={"属性：" + attr}
+          title={"属性：" + attr.toString()}
           value={value}
           min={min}
           max={max}
@@ -53,6 +52,8 @@ export function InputAttrNumber({
             if (Number.isNaN(_value)) {
               return;
             }
+            // 创建一个新对象来避免直接修改原始对象
+            //@ts-ignore
             selected3d[attr] = _value;
             setValue(_value);
           }}

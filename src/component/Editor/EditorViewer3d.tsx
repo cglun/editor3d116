@@ -46,8 +46,8 @@ function EditorViewer3d() {
       if (HELPER_GROUP) {
         scene.add(HELPER_GROUP);
       }
+      updateScene(getScene().clone());
     }
-    updateScene(getScene().clone());
 
     window.addEventListener("resize", () =>
       onWindowResize(

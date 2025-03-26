@@ -1,5 +1,12 @@
 import ListGroup from "react-bootstrap/esm/ListGroup";
-import { Object3D } from "three";
+import {
+  Camera,
+  Mesh,
+  Object3D,
+  OrthographicCamera,
+  PerspectiveCamera,
+  Scene,
+} from "three";
 import {
   getPerspectiveCamera,
   getScene,
@@ -9,7 +16,7 @@ import { setClassName } from "../../../app/utils";
 import { getObjectNameByName } from "../../../three/utils";
 import { SPACE } from "../../../app/utils";
 import Button from "react-bootstrap/esm/Button";
-import { APP_COLOR } from "../../../app/type";
+import { APP_COLOR, EditorObjec } from "../../../app/type";
 import Toast3d from "../../common/Toast3d";
 import { cameraTween } from "../../../three/animate";
 import { useUpdateScene } from "../../../app/hooks";
@@ -18,9 +25,8 @@ export function OutlineViewCamera({
   object3D,
   _setCamera,
 }: {
-  object3D: Object3D | any;
-  resetTextWarning: any;
-  _setCamera: any;
+  object3D: EditorObjec;
+  _setCamera: (camera: PerspectiveCamera | OrthographicCamera) => void;
 }) {
   const { updateScene } = useUpdateScene();
   return (
@@ -30,7 +36,12 @@ export function OutlineViewCamera({
         style={{ cursor: "pointer" }}
         onClick={() => {
           // object3D.userData.isSelected = !object3D.userData.isSelected;
-          _setCamera(object3D);
+          if (
+            object3D instanceof PerspectiveCamera ||
+            object3D instanceof OrthographicCamera
+          ) {
+            _setCamera(object3D);
+          }
           setSelectedObject(object3D);
           updateScene(getScene());
         }}

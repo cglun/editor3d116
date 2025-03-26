@@ -160,14 +160,13 @@ export function sceneDeserialize(data: string, item: ItemInfo) {
   };
 }
 
-export function getProjectData(id: number) {
+export function getProjectData(id: number): Promise<string> {
   return new Promise((resolve, reject) => {
     _axios
       .get(`/project/getProjectData/${id}`)
       .then((res) => {
         if (res.data.data) {
           const data = res.data.data;
-          // const _data: GlbModel = JSON.parse(data);
           resolve(data);
         } else {
           reject(res.data.message);

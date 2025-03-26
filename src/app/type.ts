@@ -1,4 +1,13 @@
-import { Euler, Vector3 } from "three";
+import {
+  Camera,
+  Euler,
+  Mesh,
+  Object3D,
+  OrthographicCamera,
+  PerspectiveCamera,
+  Scene,
+  Vector3,
+} from "three";
 
 export interface CanvasNode {
   width: number;
@@ -36,15 +45,15 @@ export interface ToastBody {
   show: boolean;
 }
 
-export interface ModalBody {
-  title: string;
-  show: boolean;
-  body: any;
-  action: {
-    targetId: number;
-    type: ACTION_TYPE;
-  } | null;
-}
+// export interface ModalBody {
+//   title: string;
+//   show: boolean;
+//   body: any;
+//   action: {
+//     targetId: number;
+//     type: ACTION_TYPE;
+//   } | null;
+// }
 export enum HTTP_TYPE {
   GET = "GET",
   POST = "POST",
@@ -62,7 +71,7 @@ export interface GlbModel {
   position: Vector3;
   rotation: Euler;
   scale: Vector3;
-  userData: any;
+  userData: {};
 }
 
 export enum UserDataType {
@@ -79,3 +88,5 @@ export enum UserDataType {
 //   modelTotal: number;
 //   type: "Mesh";
 // };
+
+export type EditorObjec = Scene | PerspectiveCamera | Mesh | Object3D;

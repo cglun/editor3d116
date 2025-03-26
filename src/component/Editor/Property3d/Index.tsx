@@ -1,14 +1,14 @@
 import { Accordion } from "react-bootstrap";
-import { Object3D } from "three";
 import { fixedEditorLleft, setClassName } from "../../../app/utils";
 
 import IndexChild from "./IndexChild";
+import { EditorObjec } from "../../../app/type";
 /**
  * 物体属性
  * @returns
  */
 
-export default function Index({ selected3d }: { selected3d: Object3D | any }) {
+export default function Index({ selected3d }: { selected3d: EditorObjec }) {
   return (
     selected3d && (
       <Accordion.Item

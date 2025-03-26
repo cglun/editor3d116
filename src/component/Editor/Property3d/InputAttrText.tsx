@@ -3,13 +3,14 @@ import { Object3D } from "three";
 import { getObjectNameByName } from "../../../three/utils";
 import InputGroup from "react-bootstrap/esm/InputGroup";
 import Form from "react-bootstrap/esm/Form";
+import { EditorObjec } from "../../../app/type";
 
 export function InputAttrText({
   title,
   selected3d,
 }: {
   title: string;
-  selected3d: Object3D;
+  selected3d: EditorObjec;
   attr: keyof typeof Object3D.prototype;
 }) {
   const [value, setValue] = useState(getObjectNameByName(selected3d));

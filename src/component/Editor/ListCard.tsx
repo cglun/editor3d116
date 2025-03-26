@@ -37,6 +37,7 @@ import { MyContext } from "../../app/MyContext";
 import { runScript } from "../../three/scriptDev";
 import { createGridHelper, createNewScene } from "../../three/factory3d";
 import { enableShadow } from "../../three/common3d";
+import Trigger3d from "../common/fdsfafda";
 
 export interface ItemInfo {
   id: number;
@@ -149,7 +150,7 @@ function ItemInfoCard(props: Props) {
   let modelNum = 0;
   function loadScene(item: ItemInfo) {
     getProjectData(item.id)
-      .then((data: any) => {
+      .then((data) => {
         const { scene, camera, modelList } = sceneDeserialize(data, item);
         const HELPER_GROUP = createGroupIfNotExist(scene, "HELPER_GROUP");
         HELPER_GROUP?.add(createGridHelper());
@@ -250,21 +251,20 @@ function ItemInfoCard(props: Props) {
       {list.map((item: ItemInfo, index: number) => {
         let selectStyle = "";
         if (item.des === "Scene") {
+          if (item.id.toString() == "296") {
+            debugger;
+          }
           if (scene.payload.userData.projectId === item.id) {
             selectStyle = "bg-success";
           }
         }
         return (
           <Card className="ms-2 mt-2" key={index}>
-            <Card.Header
-              style={{ width: "6rem" }}
-              title={item.name}
-              className={selectStyle}
-            >
+            <Card.Header style={{ width: "6rem" }} className={selectStyle}>
               {item.name.trim() === "" ? (
                 <span className="text-warning"> 未命名</span>
               ) : (
-                item.name
+                <Trigger3d title={item.name} />
               )}
             </Card.Header>
             <Card.Body
