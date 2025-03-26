@@ -7,10 +7,16 @@ export default function InputBase({
   name = "新场景",
   des = "场景描述",
   placeholder = "场景名",
-  getValue = function (_name: string, _des: string) {},
+  getValue, // 明确指定 getValue 的类型
+}: {
+  name?: string;
+  des?: string;
+  placeholder?: string;
+  getValue: (sceneName: string, des: string) => void;
 }) {
   const [sceneName, setSceneName] = useState(name);
   const [sceneDes, setSceneDes] = useState(des);
+
   useEffect(() => {
     getValue(sceneName, sceneDes);
   }, [sceneDes, sceneName]);

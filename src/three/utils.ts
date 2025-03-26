@@ -6,11 +6,12 @@ import {
   Scene,
   WebGLRenderer,
 } from "three";
-import { UserDataType } from "../app/type";
+import { GlbModel, UserDataType } from "../app/type";
 
 import {
   CSS2DRenderer,
   DRACOLoader,
+  GLTF,
   GLTFLoader,
 } from "three/examples/jsm/Addons.js";
 
@@ -127,20 +128,24 @@ export function sceneDeserialize(data: string, item: ItemInfo) {
   const { scene, models, loader } = strToJson(data);
 
   let newScene = new Scene();
-  loader.parse(scene, function (object: Scene | any) {
-    const { userData } = object;
+  loader.parse(scene, function (object: Object3D) {
+    // 类型断言为 Scene
+    const sceneObject = object as Scene;
+    const { userData } = sceneObject;
 
-    // newScene.children = children;
-    // newScene.fog = fog;
-    // newScene.background = background;
-    newScene = object;
-    newScene.userData = {
-      ...userData,
-      projectName: item.name,
-      projectId: item.id,
-      canSave: true,
-      selected3d: null,
-    };
+    // 检查 object 是否为 Scene 类型
+    if (object instanceof Scene) {
+      newScene = object;
+      newScene.userData = {
+        ...userData,
+        projectName: item.name,
+        projectId: item.id,
+        canSave: true,
+        selected3d: null,
+      };
+    } else {
+      console.error("The parsed object is not a Scene type.");
+    }
 
     const backgroundHDR = object.userData.backgroundHDR;
     if (backgroundHDR) {
@@ -187,7 +192,7 @@ export function glbLoader() {
   return loader;
 }
 
-export function removeCanvasChild(canvas3d: HTMLDivElement | any) {
+export function removeCanvasChild(canvas3d: React.RefObject<HTMLDivElement>) {
   if (canvas3d.current !== null) {
     const { children } = canvas3d.current;
     for (let i = 0; i < children.length; i++) {
@@ -196,11 +201,7 @@ export function removeCanvasChild(canvas3d: HTMLDivElement | any) {
   }
 }
 
-export function getModelGroup(
-  model: Object3D | any,
-  gltf: Scene | any,
-  context: Scene
-) {
+export function getModelGroup(model: GlbModel, gltf: GLTF, context: Scene) {
   const { position, rotation, scale } = model;
   let MODEL_GROUP = createGroupIfNotExist(context, "MODEL_GROUP");
   // let MODEL_GROUP = context.getObjectByName("MODEL_GROUP");

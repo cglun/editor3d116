@@ -8,48 +8,80 @@ import { testData2 } from "../../app/testData";
 import _axios from "../../app/http";
 import { Container } from "react-bootstrap";
 
+// 定义响应数据的类型
+interface ResponseData {
+  code: number;
+  message: string;
+  data: {
+    records: {
+      id: number;
+      name: string;
+      des: string;
+      cover: string;
+    }[];
+  };
+}
+
 export const Route = createLazyFileRoute("/editor3d/")({
   component: ModelList,
 });
 function ModelList() {
-  // const { data, isLoading, error } = useFetch('type=Mesh', HTTP_TYPE.GET);
-
   const [list, setList] = React.useState(testData2);
   const [filterList, setFilterList] = React.useState(testData2);
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState("");
   const [updateTime, setUpdateTime] = React.useState(0);
+
   useEffect(() => {
     setIsLoading(true);
-    _axios.post("/project/pageList/", { size: 1000 }).then((res: any) => {
-      if ((res.data.code = 200)) {
-        const message = res.data.message;
-        if (message) {
-          setError(message);
-          return;
-        }
-        const list = res.data.data.records;
-        const sceneList = list.filter((item: any) => {
-          if (item.des === "Mesh") {
-            return item;
+    _axios
+      .post<ResponseData>("/project/pageList/", { size: 1000 })
+      .then((res) => {
+        if (res.data.code === 200) {
+          const message = res.data.message;
+          if (message) {
+            setError(message);
+            return;
           }
-        });
-        setList(sceneList);
-        setFilterList(sceneList);
-        setIsLoading(false);
-      }
-    });
+          const list = res.data.data.records;
+          const sceneList = list.filter((item) => {
+            if (item.des === "Mesh") {
+              return item;
+            }
+          });
+          setList(sceneList);
+          setFilterList(sceneList);
+          setIsLoading(false);
+        }
+      });
   }, [updateTime]);
 
   function updateList(_time: number): void {
     setUpdateTime(_time);
   }
 
+  // 创建一个适配函数，解决 setFilterList 类型不匹配问题
+  const handleFilterList = (newList: any[]) => {
+    const mappedList = newList.map((item) => {
+      const foundItem = list.find((listItem) => listItem.name === item.name);
+      return foundItem || { id: 0, name: item.name, des: "", cover: "" };
+    });
+    setFilterList(mappedList);
+  };
+
+  // 创建一个适配函数，解决 updateList 类型不匹配问题
+  const noArgUpdateList = () => {
+    const currentTime = Date.now();
+    updateList(currentTime);
+  };
+
   return (
     <Container fluid className="d-flex mt-2">
       <ListGroup>
-        <Serch3d list={list} setFilterList={setFilterList} type="模型" />
-        <UploadModel updateList={updateList} />
+        {/* 修改部分：使用 handleFilterList 替代 setFilterList */}
+        <Serch3d list={list} setFilterList={handleFilterList} type="模型" />
+        {/* 修改部分：使用 noArgUpdateList 替代 updateList */}
+        <UploadModel updateList={noArgUpdateList} />
       </ListGroup>
       <ListCard
         list={filterList}

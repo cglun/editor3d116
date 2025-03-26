@@ -7,14 +7,30 @@ import InputGroup from "react-bootstrap/esm/InputGroup";
 
 import { getButtonColor, getThemeByScene, setClassName } from "../../app/utils";
 import { useUpdateScene } from "../../app/hooks";
+import { RecordItem } from "../../app/type";
+
+// 定义一个接口来描述 list 数组中元素的类型
+interface SearchableItem {
+  name: string;
+}
 
 export function Serch3d({
   list,
   setFilterList,
   type = "模型",
 }: {
-  list: any;
-  setFilterList: any;
+  // 将 list 的类型从 any 改为 SearchableItem[]
+  list: RecordItem[];
+  setFilterList: React.Dispatch<
+    React.SetStateAction<
+      {
+        id: number;
+        name: string;
+        des: string;
+        cover: string;
+      }[]
+    >
+  >;
   type: string;
 }) {
   const [name, setName] = useState("");
@@ -38,8 +54,11 @@ export function Serch3d({
             if (value.trim() === "") {
               setFilterList(list);
             } else {
-              const newList = list.filter((item: any) => {
-                return item.name.includes(value);
+              const newList = list.filter((item: SearchableItem) => {
+                return item.name
+                  .toLocaleLowerCase()
+                  .includes(value.toLocaleLowerCase());
+                // return item.name.toLowerCase().includes(name.toLowerCase());
               });
 
               setFilterList(newList);
@@ -51,8 +70,10 @@ export function Serch3d({
           id="button-addon2"
           title="搜索"
           onClick={() => {
-            const newList = list.filter((item: any) => {
-              return item.name.includes(name);
+            const newList = list.filter((item: SearchableItem) => {
+              return item.name
+                .toLocaleLowerCase()
+                .includes(name.toLocaleLowerCase());
             });
             setFilterList(newList);
           }}

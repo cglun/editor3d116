@@ -8,7 +8,8 @@ const SECRET_IV = CryptoJS.enc.Utf8.parse("e3bbe7e3ba84431a");
  * @param data
  * @returns {string}
  */
-export const encrypt = (data: any, type: string = "default"): string => {
+// 将 any 类型替换为 unknown 类型
+export const encrypt = (data: unknown, type: string = "default"): string => {
   if (typeof data === "object") {
     try {
       data = JSON.stringify(data);
@@ -16,7 +17,7 @@ export const encrypt = (data: any, type: string = "default"): string => {
       console.error("encrypt error:", error);
     }
   }
-  const dataHex = CryptoJS.enc.Utf8.parse(data);
+  const dataHex = CryptoJS.enc.Utf8.parse(data as string);
   const encrypted = CryptoJS.AES.encrypt(dataHex, SECRET_KEY, {
     iv: SECRET_IV,
     mode: CryptoJS.mode.CBC,
@@ -32,7 +33,7 @@ export const encrypt = (data: any, type: string = "default"): string => {
  * @param data
  * @returns {string}
  */
-export const decrypt = (data: string) => {
+export const decrypt = (data: string): string => {
   const encryptedHexStr = CryptoJS.enc.Hex.parse(data);
   const str = CryptoJS.enc.Base64.stringify(encryptedHexStr);
   const decrypt = CryptoJS.AES.decrypt(str, SECRET_KEY, {

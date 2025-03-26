@@ -1,35 +1,40 @@
 import { useEffect, useState } from "react";
 import Form from "react-bootstrap/esm/Form";
-import { Light, Object3D, Scene } from "three";
 
-export function Switch3d({
+export function Switch3d<T extends Record<keyof T, boolean>>({
   title,
   selected3d,
   attr,
 }: {
   title: string;
-  selected3d: Object3D | any;
-  attr:
-    | keyof typeof Object3D.prototype
-    | keyof typeof Scene.prototype
-    | keyof typeof Light.prototype;
+  selected3d: T;
+  attr: keyof T;
 }) {
-  const [checked, setChecked] = useState(selected3d[attr]);
+  // 确保 selected3d[attr] 是布尔类型
+  const initialChecked =
+    typeof selected3d[attr] === "boolean" ? selected3d[attr] : false;
+  const [checked, setChecked] = useState<boolean>(initialChecked);
+
   useEffect(() => {
-    setChecked(selected3d[attr]);
+    if (typeof selected3d[attr] === "boolean") {
+      setChecked(selected3d[attr]);
+    }
   }, [selected3d]);
 
   return (
-    selected3d.hasOwnProperty(attr) && (
-      <div className=" d-flex justify-content-between flex-wrap p-1">
+    Object.prototype.hasOwnProperty.call(selected3d, attr) && (
+      <div className="d-flex justify-content-between flex-wrap p-1">
         <span>{title}</span>
         <Form className="ms-2">
           <Form.Check
             type="switch"
             checked={checked}
             onChange={() => {
-              selected3d[attr] = !checked;
-              setChecked(!checked);
+              if (typeof selected3d[attr] === "boolean") {
+                // 这里要确保 selected3d 可以被修改，如果是只读对象需要额外处理
+                (selected3d as any)[attr] = !checked;
+                setChecked(!checked);
+              }
             }}
           />
         </Form>

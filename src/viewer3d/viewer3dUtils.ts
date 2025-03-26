@@ -1,3 +1,4 @@
+import { ActionItem } from "../app/type";
 import { getScene } from "../three/init3dViewer";
 import { createGroupIfNotExist } from "../three/utils";
 
@@ -18,11 +19,7 @@ export function showModelByName(groupName: string, show: boolean) {
     groups.visible = show;
   }
 }
-export interface ActionItem {
-  name: string;
-  id: string;
-  handler: () => void;
-}
+
 export function getActionList(): ActionItem[] {
   const scene = getScene();
   if (!scene) {
@@ -59,4 +56,3 @@ export function getActionList(): ActionItem[] {
   actionList.pop();
   return actionList;
 }
-getActionList();

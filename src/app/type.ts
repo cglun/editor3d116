@@ -1,13 +1,12 @@
 import {
-  Camera,
   Euler,
   Mesh,
   Object3D,
-  OrthographicCamera,
   PerspectiveCamera,
   Scene,
   Vector3,
 } from "three";
+import { OrbitControls } from "three/examples/jsm/Addons.js";
 
 export interface CanvasNode {
   width: number;
@@ -71,7 +70,10 @@ export interface GlbModel {
   position: Vector3;
   rotation: Euler;
   scale: Vector3;
-  userData: {};
+  userData: {
+    modelUrl: string;
+    modelTotal: number;
+  };
 }
 
 export enum UserDataType {
@@ -89,4 +91,30 @@ export enum UserDataType {
 //   type: "Mesh";
 // };
 
-export type EditorObjec = Scene | PerspectiveCamera | Mesh | Object3D;
+export type EditorObject3d = Scene | PerspectiveCamera | Mesh | Object3D;
+
+export interface RecordItem {
+  id: number;
+  name: string;
+  des: string;
+  cover: string;
+}
+export interface ProjectListResponse {
+  code: number;
+  message: string;
+  data: {
+    records: RecordItem[];
+  };
+}
+export interface ActionItem {
+  name: string;
+  id: string;
+  handler: () => void;
+}
+export interface EditorExportObject {
+  scene: Scene;
+  camera: PerspectiveCamera;
+  controls: OrbitControls;
+  all: object;
+  getActionList: () => ActionItem[];
+}

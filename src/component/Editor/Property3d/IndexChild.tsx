@@ -14,7 +14,8 @@ import AlertBase from "../../common/AlertBase";
 import { setTextureBackground } from "../../../three/common3d";
 import { useState } from "react";
 import { userData } from "../../../three/config3d";
-import { EditorObjec } from "../../../app/type";
+import { EditorObject3d } from "../../../app/type";
+import { Switch3d } from "./Switch3d";
 
 const step = 0.1;
 function SceneProperty() {
@@ -200,7 +201,7 @@ function SceneProperty() {
   );
 }
 
-function CommonProperty({ selected3d }: { selected3d: EditorObjec }) {
+function CommonProperty({ selected3d }: { selected3d: EditorObject3d }) {
   // const { type } = selected3d.parent;
   // let canSetShadow = true;
   // // if (type && type === "Scene") {
@@ -240,6 +241,7 @@ function CommonProperty({ selected3d }: { selected3d: EditorObjec }) {
               attr={"intensity"}
               step={step}
             />
+
             {/* {!selected3d.isAmbientLight && (
               <ButtonGroup className=" d-flex justify-content-between flex-wrap">
                 <Switch3d
@@ -265,10 +267,8 @@ function CommonProperty({ selected3d }: { selected3d: EditorObjec }) {
 export default function IndexChild({
   selected3d,
 }: {
-  selected3d: EditorObjec;
+  selected3d: EditorObject3d;
 }) {
-  console.log(selected3d instanceof Scene, selected3d);
-
   if (selected3d.type === "Scene") {
     return <SceneProperty />;
   }

@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import Form from "react-bootstrap/esm/Form";
 import InputGroup from "react-bootstrap/esm/InputGroup";
 
-import { useUpdateScene } from "../../../app/hooks";
-
 // 严格约束泛型 T，确保 T 的所有属性值类型为 number
 export function InputAttrNumber<T>({
   title,
@@ -23,10 +21,10 @@ export function InputAttrNumber<T>({
   disabled?: boolean;
 }) {
   const [value, setValue] = useState<number>(0);
-  const { updateScene } = useUpdateScene();
 
   useEffect(() => {
-    if (selected3d && selected3d.hasOwnProperty(attr)) {
+    // 修改为使用 Object.prototype.hasOwnProperty.call
+    if (selected3d && Object.prototype.hasOwnProperty.call(selected3d, attr)) {
       setValue(selected3d[attr] as number);
     }
   }, [selected3d]);

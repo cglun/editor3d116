@@ -10,8 +10,8 @@ import _axios from "../../app/http";
 import { APP_COLOR, GlbModel } from "../../app/type";
 import { useUpdateScene } from "../../app/hooks";
 
-export function UploadModel({ updateList = (_time: number) => {} }) {
-  const fileRef = useRef<any>(null);
+export function UploadModel({ updateList = () => {} }) {
+  const fileRef = useRef<HTMLInputElement>(null);
   const [curFile, setCurFile] = useState<File | null>(null);
   const [btn, setBtn] = useState<boolean>(true);
   const [progress, setProgress] = useState<number>(100);
@@ -25,17 +25,6 @@ export function UploadModel({ updateList = (_time: number) => {} }) {
       formData.append("file", curFile);
 
       const model = await uploadModels(formData);
-      // const model: GlbModel = {
-      //   name: curFile.name,
-      //   position: new Vector3(0, 0, 0),
-      //   rotation: new Euler(0, 0, 0, "XYZ"),
-      //   scale: new Vector3(1, 1, 1),
-      //   userData: {
-      //     modelUrl,
-      //     type: "Mesh",
-      //     modelTotal,
-      //   },
-      // };
 
       if (model) {
         _axios
@@ -47,7 +36,8 @@ export function UploadModel({ updateList = (_time: number) => {} }) {
           .then((res) => {
             if (res.data.code === 200) {
               Toast3d("保存成功");
-              updateList(new Date().getTime());
+              // 修正：移除多余参数
+              updateList();
             } else {
               Toast3d(res.data.message, "提示", APP_COLOR.Warning);
             }
@@ -100,11 +90,6 @@ export function UploadModel({ updateList = (_time: number) => {} }) {
           };
 
           resolve(model);
-          //  const   modelurl=
-          //     setProgress(100);
-          //     Toast3d(res.data.message, "提示", APP_COLOR.Success);
-          //     setBtn(true);
-          //     setCurFile(null);
         })
         .catch((err) => {
           reject(err);
@@ -138,7 +123,12 @@ export function UploadModel({ updateList = (_time: number) => {} }) {
             ref={fileRef}
             accept=".glb,.gltf"
             onChange={() => {
-              if (fileRef.current.files.length > 0) {
+              // 检查 fileRef.current 是否存在
+              if (
+                fileRef.current &&
+                fileRef.current.files &&
+                fileRef.current.files.length > 0
+              ) {
                 const curFile = fileRef.current.files[0];
                 setCurFile(curFile);
                 setBtn(false);
@@ -159,7 +149,10 @@ export function UploadModel({ updateList = (_time: number) => {} }) {
           variant={buttonColor}
           disabled={btn}
           onClick={() => {
-            fileRef.current = null;
+            // 修改部分：清空文件输入框的值而不是将 current 设为 null
+            if (fileRef.current) {
+              fileRef.current.value = "";
+            }
             setCurFile(null);
             setBtn(true);
           }}

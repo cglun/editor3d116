@@ -44,8 +44,8 @@ let scene: Scene,
   transfControls: TransformControls,
   transfControls1: TransformControls,
   transfControls2: TransformControls,
-  extra3d = extra,
-  parameters3d = parameters;
+  extra3d = extra;
+const parameters3d = parameters;
 
 export function getAll() {
   return {
@@ -118,7 +118,7 @@ export function sceneSerialization(): string {
   const sceneCopy = scene.clone();
   const modelList: GlbModel[] = [];
 
-  let MODEL_GROUP = createGroupIfNotExist(sceneCopy, "MODEL_GROUP");
+  const MODEL_GROUP = createGroupIfNotExist(sceneCopy, "MODEL_GROUP");
   const HELPER_GROUP = createGroupIfNotExist(sceneCopy, "HELPER_GROUP");
   if (HELPER_GROUP) {
     HELPER_GROUP.children = [];
@@ -134,7 +134,12 @@ export function sceneSerialization(): string {
         position,
         rotation,
         scale,
-        userData: child.userData,
+        // 修改部分，确保 userData 包含所需属性
+        userData: {
+          ...child.userData,
+          modelUrl: child.userData.modelUrl || "",
+          modelTotal: child.userData.modelTotal || 0,
+        },
       };
       modelList.push(model);
     });

@@ -38,7 +38,7 @@ export default function EditorForm({
     return () => {
       setEnableScreenshot(false);
     };
-  }, [_item]);
+  }, [_item, getNewItem]); // 添加 getNewItem 到依赖项数组
 
   return (
     <Container fluid>

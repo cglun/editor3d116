@@ -47,9 +47,12 @@ export default function EditorTop() {
     .href;
 
   function notJavascript() {
-    const { javascript } = getScene().userData;
+    const userData = getScene().userData;
+    if (!userData || !userData.javascript) {
+      return false;
+    }
     try {
-      eval(javascript);
+      eval(userData.javascript);
     } catch (error) {
       Toast3d("查看控制台!", "脚本错误", APP_COLOR.Danger);
       console.error(error);
@@ -152,7 +155,7 @@ export default function EditorTop() {
     _axios
       .post("/project/pageList/", { size: 1000 })
       .then((res) => {
-        if ((res.data.code = 200)) {
+        if (res.data.code === 200) {
           const message = res.data.message;
           if (message) {
             setError(message);

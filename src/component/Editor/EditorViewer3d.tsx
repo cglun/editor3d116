@@ -46,6 +46,7 @@ function EditorViewer3d() {
       if (HELPER_GROUP) {
         scene.add(HELPER_GROUP);
       }
+      // 调用 updateScene 函数更新场景
       updateScene(getScene().clone());
     }
 
@@ -68,7 +69,8 @@ function EditorViewer3d() {
         )
       );
     };
-  }, []);
+    // 添加 updateScene 到依赖项数组
+  }, [editorCanvas]);
 
   function setMode(modeName: TransformControlsMode) {
     const transfControls = getTransfControls();

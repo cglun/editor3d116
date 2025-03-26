@@ -7,6 +7,7 @@ import { CodeHighlight } from "@mantine/code-highlight";
 import { MantineProvider } from "@mantine/core";
 import AlertBase from "../../component/common/AlertBase";
 import { APP_COLOR } from "../../app/type";
+
 export const Route = createLazyFileRoute("/editor3d/script")({
   component: RouteComponent,
 });
@@ -16,6 +17,8 @@ function RouteComponent() {
   const { javascript } = scene.payload.userData;
   const [code, setCode] = useState(javascript);
   const [editable, setEditable] = useState(false);
+
+  // 添加 javascript 到依赖项数组
   useEffect(() => {
     setCode(javascript);
     setEditable(false);

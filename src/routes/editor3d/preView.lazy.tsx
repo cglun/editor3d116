@@ -1,55 +1,76 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import Viewer3d from "../../viewer3d/Viewer3d";
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { setEnableScreenshot } from "../../three/config3d";
 import _axios from "../../app/http";
 import { testData2 } from "../../app/testData";
 import { Button, ButtonGroup } from "react-bootstrap";
 import { useUpdateScene } from "../../app/hooks";
 import { getButtonColor, getThemeByScene } from "../../app/utils";
-import { ActionItem } from "../../viewer3d/viewer3dUtils";
+import { ActionItem, EditorExportObject } from "../../app/type";
+
+// 定义响应数据的类型
+interface PageListResponse {
+  code: number;
+  message: string;
+  data: {
+    records: {
+      id: number;
+      name: string;
+      des: string;
+      cover: string;
+    }[];
+  };
+}
 
 export const Route = createLazyFileRoute("/editor3d/preView")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const [list, setList] = React.useState(testData2);
-  const [_item, _setItem] = React.useState({
+  const [list, setList] =
+    useState<{ id: number; name: string; des: string; cover: string }[]>(
+      testData2
+    );
+  const [_item, _setItem] = useState({
     id: 296,
     name: "立方体",
     des: "Scene",
     cover: "",
   });
+  const [actionList, setActionList] = useState<ActionItem[]>([]);
   const { scene } = useUpdateScene();
   const { themeColor } = getThemeByScene(scene);
   const btnColor = getButtonColor(themeColor);
-  const [actionList, setActionList] = React.useState<any[]>([]);
 
   useEffect(() => {
     setEnableScreenshot(true);
-    _axios.post("/project/pageList/", { size: 1000 }).then((res) => {
-      if ((res.data.code = 200)) {
-        const message = res.data.message;
-        if (message) {
-          return;
-        }
-        const list = res.data.data.records;
-        const sceneList = list.filter((item: any) => {
-          if (item.des === "Scene") {
-            return item;
+    // 指定响应数据的类型
+    _axios
+      .post<PageListResponse>("/project/pageList/", { size: 1000 })
+      .then((res) => {
+        if (res.data.code === 200) {
+          const message = res.data.message;
+          if (message) {
+            return;
           }
-        });
-        setList(sceneList);
-        _setItem(sceneList[0]);
-        const element = document.getElementById("pre-view-top");
-        element?.scrollIntoView();
-      }
-    });
+          const records = res.data.data.records;
+          const sceneList = records.filter((item) => {
+            if (item.des === "Scene") {
+              return item;
+            }
+          });
+          setList(sceneList);
+          _setItem(sceneList[0]);
+          const element = document.getElementById("pre-view-top");
+          element?.scrollIntoView();
+        }
+      });
   }, []);
 
-  function callBack(incetance: any) {
-    const actionList = incetance.getActionList();
+  function callBack(instance: EditorExportObject) {
+    const actionList = instance.getActionList();
+
     setActionList(actionList);
   }
 
@@ -60,53 +81,28 @@ function RouteComponent() {
         element?.scrollIntoView();
       }}
     >
-      {/* <AlertBase type={APP_COLOR.Secondary} text={"测试"} /> */}
       <div
         id="pre-view-top"
         style={{ height: "2rem", scrollBehavior: "smooth" }}
       ></div>
 
-      {/* <ButtonGroup size="sm">
-        <Button
-          variant={APP_COLOR.Info}
-          onClick={() => {
-            const element = document.getElementById("root");
-            element?.scrollIntoView();
-          }}
-        >
-          <i
-            className={setClassName("arrow-up-circle")}
-            style={{ fontSize: "1.16rem" }}
-          ></i>
-        </Button>
-        <Button
-          variant={APP_COLOR.Info}
-          onClick={() => {
-            const element = document.getElementById("pre-view-top");
-            element?.scrollIntoView();
-          }}
-        >
-          <i
-            className={setClassName("arrow-down-circle")}
-            style={{ fontSize: "1.16rem" }}
-          ></i>
-        </Button>
-      </ButtonGroup> */}
       <ButtonGroup size="sm">
-        {list.map((item) => {
-          return (
-            <Button
-              variant={btnColor}
-              key={item.id}
-              disabled={item.id === _item.id}
-              onClick={() => {
-                _setItem(item);
-              }}
-            >
-              id_{item.id}_{item.name}
-            </Button>
-          );
-        })}
+        {list.map(
+          (item: { id: number; name: string; des: string; cover: string }) => {
+            return (
+              <Button
+                variant={btnColor}
+                key={item.id}
+                disabled={item.id === _item.id}
+                onClick={() => {
+                  _setItem(item);
+                }}
+              >
+                id_{item.id}_{item.name}
+              </Button>
+            );
+          }
+        )}
       </ButtonGroup>
 
       <ButtonGroup size="sm" className="ms-2">

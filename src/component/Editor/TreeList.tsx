@@ -26,20 +26,22 @@ function TreeNode({
   onToggle: (uuid: string, isExpanded: boolean) => void;
   resetTextWarning: (targetItem: Object3D) => void;
 }) {
-  if (node.userData.isHelper) {
-    return;
-  }
   const hasChildren = node.children && node.children.length > 0;
+  // 确保所有的 useState 调用和 useUpdateScene 调用都在条件返回之前
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [delBtn, setDelBtn] = React.useState(false);
-  const [isSelected, setIsSelected] = useState(false);
+  const [isSelected, setIsSelected] = React.useState(false);
   const { updateScene } = useUpdateScene();
+
+  if (node.userData.isHelper) {
+    return null;
+  }
+
   const handleToggle = () => {
     setIsExpanded(!isExpanded);
     resetTextWarning(node);
     setIsSelected(!isSelected);
     setSelectedObject(node);
-
     setTransformControls(node);
     onToggle(node.uuid, !isExpanded);
   };

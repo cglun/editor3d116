@@ -1,12 +1,5 @@
 import ListGroup from "react-bootstrap/esm/ListGroup";
-import {
-  Camera,
-  Mesh,
-  Object3D,
-  OrthographicCamera,
-  PerspectiveCamera,
-  Scene,
-} from "three";
+import { OrthographicCamera, PerspectiveCamera } from "three";
 import {
   getPerspectiveCamera,
   getScene,
@@ -16,7 +9,7 @@ import { setClassName } from "../../../app/utils";
 import { getObjectNameByName } from "../../../three/utils";
 import { SPACE } from "../../../app/utils";
 import Button from "react-bootstrap/esm/Button";
-import { APP_COLOR, EditorObjec } from "../../../app/type";
+import { APP_COLOR, EditorObject3d } from "../../../app/type";
 import Toast3d from "../../common/Toast3d";
 import { cameraTween } from "../../../three/animate";
 import { useUpdateScene } from "../../../app/hooks";
@@ -25,7 +18,7 @@ export function OutlineViewCamera({
   object3D,
   _setCamera,
 }: {
-  object3D: EditorObjec;
+  object3D: EditorObject3d;
   _setCamera: (camera: PerspectiveCamera | OrthographicCamera) => void;
 }) {
   const { updateScene } = useUpdateScene();

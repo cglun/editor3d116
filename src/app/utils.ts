@@ -25,7 +25,11 @@ export function setClassName(className: string): string {
 export function base64ToBlob(base64: string, mimeType = "image/png") {
   // 去掉base64的头部信息（如果有）
   const byteString = atob(base64.split(",")[1]);
-  mimeType.split("/")[0] === "image" ? mimeType.split("/")[1] : "text";
+  // 修正代码，根据条件更新 mimeType
+  mimeType =
+    mimeType.split("/")[0] === "image"
+      ? `image/${mimeType.split("/")[1]}`
+      : "text/plain";
   const ab = new ArrayBuffer(byteString.length);
   const ia = new Uint8Array(ab);
   for (let i = 0; i < byteString.length; i++) {

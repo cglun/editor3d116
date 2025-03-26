@@ -35,33 +35,6 @@ function RouteComponent() {
       >
         相机动画
       </Button>
-
-      <Button
-        variant={btnColor}
-        onClick={() => {
-          const scene = getScene();
-          scene.traverse((child: any) => {
-            if (child.isMesh) {
-              child.visible = true;
-            }
-          });
-        }}
-      >
-        显示
-      </Button>
-      <Button
-        variant={btnColor}
-        onClick={() => {
-          const scene = getScene();
-          scene.traverse((child: any) => {
-            if (child.isMesh) {
-              child.visible = false;
-            }
-          });
-        }}
-      >
-        隐藏
-      </Button>
     </ButtonGroup>
   );
 

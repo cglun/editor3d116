@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect, useRef, useState } from "react";
 import { Container, ProgressBar } from "react-bootstrap";
-import { APP_COLOR, GlbModel } from "../app/type";
+import { APP_COLOR, EditorExportObject, GlbModel } from "../app/type";
 import { getModelGroup, glbLoader, removeCanvasChild } from "../three/utils";
 import { ItemInfo } from "../component/Editor/ListCard";
 import Toast3d from "../component/common/Toast3d";
@@ -42,7 +42,7 @@ export default function Viewer3d({
 }: {
   item: ItemInfo;
   canvasStyle?: { height: string; width: string };
-  callBack?: (exportObj: Object) => void;
+  callBack?: (item: EditorExportObject) => void;
 }) {
   const canvas3d: React.RefObject<HTMLDivElement | any> = useRef();
 
@@ -56,7 +56,7 @@ export default function Viewer3d({
     initTourWindow
   );
 
-  function exportObj() {
+  function exportObj(): EditorExportObject {
     return {
       scene: getScene(),
       camera: getCamera(),
@@ -76,6 +76,7 @@ export default function Viewer3d({
         setCamera(camera);
         setLabel(scene, dispatchTourWindow);
         modelNum = modelList.length;
+
         if (modelNum === 0) {
           runScript(); // 运行脚本
           if (callBack) {
@@ -110,6 +111,7 @@ export default function Viewer3d({
       });
   }
 
+  // 定义 GlbModel 类型，确保 userData 包含 modelUrl 和 modelTotal 属性
   function loadModelByUrl(model: GlbModel) {
     const loader = glbLoader();
     let progress = 0;
@@ -127,18 +129,17 @@ export default function Viewer3d({
           getControls();
           getCamera();
           runScript();
+
           callBack && callBack(exportObj());
           const { javascript } = getScene().userData;
           if (javascript) {
             eval(javascript);
           }
         }
-        if (enableScreenshot.enable) {
-          setEnableScreenshot(true);
-        }
         modelNum--;
       },
       function (xhr) {
+        // 确保 modelTotal 存在，避免类型错误
         progress = parseFloat(
           ((xhr.loaded / model.userData.modelTotal) * 100).toFixed(2)
         );

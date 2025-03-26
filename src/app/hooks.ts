@@ -1,11 +1,13 @@
 import React, { useContext, useEffect } from "react";
 import { HTTP_TYPE } from "./type";
 import { MyContext } from "./MyContext";
+import { Scene } from "three";
 
 export default function useFetch(url: string, type: HTTP_TYPE) {
   const [data, setData] = React.useState(null);
   const [error, setError] = React.useState(null);
   const [isLoading, setIsLoading] = React.useState(false);
+
   useEffect(() => {
     setIsLoading(true);
     fetch("/api", {
@@ -27,14 +29,15 @@ export default function useFetch(url: string, type: HTTP_TYPE) {
       .finally(() => {
         setIsLoading(false);
       });
-  }, [url]);
+  }, [url, type]); // 添加 'type' 到依赖项数组
 
   return { data, isLoading, error };
 }
 
 export function useUpdateScene() {
   const { scene, dispatchScene } = useContext(MyContext);
-  function updateScene(payload: any) {
+  // 定义一个泛型 T 来替代 any 类型
+  function updateScene<T extends Scene>(payload: T) {
     dispatchScene({ type: "setScene", payload: payload });
   }
   return { scene, updateScene };

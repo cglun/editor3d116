@@ -17,9 +17,10 @@ interface Toast {
 function App116({ update, _toast }: { update: number; _toast: Toast }) {
   const [toast, setToast] = useState<Toast>(_toast);
   const { show, delay, type, title, content } = toast;
+  // 修改部分：将 _toast 添加到依赖数组中
   useEffect(() => {
     setToast({ ..._toast, show: true });
-  }, [update]);
+  }, [update, _toast]);
   return (
     <BootToast
       className="fixed-top mt-2 mx-auto"

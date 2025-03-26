@@ -1,6 +1,7 @@
 import {
   BoxHelper,
   Camera,
+  Controls,
   EquirectangularReflectionMapping,
   Group,
   Object3D,
@@ -14,7 +15,7 @@ import {
 import { UserDataType } from "../app/type";
 import TWEEN from "three/addons/libs/tween.module.js";
 import { enableScreenshot, Extra3d, parameters } from "./config3d";
-import { RGBELoader } from "three/examples/jsm/Addons.js";
+import { OrbitControls, RGBELoader } from "three/examples/jsm/Addons.js";
 import { createGroupIfNotExist } from "./utils";
 
 export function enableShadow(group: Scene | Group | Object3D, context: Scene) {
@@ -24,10 +25,11 @@ export function enableShadow(group: Scene | Group | Object3D, context: Scene) {
       return;
     }
     if (child.type !== "AmbientLight") {
-      if (child.hasOwnProperty("castShadow")) {
+      // 修改部分
+      if (Object.prototype.hasOwnProperty.call(child, "castShadow")) {
         child.castShadow = useShadow;
       }
-      if (child.hasOwnProperty("receiveShadow")) {
+      if (Object.prototype.hasOwnProperty.call(child, "receiveShadow")) {
         child.receiveShadow = useShadow;
       }
     }
@@ -88,7 +90,7 @@ export function hideBoxHelper(scene: Scene) {
 export interface AnimateProps {
   scene: Scene;
   camera: PerspectiveCamera | OrthographicCamera;
-  controls: any;
+  controls: OrbitControls;
   renderer: WebGLRenderer;
   extra3d: Extra3d;
   parameters3d: typeof parameters;

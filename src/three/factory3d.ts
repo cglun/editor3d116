@@ -183,7 +183,8 @@ function createDiv(
     i.style.cursor = "pointer";
     i.setAttribute("data-tour-id", tourObject.id);
     i.addEventListener("click", function () {
-      dispatchTourWindow &&
+      // 修改部分：检查 dispatchTourWindow 是否存在
+      if (dispatchTourWindow) {
         dispatchTourWindow({
           type: "tourWindow",
           payload: {
@@ -192,6 +193,7 @@ function createDiv(
             tourSrc: getTourSrc(tourObject.id),
           },
         });
+      }
     });
     div.appendChild(i);
   }
@@ -202,8 +204,11 @@ function createDiv(
 export function createCss3dLabel(
   name: string,
   logo: string,
-  tourObjectect?: any,
-  dispatchTourWindow?: any
+  tourObjectect?: {
+    id: string;
+    title: string;
+  },
+  dispatchTourWindow?: React.Dispatch<TourWindow>
 ) {
   const div = createDiv(logo, name, tourObjectect, dispatchTourWindow);
   const css3DSprite = new CSS3DSprite(div);

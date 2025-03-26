@@ -2,10 +2,10 @@
  *
  * 动画
  */
-import { Object3D, PerspectiveCamera, Vector3 } from "three";
+import { OrthographicCamera, PerspectiveCamera, Vector3 } from "three";
 import { Tween } from "three/addons/libs/tween.module.js";
 export function cameraTween(
-  camera: PerspectiveCamera | Object3D<any>,
+  camera: PerspectiveCamera | OrthographicCamera,
   target: Vector3,
   time: number = 1000
 ) {
