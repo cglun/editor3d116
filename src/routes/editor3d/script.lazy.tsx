@@ -21,8 +21,7 @@ function RouteComponent() {
   // 添加 javascript 到依赖项数组
   useEffect(() => {
     setCode(javascript);
-    setEditable(false);
-  }, [scene]);
+  }, [scene, javascript]);
 
   return (
     <Container fluid>

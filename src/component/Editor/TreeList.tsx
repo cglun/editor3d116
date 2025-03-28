@@ -1,10 +1,10 @@
-import React, { memo, useState } from "react";
+import React, { memo } from "react";
 import { Button, Container, ListGroupItem } from "react-bootstrap";
 import { setClassName } from "../../app/utils";
 import { getObjectNameByName } from "../../three/utils";
 import { SPACE } from "../../app/utils";
 import { APP_COLOR, UserDataType } from "../../app/type";
-import { Object3D, Object3DEventMap } from "three";
+import { Group, Light, Mesh, Object3D, Object3DEventMap } from "three";
 import ModalConfirm3d from "../common/ModalConfirm3d";
 import AlertBase from "../common/AlertBase";
 import Toast3d from "../common/Toast3d";
@@ -46,7 +46,7 @@ function TreeNode({
     onToggle(node.uuid, !isExpanded);
   };
 
-  const delMesh = (e: Event | any, item: Object3D) => {
+  const delMesh = (e: React.MouseEvent<HTMLButtonElement>, item: Object3D) => {
     e.stopPropagation();
     e.preventDefault();
     ModalConfirm3d(
@@ -77,13 +77,12 @@ function TreeNode({
     );
     // 删除提示
   };
-  function getLogo(item: Object3D | any) {
+  function getLogo(item: Object3D) {
     let logo = "hexagon";
-    if (item.isMesh) logo = "box";
-
-    if (item.isGroup) logo = "collection";
-
-    if (item.isLight) logo = "lightbulb";
+    // 修改为使用 instanceof 检查类型
+    if (item instanceof Mesh) logo = "box";
+    if (item instanceof Group) logo = "collection";
+    if (item instanceof Light) logo = "lightbulb";
 
     return <i className={setClassName(logo)}></i>;
   }

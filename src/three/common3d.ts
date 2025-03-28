@@ -1,7 +1,6 @@
 import {
   BoxHelper,
   Camera,
-  Controls,
   EquirectangularReflectionMapping,
   Group,
   Object3D,

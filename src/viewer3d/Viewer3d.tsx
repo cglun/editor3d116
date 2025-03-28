@@ -44,7 +44,8 @@ export default function Viewer3d({
   canvasStyle?: { height: string; width: string };
   callBack?: (item: EditorExportObject) => void;
 }) {
-  const canvas3d: React.RefObject<HTMLDivElement | any> = useRef();
+  // 修改为明确指定 HTMLDivElement 类型
+  const canvas3d: React.RefObject<HTMLDivElement> = useRef(null);
 
   const [progress, setProgress] = useState(0);
   const [scene, dispatchScene] = React.useReducer(
@@ -69,7 +70,7 @@ export default function Viewer3d({
   let modelNum = 0;
   function loadScene(item: ItemInfo) {
     getProjectData(item.id)
-      .then((data: any) => {
+      .then((data: string) => {
         const { scene, camera, modelList } = sceneDeserialize(data, item);
 
         setScene(scene);
@@ -103,7 +104,7 @@ export default function Viewer3d({
   }
   function loadMesh(item: ItemInfo) {
     getProjectData(item.id)
-      .then((res: any) => {
+      .then((res: string) => {
         loadModelByUrl(JSON.parse(res));
       })
       .catch((error) => {

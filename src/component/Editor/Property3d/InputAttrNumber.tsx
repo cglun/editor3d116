@@ -21,17 +21,21 @@ export function InputAttrNumber<T>({
   disabled?: boolean;
 }) {
   const [value, setValue] = useState<number>(0);
+  // console.log(Object.prototype.hasOwnProperty.call(selected3d, attr));
 
   useEffect(() => {
-    // 修改为使用 Object.prototype.hasOwnProperty.call
-    if (selected3d && Object.prototype.hasOwnProperty.call(selected3d, attr)) {
+    // 先检查 selected3d 是否为 null 或 undefined
+    if (
+      selected3d != null &&
+      Object.prototype.hasOwnProperty.call(selected3d, attr)
+    ) {
       setValue(selected3d[attr] as number);
     }
-  }, [selected3d]);
+  }, [selected3d, attr]); // 添加 'attr' 到依赖项数组
 
   return (
     selected3d &&
-    selected3d.hasOwnProperty(attr) && (
+    Object.prototype.hasOwnProperty.call(selected3d, attr) && (
       <InputGroup size="sm">
         <InputGroup.Text>{title}</InputGroup.Text>
         <Form.Control
@@ -51,7 +55,7 @@ export function InputAttrNumber<T>({
               return;
             }
             // 创建一个新对象来避免直接修改原始对象
-            //@ts-ignore
+            //@ts-expect-error 绕过类型检查，直接修改泛型对象的属性，因类型系统无法确定属性可写性
             selected3d[attr] = _value;
             setValue(_value);
           }}

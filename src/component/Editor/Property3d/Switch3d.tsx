@@ -19,7 +19,7 @@ export function Switch3d<T extends Record<keyof T, boolean>>({
     if (typeof selected3d[attr] === "boolean") {
       setChecked(selected3d[attr]);
     }
-  }, [selected3d]);
+  }, [selected3d, attr]);
 
   return (
     Object.prototype.hasOwnProperty.call(selected3d, attr) && (
@@ -32,7 +32,8 @@ export function Switch3d<T extends Record<keyof T, boolean>>({
             onChange={() => {
               if (typeof selected3d[attr] === "boolean") {
                 // 这里要确保 selected3d 可以被修改，如果是只读对象需要额外处理
-                (selected3d as any)[attr] = !checked;
+                //@ts-expect-error
+                selected3d[attr] = !checked;
                 setChecked(!checked);
               }
             }}

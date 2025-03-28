@@ -7,6 +7,7 @@ import ListCard from "../../component/Editor/ListCard";
 import { testData2 } from "../../app/testData";
 import _axios from "../../app/http";
 import { Container } from "react-bootstrap";
+import { RecordItem } from "../../app/type";
 
 // 定义响应数据的类型
 interface ResponseData {
@@ -61,7 +62,7 @@ function ModelList() {
   }
 
   // 创建一个适配函数，解决 setFilterList 类型不匹配问题
-  const handleFilterList = (newList: any[]) => {
+  const handleFilterList = (newList: RecordItem[]) => {
     const mappedList = newList.map((item) => {
       const foundItem = list.find((listItem) => listItem.name === item.name);
       return foundItem || { id: 0, name: item.name, des: "", cover: "" };

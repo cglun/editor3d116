@@ -1,6 +1,6 @@
 import Button from "react-bootstrap/esm/Button";
 import Form from "react-bootstrap/esm/Form";
-import { Color, Fog, Light, Scene, Texture } from "three";
+import { Color, Fog, Light, Texture } from "three";
 import Card from "react-bootstrap/esm/Card";
 import InputGroup from "react-bootstrap/esm/InputGroup";
 import { getScene } from "../../../three/init3dEditor";
@@ -8,14 +8,14 @@ import { Container } from "react-bootstrap";
 import { useUpdateScene } from "../../../app/hooks";
 import { Input3d } from "./Input3d";
 import { InputAttrText } from "./InputAttrText";
-import { InputAttrNumber } from "./InputAttrNumber";
+
 import { getButtonColor, getThemeByScene } from "../../../app/utils";
 import AlertBase from "../../common/AlertBase";
 import { setTextureBackground } from "../../../three/common3d";
 import { useState } from "react";
 import { userData } from "../../../three/config3d";
 import { EditorObject3d } from "../../../app/type";
-import { Switch3d } from "./Switch3d";
+import { InputAttrNumber } from "./InputAttrNumber";
 
 const step = 0.1;
 function SceneProperty() {
@@ -26,10 +26,8 @@ function SceneProperty() {
 
   let bgColor = "#000116";
   const background = _scene.background as Color | Texture;
-  //const enableColor = background instanceof Color;
-  const [enableColor, setEnableColor] = useState(background instanceof Color);
 
-  // const [checked, setChecked] = useState(background instanceof Texture);
+  const [enableColor, setEnableColor] = useState(background instanceof Color);
 
   if (background !== null) {
     if (background instanceof Color) {

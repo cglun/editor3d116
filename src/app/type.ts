@@ -118,3 +118,14 @@ export interface EditorExportObject {
   all: object;
   getActionList: () => ActionItem[];
 }
+// 定义 item 的类型
+export type TourItem = {
+  id: number; // 假设 id 是数字类型
+  title: string;
+  thumbUrl: string;
+};
+export interface ConfirmButton {
+  show?: boolean;
+  hasButton?: boolean;
+  closeButton?: boolean;
+}

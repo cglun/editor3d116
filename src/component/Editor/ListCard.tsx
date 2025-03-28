@@ -177,7 +177,7 @@ function ItemInfoCard(props: Props) {
   }
   function loadMesh(item: ItemInfo) {
     getProjectData(item.id)
-      .then((res: any) => {
+      .then((res: string) => {
         loadModelByUrl(JSON.parse(res));
       })
       .catch((error) => {
@@ -185,7 +185,7 @@ function ItemInfoCard(props: Props) {
       });
   }
 
-  function loadModelByUrl(model: GlbModel | any) {
+  function loadModelByUrl(model: GlbModel) {
     const loader = glbLoader();
     let progress = 0;
 
@@ -206,7 +206,8 @@ function ItemInfoCard(props: Props) {
 
         if (modelNum <= 1) {
           updateScene(getScene());
-          getScene();
+          // 移除无意义的函数调用
+          // getScene();
           getControls();
           getCamera();
           runScript();
@@ -249,15 +250,25 @@ function ItemInfoCard(props: Props) {
   return (
     <Container fluid className="d-flex flex-wrap">
       {list.map((item: ItemInfo, index: number) => {
-        let selectStyle = "";
-        if (item.des === "Scene") {
-          if (item.id.toString() == "296") {
-            debugger;
-          }
-          if (scene.payload.userData.projectId === item.id) {
-            selectStyle = "bg-success";
-          }
-        }
+        const selectStyle =
+          item.des === "Scene" && scene.payload.userData.projectId === item.id
+            ? "bg-success"
+            : "";
+        const cardBodyImg = (
+          <Card.Img
+            src={loadAssets(item.cover)}
+            variant="top"
+            style={{ cursor: "crosshair", width: "6rem" }}
+          />
+        );
+
+        const cardBody =
+          item.cover?.trim().length > 0 ? (
+            cardBodyImg
+          ) : (
+            <i className="bi bi-image" style={{ fontSize: "4rem" }}></i>
+          );
+
         return (
           <Card className="ms-2 mt-2" key={index}>
             <Card.Header style={{ width: "6rem" }} className={selectStyle}>
@@ -270,25 +281,11 @@ function ItemInfoCard(props: Props) {
             <Card.Body
               className="d-flex flex-column text-center"
               style={{ padding: "0" }}
+              onClick={() => {
+                item.des === "Scene" ? loadScene(item) : loadMesh(item);
+              }}
             >
-              {item.cover?.trim().length > 0 ? (
-                <Card.Img
-                  src={loadAssets(item.cover)}
-                  variant="top"
-                  style={{ cursor: "crosshair", width: "6rem" }}
-                  onClick={() => {
-                    item.des === "Scene" ? loadScene(item) : loadMesh(item);
-                  }}
-                />
-              ) : (
-                <i
-                  className="bi bi-image"
-                  style={{ fontSize: "4rem" }}
-                  onClick={() => {
-                    item.des === "Scene" ? loadScene(item) : loadMesh(item);
-                  }}
-                ></i>
-              )}
+              {cardBody}
 
               <ButtonGroup aria-label="Basic example" className="mt-2">
                 <Button

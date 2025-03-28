@@ -16,7 +16,7 @@ import { cleaerOldLabel, createGroupIfNotExist } from "../../three/utils";
 import { getScene } from "../../three/init3dEditor";
 import { CSS2DObject, CSS3DSprite } from "three/examples/jsm/Addons.js";
 import Toast3d from "../../component/common/Toast3d";
-import { APP_COLOR } from "../../app/type";
+import { APP_COLOR, TourItem } from "../../app/type";
 import { useUpdateScene } from "../../app/hooks";
 import { ConfigCheck } from "../../component/common/ConfigCheck";
 import _axios from "../../app/http";
@@ -41,8 +41,11 @@ function RouteComponent() {
   function addMark(label: CSS3DSprite | CSS2DObject) {
     const scene = getScene();
     const MARK_LABEL_GROUP = createGroupIfNotExist(scene, "MARK_LABEL_GROUP");
-    MARK_LABEL_GROUP?.add(label);
-    MARK_LABEL_GROUP && scene.add(MARK_LABEL_GROUP);
+
+    if (!MARK_LABEL_GROUP) return;
+
+    MARK_LABEL_GROUP.add(label);
+    scene.add(MARK_LABEL_GROUP);
   }
   useEffect(() => {
     _axios.get("/pano/page?size=1000").then((res) => {
@@ -153,7 +156,8 @@ function RouteComponent() {
         <Col className="d-flex   flex-wrap">
           {listTour &&
             config3d.css3d &&
-            listTour.map((item: any, index: number) => {
+            // 修改为明确指定 TourItem 类型
+            listTour.map((item: TourItem, index: number) => {
               return (
                 <Card className="ms-2" style={{ width: "6rem" }} key={index}>
                   <Card.Header className="card-pd-header ">
@@ -170,7 +174,7 @@ function RouteComponent() {
                           item.title,
                           "geo-alt",
                           {
-                            id: item.id,
+                            id: item.id.toString(),
                             title: item.title,
                           },
                           dispatchTourWindow

@@ -6,12 +6,8 @@ import { useEffect, useState } from "react";
 
 import { ButtonGroup } from "react-bootstrap";
 import { getScene } from "../../three/init3dEditor";
-export interface ModalConfirm {
-  show?: boolean;
-  hasButton?: boolean;
-  closeButton?: boolean;
-}
-export const modalConfirm: ModalConfirm = {
+import { ConfirmButton } from "../../app/type";
+export const _confirmButton: ConfirmButton = {
   show: true,
   hasButton: true,
   closeButton: true,
@@ -31,7 +27,7 @@ function ModalConfirm({
 }: {
   title: string;
   body: JSX.Element | string;
-  confirmButton: ModalConfirm;
+  confirmButton: ConfirmButton;
   callback: () => void;
   update: number;
 }) {
@@ -86,11 +82,11 @@ export default function ModalConfirm3d(
   {
     title = "提示",
     body = "内容",
-    confirmButton = modalConfirm,
+    confirmButton = _confirmButton,
   }: {
     title: string;
     body: JSX.Element | string;
-    confirmButton?: ModalConfirm;
+    confirmButton?: ConfirmButton;
   },
   callback = () => {}
 ) {

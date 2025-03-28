@@ -115,9 +115,10 @@ export function createNewScene() {
   newScene.userData.APP_THEME.sceneCanSave = false;
   setTextureBackground(newScene);
   const HELPER_GROUP = createGroupIfNotExist(newScene, "HELPER_GROUP");
-
-  HELPER_GROUP?.add(createGridHelper());
-  HELPER_GROUP && newScene.add(HELPER_GROUP);
+  if (HELPER_GROUP) {
+    HELPER_GROUP.add(createGridHelper());
+    newScene.add(HELPER_GROUP);
+  }
 
   const { useShadow } = newScene.userData.config3d;
   const light = createDirectionalLight();

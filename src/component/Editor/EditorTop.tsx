@@ -22,7 +22,7 @@ import { testData1 } from "../../app/testData";
 import Toast3d from "../common/Toast3d";
 import ModalConfirm3d from "../common/ModalConfirm3d";
 import { Color } from "three";
-import { APP_COLOR } from "../../app/type";
+import { APP_COLOR, RecordItem } from "../../app/type";
 import {
   getScene,
   sceneSerialization,
@@ -162,7 +162,7 @@ export default function EditorTop() {
             return;
           }
           const list = res.data.data.records;
-          const sceneList = list.filter((item: any) => {
+          const sceneList = list.filter((item: RecordItem) => {
             if (item.des === "Scene") {
               return item;
             }

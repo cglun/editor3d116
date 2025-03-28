@@ -8,6 +8,7 @@ import InputGroup from "react-bootstrap/esm/InputGroup";
 import { getButtonColor, getThemeByScene, setClassName } from "../../app/utils";
 import { useUpdateScene } from "../../app/hooks";
 import { RecordItem } from "../../app/type";
+import { ItemInfo } from "./ListCard";
 
 // 定义一个接口来描述 list 数组中元素的类型
 interface SearchableItem {
@@ -21,16 +22,7 @@ export function Serch3d({
 }: {
   // 将 list 的类型从 any 改为 SearchableItem[]
   list: RecordItem[];
-  setFilterList: React.Dispatch<
-    React.SetStateAction<
-      {
-        id: number;
-        name: string;
-        des: string;
-        cover: string;
-      }[]
-    >
-  >;
+  setFilterList: (list: ItemInfo[]) => void;
   type: string;
 }) {
   const [name, setName] = useState("");
