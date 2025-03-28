@@ -1,11 +1,10 @@
-import { Object3D, OrthographicCamera, PerspectiveCamera } from "three";
+import { Camera, Object3D, OrthographicCamera, PerspectiveCamera } from "three";
 import {
   getCamera,
   getDivElement,
   getPerspectiveCamera,
   getScene,
   getTransfControls,
-  raycasterSelect,
   setCamera,
   setSelectedObject,
   setTransformControls,
@@ -18,7 +17,7 @@ import TreeList from "../TreeList";
 import { useUpdateScene } from "../../../app/hooks";
 import { OutlineViewCamera } from "./OutlineViewCamera";
 import { OutlineViewScene } from "./OutlineViewScene";
-import { hideBoxHelper } from "../../../three/common3d";
+import { hideBoxHelper, raycasterSelect } from "../../../three/common3d";
 
 export default function Index() {
   const [_camera, _setCamera] = useState<
@@ -36,7 +35,7 @@ export default function Index() {
     const clickHandler = function (event: MouseEvent) {
       event.stopPropagation();
       event.preventDefault();
-      const currentObject = raycasterSelect(event);
+      const currentObject = raycasterSelect(event, camera, _scene, divElement);
       const selectedMesh: Object3D[] = [];
       for (let i = 0; i < currentObject.length; i++) {
         const { object } = currentObject[i];
@@ -151,12 +150,10 @@ export default function Index() {
             </Card.Header>
             <Card.Body>
               <ListGroup>
-                {_camera && (
-                  <OutlineViewCamera
-                    object3D={_camera}
-                    _setCamera={_setCamera}
-                  />
-                )}
+                <OutlineViewCamera
+                  object3D={_camera as Camera}
+                  _setCamera={_setCamera}
+                />
               </ListGroup>
             </Card.Body>
           </Card>

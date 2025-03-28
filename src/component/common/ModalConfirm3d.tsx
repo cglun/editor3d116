@@ -1,17 +1,14 @@
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import { setClassName, getButtonColor } from "../../app/utils";
 import { createRoot } from "react-dom/client";
 import { useEffect, useState } from "react";
-
 import { ButtonGroup } from "react-bootstrap";
 import { getScene } from "../../three/init3dEditor";
 import { ConfirmButton } from "../../app/type";
-export const _confirmButton: ConfirmButton = {
-  show: true,
-  hasButton: true,
-  closeButton: true,
-};
+// 从新文件中引入常量
+import { _confirmButton } from "./ModalConfirmUtils";
+import { getButtonColor, setClassName } from "../../app/utils";
+
 let container = document.getElementById("toast");
 if (container === null) {
   container = document.createElement("div");
@@ -35,9 +32,10 @@ function ModalConfirm({
   const { themeColor } = scene.userData.APP_THEME;
   const buttonColor = getButtonColor(themeColor);
   const [show, setShow] = useState(confirmButton.show);
+  // 修复：添加 confirmButton.show 到依赖项数组
   useEffect(() => {
     setShow(confirmButton.show);
-  }, [update]);
+  }, [update, confirmButton.show]);
   const onClose = () => {
     setShow(false);
   };

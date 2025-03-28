@@ -7,9 +7,7 @@ import {
   Object3D,
   OrthographicCamera,
   PerspectiveCamera,
-  Raycaster,
   Scene,
-  Vector2,
   Vector3,
   WebGLRenderer,
 } from "three";
@@ -221,23 +219,6 @@ export function setTransformControls(selectedMesh: Object3D) {
   getHelper.traverse((child) => {
     child.userData = userData;
   });
-}
-
-//射线 拾取物体
-export function raycasterSelect(event: MouseEvent) {
-  const raycaster = new Raycaster();
-  const pointer = new Vector2();
-  pointer.x = (event.offsetX / divElement.offsetWidth) * 2 - 1;
-  pointer.y = -(event.offsetY / divElement.offsetHeight) * 2 + 1;
-  raycaster.setFromCamera(pointer, camera);
-
-  // 计算物体和射线的焦点
-  const intersects = raycaster.intersectObjects(scene.children, true);
-  if (intersects.length > 0) {
-    // 你可以根据intersects数组中的信息来处理相交事件，比如改变相交物体的颜色等
-    return intersects;
-  }
-  return [];
 }
 
 export function getControls() {

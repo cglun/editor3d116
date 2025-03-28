@@ -19,7 +19,7 @@ export default function InputBase({
 
   useEffect(() => {
     getValue(sceneName, sceneDes);
-  }, [sceneDes, sceneName]);
+  }, [getValue, sceneDes, sceneName]); // 添加 getValue 到依赖项数组
 
   return (
     <Container fluid>

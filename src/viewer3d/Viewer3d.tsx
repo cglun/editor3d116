@@ -29,6 +29,7 @@ import { enableShadow, raycasterSelect } from "../three/common3d";
 import { enableScreenshot, setEnableScreenshot } from "../three/config3d";
 import { runScript } from "../three/scriptDev";
 import { getActionList } from "./viewer3dUtils";
+import { Object3D } from "three";
 
 /**
  * 其他应用可以调用此组件，
@@ -126,12 +127,11 @@ export default function Viewer3d({
         getScene().add(group);
 
         if (modelNum <= 1) {
-          getScene();
-          getControls();
-          getCamera();
+          // 移除无实际作用的函数调用
           runScript();
-
-          callBack && callBack(exportObj());
+          if (callBack) {
+            callBack(exportObj());
+          }
           const { javascript } = getScene().userData;
           if (javascript) {
             eval(javascript);
@@ -157,28 +157,15 @@ export default function Viewer3d({
     removeCanvasChild(canvas3d);
     if (canvas3d.current) {
       initScene(canvas3d.current);
-      item.des === "Scene" ? loadScene(item) : loadMesh(item);
-      const divElement = getDivElement();
-      divElement.addEventListener("click", function (event) {
-        event.stopPropagation();
-        event.preventDefault();
-        const currentObject = raycasterSelect(
-          event,
-          getCamera(),
-          getScene(),
-          divElement
-        );
-        if (currentObject.length > 0) {
-          console.log(currentObject[0].object.name);
-        }
-        // console.log(currentObject[0].object);
 
-        // if (currentObject.length > 0) {
-        //   setBoxHelper(currentObject[0].object, getScene());
-        // } else {
-        //   hideBoxHelper(getScene());
-        // }
-      });
+      if (item.des === "Scene") {
+        loadScene(item);
+      } else {
+        loadMesh(item);
+      }
+      const divElement = getDivElement();
+
+      divElement.addEventListener("click", clickHandler);
     }
 
     window.addEventListener("resize", () =>
@@ -188,10 +175,38 @@ export default function Viewer3d({
       window.removeEventListener("resize", () =>
         onWindowResize(canvas3d, getCamera(), getRenderer(), getLabelRenderer())
       );
-      getDivElement().removeEventListener("click", () => {});
+      const divElement = getDivElement();
+      divElement.removeEventListener("click", clickHandler);
       removeCanvasChild(canvas3d);
     };
-  }, [item.id]);
+  }, [item]); // 完善 useEffect 依赖项
+
+  function clickHandler(event: MouseEvent) {
+    const divElement = getDivElement();
+    const currentObject = raycasterSelect(
+      event,
+      getCamera(),
+      getScene(),
+      divElement
+    );
+    const selectedMesh: Object3D[] = [];
+    for (let i = 0; i < currentObject.length; i++) {
+      const { object } = currentObject[i];
+      if (!object.userData.isHelper) {
+        selectedMesh.push(object);
+      }
+    }
+    if (selectedMesh.length > 0) {
+      console.log(selectedMesh);
+    }
+    // console.log(currentObject[0].object);
+
+    // if (currentObject.length > 0) {
+    //   setBoxHelper(currentObject[0].object, getScene());
+    // } else {
+    //   hideBoxHelper(getScene());
+    // }
+  }
 
   return (
     <MyContext.Provider

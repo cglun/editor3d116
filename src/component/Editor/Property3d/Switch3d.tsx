@@ -31,8 +31,7 @@ export function Switch3d<T extends Record<keyof T, boolean>>({
             checked={checked}
             onChange={() => {
               if (typeof selected3d[attr] === "boolean") {
-                // 这里要确保 selected3d 可以被修改，如果是只读对象需要额外处理
-                //@ts-expect-error
+                //@ts-expect-error 因 selected3d 可能为只读对象，类型系统禁止直接修改属性，需绕过类型检查更新属性值
                 selected3d[attr] = !checked;
                 setChecked(!checked);
               }

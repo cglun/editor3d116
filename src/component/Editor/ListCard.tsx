@@ -282,7 +282,11 @@ function ItemInfoCard(props: Props) {
               className="d-flex flex-column text-center"
               style={{ padding: "0" }}
               onClick={() => {
-                item.des === "Scene" ? loadScene(item) : loadMesh(item);
+                if (item.des === "Scene") {
+                  loadScene(item);
+                  return;
+                }
+                loadMesh(item);
               }}
             >
               {cardBody}

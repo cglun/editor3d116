@@ -70,7 +70,7 @@ function EditorViewer3d() {
       );
     };
     // 添加 updateScene 到依赖项数组
-  }, []);
+  }, [editorCanvas.current]);
 
   function setMode(modeName: TransformControlsMode) {
     const transfControls = getTransfControls();
