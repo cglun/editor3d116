@@ -10,7 +10,7 @@ import {
 import AlertBase from "../common/AlertBase";
 
 import { getThemeByScene, setClassName } from "../../app/utils";
-import { APP_COLOR, GlbModel } from "../../app/type";
+import { APP_COLOR, Context116, GlbModel, RecordItem } from "../../app/type";
 import ModalConfirm3d from "../common/ModalConfirm3d";
 import Toast3d from "../common/Toast3d";
 import EditorForm from "../common/EditorForm";
@@ -21,38 +21,34 @@ import {
   getScene,
   getControls,
   getCamera,
+  getAll,
 } from "../../three/init3dEditor";
 
 import {
-  glbLoader,
   getProjectData,
   sceneDeserialize,
   setLabel,
-  getModelGroup,
   createGroupIfNotExist,
+  loadModelByUrl,
+  finishLoadExecute,
 } from "../../three/utils";
 import { useUpdateScene } from "../../app/hooks";
 
 import { MyContext } from "../../app/MyContext";
-import { runScript } from "../../three/scriptDev";
-import { createGridHelper, createNewScene } from "../../three/factory3d";
-import { enableShadow } from "../../three/common3d";
-import Trigger3d from "../common/fdsfafda";
 
-export interface ItemInfo {
-  id: number;
-  name: string;
-  des: string;
-  cover: string;
-}
+import { createGridHelper, createNewScene } from "../../three/factory3d";
+
+import Trigger3d from "../common/fdsfafda";
+import { getActionList } from "../../viewer3d/viewer3dUtils";
+import { Scene } from "three";
 
 interface Props {
-  list: ItemInfo[];
-  setList: (list: ItemInfo[]) => void;
+  list: RecordItem[];
+  setList: (list: RecordItem[]) => void;
   isLoading: boolean;
   error: string;
 }
-function ItemInfoCard(props: Props) {
+function RecordItemCard(props: Props) {
   const { list, setList, isLoading, error } = props;
   const { scene, updateScene } = useUpdateScene();
   const { themeColor } = getThemeByScene(scene);
@@ -74,7 +70,7 @@ function ItemInfoCard(props: Props) {
     return <AlertBase type={APP_COLOR.Warning} text={"无数据"} />;
   }
 
-  function deleteBtn(item: ItemInfo, index: number) {
+  function deleteBtn(item: RecordItem, index: number) {
     ModalConfirm3d(
       {
         title: "删除",
@@ -105,9 +101,9 @@ function ItemInfoCard(props: Props) {
     );
   }
 
-  function editorBtn(item: ItemInfo, _index: number) {
+  function editorBtn(item: RecordItem, _index: number) {
     let newI = { ...item };
-    function getNewItem(_newItem: ItemInfo) {
+    function getNewItem(_newItem: RecordItem) {
       const newList = list.map((item, index) => {
         if (index === _index) {
           newI = _newItem;
@@ -147,8 +143,15 @@ function ItemInfoCard(props: Props) {
     );
   }
 
+  const context: Context116 = {
+    getScene,
+    getCamera,
+    getControls,
+    getActionList,
+    getAll,
+  };
   let modelNum = 0;
-  function loadScene(item: ItemInfo) {
+  function loadScene(item: RecordItem) {
     getProjectData(item.id)
       .then((data) => {
         const { scene, camera, modelList } = sceneDeserialize(data, item);
@@ -159,97 +162,141 @@ function ItemInfoCard(props: Props) {
         }
         setScene(scene);
         setCamera(camera);
-
         // 加载完成后，设置标签
         setLabel(scene, dispatchTourWindow);
-
         modelNum = modelList.length;
         if (modelNum === 0) {
-          runScript(); // 运行脚本
+          //runScript(); // 运行脚本
+          finishLoadExecute(context);
+          updateScene(getScene());
         }
-        modelList.forEach((item: GlbModel) => {
-          loadModelByUrl(item);
+        modelList.forEach((model: GlbModel) => {
+          loadOneModel(model, scene);
         });
       })
       .catch((error) => {
         Toast3d(error, "提示", APP_COLOR.Danger);
       });
   }
-  function loadMesh(item: ItemInfo) {
+  function loadMesh(item: RecordItem) {
     getProjectData(item.id)
       .then((res: string) => {
-        loadModelByUrl(JSON.parse(res));
+        loadOneModel(JSON.parse(res), getScene());
       })
       .catch((error) => {
         Toast3d(error, "提示", APP_COLOR.Danger);
       });
   }
 
-  function loadModelByUrl(model: GlbModel) {
-    const loader = glbLoader();
-    let progress = 0;
-
-    loader.load(
-      model.userData.modelUrl,
-      function (gltf) {
+  function loadOneModel(model: GlbModel, scene: Scene) {
+    loadModelByUrl(
+      model,
+      scene,
+      (_progress: number) => {
         ModalConfirm3d({
           title: "提示",
-          body: "加载完成",
-          confirmButton: {
-            show: false,
-          },
-        });
-
-        const group = getModelGroup(model, gltf, getScene());
-        enableShadow(group, getScene());
-        getScene().add(group);
-
-        if (modelNum <= 1) {
-          updateScene(getScene());
-          // 移除无意义的函数调用
-          // getScene();
-          getControls();
-          getCamera();
-          runScript();
-          const { javascript } = getScene().userData;
-          if (javascript) {
-            eval(javascript);
-          }
-        }
-        modelNum--;
-      },
-      function (xhr) {
-        progress = parseFloat(
-          ((xhr.loaded / model.userData.modelTotal) * 100).toFixed(2)
-        );
-
-        ModalConfirm3d({
-          title: "提示",
-          body: <ProgressBar now={progress} label={`${progress}%`} />,
+          body: <ProgressBar now={_progress} label={`${_progress}%`} />,
           confirmButton: {
             show: true,
             closeButton: false,
             hasButton: false,
           },
         });
+
+        if (modelNum <= 1) {
+          ModalConfirm3d({
+            title: "提示",
+            body: "加载完成",
+            confirmButton: {
+              show: false,
+            },
+          });
+          updateScene(getScene());
+          finishLoadExecute(context);
+        }
+
+        if (_progress >= 100) {
+          modelNum--; // 确保在回调中更新 modelNum。如果不更新，可能会导致 modelNum 不正确。
+        }
       },
-      function (error) {
+
+      (error: unknown) => {
         ModalConfirm3d({
           title: "提示",
-          body: " An error happened" + error,
+          body: "加载失败" + error,
           confirmButton: {
             show: true,
-            closeButton: true,
-            hasButton: true,
           },
         });
       }
     );
   }
 
+  // function loadModelByUrl11(model: GlbModel) {
+  //   const loader = glbLoader();
+  //   let progress = 0;
+
+  //   loader.load(
+  //     model.userData.modelUrl,
+  //     function (gltf) {
+  //       ModalConfirm3d({
+  //         title: "提示",
+  //         body: "加载完成",
+  //         confirmButton: {
+  //           show: false,
+  //         },
+  //       });
+
+  //       const group = getModelGroup(model, gltf, getScene());
+  //       enableShadow(group, getScene());
+  //       getScene().add(group);
+
+  //       if (modelNum <= 1) {
+  //         updateScene(getScene());
+  //         // 移除无意义的函数调用
+  //         // getScene();
+  //         getControls();
+  //         getCamera();
+  //         //  runScript();
+  //         const { javascript } = getScene().userData;
+  //         if (javascript) {
+  //           eval(javascript);
+  //         }
+  //       }
+  //       modelNum--;
+  //     },
+  //     function (xhr) {
+  //       progress = parseFloat(
+  //         ((xhr.loaded / model.userData.modelTotal) * 100).toFixed(2)
+  //       );
+
+  //       ModalConfirm3d({
+  //         title: "提示",
+  //         body: <ProgressBar now={progress} label={`${progress}%`} />,
+  //         confirmButton: {
+  //           show: true,
+  //           closeButton: false,
+  //           hasButton: false,
+  //         },
+  //       });
+  //     },
+  //     function (error) {
+  //       ModalConfirm3d({
+  //         title: "提示",
+  //         body: " An error happened" + error,
+  //         confirmButton: {
+  //           show: true,
+  //           closeButton: true,
+  //           hasButton: true,
+  //         },
+  //       });
+  //     }
+  //   );
+  // }
+
   return (
     <Container fluid className="d-flex flex-wrap">
-      {list.map((item: ItemInfo, index: number) => {
+      {list.map((item: RecordItem, index: number) => {
         const selectStyle =
           item.des === "Scene" && scene.payload.userData.projectId === item.id
             ? "bg-success"
@@ -314,4 +361,4 @@ function ItemInfoCard(props: Props) {
     </Container>
   );
 }
-export default memo(ItemInfoCard);
+export default memo(RecordItemCard);

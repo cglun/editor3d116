@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ItemInfo } from "../Editor/ListCard";
+
 import InputGroup from "react-bootstrap/esm/InputGroup";
 import Form from "react-bootstrap/esm/Form";
 import { Button, ButtonGroup, Card, Container } from "react-bootstrap";
@@ -13,7 +13,7 @@ import {
 } from "../../app/utils";
 import { takeScreenshot } from "../../three/init3dViewer";
 import _axios, { loadAssets } from "../../app/http";
-import { APP_COLOR } from "../../app/type";
+import { APP_COLOR, RecordItem } from "../../app/type";
 
 import { getScene } from "../../three/init3dEditor";
 
@@ -23,10 +23,10 @@ export default function EditorForm({
   item,
   getNewItem,
 }: {
-  item: ItemInfo;
-  getNewItem: (item: ItemInfo) => void;
+  item: RecordItem;
+  getNewItem: (item: RecordItem) => void;
 }) {
-  const [_item, _setItem] = useState<ItemInfo>({ ...item });
+  const [_item, _setItem] = useState<RecordItem>({ ...item });
   const [imgBase64, setImgBase64] = useState("");
   const scene = getScene();
   //const { themeColor } = getThemeByScene(scene);

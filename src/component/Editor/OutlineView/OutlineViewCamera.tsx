@@ -6,7 +6,6 @@ import {
   setSelectedObject,
 } from "../../../three/init3dEditor";
 import { setClassName } from "../../../app/utils";
-import { getObjectNameByName } from "../../../three/utils";
 import { SPACE } from "../../../app/utils";
 import Button from "react-bootstrap/esm/Button";
 import { APP_COLOR } from "../../../app/type";
@@ -41,7 +40,7 @@ export function OutlineViewCamera({
       >
         <div>
           <i className={setClassName("camera-reels")}></i>
-          {SPACE + getObjectNameByName(object3D)}
+          {SPACE + "相机"}
 
           <Button
             className="ms-2"

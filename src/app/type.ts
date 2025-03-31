@@ -2,6 +2,7 @@ import {
   Euler,
   Mesh,
   Object3D,
+  OrthographicCamera,
   PerspectiveCamera,
   Scene,
   Vector3,
@@ -111,13 +112,7 @@ export interface ActionItem {
   id: string;
   handler: () => void;
 }
-export interface EditorExportObject {
-  scene: Scene;
-  camera: PerspectiveCamera;
-  controls: OrbitControls;
-  all: object;
-  getActionList: () => ActionItem[];
-}
+
 // 定义 item 的类型
 export type TourItem = {
   id: number; // 假设 id 是数字类型
@@ -128,4 +123,13 @@ export interface ConfirmButton {
   show?: boolean;
   hasButton?: boolean;
   closeButton?: boolean;
+}
+
+// 定义 context 的类型
+export interface Context116 {
+  getScene: () => Scene; // 返回 Scene 类型
+  getControls: () => OrbitControls; // 返回 OrbitControls 类型
+  getCamera: () => PerspectiveCamera | OrthographicCamera; // 返回 PerspectiveCamera 类型
+  getActionList: () => ActionItem[]; // 返回 ActionItem[] 类型
+  getAll: () => object; // 返回 object 类型
 }

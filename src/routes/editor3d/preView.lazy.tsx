@@ -7,7 +7,7 @@ import { testData2 } from "../../app/testData";
 import { Button, ButtonGroup } from "react-bootstrap";
 import { useUpdateScene } from "../../app/hooks";
 import { getButtonColor, getThemeByScene } from "../../app/utils";
-import { ActionItem, EditorExportObject } from "../../app/type";
+import { ActionItem, Context116, RecordItem } from "../../app/type";
 
 // 定义响应数据的类型
 interface PageListResponse {
@@ -32,16 +32,17 @@ function RouteComponent() {
     useState<{ id: number; name: string; des: string; cover: string }[]>(
       testData2
     );
-  const [_item, _setItem] = useState({
-    id: 296,
-    name: "立方体",
-    des: "Scene",
-    cover: "",
-  });
+  // const [_item, _setItem] = useState({
+  //   id: 296,
+  //   name: "立方体",
+  //   des: "Scene",
+  //   cover: "",
+  // });
   const [actionList, setActionList] = useState<ActionItem[]>([]);
   const { scene } = useUpdateScene();
   const { themeColor } = getThemeByScene(scene);
   const btnColor = getButtonColor(themeColor);
+  const [_item, _setItem] = useState<RecordItem>();
 
   useEffect(() => {
     setEnableScreenshot(true);
@@ -68,10 +69,13 @@ function RouteComponent() {
       });
   }, []);
 
-  function callBack(instance: EditorExportObject) {
+  function callBack(instance: Context116) {
     const actionList = instance.getActionList();
 
     setActionList(actionList);
+  }
+  function callBackError(error: unknown) {
+    console.log("加载失败----------------", error);
   }
 
   return (
@@ -83,8 +87,11 @@ function RouteComponent() {
     >
       <div
         id="pre-view-top"
+        className="sticky-top"
         style={{ height: "2rem", scrollBehavior: "smooth" }}
-      ></div>
+      >
+        —————————————————鼠标滑到下面画布—————————————————
+      </div>
 
       <ButtonGroup size="sm">
         {list.map(
@@ -93,7 +100,8 @@ function RouteComponent() {
               <Button
                 variant={btnColor}
                 key={item.id}
-                disabled={item.id === _item.id}
+                // Bug 修复：添加 _item 判空检查
+                disabled={_item && item.id === _item.id}
                 onClick={() => {
                   _setItem(item);
                 }}
@@ -127,7 +135,13 @@ function RouteComponent() {
           element?.scrollIntoView();
         }}
       >
-        <Viewer3d item={_item} callBack={callBack} />
+        {_item && (
+          <Viewer3d
+            item={_item}
+            callBack={callBack}
+            callBackError={callBackError}
+          />
+        )}
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ import {
   Scene,
   WebGLRenderer,
 } from "three";
-import { GlbModel, UserDataType } from "../app/type";
+import { Context116, GlbModel, RecordItem, UserDataType } from "../app/type";
 
 import {
   CSS2DRenderer,
@@ -15,11 +15,14 @@ import {
   GLTFLoader,
 } from "three/examples/jsm/Addons.js";
 
-import { ItemInfo } from "../component/Editor/ListCard";
 import _axios from "../app/http";
 import { createCss2dLabel, createCss3dLabel } from "./factory3d";
-import { setTextureBackground } from "./common3d";
+import { enableShadow, setTextureBackground } from "./common3d";
 import { TourWindow } from "../app/MyContext";
+import React from "react";
+
+import { enableScreenshot, setEnableScreenshot } from "./config3d";
+import { runScript } from "./scriptDev";
 
 export function getObjectNameByName(object3D: Object3D): string {
   return object3D.name.trim() === "" ? object3D.type : object3D.name;
@@ -124,7 +127,7 @@ export function strToJson(str: string) {
 }
 
 //反序列化
-export function sceneDeserialize(data: string, item: ItemInfo) {
+export function sceneDeserialize(data: string, item: RecordItem) {
   const { scene, models, loader } = strToJson(data);
 
   let newScene = new Scene();
@@ -262,4 +265,56 @@ export function createGroupIfNotExist(
     return group;
   }
   return undefined;
+}
+
+export function loadModelByUrl(
+  model: GlbModel,
+  scene: Scene,
+  getProsess: (progress: number) => void,
+  getError: (error: unknown) => void
+) {
+  const loader = glbLoader();
+  loader.load(
+    model.userData.modelUrl,
+    function (gltf) {
+      const group = getModelGroup(model, gltf, scene);
+      enableShadow(group, scene);
+      scene.add(group);
+      getProsess(100);
+    },
+    function (xhr) {
+      const progress = parseFloat(
+        ((xhr.loaded / model.userData.modelTotal) * 100).toFixed(2)
+      );
+      getProsess(progress);
+    },
+    function (error) {
+      getError(error);
+    }
+  );
+}
+
+export function finishLoadExecute(
+  context: Context116,
+  callBack?: (context: Context116) => void
+) {
+  const { javascript } = context.getScene().userData;
+  if (enableScreenshot.enable) {
+    setEnableScreenshot(true);
+  }
+
+  if (javascript) {
+    // 使用类型正确的 context 调用方法
+    const { getScene, getControls, getCamera } = context; // 这里的 context 需要根据实际情况修改类型为 Context116 或正确的类型定义
+    getScene();
+    getControls();
+    getCamera();
+    eval(javascript);
+    if (callBack) {
+      callBack(context);
+    }
+  }
+  if (import.meta.env.MODE === "development") {
+    runScript(context);
+  }
 }

@@ -2,7 +2,7 @@ import ListGroup from "react-bootstrap/esm/ListGroup";
 
 import { getScene, setSelectedObject } from "../../../three/init3dEditor";
 import { setClassName } from "../../../app/utils";
-import { getObjectNameByName } from "../../../three/utils";
+
 import { SPACE } from "../../../app/utils";
 
 import { useUpdateScene } from "../../../app/hooks";
@@ -23,7 +23,7 @@ export function OutlineViewScene() {
       >
         <div>
           <i className={setClassName("box2")}></i>
-          {SPACE + getObjectNameByName(object3D)}
+          {SPACE + "场景"}
         </div>
       </ListGroup.Item>
     )
