@@ -32,6 +32,7 @@ import {
 } from "../three/utils";
 import { raycasterSelect } from "../three/common3d";
 import { getActionList } from "./viewer3dUtils";
+import ModalConfirm3d from "../component/common/ModalConfirm3d";
 
 /**
  * 其他应用可以调用此组件，
@@ -64,9 +65,6 @@ export default function Viewer3d({
 
   let modelNum = 0;
   function loadScene(item: RecordItem) {
-    if (item.des !== "Scene") {
-      return;
-    }
     const context: Context116 = {
       getScene,
       getCamera,
@@ -124,54 +122,38 @@ export default function Viewer3d({
       });
   }
 
-  // 定义 GlbModel 类型，确保 userData 包含 modelUrl 和 modelTotal 属性
-  // function loadModelByUrl1(model: GlbModel) {
-  //   const loader = glbLoader();
-  //   let progress = 0;
+  function loadMesh(item: RecordItem) {
+    getProjectData(item.id)
+      .then((res: string) => {
+        loadModelByUrl(
+          JSON.parse(res),
+          getScene(),
+          (_progress: number) => {
+            setProgress(_progress);
+          },
 
-  //   loader.load(
-  //     model.userData.modelUrl,
-  //     function (gltf) {
-  //       setProgress(100);
-  //       const group = getModelGroup(model, gltf, getScene());
-  //       enableShadow(group, getScene());
-  //       getScene().add(group);
-
-  //       if (modelNum <= 1) {
-  //         // 移除无实际作用的函数调用
-  //         const context: Context116 = {
-  //           getScene,
-  //           getCamera,
-  //           getControls,
-  //           getActionList,
-  //           getAll,
-  //         };
-  //         finishLoadExecute(context);
-  //         if (callBack) {
-  //           callBack(context);
-  //         }
-  //       }
-  //       modelNum--;
-  //     },
-  //     function (xhr) {
-  //       // 确保 modelTotal 存在，避免类型错误
-  //       progress = parseFloat(
-  //         ((xhr.loaded / model.userData.modelTotal) * 100).toFixed(2)
-  //       );
-
-  //       setProgress(progress);
-  //     },
-  //     function (error) {
-  //       Toast3d("加载失败:" + error, "error", APP_COLOR.Warning);
-  //     }
-  //   );
-  // }
+          (error: unknown) => {
+            console.log(error);
+          }
+        );
+      })
+      .catch((error) => {
+        console.log(error);
+        Toast3d(error, "提示", APP_COLOR.Danger);
+      });
+  }
 
   useEffect(() => {
     removeCanvasChild(canvas3d);
     if (canvas3d.current) {
       initScene(canvas3d.current);
-      loadScene(item);
+
+      if (item.des === "Scene") {
+        loadScene(item);
+      }
+      if (item.des === "Mesh") {
+        loadMesh(item);
+      }
       const divElement = getDivElement();
       divElement.addEventListener("click", clickHandler);
     }

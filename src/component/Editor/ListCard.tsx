@@ -38,7 +38,7 @@ import { MyContext } from "../../app/MyContext";
 
 import { createGridHelper, createNewScene } from "../../three/factory3d";
 
-import Trigger3d from "../common/fdsfafda";
+import Trigger3d from "../common/Trigger3d";
 import { getActionList } from "../../viewer3d/viewer3dUtils";
 import { Scene } from "three";
 
@@ -328,15 +328,18 @@ function RecordItemCard(props: Props) {
             <Card.Body
               className="d-flex flex-column text-center"
               style={{ padding: "0" }}
-              onClick={() => {
-                if (item.des === "Scene") {
-                  loadScene(item);
-                  return;
-                }
-                loadMesh(item);
-              }}
             >
-              {cardBody}
+              <div
+                onClick={() => {
+                  if (item.des === "Scene") {
+                    loadScene(item);
+                    return;
+                  }
+                  loadMesh(item);
+                }}
+              >
+                {cardBody}
+              </div>
 
               <ButtonGroup aria-label="Basic example" className="mt-2">
                 <Button
