@@ -32,7 +32,6 @@ import {
 } from "../three/utils";
 import { raycasterSelect } from "../three/common3d";
 import { getActionList } from "./viewer3dUtils";
-import ModalConfirm3d from "../component/common/ModalConfirm3d";
 
 /**
  * 其他应用可以调用此组件，
@@ -169,7 +168,7 @@ export default function Viewer3d({
       divElement.removeEventListener("click", clickHandler);
       removeCanvasChild(canvas3d);
     };
-  }, [item]); // 完善 useEffect 依赖项
+  }, [item]);
 
   function clickHandler(event: MouseEvent) {
     const divElement = getDivElement();

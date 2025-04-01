@@ -31,7 +31,7 @@ function RouteComponent() {
   const buttonColor = getButtonColor(themeColor);
   const [isDebug, setIsDebug] = useState(false); // 是否为调试场景[调试场景不允许修改代码]
 
-  // 添加 javascript 到依赖项数组
+  // 添加 javascript 和 projectId 到依赖项数组
   useEffect(() => {
     setCode(javascript);
     const SCENE_PROJECT = localStorage.getItem("SCENE_PROJECT");
@@ -40,7 +40,7 @@ function RouteComponent() {
     } else {
       setIsDebug(false);
     }
-  }, [scene, javascript]);
+  }, [scene, javascript, projectId]);
 
   return (
     <Container fluid>
