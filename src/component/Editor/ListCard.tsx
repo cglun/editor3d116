@@ -166,7 +166,6 @@ function RecordItemCard(props: Props) {
         setLabel(scene, dispatchTourWindow);
         modelNum = modelList.length;
         if (modelNum === 0) {
-          //runScript(); // 运行脚本
           finishLoadExecute(context);
           updateScene(getScene());
         }
@@ -257,7 +256,7 @@ function RecordItemCard(props: Props) {
   //         // getScene();
   //         getControls();
   //         getCamera();
-  //         //  runScript();
+  //
   //         const { javascript } = getScene().userData;
   //         if (javascript) {
   //           eval(javascript);

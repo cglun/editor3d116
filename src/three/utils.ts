@@ -286,7 +286,9 @@ export function loadModelByUrl(
       const progress = parseFloat(
         ((xhr.loaded / model.userData.modelTotal) * 100).toFixed(2)
       );
-      getProsess(progress);
+      if (progress < 100) {
+        getProsess(progress);
+      }
     },
     function (error) {
       getError(error);

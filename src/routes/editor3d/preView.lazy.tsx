@@ -77,6 +77,10 @@ function RouteComponent() {
   function callBackError(error: unknown) {
     console.log("加载失败----------------", error);
   }
+  //@ts-expect-error
+  function getProgress(progress: number) {
+    console.log("加载进度----------------", progress);
+  }
 
   return (
     <div

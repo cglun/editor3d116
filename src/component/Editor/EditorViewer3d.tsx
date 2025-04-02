@@ -124,7 +124,6 @@ function EditorViewer3d() {
         setLabel(scene, dispatchTourWindow);
         modelNum = modelList.length;
         if (modelNum === 0) {
-          //runScript(); // 运行脚本
           finishLoadExecute(context);
           updateScene(getScene());
         }

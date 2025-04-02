@@ -43,11 +43,13 @@ export default function Viewer3d({
   canvasStyle = { height: "100vh", width: "100vw" },
   callBack,
   callBackError,
+  getProgress,
 }: {
   item: RecordItem;
   canvasStyle?: { height: string; width: string };
   callBack?: (item: Context116) => void;
   callBackError?: (error: unknown) => void;
+  getProgress?: (progress: number) => void;
 }) {
   // 修改为明确指定 HTMLDivElement 类型
   const canvas3d: React.RefObject<HTMLDivElement> = useRef(null);
@@ -73,14 +75,17 @@ export default function Viewer3d({
     };
     getProjectData(item.id)
       .then((data: string) => {
+        setProgress(0);
+        getProgress && getProgress(0);
         const { scene, camera, modelList } = sceneDeserialize(data, item);
-
         setScene(scene);
         setCamera(camera);
         setLabel(scene, dispatchTourWindow);
         modelNum = modelList.length;
 
         if (modelNum === 0) {
+          getProgress && getProgress(100);
+          setProgress(100);
           // 运行调试脚本
           finishLoadExecute(context, callBack);
         }
@@ -91,14 +96,17 @@ export default function Viewer3d({
             scene,
             (_progress: number) => {
               setProgress(_progress);
-
-              if (modelNum <= 1) {
-                console.log("加载完成");
-                finishLoadExecute(context, callBack);
-              }
+              getProgress && getProgress(100);
 
               if (_progress >= 100) {
+                //setProgress(100);
                 modelNum--; // 确保在回调中更新 modelNum。如果不更新，可能会导致 modelNum 不正确。
+                if (modelList.length === 1) {
+                  finishLoadExecute(context, callBack);
+                }
+                if (modelList.length > 1 && modelNum <= 1) {
+                  finishLoadExecute(context, callBack);
+                }
               }
             },
 
@@ -203,7 +211,7 @@ export default function Viewer3d({
     >
       <Container fluid>
         <div className="mb-1 mx-auto" style={{ width: "300px" }}>
-          {progress < 100 && (
+          {progress < 100 && !getProgress && (
             <ProgressBar now={progress} label={`${progress}%`} />
           )}
         </div>
