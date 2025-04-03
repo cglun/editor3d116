@@ -188,7 +188,7 @@ export function getProjectData(id: number): Promise<string> {
 
 export function glbLoader() {
   const dracoLoader = new DRACOLoader();
-  dracoLoader.setDecoderPath("/public/static/js/draco/gltf/");
+  dracoLoader.setDecoderPath("/editor3d/public/static/js/draco/gltf/");
   //const loader = new GLTFLoader(new LoadingManager());
   const loader = new GLTFLoader();
   loader.setDRACOLoader(dracoLoader);

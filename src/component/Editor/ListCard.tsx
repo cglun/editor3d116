@@ -150,8 +150,10 @@ function RecordItemCard(props: Props) {
     getActionList,
     getAll,
   };
-  let modelNum = 0;
+  let modelNum = 0,
+    _modelLen = 0;
   function loadScene(item: RecordItem) {
+    (modelNum = 0), (_modelLen = 0);
     getProjectData(item.id)
       .then((data) => {
         const { scene, camera, modelList } = sceneDeserialize(data, item);
@@ -165,6 +167,8 @@ function RecordItemCard(props: Props) {
         // 加载完成后，设置标签
         setLabel(scene, dispatchTourWindow);
         modelNum = modelList.length;
+
+        _modelLen = modelList.length;
         if (modelNum === 0) {
           finishLoadExecute(context);
           updateScene(getScene());
@@ -202,7 +206,30 @@ function RecordItemCard(props: Props) {
           },
         });
 
-        if (modelNum <= 1) {
+        if (_progress >= 100) {
+          modelNum--;
+          if (_modelLen === 1) {
+            ModalConfirm3d({
+              title: "提示",
+              body: "加载完成",
+              confirmButton: {
+                show: false,
+              },
+            });
+            updateScene(getScene());
+            finishLoadExecute(context);
+          }
+          if (_modelLen > 1 && modelNum <= 1) {
+            ModalConfirm3d({
+              title: "提示",
+              body: "加载完成",
+              confirmButton: {
+                show: false,
+              },
+            });
+            updateScene(getScene());
+            finishLoadExecute(context);
+          }
           ModalConfirm3d({
             title: "提示",
             body: "加载完成",
@@ -210,12 +237,8 @@ function RecordItemCard(props: Props) {
               show: false,
             },
           });
-          updateScene(getScene());
-          finishLoadExecute(context);
-        }
 
-        if (_progress >= 100) {
-          modelNum--; // 确保在回调中更新 modelNum。如果不更新，可能会导致 modelNum 不正确。
+          // 确保在回调中更新 modelNum。如果不更新，可能会导致 modelNum 不正确。
         }
       },
 
