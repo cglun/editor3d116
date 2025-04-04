@@ -43,8 +43,7 @@ export default function EditorTop() {
   const { scene, updateScene } = useUpdateScene();
   const { themeColor, iconFill, sceneCanSave } = getThemeByScene(scene);
   document.body.setAttribute("data-bs-theme", themeColor);
-  const logoUrl = new URL("/public/static/images/logo.png", import.meta.url)
-    .href;
+  const logoUrl = new URL("/static/images/logo.png", import.meta.url).href;
 
   function notJavascript() {
     const userData = getScene().userData;
@@ -52,7 +51,7 @@ export default function EditorTop() {
       return false;
     }
     try {
-      eval(userData.javascript);
+      // eval(userData.javascript);
     } catch (error) {
       Toast3d("查看控制台!", "脚本错误", APP_COLOR.Danger);
       console.error(error);

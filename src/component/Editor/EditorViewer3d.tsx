@@ -14,7 +14,7 @@ import initScene, {
 } from "../../three/init3dEditor"; // 初始化
 import { Button, ButtonGroup, Container, ProgressBar } from "react-bootstrap";
 
-import { TransformControlsMode } from "three/examples/jsm/Addons.js";
+import { TransformControlsMode } from "three/addons/controls/TransformControls.js";
 import { Object3D, Vector3 } from "three";
 import { getThemeByScene, setClassName } from "../../app/utils";
 import {

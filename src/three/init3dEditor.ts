@@ -11,13 +11,14 @@ import {
   Vector3,
   WebGLRenderer,
 } from "three";
-
-import {
-  OrbitControls,
-  TransformControls,
-  DragControls,
-} from "three/examples/jsm/Addons.js";
-
+// import {
+//   OrbitControls,
+//   TransformControls,
+//   DragControls,
+// } from "three/examples/jsm/Addons.js";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { TransformControls } from "three/addons/controls/TransformControls.js";
+import { DragControls } from "three/addons/controls/DragControls.js";
 import { GlbModel, UserDataType } from "../app/type";
 import { cameraTween } from "./animate";
 import { setBoxHelper, commonAnimate, AnimateProps } from "./common3d";

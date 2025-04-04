@@ -7,12 +7,21 @@ import {
   Vector2,
   WebGLRenderer,
 } from "three";
+// import {
+//   CSS2DObject,
+//   CSS2DRenderer,
+//   CSS3DRenderer,
+//   CSS3DSprite,
+// } from "three/examples/jsm/Addons.js";
 import {
   CSS2DObject,
   CSS2DRenderer,
-  CSS3DRenderer,
+} from "three/addons/renderers/CSS2DRenderer.js";
+import {
   CSS3DSprite,
-} from "three/examples/jsm/Addons.js";
+  CSS3DRenderer,
+} from "three/addons/renderers/CSS3DRenderer.js";
+
 import { UserDataType } from "../app/type";
 import { cleaerOldLabel, createGroupIfNotExist, getTourSrc } from "./utils";
 import { userData } from "./config3d";

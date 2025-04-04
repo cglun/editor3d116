@@ -11,20 +11,21 @@ export default defineConfig({
       filename: "remoteEntry.js",
       exposes: {
         "./Viewer3d": "./src/Viewer3d/Viewer3d.tsx",
+        // "./init3dViewer": "./src/three/init3dViewer.ts",
       },
       shared: ["react", "react-dom"],
     }),
   ],
   base: "/editor3d/",
-
+  // publicDir: "/public/",
   build: {
     modulePreload: true,
     copyPublicDir: true,
     target: "esnext",
     minify: true,
     cssCodeSplit: false,
-    outDir: "../datav_vr_2d/editor3d",
-    //outDir: "editor3d",
+    // outDir: "../datav_vr_2d/editor3d",
+    outDir: "editor3d",
     assetsDir: "assets",
     assetsInlineLimit: 4096000,
     chunkSizeWarningLimit: 4096000,
@@ -32,7 +33,6 @@ export default defineConfig({
       transformMixedEsModules: false,
     },
     rollupOptions: {
-      external: ["/static/css/github-dark.min.css?transform-only"],
       //  external: [new RegExp(".hdr")],
       output: {
         assetFileNames: "assets/[name].[ext]",

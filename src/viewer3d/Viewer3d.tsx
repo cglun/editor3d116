@@ -96,8 +96,7 @@ export default function Viewer3d({
             scene,
             (_progress: number) => {
               setProgress(_progress);
-              getProgress && getProgress(100);
-
+              getProgress && getProgress(_progress);
               if (_progress >= 100) {
                 //setProgress(100);
                 modelNum--; // 确保在回调中更新 modelNum。如果不更新，可能会导致 modelNum 不正确。

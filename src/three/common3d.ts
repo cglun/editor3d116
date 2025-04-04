@@ -14,7 +14,8 @@ import {
 import { UserDataType } from "../app/type";
 import TWEEN from "three/addons/libs/tween.module.js";
 import { enableScreenshot, Extra3d, parameters } from "./config3d";
-import { OrbitControls, RGBELoader } from "three/examples/jsm/Addons.js";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
 import { createGroupIfNotExist } from "./utils";
 
 export function enableShadow(group: Scene | Group | Object3D, context: Scene) {

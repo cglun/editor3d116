@@ -207,7 +207,6 @@ function RecordItemCard(props: Props) {
         });
 
         if (_progress >= 100) {
-          modelNum--;
           if (_modelLen === 1) {
             ModalConfirm3d({
               title: "提示",
@@ -237,7 +236,7 @@ function RecordItemCard(props: Props) {
               show: false,
             },
           });
-
+          modelNum--;
           // 确保在回调中更新 modelNum。如果不更新，可能会导致 modelNum 不正确。
         }
       },
@@ -357,6 +356,7 @@ function RecordItemCard(props: Props) {
                     loadScene(item);
                     return;
                   }
+                  _modelLen = 1;
                   loadMesh(item);
                 }}
               >

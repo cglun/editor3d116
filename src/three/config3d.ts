@@ -1,5 +1,6 @@
 import { Clock, Vector3 } from "three";
-import { CSS2DRenderer, CSS3DRenderer } from "three/examples/jsm/Addons.js";
+import { CSS2DRenderer } from "three/addons/renderers/CSS2DRenderer.js";
+import { CSS3DRenderer } from "three/addons/renderers/CSS3DRenderer.js";
 import { APP_COLOR } from "../app/type";
 
 export const enableScreenshot = {

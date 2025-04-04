@@ -8,12 +8,15 @@ import {
 } from "three";
 import { Context116, GlbModel, RecordItem, UserDataType } from "../app/type";
 
-import {
-  CSS2DRenderer,
-  DRACOLoader,
-  GLTF,
-  GLTFLoader,
-} from "three/examples/jsm/Addons.js";
+// import {
+//   CSS2DRenderer,
+
+//   GLTF,
+//   GLTFLoader,
+// } from "three/examples/jsm/Addons.js";
+import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
+import { CSS2DRenderer } from "three/addons/renderers/CSS2DRenderer.js";
+import { GLTF, GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
 import _axios from "../app/http";
 import { createCss2dLabel, createCss3dLabel } from "./factory3d";
@@ -187,10 +190,14 @@ export function getProjectData(id: number): Promise<string> {
 }
 
 export function glbLoader() {
-  const dracoLoader = new DRACOLoader();
-  dracoLoader.setDecoderPath("/editor3d/public/static/js/draco/gltf/");
-  //const loader = new GLTFLoader(new LoadingManager());
   const loader = new GLTFLoader();
+  const baseurl = import.meta.env.BASE_URL;
+  let path = `${baseurl}static/js/draco/gltf/`;
+  if (import.meta.env.DEV) {
+    path = `${baseurl}public/static/js/draco/gltf/`;
+  }
+  const dracoLoader = new DRACOLoader();
+  dracoLoader.setDecoderPath(path);
   loader.setDRACOLoader(dracoLoader);
   return loader;
 }
@@ -274,12 +281,14 @@ export function loadModelByUrl(
   getError: (error: unknown) => void
 ) {
   const loader = glbLoader();
+
   loader.load(
-    model.userData.modelUrl,
+    model.userData.modelUrl + "?url",
     function (gltf) {
       const group = getModelGroup(model, gltf, scene);
       enableShadow(group, scene);
       scene.add(group);
+
       getProsess(100);
     },
     function (xhr) {
@@ -311,7 +320,7 @@ export function finishLoadExecute(
     getScene();
     getControls();
     getCamera();
-    eval(javascript);
+    // eval(javascript);
     if (callBack) {
       callBack(context);
     }

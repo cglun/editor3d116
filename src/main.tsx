@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap.bundle.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-import "/public/static/css/github-dark.min.css";
+import "../public/static/css/github-dark.min.css";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import "./App.css";
 // Import the generated route tree
@@ -19,6 +19,9 @@ declare module "@tanstack/react-router" {
     router: typeof router;
   }
 }
+console.log(
+  `${location.protocol}//${location.hostname}:${location.port}/#/preview/`
+);
 
 // Render the app
 const rootElement = document.getElementById("root")!;

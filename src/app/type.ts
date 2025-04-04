@@ -7,7 +7,7 @@ import {
   Scene,
   Vector3,
 } from "three";
-import { OrbitControls } from "three/examples/jsm/Addons.js";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 export interface CanvasNode {
   width: number;
