@@ -18,7 +18,6 @@ import {
 } from "../../app/utils";
 
 import ListCard from "./ListCard";
-import { testData1 } from "../../app/testData";
 import Toast3d from "../common/Toast3d";
 import ModalConfirm3d from "../common/ModalConfirm3d";
 import { Color } from "three";
@@ -143,9 +142,9 @@ export default function EditorTop() {
     );
   }
 
-  const [list, setList] = useState(testData1);
+  const [list, setList] = useState<RecordItem[]>([]);
   const [error, setError] = useState("");
-  const [filterList, setFilterList] = useState(testData1);
+  const [filterList, setFilterList] = useState<RecordItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

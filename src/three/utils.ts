@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Group,
   Object3D,
@@ -7,23 +8,13 @@ import {
   WebGLRenderer,
 } from "three";
 import { Context116, GlbModel, RecordItem, UserDataType } from "../app/type";
-
-// import {
-//   CSS2DRenderer,
-
-//   GLTF,
-//   GLTFLoader,
-// } from "three/examples/jsm/Addons.js";
 import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
 import { CSS2DRenderer } from "three/addons/renderers/CSS2DRenderer.js";
 import { GLTF, GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-
 import _axios from "../app/http";
 import { createCss2dLabel, createCss3dLabel } from "./factory3d";
 import { enableShadow, setTextureBackground } from "./common3d";
 import { TourWindow } from "../app/MyContext";
-import React from "react";
-
 import { enableScreenshot, setEnableScreenshot } from "./config3d";
 import { runScript } from "./scriptDev";
 

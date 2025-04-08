@@ -9,7 +9,7 @@ import {
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 import {
-  createConfig,
+  createConfigRenderer,
   createDirectionalLight,
   createPerspectiveCamera,
   createRenderer,
@@ -52,7 +52,7 @@ export default function initScene(node: HTMLDivElement): void {
   renderer = createRenderer(node);
   node.appendChild(renderer.domElement);
   controls = new OrbitControls(camera, renderer.domElement);
-  extra3d = createConfig(scene, node);
+  extra3d = createConfigRenderer(scene, node);
   animate();
 }
 

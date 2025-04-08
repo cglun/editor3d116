@@ -40,6 +40,31 @@ export default function EditorForm({
     };
   }, [_item, getNewItem]); // 添加 getNewItem 到依赖项数组
 
+  function uploadScreenshot() {
+    const blob = base64ToBlob(imgBase64, "image/png");
+    const file = blobToFile(blob, "截图.png");
+    const formData = new FormData();
+    formData.append("file", file);
+    _axios
+      .post("/material/upload/116", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((res) => {
+        if (res.data.code !== 200) {
+          Toast3d(res.data.message, "提示", APP_COLOR.Warning);
+          return;
+        }
+        const item = { ..._item, cover: res.data.result.url };
+        _setItem(item);
+        Toast3d(res.data.message, "提示", APP_COLOR.Success);
+      })
+      .catch((err) => {
+        Toast3d(err.message, "错误", APP_COLOR.Danger);
+      });
+  }
+
   return (
     <Container fluid>
       <InputGroup size="sm">
@@ -113,30 +138,7 @@ export default function EditorForm({
           <Button
             variant={buttonColor}
             disabled={imgBase64.trim() === ""}
-            onClick={() => {
-              const blob = base64ToBlob(imgBase64, "image/png");
-              const file = blobToFile(blob, "截图.png");
-              const formData = new FormData();
-              formData.append("file", file);
-              _axios
-                .post("/material/upload/116", formData, {
-                  headers: {
-                    "Content-Type": "multipart/form-data",
-                  },
-                })
-                .then((res) => {
-                  if (res.data.code !== 200) {
-                    Toast3d(res.data.message, "提示", APP_COLOR.Warning);
-                    return;
-                  }
-                  const item = { ..._item, cover: res.data.result.url };
-                  _setItem(item);
-                  Toast3d(res.data.message, "提示", APP_COLOR.Success);
-                })
-                .catch((err) => {
-                  Toast3d(err.message, "错误", APP_COLOR.Danger);
-                });
-            }}
+            onClick={uploadScreenshot}
           >
             <i className={setClassName("cloud-arrow-up")}></i>
             上传截图

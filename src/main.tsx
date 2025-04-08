@@ -19,7 +19,6 @@ declare module "@tanstack/react-router" {
     router: typeof router;
   }
 }
-console.log(`${location.protocol}//${location.hostname}:${location.port}/#/preview/`);
 
 // Render the app
 const rootElement = document.getElementById("root")!;

@@ -45,24 +45,13 @@ export interface ToastBody {
   show: boolean;
 }
 
-// export interface ModalBody {
-//   title: string;
-//   show: boolean;
-//   body: any;
-//   action: {
-//     targetId: number;
-//     type: ACTION_TYPE;
-//   } | null;
-// }
 export enum HTTP_TYPE {
   GET = "GET",
   POST = "POST",
-}
-export enum ACTION_TYPE {
-  ADD = "ADD",
   DELETE = "DELETE",
   UPDATE = "UPDATE",
 }
+
 export type ViewType = string | null;
 
 export interface GlbModel {

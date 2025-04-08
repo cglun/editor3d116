@@ -24,7 +24,7 @@ import { cameraTween } from "./animate";
 import { setBoxHelper, commonAnimate, AnimateProps } from "./common3d";
 import { extra3d as extra, parameters } from "./config3d";
 import {
-  createConfig,
+  createConfigRenderer,
   createPerspectiveCamera,
   createRenderer,
   createScene,
@@ -107,7 +107,7 @@ export default function initScene(node: HTMLDivElement): void {
     renderer.domElement
   );
   transfControls = transfControls1;
-  extra3d = createConfig(scene, node);
+  extra3d = createConfigRenderer(scene, node);
   animate();
 }
 

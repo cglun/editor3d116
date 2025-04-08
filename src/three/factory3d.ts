@@ -7,12 +7,7 @@ import {
   Vector2,
   WebGLRenderer,
 } from "three";
-// import {
-//   CSS2DObject,
-//   CSS2DRenderer,
-//   CSS3DRenderer,
-//   CSS3DSprite,
-// } from "three/examples/jsm/Addons.js";
+
 import {
   CSS2DObject,
   CSS2DRenderer,
@@ -89,7 +84,7 @@ export function createRenderer(node: HTMLElement) {
   return renderer;
 }
 
-export function createConfig(scene: Scene, node: HTMLElement) {
+export function createConfigRenderer(scene: Scene, node: HTMLElement) {
   const { config3d } = scene.userData;
   let labelRenderer2d, labelRenderer3d;
   if (config3d.css2d) {
@@ -155,14 +150,10 @@ export function createLabelRenderer(
 ) {
   const labelRenderer = renderer;
   labelRenderer.setSize(node.offsetWidth, node.offsetHeight);
-  // const top = node.childNodes[0] as HTMLElement;
-  // const tt = top.getBoundingClientRect().top;
   const renderDom = labelRenderer.domElement;
   renderDom.style.position = "absolute";
-  //renderDom.style.zIndex = "-1";
   renderDom.style.pointerEvents = "none";
   renderDom.classList.add("label-renderer");
-  //renderDom.style.top = `${window.scrollY}px`;
   node.appendChild(labelRenderer.domElement);
   return labelRenderer;
 }
@@ -181,7 +172,6 @@ function createDiv(
   const img = document.createElement("i");
   img.className = setClassName(logo);
   div.appendChild(img);
-
   const span = document.createElement("span");
   span.textContent = name;
   div.appendChild(span);
@@ -207,7 +197,6 @@ function createDiv(
     });
     div.appendChild(i);
   }
-
   return div;
 }
 
@@ -226,7 +215,6 @@ export function createCss3dLabel(
   css3DSprite.name = name;
   css3DSprite.position.set(0, 0, 0);
   css3DSprite.scale.set(0.04, 0.04, 0.04);
-
   css3DSprite.userData = {
     type: UserDataType.CSS3DObject,
     labelLogo: logo,
