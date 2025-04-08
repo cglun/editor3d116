@@ -248,7 +248,7 @@ export function createGroupIfNotExist(
   contextScene: Scene | Group | Object3D,
   name: string,
   createGroup: boolean = true
-): Object3D | undefined {
+): Scene | Group | Object3D | undefined {
   let group = contextScene.getObjectByName(name);
 
   if (group !== undefined) {

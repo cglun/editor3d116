@@ -24,7 +24,7 @@ export default defineConfig({
     minify: true,
     cssCodeSplit: false,
     outDir: "../datav_vr_2d/editor3d",
-    //outDir: "editor3d",
+    // outDir: "dist/editor3d",
     assetsDir: "assets",
     assetsInlineLimit: 4096000,
     chunkSizeWarningLimit: 4096000,
