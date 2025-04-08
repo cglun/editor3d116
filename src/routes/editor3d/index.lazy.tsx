@@ -4,7 +4,6 @@ import ListGroup from "react-bootstrap/esm/ListGroup";
 import { Serch3d } from "../../component/Editor/Serch3d";
 import { UploadModel } from "../../component/Editor/UploadModel";
 import ListCard from "../../component/Editor/ListCard";
-import { testData2 } from "../../app/testData";
 import _axios from "../../app/http";
 import { Container } from "react-bootstrap";
 import { RecordItem } from "../../app/type";
@@ -27,8 +26,8 @@ export const Route = createLazyFileRoute("/editor3d/")({
   component: ModelList,
 });
 function ModelList() {
-  const [list, setList] = React.useState(testData2);
-  const [filterList, setFilterList] = React.useState(testData2);
+  const [list, setList] = React.useState<RecordItem[]>([]);
+  const [filterList, setFilterList] = React.useState<RecordItem[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState("");
   const [updateTime, setUpdateTime] = React.useState(0);
