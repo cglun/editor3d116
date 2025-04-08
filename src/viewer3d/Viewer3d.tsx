@@ -3,11 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Container, ProgressBar } from "react-bootstrap";
 import { APP_COLOR, Context116, GlbModel, RecordItem } from "../app/type";
 import { Object3D } from "three";
-import {
-  finishLoadExecute,
-  loadModelByUrl,
-  removeCanvasChild,
-} from "../three/utils";
+import { finishLoadExecute, loadModelByUrl, removeCanvasChild } from "../three/utils";
 
 import Toast3d from "../component/common/Toast3d";
 import { initEditorScene, initTourWindow, MyContext } from "../app/MyContext";
@@ -24,12 +20,7 @@ import initScene, {
   getControls,
   getAll,
 } from "../three/init3dViewer";
-import {
-  getProjectData,
-  onWindowResize,
-  sceneDeserialize,
-  setLabel,
-} from "../three/utils";
+import { getProjectData, onWindowResize, sceneDeserialize, setLabel } from "../three/utils";
 import { raycasterSelect } from "../three/common3d";
 import { getActionList } from "./viewer3dUtils";
 
@@ -55,14 +46,8 @@ export default function Viewer3d({
   const canvas3d: React.RefObject<HTMLDivElement> = useRef(null);
 
   const [progress, setProgress] = useState(0);
-  const [scene, dispatchScene] = React.useReducer(
-    reducerScene,
-    initEditorScene
-  );
-  const [tourWindow, dispatchTourWindow] = React.useReducer(
-    reducerTour,
-    initTourWindow
-  );
+  const [scene, dispatchScene] = React.useReducer(reducerScene, initEditorScene);
+  const [tourWindow, dispatchTourWindow] = React.useReducer(reducerTour, initTourWindow);
 
   let modelNum = 0;
   function loadScene(item: RecordItem) {
@@ -164,9 +149,7 @@ export default function Viewer3d({
       divElement.addEventListener("click", clickHandler);
     }
 
-    window.addEventListener("resize", () =>
-      onWindowResize(canvas3d, getCamera(), getRenderer(), getLabelRenderer())
-    );
+    window.addEventListener("resize", () => onWindowResize(canvas3d, getCamera(), getRenderer(), getLabelRenderer()));
     return () => {
       window.removeEventListener("resize", () =>
         onWindowResize(canvas3d, getCamera(), getRenderer(), getLabelRenderer())
@@ -179,12 +162,7 @@ export default function Viewer3d({
 
   function clickHandler(event: MouseEvent) {
     const divElement = getDivElement();
-    const currentObject = raycasterSelect(
-      event,
-      getCamera(),
-      getScene(),
-      divElement
-    );
+    const currentObject = raycasterSelect(event, getCamera(), getScene(), divElement);
     const selectedMesh: Object3D[] = [];
     for (let i = 0; i < currentObject.length; i++) {
       const { object } = currentObject[i];
@@ -205,20 +183,12 @@ export default function Viewer3d({
   }
 
   return (
-    <MyContext.Provider
-      value={{ scene, dispatchScene, tourWindow, dispatchTourWindow }}
-    >
+    <MyContext.Provider value={{ scene, dispatchScene, tourWindow, dispatchTourWindow }}>
       <Container fluid>
         <div className="mb-1 mx-auto" style={{ width: "300px" }}>
-          {progress < 100 && !getProgress && (
-            <ProgressBar now={progress} label={`${progress}%`} />
-          )}
+          {progress < 100 && !getProgress && <ProgressBar now={progress} label={`${progress}%`} />}
         </div>
-        <div
-          className="mx-auto position-relative"
-          style={canvasStyle}
-          ref={canvas3d}
-        ></div>
+        <div className="mx-auto position-relative" style={canvasStyle} ref={canvas3d}></div>
         <ModalTour />
       </Container>
     </MyContext.Provider>
