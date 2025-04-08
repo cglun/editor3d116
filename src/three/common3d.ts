@@ -59,12 +59,17 @@ export function raycasterSelect(
 }
 
 export function setBoxHelper(selectedMesh: Object3D, scene: Scene) {
-  const HELPER_GROUP = createGroupIfNotExist(scene, "HELPER_GROUP");
+  const HELPER_GROUP = createGroupIfNotExist(
+    scene,
+    GLOBAL_CONSTANT.HELPER_GROUP
+  );
 
-  const BOX_HELPER = scene.getObjectByName("BOX_HELPER") as BoxHelper;
+  const BOX_HELPER = scene.getObjectByName(
+    GLOBAL_CONSTANT.BOX_HELPER
+  ) as BoxHelper;
   if (!BOX_HELPER) {
     const boxHelper = new BoxHelper(selectedMesh, 0xffff00);
-    boxHelper.name = "BOX_HELPER";
+    boxHelper.name = GLOBAL_CONSTANT.BOX_HELPER;
     boxHelper.userData = {
       type: UserDataType.BoxHelper,
       isHelper: true,
@@ -82,7 +87,7 @@ export function setBoxHelper(selectedMesh: Object3D, scene: Scene) {
 }
 // 显示或隐藏BOX_HELPER
 export function hideBoxHelper(scene: Scene) {
-  const boxHelper = scene.getObjectByName("BOX_HELPER");
+  const boxHelper = scene.getObjectByName(GLOBAL_CONSTANT.BOX_HELPER);
   if (boxHelper) {
     boxHelper.visible = false;
   }
@@ -130,6 +135,7 @@ export function commonAnimate({
 }
 import venice_sunset_1k from "/static/file3d/hdr/venice_sunset_1k.hdr?url";
 import spruit_sunrise_1k from "/static/file3d/hdr/spruit_sunrise_1k.hdr?url";
+import { GLOBAL_CONSTANT } from "./GLOBAL_CONSTANT";
 
 //环境贴图设置
 export function setTextureBackground(scene: Scene) {

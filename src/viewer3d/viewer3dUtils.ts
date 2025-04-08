@@ -2,11 +2,16 @@ import { Object3D, Object3DEventMap } from "three";
 import { ActionItem } from "../app/type";
 import { getScene } from "../three/init3dViewer";
 import { createGroupIfNotExist } from "../three/utils";
+import { GLOBAL_CONSTANT } from "../three/GLOBAL_CONSTANT";
 
 // 显示和隐藏模型
 
 export function showModelByName(targetGroupName: string) {
-  const MODEL_GROUP = createGroupIfNotExist(getScene(), "MODEL_GROUP", false);
+  const MODEL_GROUP = createGroupIfNotExist(
+    getScene(),
+    GLOBAL_CONSTANT.MODEL_GROUP,
+    false
+  );
   if (MODEL_GROUP) {
     MODEL_GROUP.traverse((item) => {
       item.visible = false;

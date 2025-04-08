@@ -17,6 +17,7 @@ import { enableShadow, setTextureBackground } from "./common3d";
 import { TourWindow } from "../app/MyContext";
 import { enableScreenshot, setEnableScreenshot } from "./config3d";
 import { runScript } from "./scriptDev";
+import { GLOBAL_CONSTANT } from "./GLOBAL_CONSTANT";
 
 export function getObjectNameByName(object3D: Object3D): string {
   return object3D.name.trim() === "" ? object3D.type : object3D.name;
@@ -57,8 +58,11 @@ export function setLabel(
   dispatchTourWindow?: React.Dispatch<TourWindow>
 ) {
   cleaerOldLabel();
-  // const MARK_LABEL_GROUP = scene.getObjectByName("MARK_LABEL_GROUP");
-  const MARK_LABEL_GROUP = createGroupIfNotExist(scene, "MARK_LABEL_GROUP");
+
+  const MARK_LABEL_GROUP = createGroupIfNotExist(
+    scene,
+    GLOBAL_CONSTANT.MARK_LABEL_GROUP
+  );
   if (!MARK_LABEL_GROUP) {
     return;
   }
@@ -204,12 +208,10 @@ export function removeCanvasChild(canvas3d: React.RefObject<HTMLDivElement>) {
 
 export function getModelGroup(model: GlbModel, gltf: GLTF, context: Scene) {
   const { position, rotation, scale } = model;
-  let MODEL_GROUP = createGroupIfNotExist(context, "MODEL_GROUP");
-  // let MODEL_GROUP = context.getObjectByName("MODEL_GROUP");
-
+  let MODEL_GROUP = createGroupIfNotExist(context, GLOBAL_CONSTANT.MODEL_GROUP);
   if (!MODEL_GROUP) {
     MODEL_GROUP = new Group();
-    MODEL_GROUP.name = "MODEL_GROUP";
+    MODEL_GROUP.name = GLOBAL_CONSTANT.MODEL_GROUP;
     context.add(MODEL_GROUP);
   }
 
@@ -257,7 +259,7 @@ export function createGroupIfNotExist(
   if (createGroup) {
     group = new Group();
     group.name = name;
-    if (name === "HELPER_GROUP") {
+    if (name === GLOBAL_CONSTANT.HELPER_GROUP) {
       group.userData.isHelper = true;
     }
     return group;

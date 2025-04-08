@@ -39,6 +39,7 @@ import { APP_COLOR, Context116, GlbModel, RecordItem } from "../../app/type";
 import { getActionList } from "../../viewer3d/viewer3dUtils";
 import ModalConfirm3d from "../common/ModalConfirm3d";
 import Toast3d from "../common/Toast3d";
+import { GLOBAL_CONSTANT } from "../../three/GLOBAL_CONSTANT";
 
 function EditorViewer3d() {
   const editorCanvas: React.RefObject<HTMLDivElement> =
@@ -86,7 +87,10 @@ function EditorViewer3d() {
     if (editorCanvas.current) {
       initScene(editorCanvas.current);
       const scene = getScene();
-      const HELPER_GROUP = createGroupIfNotExist(scene, "HELPER_GROUP");
+      const HELPER_GROUP = createGroupIfNotExist(
+        scene,
+        GLOBAL_CONSTANT.HELPER_GROUP
+      );
       const { useShadow } = getScene().userData.config3d;
       const light = createDirectionalLight();
       light.castShadow = useShadow;
@@ -113,7 +117,10 @@ function EditorViewer3d() {
     getProjectData(item.id)
       .then((data) => {
         const { scene, camera, modelList } = sceneDeserialize(data, item);
-        const HELPER_GROUP = createGroupIfNotExist(scene, "HELPER_GROUP");
+        const HELPER_GROUP = createGroupIfNotExist(
+          scene,
+          GLOBAL_CONSTANT.HELPER_GROUP
+        );
         HELPER_GROUP?.add(createGridHelper());
         if (HELPER_GROUP) {
           scene.add(HELPER_GROUP);

@@ -41,6 +41,7 @@ import { createGridHelper, createNewScene } from "../../three/factory3d";
 import Trigger3d from "../common/Trigger3d";
 import { getActionList } from "../../viewer3d/viewer3dUtils";
 import { Scene } from "three";
+import { GLOBAL_CONSTANT } from "../../three/GLOBAL_CONSTANT";
 
 interface Props {
   list: RecordItem[];
@@ -157,7 +158,10 @@ function RecordItemCard(props: Props) {
     getProjectData(item.id)
       .then((data) => {
         const { scene, camera, modelList } = sceneDeserialize(data, item);
-        const HELPER_GROUP = createGroupIfNotExist(scene, "HELPER_GROUP");
+        const HELPER_GROUP = createGroupIfNotExist(
+          scene,
+          GLOBAL_CONSTANT.HELPER_GROUP
+        );
         HELPER_GROUP?.add(createGridHelper());
         if (HELPER_GROUP) {
           scene.add(HELPER_GROUP);

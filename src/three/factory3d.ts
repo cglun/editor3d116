@@ -24,6 +24,7 @@ import { setClassName } from "../app/utils";
 
 import { setTextureBackground } from "./common3d";
 import { TourWindow } from "../app/MyContext";
+import { GLOBAL_CONSTANT } from "./GLOBAL_CONSTANT";
 
 export function createPerspectiveCamera(
   node: HTMLElement,
@@ -118,7 +119,10 @@ export function createNewScene() {
   newScene.userData = userData;
   newScene.userData.APP_THEME.sceneCanSave = false;
   setTextureBackground(newScene);
-  const HELPER_GROUP = createGroupIfNotExist(newScene, "HELPER_GROUP");
+  const HELPER_GROUP = createGroupIfNotExist(
+    newScene,
+    GLOBAL_CONSTANT.HELPER_GROUP
+  );
   if (HELPER_GROUP) {
     HELPER_GROUP.add(createGridHelper());
     newScene.add(HELPER_GROUP);

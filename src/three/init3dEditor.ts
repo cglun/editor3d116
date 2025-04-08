@@ -11,11 +11,6 @@ import {
   Vector3,
   WebGLRenderer,
 } from "three";
-// import {
-//   OrbitControls,
-//   TransformControls,
-//   DragControls,
-// } from "three/examples/jsm/Addons.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { TransformControls } from "three/addons/controls/TransformControls.js";
 import { DragControls } from "three/addons/controls/DragControls.js";
@@ -30,6 +25,7 @@ import {
   createScene,
 } from "./factory3d";
 import { createGroupIfNotExist } from "./utils";
+import { GLOBAL_CONSTANT } from "./GLOBAL_CONSTANT";
 
 let scene: Scene,
   camera: PerspectiveCamera | OrthographicCamera,
@@ -117,8 +113,14 @@ export function sceneSerialization(): string {
   const sceneCopy = scene.clone();
   const modelList: GlbModel[] = [];
 
-  const MODEL_GROUP = createGroupIfNotExist(sceneCopy, "MODEL_GROUP");
-  const HELPER_GROUP = createGroupIfNotExist(sceneCopy, "HELPER_GROUP");
+  const MODEL_GROUP = createGroupIfNotExist(
+    sceneCopy,
+    GLOBAL_CONSTANT.MODEL_GROUP
+  );
+  const HELPER_GROUP = createGroupIfNotExist(
+    sceneCopy,
+    GLOBAL_CONSTANT.HELPER_GROUP
+  );
   if (HELPER_GROUP) {
     HELPER_GROUP.children = [];
   }
@@ -195,7 +197,9 @@ export function setTransformControls(selectedMesh: Object3D) {
     controls.enabled = !event.value;
   });
   transfControls.addEventListener("change", () => {
-    const boxHelper = scene.getObjectByName("BOX_HELPER") as BoxHelper;
+    const boxHelper = scene.getObjectByName(
+      GLOBAL_CONSTANT.BOX_HELPER
+    ) as BoxHelper;
     if (boxHelper) {
       boxHelper.update();
     }
@@ -204,7 +208,10 @@ export function setTransformControls(selectedMesh: Object3D) {
   // transfControls.addEventListener("mouseUp", () => {});
   transfControls.attach(selectedMesh);
   setBoxHelper(selectedMesh, scene);
-  const HELPER_GROUP = createGroupIfNotExist(scene, "HELPER_GROUP");
+  const HELPER_GROUP = createGroupIfNotExist(
+    scene,
+    GLOBAL_CONSTANT.HELPER_GROUP
+  );
 
   const getHelper = transfControls.getHelper();
   const userData = {
