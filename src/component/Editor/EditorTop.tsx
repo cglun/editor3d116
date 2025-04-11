@@ -27,7 +27,7 @@ import {
   sceneSerialization,
   setScene,
 } from "../../three/init3dEditor";
-import _axios from "../../app/http";
+import axios from "../../app/http";
 import InputBase from "../common/InputBase";
 import { useUpdateScene } from "../../app/hooks";
 import { Serch3d } from "./Serch3d";
@@ -64,7 +64,7 @@ export default function EditorTop() {
       return;
     }
 
-    _axios
+    axios
       .post("/project/update/", {
         id: getScene().userData.projectId,
         dataJson: dataJson,
@@ -121,7 +121,7 @@ export default function EditorTop() {
       },
       function () {
         const dataJson = sceneSerialization();
-        _axios
+        axios
           .post("/project/create/", {
             name: scene.userData.sceneName,
             des: "Scene",
@@ -150,7 +150,7 @@ export default function EditorTop() {
   useEffect(() => {
     setIsLoading(true);
 
-    _axios
+    axios
       .post("/project/pageList/", { size: 1000 })
       .then((res) => {
         if (res.data.code === 200) {

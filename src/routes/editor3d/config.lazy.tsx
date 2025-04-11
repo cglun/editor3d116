@@ -7,6 +7,8 @@ import { config3d } from "../../three/config3d";
 import { useUpdateScene } from "../../app/hooks";
 import Toast3d from "../../component/common/Toast3d";
 
+import { APP_COLOR, DELAY } from "../../app/type";
+
 export const Route = createLazyFileRoute("/editor3d/config")({
   component: RouteComponent,
 });
@@ -14,6 +16,14 @@ export const Route = createLazyFileRoute("/editor3d/config")({
 function RouteComponent() {
   const { scene, updateScene } = useUpdateScene();
   const { FPS } = scene.payload.userData.config3d;
+
+  // 关键帧动画设置
+  function setKeyframe() {
+    const { useKeyframe } = getScene().userData.config3d;
+    if (useKeyframe) {
+      Toast3d("保存后，重新加载生效!", "提示", APP_COLOR.Warning, DELAY.LONG);
+    }
+  }
 
   return (
     <ListGroup horizontal className="mt-2">
@@ -26,6 +36,15 @@ function RouteComponent() {
             label="投射阴影"
             configKey="useShadow"
             callBack={() => enableShadow(getScene(), getScene())}
+          />
+        </InputGroup>
+      </ListGroup.Item>
+      <ListGroup.Item>
+        <InputGroup size="sm">
+          <ConfigCheck
+            label="关键帧动画"
+            configKey="useKeyframe"
+            callBack={setKeyframe}
           />
         </InputGroup>
       </ListGroup.Item>

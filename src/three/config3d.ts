@@ -1,4 +1,4 @@
-import { Clock, Vector3 } from "three";
+import { AnimationMixer, Clock, Vector3 } from "three";
 import { CSS2DRenderer } from "three/addons/renderers/CSS2DRenderer.js";
 import { CSS3DRenderer } from "three/addons/renderers/CSS3DRenderer.js";
 import { APP_COLOR } from "../app/type";
@@ -16,6 +16,7 @@ export const config3d = {
   css3d: true, //是否开启3d标签
   useTween: true, //是否开启动画
   useShadow: true, //是否开启阴影
+  useKeyframe: true, //是否开启关键帧动画
   FPS: 30, //帧率
 };
 export const userData = {
@@ -42,9 +43,11 @@ export const parameters = {
 export interface Extra3d {
   labelRenderer2d: CSS2DRenderer | undefined;
   labelRenderer3d: CSS3DRenderer | undefined;
+  mixer: AnimationMixer[];
 }
 
 export const extra3d: Extra3d = {
   labelRenderer2d: undefined,
   labelRenderer3d: undefined,
+  mixer: [],
 };

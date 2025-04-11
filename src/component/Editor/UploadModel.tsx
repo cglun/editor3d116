@@ -6,7 +6,7 @@ import { Euler, Vector3 } from "three";
 import { useRef, useState } from "react";
 import Toast3d from "../common/Toast3d";
 import { getButtonColor, getThemeByScene, setClassName } from "../../app/utils";
-import _axios from "../../app/http";
+import axios from "../../app/http";
 import { APP_COLOR, GlbModel } from "../../app/type";
 import { useUpdateScene } from "../../app/hooks";
 
@@ -27,7 +27,7 @@ export function UploadModel({ updateList = () => {} }) {
       const model = await uploadModels(formData);
 
       if (model) {
-        _axios
+        axios
           .post("/project/create/", {
             name: model.name,
             des: "Mesh",
@@ -56,7 +56,7 @@ export function UploadModel({ updateList = () => {} }) {
   function uploadModels(formData: FormData): Promise<GlbModel> {
     return new Promise((resolve, reject) => {
       let modelTotal = 0;
-      _axios
+      axios
         .post("/material/upload/116", formData, {
           headers: {
             "Content-Type": "multipart/form-data",

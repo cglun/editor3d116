@@ -8,13 +8,12 @@ import {
   Spinner,
 } from "react-bootstrap";
 import AlertBase from "../common/AlertBase";
-
 import { getThemeByScene, setClassName } from "../../app/utils";
 import { APP_COLOR, Context116, GlbModel, RecordItem } from "../../app/type";
 import ModalConfirm3d from "../common/ModalConfirm3d";
 import Toast3d from "../common/Toast3d";
 import EditorForm from "../common/EditorForm";
-import _axios, { loadAssets } from "../../app/http";
+import axios, { loadAssets } from "../../app/http";
 import {
   setCamera,
   setScene,
@@ -33,11 +32,8 @@ import {
   finishLoadExecute,
 } from "../../three/utils";
 import { useUpdateScene } from "../../app/hooks";
-
 import { MyContext } from "../../app/MyContext";
-
 import { createGridHelper, createNewScene } from "../../three/factory3d";
-
 import Trigger3d from "../common/Trigger3d";
 import { getActionList } from "../../viewer3d/viewer3dUtils";
 import { Scene } from "three";
@@ -78,7 +74,7 @@ function RecordItemCard(props: Props) {
         body: <AlertBase type={APP_COLOR.Danger} text={item.name} />,
       },
       () => {
-        _axios
+        axios
           .get(`/project/del/${item.id}`)
           .then((res) => {
             if (res.data.code === 200) {
@@ -121,7 +117,7 @@ function RecordItemCard(props: Props) {
         body: <EditorForm item={item} getNewItem={getNewItem} />,
       },
       () => {
-        _axios
+        axios
           .post(`/project/update/`, {
             id: item.id,
             name: newI.name,
@@ -154,7 +150,8 @@ function RecordItemCard(props: Props) {
   let modelNum = 0,
     _modelLen = 0;
   function loadScene(item: RecordItem) {
-    (modelNum = 0), (_modelLen = 0);
+    modelNum = 0;
+    _modelLen = 0;
     getProjectData(item.id)
       .then((data) => {
         const { scene, camera, modelList } = sceneDeserialize(data, item);

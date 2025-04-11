@@ -13,7 +13,7 @@ import {
 } from "three";
 import { UserDataType } from "../app/type";
 import TWEEN from "three/addons/libs/tween.module.js";
-import { enableScreenshot, Extra3d, parameters } from "./config3d";
+import { config3d, enableScreenshot, Extra3d, parameters } from "./config3d";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
 import { createGroupIfNotExist } from "./utils";
@@ -108,9 +108,10 @@ export function commonAnimate({
   extra3d,
   parameters3d,
 }: AnimateProps) {
-  const { css2d, css3d, useTween, FPS } = scene.userData.config3d;
-  const { clock } = parameters3d;
+  const { css2d, css3d, useTween, FPS, useKeyframe } = scene.userData
+    .config3d as typeof config3d;
 
+  const { clock } = parameters3d;
   const T = clock.getDelta();
   parameters3d.timeS = parameters3d.timeS + T;
   let renderT = 1 / FPS;
@@ -131,6 +132,11 @@ export function commonAnimate({
     controls.update();
     renderer.render(scene, camera); //执行渲染操作
     parameters3d.timeS = 0;
+  }
+  if (useKeyframe) {
+    extra3d.mixer.forEach((mixer) => {
+      mixer.update(T);
+    });
   }
 }
 import venice_sunset_1k from "/static/file3d/hdr/venice_sunset_1k.hdr?url";

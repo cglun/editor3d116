@@ -1,9 +1,6 @@
-/**
- * request 网络请求工具，创建_axios实例对象
- * send cookies when cross-domain requests
- */
-import axios from 'axios';
-import { decrypt } from './crypto';
+// 修改导入名称为 _axios，避免与局部变量冲突
+import _axios from "axios";
+import { decrypt } from "./crypto";
 
 // const codeMessage = {
 //   200: "服务器成功返回请求的数据。",
@@ -23,58 +20,51 @@ import { decrypt } from './crypto';
 //   504: "网关超时。",
 // };
 
-interface StoreConfig {
-  type: 'localStorage' | 'sessionStorage';
-  expire: number;
-  isEncrypt: boolean;
-}
-
 const header = {
-  Accept: 'application/json, text/plain, */*',
+  Accept: "application/json, text/plain, */*",
+  Authorization: "TOKEN",
+  "Content-type": "application/json;charset=UTF-8",
   // catch: "no-catch",
-  Authorization: 'TOKEN',
   //"accept-encoding": "gzip, deflate, br, zstd",
-  'Content-type': 'application/json;charset=UTF-8',
 };
 
-(function getStorage(key = 'TOKEN') {
-  if (header.Authorization !== 'TOKEN') {
+(function getStorage(key = "TOKEN") {
+  if (header.Authorization !== "TOKEN") {
     return;
   }
-  if (import.meta.env.MODE === 'development') {
+  if (import.meta.env.MODE === "development") {
     localStorage.setItem(
-      'TOKEN',
-      '73dd13c066eca2273e4622959ecfcc0bef55c9e0ff1d76f203c6680c0a57189de08b8c52d56e5b988e13b7c34da1faf161668949e052c14fab158489cad268c3aa2ae294724554d948f11e101b34e1ef651bdf8424042f3b0bef201c32036edc8f18bdf42b2d9bf7513a4b1d86fe1b35285246ba0a3c76d8a3194827456022ef4a596371e9d9396a1d90c7ddb5e011c4c171a4c07f074c69a87dba3a0011c76f227e0b65c8b7e74cf845d6e0d41fc644fdb21ffed8d011781ba41d2745dc4a92c60c3afe965e1b8f374ff9b80db81d632a1d0c50642d839495c862d3421b3323708bb04d4119e2f92b3d7f4e83019fd32b467c476243bfb01f2e57401d063771'
+      "TOKEN",
+      "73dd13c066eca2273e4622959ecfcc0bef55c9e0ff1d76f203c6680c0a57189de08b8c52d56e5b988e13b7c34da1faf161668949e052c14fab158489cad268c371450762a8a0258176b0c550e86d3c3f57ddec80194f6621483f422f32cda7078c47d0f6e581df492d54cfda520b7d5ef01071508dedef3795f10f586e2db830b57803bc50b1f0d8e20db56f2aee56be6498282da37d6e2bb23213eeb9459df949ca2a78ce18aa1c564543ef3cbc0b79e24cc5794e2c453ee29d8649829d1b9253a3b909a73f5ee4a4f9c8d98b0689e4ebb4132dbee68306434b58dccb42c9de0346f6dcb6c1f3bb6fa7e6f3dc8aca14efb16600316051148f0837f095eb641b"
     );
   }
+  interface StoreConfig {
+    type: "localStorage" | "sessionStorage";
+    expire: number;
+    isEncrypt: boolean;
+  }
   const config: StoreConfig = {
-    type: 'localStorage',
+    type: "localStorage",
     expire: 1 * 60 * 60 * 24, //过期时间 单位：秒
     isEncrypt: true,
   };
   const __localStorage = window[config.type].getItem(key);
-  if (!__localStorage || JSON.stringify(__localStorage) === 'null') {
+  if (!__localStorage || JSON.stringify(__localStorage) === "null") {
     return null;
   }
-  const storage = config.isEncrypt ? JSON.parse(decrypt(__localStorage!)) : JSON.parse(__localStorage!);
-
+  const storage = config.isEncrypt
+    ? JSON.parse(decrypt(__localStorage!))
+    : JSON.parse(__localStorage!);
   header.Authorization = storage.value;
-
-  // return storage;
 })();
 
-const _axios = axios.create({
-  baseURL: '/api',
+export function loadAssets(url: string) {
+  return url?.replace("/static/covers/", "");
+}
+
+const axios = _axios.create({
+  baseURL: "/api",
   timeout: 100000000,
   headers: header,
 });
-export default _axios;
-
-export function loadAssets(url: string) {
-  return url?.replace('/static/covers/', '');
-  //   if (import.meta.env.DEV) {
-  //   } else {
-  //     return url?.replace("/^\\/file/", "/file");
-  //   }
-  //
-}
+export default axios;

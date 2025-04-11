@@ -12,7 +12,7 @@ import {
   setClassName,
 } from "../../app/utils";
 import { takeScreenshot } from "../../three/init3dViewer";
-import _axios, { loadAssets } from "../../app/http";
+import axios, { loadAssets } from "../../app/http";
 import { APP_COLOR, RecordItem } from "../../app/type";
 
 import { getScene } from "../../three/init3dEditor";
@@ -45,7 +45,7 @@ export default function EditorForm({
     const file = blobToFile(blob, "截图.png");
     const formData = new FormData();
     formData.append("file", file);
-    _axios
+    axios
       .post("/material/upload/116", formData, {
         headers: {
           "Content-Type": "multipart/form-data",

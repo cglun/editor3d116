@@ -11,6 +11,7 @@ export default defineConfig({
       filename: "remoteEntry.js",
       exposes: {
         "./Viewer3d": "./src/Viewer3d/Viewer3d.tsx",
+        "./sendTo3d": "./src/Viewer3d/sendTo3d.ts",
       },
       shared: ["react", "react-dom"],
     }),

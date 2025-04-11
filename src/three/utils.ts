@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  AnimationMixer,
   Group,
   Object3D,
   ObjectLoader,
@@ -11,11 +12,16 @@ import { Context116, GlbModel, RecordItem, UserDataType } from "../app/type";
 import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
 import { CSS2DRenderer } from "three/addons/renderers/CSS2DRenderer.js";
 import { GLTF, GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import _axios from "../app/http";
+import axios from "../app/http";
 import { createCss2dLabel, createCss3dLabel } from "./factory3d";
 import { enableShadow, setTextureBackground } from "./common3d";
 import { TourWindow } from "../app/MyContext";
-import { enableScreenshot, setEnableScreenshot } from "./config3d";
+import {
+  enableScreenshot,
+  extra3d,
+  setEnableScreenshot,
+  userData,
+} from "./config3d";
 import { runScript } from "./scriptDev";
 import { GLOBAL_CONSTANT } from "./GLOBAL_CONSTANT";
 
@@ -168,7 +174,7 @@ export function sceneDeserialize(data: string, item: RecordItem) {
 
 export function getProjectData(id: number): Promise<string> {
   return new Promise((resolve, reject) => {
-    _axios
+    axios
       .get(`/project/getProjectData/${id}`)
       .then((res) => {
         if (res.data.data) {
@@ -216,6 +222,17 @@ export function getModelGroup(model: GlbModel, gltf: GLTF, context: Scene) {
   }
 
   const scene = gltf.scene;
+  const { config3d } = context.userData as typeof userData;
+  if (config3d.useKeyframe) {
+    const mixer = new AnimationMixer(scene);
+    extra3d.mixer.push(mixer);
+    if (gltf.animations.length > 0) {
+      for (let i = 0; i < gltf.animations.length; i++) {
+        mixer.clipAction(gltf.animations[i]).play();
+      }
+    }
+  }
+
   if (scene.children.length === 1) {
     const gltfmModel = scene.children[0];
     gltfmModel.position.set(position.x, position.y, position.z);

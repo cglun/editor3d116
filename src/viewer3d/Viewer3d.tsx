@@ -76,7 +76,9 @@ export default function Viewer3d({
     getProjectData(item.id)
       .then((data: string) => {
         setProgress(0);
-        getProgress && getProgress(0);
+        if (getProgress) {
+          getProgress(0);
+        }
         const { scene, camera, modelList } = sceneDeserialize(data, item);
         setScene(scene);
         setCamera(camera);
@@ -84,7 +86,9 @@ export default function Viewer3d({
         modelNum = modelList.length;
 
         if (modelNum === 0) {
-          getProgress && getProgress(100);
+          if (getProgress) {
+            getProgress(100);
+          }
           setProgress(100);
           // 运行调试脚本
           finishLoadExecute(context, callBack);
@@ -96,7 +100,9 @@ export default function Viewer3d({
             scene,
             (_progress: number) => {
               setProgress(_progress);
-              getProgress && getProgress(_progress);
+              if (getProgress) {
+                getProgress(_progress);
+              }
               if (_progress >= 100) {
                 //setProgress(100);
                 modelNum--; // 确保在回调中更新 modelNum。如果不更新，可能会导致 modelNum 不正确。

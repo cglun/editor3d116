@@ -103,7 +103,15 @@ export default function initScene(node: HTMLDivElement): void {
     renderer.domElement
   );
   transfControls = transfControls1;
-  extra3d = createConfigRenderer(scene, node);
+  const { labelRenderer2d, labelRenderer3d } = createConfigRenderer(
+    scene,
+    node
+  );
+  extra3d = {
+    ...extra3d,
+    labelRenderer2d,
+    labelRenderer3d,
+  };
   animate();
 }
 
