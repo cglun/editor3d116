@@ -97,8 +97,8 @@ export interface ProjectListResponse {
   };
 }
 export interface ActionItem {
+  id: number;
   name: string;
-  id: string;
   handler: () => void;
 }
 

@@ -21,7 +21,17 @@ export default function Index() {
           </Row>
         </Col>
 
-        <Col xl={2} className="position-fixed" style={{ right: "0" }}>
+        <Col
+          id="editor-right"
+          xl={2}
+          className="position-fixed"
+          style={{
+            right: "0",
+            overflowY: "scroll",
+            height: "96vh",
+            scrollbarWidth: "none",
+          }}
+        >
           <OutlineView />
         </Col>
       </Row>

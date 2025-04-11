@@ -60,8 +60,11 @@ export function getThemeByScene(scene: EditorScene) {
 
 export function fixedEditorLleft(fixed = true) {
   const editorLeft = document.getElementById("editor-left");
+  const editorRight = document.getElementById("editor-right");
   editorLeft?.classList.remove("position-fixed");
+  editorRight!.style.overflowY = "scroll";
   if (fixed) {
     editorLeft?.classList.add("position-fixed");
+    editorRight!.style.overflowY = "hidden";
   }
 }

@@ -1,6 +1,14 @@
 import Button from "react-bootstrap/esm/Button";
 import Form from "react-bootstrap/esm/Form";
-import { Color, Fog, Light, Texture } from "three";
+import {
+  Camera,
+  Color,
+  Fog,
+  Light,
+  OrthographicCamera,
+  Texture,
+  Vector2,
+} from "three";
 import Card from "react-bootstrap/esm/Card";
 import InputGroup from "react-bootstrap/esm/InputGroup";
 import { getScene } from "../../../three/init3dEditor";
@@ -218,6 +226,82 @@ function CommonProperty({ selected3d }: { selected3d: EditorObject3d }) {
   // }
   // findTopLevelParent(selected3d);
   // debugger;
+
+  function LightProperty({ selected3d }: { selected3d: Light }) {
+    if (!(selected3d instanceof Light)) {
+      return;
+    }
+    //  selected3d!.shadow!.mapSize.x = 33512; // default
+    const camera = selected3d.shadow?.camera as OrthographicCamera;
+    return (
+      <>
+        <InputAttrNumber
+          title="亮度"
+          min={0}
+          selected3d={selected3d}
+          attr={"intensity"}
+          step={step}
+        />
+        <InputAttrNumber
+          title="阴影宽"
+          min={0}
+          selected3d={selected3d.shadow?.mapSize as Vector2}
+          attr={"x"}
+          step={step}
+        />
+        <InputAttrNumber
+          title="阴影高"
+          min={0}
+          selected3d={selected3d.shadow?.mapSize as Vector2}
+          attr={"y"}
+          step={step}
+        />
+        <InputAttrNumber
+          title="阴影近端"
+          min={0}
+          selected3d={camera}
+          attr={"near"}
+          step={step}
+        />
+        <InputAttrNumber
+          title="阴影远端"
+          min={0}
+          selected3d={camera}
+          attr={"far"}
+          step={step}
+        />
+        <InputAttrNumber
+          title="阴影左端"
+          min={-10000}
+          selected3d={camera}
+          attr={"left"}
+          step={step}
+        />
+        <InputAttrNumber
+          title="阴影右端"
+          min={-10000}
+          selected3d={camera}
+          attr={"right"}
+          step={step}
+        />
+        <InputAttrNumber
+          title="阴影顶端"
+          min={-10000}
+          selected3d={camera}
+          attr={"top"}
+          step={step}
+        />
+        <InputAttrNumber
+          title="阴影底端"
+          min={-10000}
+          selected3d={camera}
+          attr={"bottom"}
+          step={step}
+        />
+      </>
+    );
+  }
+
   return (
     selected3d && (
       <Container fluid>
@@ -232,13 +316,7 @@ function CommonProperty({ selected3d }: { selected3d: EditorObject3d }) {
               selected3d={selected3d}
               attr={"name"}
             />
-            <InputAttrNumber
-              title="亮度"
-              min={0}
-              selected3d={selected3d as Light}
-              attr={"intensity"}
-              step={step}
-            />
+            <LightProperty selected3d={selected3d as Light} />
 
             {/* {!selected3d.isAmbientLight && (
               <ButtonGroup className=" d-flex justify-content-between flex-wrap">

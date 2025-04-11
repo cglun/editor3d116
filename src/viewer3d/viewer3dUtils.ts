@@ -41,33 +41,55 @@ export function getActionList(): ActionItem[] {
     return [];
   }
 
-  const MODEL_GROUP = createGroupIfNotExist(scene, "test.glb", false);
-  const GROUND = createGroupIfNotExist(scene, "GROUND", false);
+  const rootGroupName = "a.glb";
+  let _rootGroupName = "";
+
+  if (!rootGroupName) {
+    const MODEL_GROUP = createGroupIfNotExist(
+      scene,
+      GLOBAL_CONSTANT.MODEL_GROUP,
+      false
+    );
+    if (MODEL_GROUP?.children?.length) {
+      _rootGroupName = MODEL_GROUP.children[0].name;
+    }
+  }
+  const targetGroup = createGroupIfNotExist(scene, _rootGroupName, false);
+
+  //const GROUND = createGroupIfNotExist(scene, "GROUND", false);
 
   const actionList: ActionItem[] = [
     {
       name: "全部",
-      id: "0",
+      id: 0,
       handler: () => {
-        showModelByName("test.glb");
+        showModelByName(_rootGroupName);
       },
     },
   ];
-  if (MODEL_GROUP) {
-    const { children } = MODEL_GROUP;
+  if (targetGroup) {
+    const { children } = targetGroup;
+    const envMesh = children.find((item) => item.name.includes("_ENV"));
     children.forEach((item) => {
-      actionList.push({
-        name: "显示" + item.name,
-        id: item.id + "",
-        handler: () => {
-          showModelByName(item.name);
-          if (GROUND) {
-            GROUND.visible = true;
-          }
-        },
-      });
+      const itemName = item.name;
+      if (!itemName.includes("_ENV")) {
+        const { children } = item;
+        for (let i = 0; i < children.length; i++) {
+          const { name, id } = children[i];
+          actionList.push({
+            id,
+            name,
+            handler: () => {
+              showModelByName(name);
+              if (envMesh) {
+                envMesh.visible = true;
+              }
+            },
+          });
+        }
+      }
     });
   }
-  actionList.pop();
+
   return actionList;
 }
