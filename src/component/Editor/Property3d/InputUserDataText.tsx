@@ -1,45 +1,45 @@
 import { useEffect, useState } from "react";
-import { Object3D } from "three";
+
 import InputGroup from "react-bootstrap/esm/InputGroup";
 import Form from "react-bootstrap/esm/Form";
-import { EditorObject3d } from "../../../app/type";
+import { APP_COLOR, DELAY, EditorObject3d } from "../../../app/type";
+import Toast3d from "../../common/Toast3d";
 
-export function InputAttrText({
+export function InputUserDataText({
   title,
   selected3d,
-  attr,
 }: {
   title: string;
   selected3d: EditorObject3d;
-  attr: keyof typeof Object3D.prototype;
 }) {
   const [value, setValue] = useState("");
   useEffect(() => {
-    // 先检查 selected3d 是否为 null 或 undefined
-    if (
-      selected3d != null &&
-      Object.prototype.hasOwnProperty.call(selected3d, attr)
-    ) {
-      setValue(selected3d[attr] as string);
-    }
-  }, [selected3d, attr]); // 添加 'attr' 到依赖项数组
+    setValue(JSON.stringify(selected3d.userData));
+  }, [selected3d]); // 添加 'attr' 到依赖项数组
 
   return (
     selected3d && (
       <InputGroup size="sm">
         <InputGroup.Text>{title}</InputGroup.Text>
         <Form.Control
+          style={{ minHeight: "6rem" }}
           aria-label="Small"
           aria-describedby="inputGroup-sizing-sm"
           type="text"
           placeholder={value}
           value={value}
           title={value}
+          onMouseLeave={() => {
+            try {
+              const _value = JSON.parse(value);
+              selected3d.userData = _value;
+            } catch (error) {
+              Toast3d("数据格式错误", "错误", APP_COLOR.Danger, DELAY.LONG);
+            }
+          }}
           onChange={(e) => {
-            const _value = e.target.value;
-            //@ts-expect-error
-            selected3d[attr] = _value;
-            setValue(_value);
+            // const _value = JSON.parse(e.target.value);
+            setValue(e.target.value);
           }}
         />
       </InputGroup>

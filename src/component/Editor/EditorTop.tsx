@@ -209,7 +209,8 @@ export default function EditorTop() {
             {scene.payload.userData.sceneName && (
               <Stack direction="horizontal" gap={2}>
                 <Badge bg={APP_COLOR.Secondary}>
-                  当前：{scene.payload.userData.sceneName}
+                  name：{scene.payload.userData.sceneName}-[id:
+                  {scene.payload.userData.projectId}]
                 </Badge>
               </Stack>
             )}

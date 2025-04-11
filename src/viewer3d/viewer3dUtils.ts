@@ -41,23 +41,15 @@ export function getActionList(): ActionItem[] {
     return [];
   }
 
-  const rootGroupName = "a.glb";
   let _rootGroupName = "";
-
-  if (!rootGroupName) {
-    const MODEL_GROUP = createGroupIfNotExist(
-      scene,
-      GLOBAL_CONSTANT.MODEL_GROUP,
-      false
-    );
-    if (MODEL_GROUP?.children?.length) {
-      _rootGroupName = MODEL_GROUP.children[0].name;
-    }
+  const MODEL_GROUP = createGroupIfNotExist(
+    scene,
+    GLOBAL_CONSTANT.MODEL_GROUP,
+    false
+  );
+  if (MODEL_GROUP?.children?.length) {
+    _rootGroupName = MODEL_GROUP.children[0].name;
   }
-  const targetGroup = createGroupIfNotExist(scene, _rootGroupName, false);
-
-  //const GROUND = createGroupIfNotExist(scene, "GROUND", false);
-
   const actionList: ActionItem[] = [
     {
       name: "全部",
@@ -67,6 +59,7 @@ export function getActionList(): ActionItem[] {
       },
     },
   ];
+  const targetGroup = createGroupIfNotExist(scene, _rootGroupName, false);
   if (targetGroup) {
     const { children } = targetGroup;
     const envMesh = children.find((item) => item.name.includes("_ENV"));

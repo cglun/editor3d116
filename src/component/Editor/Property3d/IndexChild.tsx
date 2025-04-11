@@ -1,18 +1,10 @@
 import Button from "react-bootstrap/esm/Button";
 import Form from "react-bootstrap/esm/Form";
-import {
-  Camera,
-  Color,
-  Fog,
-  Light,
-  OrthographicCamera,
-  Texture,
-  Vector2,
-} from "three";
+import { Color, Fog, Light, OrthographicCamera, Texture, Vector2 } from "three";
 import Card from "react-bootstrap/esm/Card";
 import InputGroup from "react-bootstrap/esm/InputGroup";
 import { getScene } from "../../../three/init3dEditor";
-import { Container } from "react-bootstrap";
+import { ButtonGroup, Container } from "react-bootstrap";
 import { useUpdateScene } from "../../../app/hooks";
 import { Input3d } from "./Input3d";
 import { InputAttrText } from "./InputAttrText";
@@ -227,7 +219,7 @@ function CommonProperty({ selected3d }: { selected3d: EditorObject3d }) {
   // findTopLevelParent(selected3d);
   // debugger;
 
-  function LightProperty({ selected3d }: { selected3d: Light }) {
+  function LightProperty() {
     if (!(selected3d instanceof Light)) {
       return;
     }
@@ -302,6 +294,35 @@ function CommonProperty({ selected3d }: { selected3d: EditorObject3d }) {
     );
   }
 
+  function BindObject() {
+    if (selected3d instanceof Light) {
+      return;
+    }
+    return (
+      <ButtonGroup size="sm">
+        <Button
+          variant={buttonColor}
+          onClick={() => {
+            alert("请在threejs中添加视角");
+          }}
+        >
+          绑定视角
+        </Button>
+        <Button
+          variant={buttonColor}
+          onClick={() => {
+            alert("请在threejs中添加视角");
+          }}
+        >
+          绑定场景
+        </Button>
+      </ButtonGroup>
+    );
+  }
+
+  const { scene } = useUpdateScene();
+  const { themeColor } = getThemeByScene(scene);
+  const buttonColor = getButtonColor(themeColor);
   return (
     selected3d && (
       <Container fluid>
@@ -316,8 +337,8 @@ function CommonProperty({ selected3d }: { selected3d: EditorObject3d }) {
               selected3d={selected3d}
               attr={"name"}
             />
-            <LightProperty selected3d={selected3d as Light} />
-
+            <BindObject />
+            <LightProperty />
             {/* {!selected3d.isAmbientLight && (
               <ButtonGroup className=" d-flex justify-content-between flex-wrap">
                 <Switch3d

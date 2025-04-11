@@ -35,6 +35,8 @@ export const userData = {
     iconFill: "",
     sceneCanSave: false,
   },
+  bindCameraPerspective: [],
+  bindSceneById: [],
 };
 export const parameters = {
   clock: new Clock(),
