@@ -2,6 +2,7 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
   Button,
+  ButtonGroup,
   Container,
   FloatingLabel,
   Form,
@@ -47,30 +48,54 @@ function RouteComponent() {
       <ListGroup horizontal>
         {projectId && (
           <ListGroup.Item>
-            {isDebug ? (
+            {" "}
+            <ButtonGroup size="sm">
+              {isDebug ? (
+                <Button
+                  variant={buttonColor}
+                  onClick={() => {
+                    localStorage.removeItem("SCENE_PROJECT");
+                    setIsDebug(!isDebug);
+                    location.reload();
+                  }}
+                >
+                  取消调试场景
+                </Button>
+              ) : (
+                <Button
+                  variant={buttonColor}
+                  onClick={() => {
+                    localStorage.setItem("SCENE_PROJECT", projectId);
+                    setIsDebug(!isDebug);
+                  }}
+                >
+                  设置调试场景
+                </Button>
+              )}
               <Button
                 variant={buttonColor}
                 onClick={() => {
-                  localStorage.removeItem("SCENE_PROJECT");
-                  setIsDebug(!isDebug);
-                  location.reload();
+                  setCode(code + "\n" + "console.log('hello world')");
                 }}
               >
-                取消调试场景
+                生成自定义按钮
               </Button>
-            ) : (
               <Button
                 variant={buttonColor}
                 onClick={() => {
-                  localStorage.setItem("SCENE_PROJECT", projectId);
-                  setIsDebug(!isDebug);
+                  if (navigator.clipboard) {
+                    navigator.clipboard.readText().then((text) => {
+                      setCode(`${code}\n${text}`);
+                    });
+                  }
                 }}
               >
-                设置调试场景
+                粘贴代码
               </Button>
-            )}
+            </ButtonGroup>
           </ListGroup.Item>
         )}
+
         <ListGroup.Item>
           <AlertBase
             className="  mb-0 mt-0"

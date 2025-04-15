@@ -8,7 +8,6 @@ import { ButtonGroup, Container } from "react-bootstrap";
 import { useUpdateScene } from "../../../app/hooks";
 import { Input3d } from "./Input3d";
 import { InputAttrText } from "./InputAttrText";
-
 import { getButtonColor, getThemeByScene } from "../../../app/utils";
 import AlertBase from "../../common/AlertBase";
 import { setTextureBackground } from "../../../three/common3d";
@@ -23,10 +22,8 @@ function SceneProperty() {
   const { themeColor } = getThemeByScene(scene);
 
   const _scene = getScene();
-
   let bgColor = "#000116";
   const background = _scene.background as Color | Texture;
-
   const [enableColor, setEnableColor] = useState(background instanceof Color);
 
   if (background !== null) {
@@ -293,7 +290,7 @@ function CommonProperty({ selected3d }: { selected3d: EditorObject3d }) {
       </>
     );
   }
-
+  //@ts-ignore
   function BindObject() {
     if (selected3d instanceof Light) {
       return;
@@ -303,7 +300,8 @@ function CommonProperty({ selected3d }: { selected3d: EditorObject3d }) {
         <Button
           variant={buttonColor}
           onClick={() => {
-            alert("请在threejs中添加视角");
+            const scene = getScene();
+            console.log(scene);
           }}
         >
           绑定视角
@@ -337,7 +335,7 @@ function CommonProperty({ selected3d }: { selected3d: EditorObject3d }) {
               selected3d={selected3d}
               attr={"name"}
             />
-            <BindObject />
+            {/* <BindObject /> */}
             <LightProperty />
             {/* {!selected3d.isAmbientLight && (
               <ButtonGroup className=" d-flex justify-content-between flex-wrap">
