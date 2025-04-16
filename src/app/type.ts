@@ -99,7 +99,10 @@ export interface ProjectListResponse {
 export interface ActionItem {
   id: number;
   name: string;
-  handler: () => void;
+
+  handler?: () => void;
+  bindSceneById?: number | null;
+  bindCameraView?: Vector3 | null;
 }
 
 // 定义 item 的类型

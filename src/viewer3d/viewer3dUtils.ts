@@ -54,6 +54,7 @@ export function getActionList(): ActionItem[] {
     {
       name: "全部",
       id: 0,
+
       handler: () => {
         showModelByName(_rootGroupName);
       },

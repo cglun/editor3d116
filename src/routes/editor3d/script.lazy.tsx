@@ -13,9 +13,13 @@ import { useUpdateScene } from "../../app/hooks";
 import { CodeHighlight } from "@mantine/code-highlight";
 import { MantineProvider } from "@mantine/core";
 import AlertBase from "../../component/common/AlertBase";
-import { APP_COLOR } from "../../app/type";
+import { ActionItem, APP_COLOR } from "../../app/type";
 import { getButtonColor, getThemeByScene } from "../../app/utils";
 import { useRef } from "react";
+import { createGroupIfNotExist } from "../../three/utils";
+import { GLOBAL_CONSTANT } from "../../three/GLOBAL_CONSTANT";
+import { showModelByName } from "../../viewer3d/viewer3dUtils";
+import Toast3d from "../../component/common/Toast3d";
 
 export const Route = createLazyFileRoute("/editor3d/script")({
   component: RouteComponent,
@@ -42,13 +46,95 @@ function RouteComponent() {
       setIsDebug(false);
     }
   }, [scene, javascript, projectId]);
+  function generateButtonGroup() {
+    const actionList: ActionItem[] = [];
+    const MODEL_GROUP = createGroupIfNotExist(
+      getScene(),
+      GLOBAL_CONSTANT.MODEL_GROUP,
+      false
+    );
+    if (MODEL_GROUP) {
+      // _rootGroupName = MODEL_GROUP.children[0].name;
+      const { children } = MODEL_GROUP;
+      const envMesh = children.find((item) => item.name.includes("_ENV"));
+      //二层
+      children.forEach((item) => {
+        const level2 = item.children;
+        level2.forEach((item) => {
+          if (!item.name.includes("_ENV")) {
+            const { name, id } = item;
+            actionList.push({
+              id,
+              name,
+              handler: () => {
+                showModelByName(item.name);
+              },
+              bindCameraView: null,
+              bindSceneById: null,
+            });
+          }
+        });
+      });
+      //三层
+      children.forEach((item) => {
+        const level2 = item.children;
+        level2.forEach((item) => {
+          const level3 = item.children;
+          level3.forEach((item) => {
+            const { name, id } = item;
+            actionList.push({
+              id,
+              name,
 
+              handler: () => {
+                showModelByName(name);
+                if (envMesh) {
+                  envMesh.visible = true;
+                }
+              },
+              bindCameraView: null,
+              bindSceneById: null,
+            });
+          });
+        });
+      });
+    }
+    const _code = JSON.stringify(actionList) + "\n\n\n\n\n" + code;
+    // navigator.clipboard
+    //   .writeText(_code)
+    //   .then(() => {
+    //     Toast3d("复制成功");
+    //   })
+    //   .catch((error) => {
+    //     // 处理复制过程中出现的错误
+    //     console.error("复制时发生错误:", error);
+    //     Toast3d("复制失败", "失败", APP_COLOR.Danger);
+    //   });
+    setCode(_code);
+    getScene().userData.javascript = _code;
+  }
+  const bb = [
+    { id: 987, name: "A", bindCameraView: null, bindSceneById: null },
+    { id: 988, name: "B", bindCameraView: null, bindSceneById: null },
+    { id: 989, name: "C", bindCameraView: null, bindSceneById: null },
+    { id: 1016, name: "A_F1", bindCameraView: null, bindSceneById: null },
+    { id: 1017, name: "A_F2", bindCameraView: null, bindSceneById: null },
+    { id: 1018, name: "A_F3", bindCameraView: null, bindSceneById: null },
+    { id: 1019, name: "A_F4", bindCameraView: null, bindSceneById: null },
+    { id: 1020, name: "B_F1", bindCameraView: null, bindSceneById: null },
+    { id: 1021, name: "B_F2", bindCameraView: null, bindSceneById: null },
+    { id: 1022, name: "B_F3", bindCameraView: null, bindSceneById: null },
+    { id: 1023, name: "B_F4", bindCameraView: null, bindSceneById: null },
+    { id: 1024, name: "C_F1", bindCameraView: null, bindSceneById: null },
+    { id: 1025, name: "C_F2", bindCameraView: null, bindSceneById: null },
+    { id: 1026, name: "C_F3", bindCameraView: null, bindSceneById: null },
+    { id: 1027, name: "C_F4", bindCameraView: null, bindSceneById: null },
+  ];
   return (
     <Container fluid>
       <ListGroup horizontal>
         {projectId && (
           <ListGroup.Item>
-            {" "}
             <ButtonGroup size="sm">
               {isDebug ? (
                 <Button
@@ -59,7 +145,7 @@ function RouteComponent() {
                     location.reload();
                   }}
                 >
-                  取消调试场景
+                  取消调试
                 </Button>
               ) : (
                 <Button
@@ -69,16 +155,11 @@ function RouteComponent() {
                     setIsDebug(!isDebug);
                   }}
                 >
-                  设置调试场景
+                  设置调试
                 </Button>
               )}
-              <Button
-                variant={buttonColor}
-                onClick={() => {
-                  setCode(code + "\n" + "console.log('hello world')");
-                }}
-              >
-                生成自定义按钮
+              <Button variant={buttonColor} onClick={generateButtonGroup}>
+                复制按钮代码
               </Button>
               <Button
                 variant={buttonColor}
