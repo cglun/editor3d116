@@ -110,11 +110,11 @@ function RouteComponent() {
 
       <ButtonGroup size="sm" className="ms-2">
         {actionList &&
-          actionList.map((item: ActionItem) => {
+          actionList.map((item: ActionItem, index: number) => {
             return (
               <Button
                 variant={btnColor}
-                key={item.id}
+                key={index}
                 onClick={() => {
                   item.handler();
                 }}

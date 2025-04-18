@@ -53,8 +53,6 @@ export function getActionList(): ActionItem[] {
   const actionList: ActionItem[] = [
     {
       name: "全部",
-      id: 0,
-
       handler: () => {
         showModelByName(_rootGroupName);
       },
@@ -63,15 +61,16 @@ export function getActionList(): ActionItem[] {
   const targetGroup = createGroupIfNotExist(scene, _rootGroupName, false);
   if (targetGroup) {
     const { children } = targetGroup;
-    const envMesh = children.find((item) => item.name.includes("_ENV"));
+    const envMesh = children.find((item) =>
+      item.name.toUpperCase().includes("_ENV")
+    );
     children.forEach((item) => {
       const itemName = item.name;
-      if (!itemName.includes("_ENV")) {
+      if (!itemName.toUpperCase().includes("_ENV")) {
         const { children } = item;
         for (let i = 0; i < children.length; i++) {
-          const { name, id } = children[i];
+          const { name } = children[i];
           actionList.push({
-            id,
             name,
             handler: () => {
               showModelByName(name);

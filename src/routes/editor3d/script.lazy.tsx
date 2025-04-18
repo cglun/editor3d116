@@ -56,21 +56,20 @@ function RouteComponent() {
     if (MODEL_GROUP) {
       // _rootGroupName = MODEL_GROUP.children[0].name;
       const { children } = MODEL_GROUP;
-      const envMesh = children.find((item) => item.name.includes("_ENV"));
+      const envMesh = children.find((item) =>
+        item.name.toUpperCase().includes("_ENV")
+      );
       //二层
       children.forEach((item) => {
         const level2 = item.children;
         level2.forEach((item) => {
-          if (!item.name.includes("_ENV")) {
-            const { name, id } = item;
+          if (!item.name.toUpperCase().includes("_ENV")) {
+            const { name } = item;
             actionList.push({
-              id,
               name,
               handler: () => {
                 showModelByName(item.name);
               },
-              bindCameraView: null,
-              bindSceneById: null,
             });
           }
         });
@@ -81,19 +80,15 @@ function RouteComponent() {
         level2.forEach((item) => {
           const level3 = item.children;
           level3.forEach((item) => {
-            const { name, id } = item;
+            const { name } = item;
             actionList.push({
-              id,
               name,
-
               handler: () => {
                 showModelByName(name);
                 if (envMesh) {
                   envMesh.visible = true;
                 }
               },
-              bindCameraView: null,
-              bindSceneById: null,
             });
           });
         });
@@ -114,21 +109,21 @@ function RouteComponent() {
     getScene().userData.javascript = _code;
   }
   const bb = [
-    { id: 987, name: "A", bindCameraView: null, bindSceneById: null },
-    { id: 988, name: "B", bindCameraView: null, bindSceneById: null },
-    { id: 989, name: "C", bindCameraView: null, bindSceneById: null },
-    { id: 1016, name: "A_F1", bindCameraView: null, bindSceneById: null },
-    { id: 1017, name: "A_F2", bindCameraView: null, bindSceneById: null },
-    { id: 1018, name: "A_F3", bindCameraView: null, bindSceneById: null },
-    { id: 1019, name: "A_F4", bindCameraView: null, bindSceneById: null },
-    { id: 1020, name: "B_F1", bindCameraView: null, bindSceneById: null },
-    { id: 1021, name: "B_F2", bindCameraView: null, bindSceneById: null },
-    { id: 1022, name: "B_F3", bindCameraView: null, bindSceneById: null },
-    { id: 1023, name: "B_F4", bindCameraView: null, bindSceneById: null },
-    { id: 1024, name: "C_F1", bindCameraView: null, bindSceneById: null },
-    { id: 1025, name: "C_F2", bindCameraView: null, bindSceneById: null },
-    { id: 1026, name: "C_F3", bindCameraView: null, bindSceneById: null },
-    { id: 1027, name: "C_F4", bindCameraView: null, bindSceneById: null },
+    { name: "A" },
+    { name: "B" },
+    { name: "C" },
+    { name: "A_F1" },
+    { name: "A_F2" },
+    { name: "A_F3" },
+    { name: "A_F4" },
+    { name: "B_F1" },
+    { name: "B_F2" },
+    { name: "B_F3" },
+    { name: "B_F4" },
+    { name: "C_F1" },
+    { name: "C_F2" },
+    { name: "C_F3" },
+    { name: "C_F4" },
   ];
   return (
     <Container fluid>
