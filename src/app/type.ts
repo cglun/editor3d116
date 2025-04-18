@@ -81,7 +81,7 @@ export enum UserDataType {
 //   type: "Mesh";
 // };
 
-export type EditorObject3d = Scene | PerspectiveCamera | Mesh | Object3D;
+export type SelectedObject = Scene | PerspectiveCamera | Mesh | Object3D;
 
 export interface RecordItem {
   id: number;

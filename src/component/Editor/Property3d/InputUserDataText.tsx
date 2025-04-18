@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import InputGroup from "react-bootstrap/esm/InputGroup";
 import Form from "react-bootstrap/esm/Form";
-import { APP_COLOR, DELAY, EditorObject3d } from "../../../app/type";
+import { APP_COLOR, DELAY, SelectedObject } from "../../../app/type";
 import Toast3d from "../../common/Toast3d";
 
 export function InputUserDataText({
@@ -10,7 +10,7 @@ export function InputUserDataText({
   selected3d,
 }: {
   title: string;
-  selected3d: EditorObject3d;
+  selected3d: SelectedObject;
 }) {
   const [value, setValue] = useState("");
   useEffect(() => {

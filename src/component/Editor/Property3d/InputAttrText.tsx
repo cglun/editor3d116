@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Object3D } from "three";
 import InputGroup from "react-bootstrap/esm/InputGroup";
 import Form from "react-bootstrap/esm/Form";
-import { EditorObject3d } from "../../../app/type";
+import { SelectedObject } from "../../../app/type";
 
 export function InputAttrText({
   title,
@@ -10,7 +10,7 @@ export function InputAttrText({
   attr,
 }: {
   title: string;
-  selected3d: EditorObject3d;
+  selected3d: SelectedObject;
   attr: keyof typeof Object3D.prototype;
 }) {
   const [value, setValue] = useState("");

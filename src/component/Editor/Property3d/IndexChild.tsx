@@ -13,7 +13,7 @@ import AlertBase from "../../common/AlertBase";
 import { setTextureBackground } from "../../../three/common3d";
 import { useState } from "react";
 import { userData } from "../../../three/config3d";
-import { EditorObject3d } from "../../../app/type";
+import { SelectedObject } from "../../../app/type";
 import { InputAttrNumber } from "./InputAttrNumber";
 
 const step = 0.1;
@@ -196,7 +196,7 @@ function SceneProperty() {
   );
 }
 
-function CommonProperty({ selected3d }: { selected3d: EditorObject3d }) {
+function CommonProperty({ selected3d }: { selected3d: SelectedObject }) {
   // const { type } = selected3d.parent;
   // let canSetShadow = true;
   // // if (type && type === "Scene") {
@@ -359,10 +359,11 @@ function CommonProperty({ selected3d }: { selected3d: EditorObject3d }) {
   );
 }
 
+// 移除 typeof 关键字，并添加类型注解，这里假设使用 SelectedObject 类型
 export default function IndexChild({
   selected3d,
 }: {
-  selected3d: EditorObject3d;
+  selected3d: SelectedObject;
 }) {
   if (selected3d.type === "Scene") {
     return <SceneProperty />;

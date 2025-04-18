@@ -2,14 +2,14 @@ import { Accordion } from "react-bootstrap";
 import { fixedEditorLleft, setClassName } from "../../../app/utils";
 
 import IndexChild from "./IndexChild";
-import { EditorObject3d } from "../../../app/type";
+import { SelectedObject } from "../../../app/type";
 import { useEffect, useRef } from "react";
 /**
  * 物体属性
  * @returns
  */
 
-export default function Index({ selected3d }: { selected3d: EditorObject3d }) {
+export default function Index({ selected3d }: { selected3d: SelectedObject }) {
   const refAccordion = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const focusHandler = () => {
