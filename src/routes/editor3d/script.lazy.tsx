@@ -19,7 +19,6 @@ import { useRef } from "react";
 import { createGroupIfNotExist } from "../../three/utils";
 import { GLOBAL_CONSTANT } from "../../three/GLOBAL_CONSTANT";
 import { showModelByName } from "../../viewer3d/viewer3dUtils";
-import Toast3d from "../../component/common/Toast3d";
 
 export const Route = createLazyFileRoute("/editor3d/script")({
   component: RouteComponent,
@@ -108,7 +107,8 @@ function RouteComponent() {
     setCode(_code);
     getScene().userData.javascript = _code;
   }
-  const bb = [
+  //@ts-ignore
+  const list = [
     { name: "A" },
     { name: "B" },
     { name: "C" },
@@ -124,6 +124,12 @@ function RouteComponent() {
     { name: "C_F2" },
     { name: "C_F3" },
     { name: "C_F4" },
+    { name: "库房A" },
+    { name: "库房B" },
+    { name: "库房A货架1" },
+    { name: "库房B货架2" },
+    { name: "库房2货架1" },
+    { name: "库房2货架2" },
   ];
   return (
     <Container fluid>
