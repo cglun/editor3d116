@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Button from "react-bootstrap/esm/Button";
 import Form from "react-bootstrap/esm/Form";
 import { Color, Fog, Light, OrthographicCamera, Texture, Vector2 } from "three";
@@ -11,9 +12,8 @@ import { InputAttrText } from "./InputAttrText";
 import { getButtonColor, getThemeByScene } from "../../../app/utils";
 import AlertBase from "../../common/AlertBase";
 import { setTextureBackground } from "../../../three/common3d";
-import { useState } from "react";
 import { userData } from "../../../three/config3d";
-import { SelectedObject } from "../../../app/type";
+import { APP_COLOR, SelectedObject } from "../../../app/type";
 import { InputAttrNumber } from "./InputAttrNumber";
 import ScriptEditor from "../../common/ScriptEditor";
 
@@ -21,7 +21,12 @@ const step = 0.1;
 function SceneProperty() {
   const { scene, updateScene } = useUpdateScene();
   const { themeColor } = getThemeByScene(scene);
-
+  const { customButtonList } = scene.payload.userData;
+  // 检查 customButtonList 是否存在，若不存在则使用空数组
+  const safeCustomButtonList = customButtonList || [];
+  const [code, setCode] = useState<string>(
+    JSON.stringify(safeCustomButtonList)
+  );
   const _scene = getScene();
   let bgColor = "#000116";
   const background = _scene.background as Color | Texture;
@@ -193,7 +198,18 @@ function SceneProperty() {
       >
         重置雾气
       </Button>
-      <ScriptEditor />
+      <AlertBase
+        className="mb-1 mt-1"
+        type={APP_COLOR.Warning}
+        text={"自定义按钮，类型：数组"}
+      />
+      <ScriptEditor
+        code={code}
+        setCode={setCode}
+        callback={function (): void {
+          getScene().userData.customButtonList = JSON.parse(code);
+        }}
+      />
     </Container>
   );
 }

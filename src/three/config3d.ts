@@ -30,6 +30,7 @@ export const userData = {
   },
   javascript: `//const scene = getScene(); 
   console.log("116");`,
+  customButtonList: [],
   APP_THEME: {
     themeColor: APP_COLOR.Dark,
     iconFill: "",

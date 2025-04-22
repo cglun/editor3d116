@@ -1,24 +1,15 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import {
-  Button,
-  ButtonGroup,
-  Container,
-  FloatingLabel,
-  Form,
-  ListGroup,
-} from "react-bootstrap";
+import { Button, ButtonGroup, Container, ListGroup } from "react-bootstrap";
 import { getScene } from "../../three/init3dEditor";
 import { useUpdateScene } from "../../app/hooks";
-import { CodeHighlight } from "@mantine/code-highlight";
-import { MantineProvider } from "@mantine/core";
 import AlertBase from "../../component/common/AlertBase";
 import { ActionItem, APP_COLOR } from "../../app/type";
 import { getButtonColor, getThemeByScene } from "../../app/utils";
-import { useRef } from "react";
 import { createGroupIfNotExist } from "../../three/utils";
 import { GLOBAL_CONSTANT } from "../../three/GLOBAL_CONSTANT";
 import { showModelByName } from "../../viewer3d/viewer3dUtils";
+import ScriptEditor from "../../component/common/ScriptEditor";
 
 export const Route = createLazyFileRoute("/editor3d/script")({
   component: RouteComponent,
@@ -27,9 +18,7 @@ export const Route = createLazyFileRoute("/editor3d/script")({
 function RouteComponent() {
   const { scene } = useUpdateScene();
   const { javascript, projectId } = scene.payload.userData;
-  const [code, setCode] = useState(javascript);
-  const [editable, setEditable] = useState(false);
-  const textareaRef = useRef<HTMLTextAreaElement>(null); // 创建一个引用
+  const [code, setCode] = useState<string>(javascript);
 
   const { themeColor } = getThemeByScene(scene);
   const buttonColor = getButtonColor(themeColor);
@@ -107,6 +96,7 @@ function RouteComponent() {
     setCode(_code);
     getScene().userData.javascript = _code;
   }
+
   //@ts-ignore
   const list = [
     { name: "A" },
@@ -189,51 +179,13 @@ function RouteComponent() {
         </ListGroup.Item>
       </ListGroup>
 
-      {editable ? (
-        <FloatingLabel controlId="floatingTextarea2" label="编辑中……">
-          <Form.Control
-            as="textarea"
-            ref={textareaRef} // 将引用绑定到文本框
-            style={{ height: "100vh" }}
-            value={code}
-            onMouseLeave={() => {
-              setEditable(!editable);
-            }}
-            onMouseEnter={() => {
-              // 聚焦到文本框内容最后面
-              if (textareaRef.current) {
-                const length = textareaRef.current.value.length;
-                textareaRef.current.setSelectionRange(length, length);
-                textareaRef.current.focus();
-              }
-            }}
-            onChange={(e) => {
-              setCode(e.target.value);
-              getScene().userData.javascript = e.target.value;
-            }}
-          />
-        </FloatingLabel>
-      ) : (
-        <MantineProvider>
-          <CodeHighlight
-            code={code.trim().length > 0 ? code : "//编辑代码"}
-            style={{
-              padding: "2px 10px ",
-              minHeight: "10vh",
-              cursor: "text",
-              borderWidth: "1px",
-              borderStyle: "dashed",
-              borderColor: "var(--bs-card-border-color)",
-              borderRadius: "4px",
-            }}
-            language="javascript"
-            withCopyButton={false}
-            onClick={() => {
-              setEditable(!editable);
-            }}
-          />
-        </MantineProvider>
-      )}
+      <ScriptEditor
+        code={code}
+        setCode={setCode}
+        callback={function (): void {
+          getScene().userData.javascript = code;
+        }}
+      />
     </Container>
   );
 }

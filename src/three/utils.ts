@@ -327,10 +327,11 @@ export function finishLoadExecute(
   if (javascript) {
     // 使用类型正确的 context 调用方法
     const { getScene, getControls, getCamera } = context; // 这里的 context 需要根据实际情况修改类型为 Context116 或正确的类型定义
+
     getScene();
     getControls();
     getCamera();
-    // eval(javascript);
+    eval(javascript);
     if (callBack) {
       callBack(context);
     }
