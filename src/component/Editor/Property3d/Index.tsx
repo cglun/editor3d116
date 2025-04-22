@@ -43,12 +43,12 @@ export default function Index({ selected3d }: { selected3d: SelectedObject }) {
       <Accordion.Item
         eventKey="1"
         ref={refAccordion}
-        onMouseLeave={() => {
-          //fixedEditorLleft(false);
-        }}
-        onMouseEnter={() => {
-          // fixedEditorLleft();
-        }}
+        // onMouseLeave={() => {
+        //    fixedEditorLleft(false);
+        // }}
+        // onMouseEnter={() => {
+        //     fixedEditorLleft();
+        // }}
       >
         <Accordion.Header>
           <i className={setClassName("menu-button")}></i>

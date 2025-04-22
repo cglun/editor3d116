@@ -52,8 +52,6 @@ export enum HTTP_TYPE {
   UPDATE = "UPDATE",
 }
 
-export type ViewType = string | null;
-
 export interface GlbModel {
   id?: number;
   name: string;
@@ -74,12 +72,6 @@ export enum UserDataType {
   CSS2DObject = "CSS2DObject",
   CSS3DObject = "CSS3DObject",
 }
-
-// export type XXXX = {
-//   modelUrl: string;
-//   modelTotal: number;
-//   type: "Mesh";
-// };
 
 export type SelectedObject = Scene | PerspectiveCamera | Mesh | Object3D;
 

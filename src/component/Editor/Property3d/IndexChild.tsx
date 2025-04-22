@@ -15,6 +15,7 @@ import { useState } from "react";
 import { userData } from "../../../three/config3d";
 import { SelectedObject } from "../../../app/type";
 import { InputAttrNumber } from "./InputAttrNumber";
+import ScriptEditor from "../../common/ScriptEditor";
 
 const step = 0.1;
 function SceneProperty() {
@@ -192,6 +193,7 @@ function SceneProperty() {
       >
         重置雾气
       </Button>
+      <ScriptEditor />
     </Container>
   );
 }
@@ -360,6 +362,7 @@ function CommonProperty({ selected3d }: { selected3d: SelectedObject }) {
 }
 
 // 移除 typeof 关键字，并添加类型注解，这里假设使用 SelectedObject 类型
+
 export default function IndexChild({
   selected3d,
 }: {
