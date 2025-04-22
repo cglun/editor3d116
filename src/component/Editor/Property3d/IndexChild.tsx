@@ -16,6 +16,7 @@ import { userData } from "../../../three/config3d";
 import { APP_COLOR, SelectedObject } from "../../../app/type";
 import { InputAttrNumber } from "./InputAttrNumber";
 import ScriptEditor from "../../common/ScriptEditor";
+import { generateButtonGroup } from "../../../viewer3d/viewer3dUtils";
 
 const step = 0.1;
 function SceneProperty() {
@@ -27,6 +28,7 @@ function SceneProperty() {
   const [code, setCode] = useState<string>(
     JSON.stringify(safeCustomButtonList)
   );
+  const [error, setError] = useState("自定义按钮，类型：数组");
   const _scene = getScene();
   let bgColor = "#000116";
   const background = _scene.background as Color | Texture;
@@ -125,33 +127,50 @@ function SceneProperty() {
   return (
     <Container fluid>
       <AlertBase type={themeColor} text={"背景色和背景图，只选其一"} />
-      <Button
-        className="mb-2"
-        variant={getButtonColor(themeColor)}
-        size="sm"
-        onClick={() => {
-          setEnableColor(!enableColor);
+      <ButtonGroup size="sm">
+        <Button
+          variant={getButtonColor(themeColor)}
+          onClick={() => {
+            setEnableColor(!enableColor);
+            _scene.userData.backgroundHDR = userData.backgroundHDR;
+            const { backgroundHDR } = _scene.userData;
+            backgroundHDR.asBackground = !backgroundHDR.asBackground;
+            if (!backgroundHDR.asBackground) {
+              _scene.background = new Color(bgColor);
+              _scene.environment = null;
+            }
+            if (backgroundHDR.asBackground) {
+              _scene.userData.backgroundHDR.asBackground = true;
+              setTextureBackground(_scene);
+            }
+            updateScene(getScene());
+          }}
+        >
+          {enableColor ? "使用贴图" : "使用颜色"}
+        </Button>
+        <Button
+          variant={getButtonColor(themeColor)}
+          onClick={() => {
+            // _scene.background = new Color("#000");
+            _scene.fog = null;
+            updateScene(getScene());
+          }}
+        >
+          重置雾气
+        </Button>
 
-          // if (!backgroundHDR) {}
-          _scene.userData.backgroundHDR = userData.backgroundHDR;
-          const { backgroundHDR } = _scene.userData;
-          backgroundHDR.asBackground = !backgroundHDR.asBackground;
-          if (!backgroundHDR.asBackground) {
-            _scene.background = new Color(bgColor);
-            _scene.environment = null;
-          }
-          if (backgroundHDR.asBackground) {
-            // const textureName = "venice_sunset_1k.hdr";
-            // _scene.userData.backgroundHDR.name = textureName;
+        <Button
+          variant={getButtonColor(themeColor)}
+          onClick={() => {
+            const c = JSON.parse(code);
+            const res = generateButtonGroup(c);
+            setCode(JSON.stringify(res, null, 1));
+          }}
+        >
+          生成按钮
+        </Button>
+      </ButtonGroup>
 
-            _scene.userData.backgroundHDR.asBackground = true;
-            setTextureBackground(_scene);
-          }
-          updateScene(getScene());
-        }}
-      >
-        {enableColor ? "使用贴图" : "使用颜色"}
-      </Button>
       {enableColor ? setBgColorColor() : setBgColorTexture()}
       <InputGroup size="sm">
         <InputGroup.Text>雾气色</InputGroup.Text>
@@ -187,27 +206,37 @@ function SceneProperty() {
         attr={"far"}
         step={step}
       />
-      <Button
-        variant={getButtonColor(themeColor)}
-        size="sm"
-        onClick={() => {
-          // _scene.background = new Color("#000");
-          _scene.fog = null;
-          updateScene(getScene());
-        }}
-      >
-        重置雾气
-      </Button>
+
       <AlertBase
         className="mb-1 mt-1"
         type={APP_COLOR.Warning}
         text={"自定义按钮，类型：数组"}
       />
+      <span>{error}</span>
       <ScriptEditor
         code={code}
         setCode={setCode}
         callback={function (): void {
-          getScene().userData.customButtonList = JSON.parse(code);
+          //如果code为空，return
+          if (code.trim().length === 0) {
+            setCode("[]");
+            getScene().userData.customButtonList = [];
+            setError("格式正确");
+            return;
+          }
+          try {
+            const parsedData = JSON.parse(code);
+            if (Array.isArray(parsedData)) {
+              getScene().userData.customButtonList = parsedData;
+              setError("格式正确");
+            } else {
+              setError("格式错误 ");
+            }
+          } catch (error) {
+            console.error("解析JSON时发生错误:", error);
+            setError("格式错误 ");
+            // 处理解析错误的逻辑
+          }
         }}
       />
     </Container>

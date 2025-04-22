@@ -4,11 +4,9 @@ import { Button, ButtonGroup, Container, ListGroup } from "react-bootstrap";
 import { getScene } from "../../three/init3dEditor";
 import { useUpdateScene } from "../../app/hooks";
 import AlertBase from "../../component/common/AlertBase";
-import { ActionItem, APP_COLOR } from "../../app/type";
+import { APP_COLOR } from "../../app/type";
 import { getButtonColor, getThemeByScene } from "../../app/utils";
-import { createGroupIfNotExist } from "../../three/utils";
-import { GLOBAL_CONSTANT } from "../../three/GLOBAL_CONSTANT";
-import { showModelByName } from "../../viewer3d/viewer3dUtils";
+
 import ScriptEditor from "../../component/common/ScriptEditor";
 
 export const Route = createLazyFileRoute("/editor3d/script")({
@@ -34,68 +32,6 @@ function RouteComponent() {
       setIsDebug(false);
     }
   }, [scene, javascript, projectId]);
-  function generateButtonGroup() {
-    const actionList: ActionItem[] = [];
-    const MODEL_GROUP = createGroupIfNotExist(
-      getScene(),
-      GLOBAL_CONSTANT.MODEL_GROUP,
-      false
-    );
-    if (MODEL_GROUP) {
-      // _rootGroupName = MODEL_GROUP.children[0].name;
-      const { children } = MODEL_GROUP;
-      const envMesh = children.find((item) =>
-        item.name.toUpperCase().includes("_ENV")
-      );
-      //二层
-      children.forEach((item) => {
-        const level2 = item.children;
-        level2.forEach((item) => {
-          if (!item.name.toUpperCase().includes("_ENV")) {
-            const { name } = item;
-            actionList.push({
-              name,
-              handler: () => {
-                showModelByName(item.name);
-              },
-            });
-          }
-        });
-      });
-      //三层
-      children.forEach((item) => {
-        const level2 = item.children;
-        level2.forEach((item) => {
-          const level3 = item.children;
-          level3.forEach((item) => {
-            const { name } = item;
-            actionList.push({
-              name,
-              handler: () => {
-                showModelByName(name);
-                if (envMesh) {
-                  envMesh.visible = true;
-                }
-              },
-            });
-          });
-        });
-      });
-    }
-    const _code = JSON.stringify(actionList) + "\n\n\n\n\n" + code;
-    // navigator.clipboard
-    //   .writeText(_code)
-    //   .then(() => {
-    //     Toast3d("复制成功");
-    //   })
-    //   .catch((error) => {
-    //     // 处理复制过程中出现的错误
-    //     console.error("复制时发生错误:", error);
-    //     Toast3d("复制失败", "失败", APP_COLOR.Danger);
-    //   });
-    setCode(_code);
-    getScene().userData.javascript = _code;
-  }
 
   //@ts-ignore
   const list = [
@@ -149,9 +85,7 @@ function RouteComponent() {
                   设置调试
                 </Button>
               )}
-              <Button variant={buttonColor} onClick={generateButtonGroup}>
-                复制按钮代码
-              </Button>
+
               <Button
                 variant={buttonColor}
                 onClick={() => {

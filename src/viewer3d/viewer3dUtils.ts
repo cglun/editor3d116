@@ -1,8 +1,9 @@
 import { Object3D, Object3DEventMap } from "three";
 import { ActionItem } from "../app/type";
-import { getScene } from "../three/init3dViewer";
+
 import { createGroupIfNotExist } from "../three/utils";
 import { GLOBAL_CONSTANT } from "../three/GLOBAL_CONSTANT";
+import { getScene } from "../three/init3dEditor";
 
 // 显示和隐藏模型
 
@@ -85,4 +86,73 @@ export function getActionList(): ActionItem[] {
   }
 
   return actionList;
+}
+
+// 修改返回类型为 ActionItem[]
+export function generateButtonGroup(
+  originalCodeArr: ActionItem[]
+): ActionItem[] {
+  const actionList: ActionItem[] = [];
+
+  const MODEL_GROUP = createGroupIfNotExist(
+    getScene(),
+    GLOBAL_CONSTANT.MODEL_GROUP,
+    false
+  );
+  if (MODEL_GROUP) {
+    // _rootGroupName = MODEL_GROUP.children[0].name;
+    const { children } = MODEL_GROUP;
+    const envMesh = children.find((item) =>
+      item.name.toUpperCase().includes("_ENV")
+    );
+    //二层
+    children.forEach((item) => {
+      const level2 = item.children;
+      level2.forEach((item) => {
+        if (!item.name.toUpperCase().includes("_ENV")) {
+          const { name } = item;
+          actionList.push({
+            name,
+            handler: () => {
+              showModelByName(item.name);
+            },
+          });
+        }
+      });
+    });
+    //三层
+    children.forEach((item) => {
+      const level2 = item.children;
+      level2.forEach((item) => {
+        const level3 = item.children;
+        level3.forEach((item) => {
+          const { name } = item;
+          actionList.push({
+            name,
+            handler: () => {
+              showModelByName(name);
+              if (envMesh) {
+                envMesh.visible = true;
+              }
+            },
+          });
+        });
+      });
+    });
+  }
+  // 把actionList和originalCode两个数组拼接成一个新的数组
+  // 修改：将 originalCode 替换为 originalCodeArr
+  const _code = [...actionList, ...originalCodeArr];
+  // navigator.clipboard
+  //   .writeText(_code)
+  //   .then(() => {
+  //     Toast3d("复制成功");
+  //   })
+  //   .catch((error) => {
+  //     // 处理复制过程中出现的错误
+  //     console.error("复制时发生错误:", error);
+  //     Toast3d("复制失败", "失败", APP_COLOR.Danger);
+  //   });
+  // 原选中代码，无需修改
+  return _code;
 }
