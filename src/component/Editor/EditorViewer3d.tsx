@@ -182,7 +182,7 @@ function EditorViewer3d() {
                 if (modelNum <= 0) {
                   ModalConfirm3d({
                     title: "提示",
-                    body: "加载完成.",
+                    body: "加载完成",
                     confirmButton: {
                       show: false,
                     },
