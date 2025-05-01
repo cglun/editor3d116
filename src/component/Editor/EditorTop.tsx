@@ -185,7 +185,10 @@ export default function EditorTop() {
         className="bg-body-tertiary"
         style={{ padding: 0 }}
       >
-        <Navbar.Brand style={{ padding: 0, marginRight: "0" }}>
+        <Navbar.Brand
+          className="d-flex"
+          style={{ padding: 0, marginRight: "0" }}
+        >
           <Image style={{ width: "1.6rem" }} src={logoUrl} title="logo" />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />

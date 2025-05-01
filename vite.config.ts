@@ -24,7 +24,7 @@ export default defineConfig({
     target: "esnext",
     minify: true,
     cssCodeSplit: false,
-    outDir: "../datav_vr_2d/editor3d",
+    outDir: "../ArgDataV.Designer.V2.Vite/editor3d",
     // outDir: "dist/editor3d",
     assetsDir: "assets",
     assetsInlineLimit: 4096000,

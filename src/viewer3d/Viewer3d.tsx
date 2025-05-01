@@ -105,13 +105,16 @@ export default function Viewer3d({
               }
               if (_progress >= 100) {
                 //setProgress(100);
-                modelNum--; // 确保在回调中更新 modelNum。如果不更新，可能会导致 modelNum 不正确。
-                if (modelList.length === 1) {
+
+                // if (modelList.length === 1) {
+                //   finishLoadExecute(context, callBack);
+                // }
+
+                modelNum--;
+                if (modelNum <= 0) {
                   finishLoadExecute(context, callBack);
                 }
-                if (modelList.length > 1 && modelNum <= 1) {
-                  finishLoadExecute(context, callBack);
-                }
+                // 确保在回调中更新 modelNum。如果不更新，可能会导致 modelNum 不正确。
               }
             },
 
@@ -208,11 +211,12 @@ export default function Viewer3d({
       value={{ scene, dispatchScene, tourWindow, dispatchTourWindow }}
     >
       <Container fluid>
-        <div className="mb-1 mx-auto" style={{ width: "300px" }}>
-          {progress < 100 && !getProgress && (
+        {progress < 100 && !getProgress && (
+          <div className="mb-1 mx-auto" style={{ width: "300px" }}>
             <ProgressBar now={progress} label={`${progress}%`} />
-          )}
-        </div>
+          </div>
+        )}
+
         <div
           className="mx-auto position-relative"
           style={canvasStyle}

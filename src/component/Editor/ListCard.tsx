@@ -38,6 +38,7 @@ import Trigger3d from "../common/Trigger3d";
 import { getActionList } from "../../viewer3d/viewer3dUtils";
 import { Scene } from "three";
 import { GLOBAL_CONSTANT } from "../../three/GLOBAL_CONSTANT";
+import { useNavigate } from "@tanstack/react-router";
 
 interface Props {
   list: RecordItem[];
@@ -49,6 +50,7 @@ function RecordItemCard(props: Props) {
   const { list, setList, isLoading, error } = props;
   const { scene, updateScene } = useUpdateScene();
   const { themeColor } = getThemeByScene(scene);
+  const navigate = useNavigate();
 
   const { dispatchTourWindow } = useContext(MyContext);
 
@@ -315,7 +317,10 @@ function RecordItemCard(props: Props) {
   //     }
   //   );
   // }
-
+  const defaultImage3dUrl = new URL(
+    "/static/images/defaultImage3d.png",
+    import.meta.url
+  ).href;
   return (
     <Container fluid className="d-flex flex-wrap">
       {list.map((item: RecordItem, index: number) => {
@@ -331,12 +336,16 @@ function RecordItemCard(props: Props) {
           />
         );
 
+        const defaultImage3d = (
+          <Card.Img
+            src={defaultImage3dUrl}
+            variant="top"
+            style={{ cursor: "crosshair", width: "6rem" }}
+          />
+        );
+        //<i className="bi bi-image" style={{ fontSize: "4rem" }}></i>
         const cardBody =
-          item.cover?.trim().length > 0 ? (
-            cardBodyImg
-          ) : (
-            <i className="bi bi-image" style={{ fontSize: "4rem" }}></i>
-          );
+          item.cover?.trim().length > 0 ? cardBodyImg : defaultImage3d;
 
         return (
           <Card className="ms-2 mt-2" key={index}>
@@ -354,6 +363,9 @@ function RecordItemCard(props: Props) {
               <div
                 onClick={() => {
                   if (item.des === "Scene") {
+                    navigate({
+                      to: "/editor3d/?sceneId=" + item.id,
+                    });
                     loadScene(item);
                     return;
                   }

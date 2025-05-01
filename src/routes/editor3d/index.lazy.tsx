@@ -22,9 +22,11 @@ interface ResponseData {
   };
 }
 
+// 更新路由定义，添加 sceneID 参数
 export const Route = createLazyFileRoute("/editor3d/")({
   component: ModelList,
 });
+
 function ModelList() {
   const [list, setList] = React.useState<RecordItem[]>([]);
   const [filterList, setFilterList] = React.useState<RecordItem[]>([]);

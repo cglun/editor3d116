@@ -1,4 +1,5 @@
 import React, { memo, useContext, useEffect, useRef } from "react";
+
 import initScene, {
   getPerspectiveCamera,
   getLabelRenderer,
@@ -47,19 +48,30 @@ function EditorViewer3d() {
 
   const { scene, updateScene } = useUpdateScene();
   const { themeColor } = getThemeByScene(scene);
+  //获取url的参数 值
+  const urlParams = new URLSearchParams(window.location.search);
+  const sceneId = urlParams.get("sceneId");
 
   useEffect(() => {
     removeCanvasChild(editorCanvas);
-
     newScene();
     const SCENE_PROJECT = localStorage.getItem("SCENE_PROJECT");
+
+    const currentScene: RecordItem = {
+      id: -1,
+      name: "",
+      des: "",
+      cover: "",
+    };
+
     if (SCENE_PROJECT) {
-      loadScene({
-        id: parseInt(SCENE_PROJECT),
-        name: "",
-        des: "",
-        cover: "",
-      }); // 加载场景
+      currentScene.id = parseInt(SCENE_PROJECT);
+    }
+    if (sceneId) {
+      currentScene.id = parseInt(sceneId);
+    }
+    if (currentScene.id !== -1) {
+      loadScene(currentScene);
     }
 
     window.addEventListener("resize", () =>
@@ -114,6 +126,13 @@ function EditorViewer3d() {
     getAll,
   };
   function loadScene(item: RecordItem) {
+    ModalConfirm3d({
+      title: "提示",
+      body: "加载开始",
+      confirmButton: {
+        show: true,
+      },
+    });
     getProjectData(item.id)
       .then((data) => {
         const { scene, camera, modelList } = sceneDeserialize(data, item);
@@ -130,9 +149,17 @@ function EditorViewer3d() {
         // 加载完成后，设置标签
         setLabel(scene, dispatchTourWindow);
         modelNum = modelList.length;
+
         if (modelNum === 0) {
           finishLoadExecute(context);
           updateScene(getScene());
+          ModalConfirm3d({
+            title: "提示",
+            body: "加载完成",
+            confirmButton: {
+              show: false,
+            },
+          });
         }
         modelList.forEach((model: GlbModel) => {
           loadModelByUrl(
@@ -149,20 +176,21 @@ function EditorViewer3d() {
                 },
               });
 
-              if (modelNum <= 1) {
-                ModalConfirm3d({
-                  title: "提示",
-                  body: "加载完成",
-                  confirmButton: {
-                    show: false,
-                  },
-                });
-                updateScene(getScene());
-                finishLoadExecute(context);
-              }
-
               if (_progress >= 100) {
-                modelNum--; // 确保在回调中更新 modelNum。如果不更新，可能会导致 modelNum 不正确。
+                modelNum--;
+
+                if (modelNum <= 0) {
+                  ModalConfirm3d({
+                    title: "提示",
+                    body: "加载完成",
+                    confirmButton: {
+                      show: false,
+                    },
+                  });
+
+                  updateScene(getScene());
+                  finishLoadExecute(context);
+                }
               }
             },
 

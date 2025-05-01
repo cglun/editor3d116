@@ -17,6 +17,7 @@ import { APP_COLOR, SelectedObject } from "../../../app/type";
 import { InputAttrNumber } from "./InputAttrNumber";
 import ScriptEditor from "../../common/ScriptEditor";
 import { generateButtonGroup } from "../../../viewer3d/viewer3dUtils";
+import Toast3d from "../../common/Toast3d";
 
 const step = 0.1;
 function SceneProperty() {
@@ -127,7 +128,7 @@ function SceneProperty() {
   return (
     <Container fluid>
       <AlertBase type={themeColor} text={"背景色和背景图，只选其一"} />
-      <ButtonGroup size="sm">
+      <ButtonGroup className="mb-2" size="sm">
         <Button
           variant={getButtonColor(themeColor)}
           onClick={() => {
@@ -153,6 +154,7 @@ function SceneProperty() {
           onClick={() => {
             // _scene.background = new Color("#000");
             _scene.fog = null;
+            Toast3d("雾气已重置");
             updateScene(getScene());
           }}
         >
@@ -164,13 +166,15 @@ function SceneProperty() {
           onClick={() => {
             const c = JSON.parse(code);
             const res = generateButtonGroup(c);
+
             setCode(JSON.stringify(res, null, 1));
+
+            Toast3d("已生成按钮组");
           }}
         >
           生成按钮
         </Button>
       </ButtonGroup>
-
       {enableColor ? setBgColorColor() : setBgColorTexture()}
       <InputGroup size="sm">
         <InputGroup.Text>雾气色</InputGroup.Text>
