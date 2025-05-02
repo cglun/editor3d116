@@ -1,5 +1,5 @@
 import React, { memo, useContext, useEffect, useRef } from "react";
-
+import { useLocation } from "@tanstack/react-router";
 import initScene, {
   getPerspectiveCamera,
   getLabelRenderer,
@@ -41,6 +41,8 @@ import { getActionList } from "../../viewer3d/viewer3dUtils";
 import ModalConfirm3d from "../common/ModalConfirm3d";
 import Toast3d from "../common/Toast3d";
 import { GLOBAL_CONSTANT } from "../../three/GLOBAL_CONSTANT";
+import { cameraTween } from "../../three/animate";
+import { userData } from "../../three/config3d";
 
 function EditorViewer3d() {
   const editorCanvas: React.RefObject<HTMLDivElement> =
@@ -48,21 +50,30 @@ function EditorViewer3d() {
 
   const { scene, updateScene } = useUpdateScene();
   const { themeColor } = getThemeByScene(scene);
-  //获取url的参数 值
-  const urlParams = new URLSearchParams(window.location.search);
-  const sceneId = urlParams.get("sceneId");
+
+  const location = useLocation().search; // 获取 sceneId 参数
+  const searchParams = new URLSearchParams(location);
+  const sceneId = searchParams.get("sceneId");
+  const currentScene: RecordItem = {
+    id: -1,
+    name: "",
+    des: "",
+    cover: "",
+  };
+  useEffect(() => {
+    if (sceneId) {
+      currentScene.id = parseInt(sceneId);
+      const scene = getScene();
+      if (scene) {
+        loadScene(currentScene);
+      }
+    }
+  }, [sceneId]);
 
   useEffect(() => {
     removeCanvasChild(editorCanvas);
     newScene();
     const SCENE_PROJECT = localStorage.getItem("SCENE_PROJECT");
-
-    const currentScene: RecordItem = {
-      id: -1,
-      name: "",
-      des: "",
-      cover: "",
-    };
 
     if (SCENE_PROJECT) {
       currentScene.id = parseInt(SCENE_PROJECT);
@@ -93,7 +104,7 @@ function EditorViewer3d() {
         )
       );
     };
-    // 添加 updateScene 到依赖项数组
+    // 添加 sceneId 到依赖项数组
   }, [editorCanvas.current]);
   function newScene() {
     if (editorCanvas.current) {
@@ -133,6 +144,7 @@ function EditorViewer3d() {
         show: true,
       },
     });
+
     getProjectData(item.id)
       .then((data) => {
         const { scene, camera, modelList } = sceneDeserialize(data, item);
@@ -146,6 +158,7 @@ function EditorViewer3d() {
         }
         setScene(scene);
         setCamera(camera);
+
         // 加载完成后，设置标签
         setLabel(scene, dispatchTourWindow);
         modelNum = modelList.length;
@@ -190,6 +203,25 @@ function EditorViewer3d() {
 
                   updateScene(getScene());
                   finishLoadExecute(context);
+                  const { fixedCameraPosition } = getScene().userData;
+                  if (fixedCameraPosition) {
+                    const { x, y, z } = fixedCameraPosition;
+                    const camera = getPerspectiveCamera();
+                    const position = userData.fixedCameraPosition;
+                    const multiple = 11.6;
+                    camera.position.set(
+                      position.x * multiple,
+                      position.y * multiple,
+                      position.z * multiple
+                    );
+
+                    const tween = cameraTween(
+                      camera,
+                      new Vector3(x, y, z),
+                      1000
+                    );
+                    tween.start();
+                  }
                 }
               }
             },

@@ -64,7 +64,18 @@ export default function EditorForm({
         Toast3d(err.message, "错误", APP_COLOR.Danger);
       });
   }
-
+  const defaultImage3dUrl = new URL(
+    "/static/images/defaultImage3d.png",
+    import.meta.url
+  ).href;
+  const defaultImage3d = (
+    <Card.Img
+      src={defaultImage3dUrl}
+      variant="top"
+      style={{ cursor: "crosshair", width: "300px" }}
+    />
+  );
+  //  <i className="bi bi-image" style={{ fontSize: "11.6rem" }}> </i>
   return (
     <Container fluid>
       <InputGroup size="sm">
@@ -110,7 +121,7 @@ export default function EditorForm({
             variant="top"
           />
         ) : (
-          <i className="bi bi-image" style={{ fontSize: "11.6rem" }}></i>
+          defaultImage3d
         )}
         <ButtonGroup className="mt-2" size="sm">
           <Button

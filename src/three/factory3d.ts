@@ -37,7 +37,7 @@ export function createPerspectiveCamera(
     1000
   );
   camera.name = cameraName;
-  const { x, y, z } = userData.perspectiveCameraPosition;
+  const { x, y, z } = userData.fixedCameraPosition;
   camera.position.set(x, y, z);
   camera.userData.isSelected = false;
 

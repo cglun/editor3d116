@@ -21,8 +21,8 @@ export const config3d = {
 };
 export const userData = {
   isSelected: false,
-  perspectiveCameraPosition: new Vector3(-5, 5, 8),
-  fiexedCameraPosition: new Vector3(-5, 5, 8),
+  fixedCameraPosition: new Vector3(-5, 5, 8),
+
   config3d,
   backgroundHDR: {
     name: "venice_sunset_1k.hdr",

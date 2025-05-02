@@ -161,10 +161,12 @@ export function sceneDeserialize(data: string, item: RecordItem) {
   });
 
   const newCamera = new PerspectiveCamera();
+  const { fixedCameraPosition } = newScene.userData;
+  if (fixedCameraPosition) {
+    const { x, y, z } = fixedCameraPosition;
+    newCamera.position.set(x, y, z);
+  }
 
-  const { x, y, z } = newScene.userData.fiexedCameraPosition;
-
-  newCamera.position.set(x, y, z);
   return {
     scene: newScene,
     camera: newCamera,
@@ -287,7 +289,7 @@ export function createGroupIfNotExist(
 export function loadModelByUrl(
   model: GlbModel,
   scene: Scene,
-  getProsess: (progress: number) => void,
+  getProgress: (progress: number) => void,
   getError: (error: unknown) => void
 ) {
   const loader = glbLoader();
@@ -299,14 +301,14 @@ export function loadModelByUrl(
       enableShadow(group, scene);
       scene.add(group);
 
-      getProsess(100);
+      getProgress(100);
     },
     function (xhr) {
       const progress = parseFloat(
         ((xhr.loaded / model.userData.modelTotal) * 100).toFixed(2)
       );
       if (progress < 100) {
-        getProsess(progress);
+        getProgress(progress);
       }
     },
     function (error) {

@@ -151,7 +151,8 @@ function RecordItemCard(props: Props) {
   };
   let modelNum = 0,
     _modelLen = 0;
-  function loadScene(item: RecordItem) {
+  //@ts-ignore
+  function loadScene116(item: RecordItem) {
     modelNum = 0;
     _modelLen = 0;
     getProjectData(item.id)
@@ -255,79 +256,28 @@ function RecordItemCard(props: Props) {
       }
     );
   }
-
-  // function loadModelByUrl11(model: GlbModel) {
-  //   const loader = glbLoader();
-  //   let progress = 0;
-
-  //   loader.load(
-  //     model.userData.modelUrl,
-  //     function (gltf) {
-  //       ModalConfirm3d({
-  //         title: "提示",
-  //         body: "加载完成",
-  //         confirmButton: {
-  //           show: false,
-  //         },
-  //       });
-
-  //       const group = getModelGroup(model, gltf, getScene());
-  //       enableShadow(group, getScene());
-  //       getScene().add(group);
-
-  //       if (modelNum <= 1) {
-  //         updateScene(getScene());
-  //         // 移除无意义的函数调用
-  //         // getScene();
-  //         getControls();
-  //         getCamera();
-  //
-  //         const { javascript } = getScene().userData;
-  //         if (javascript) {
-  //           eval(javascript);
-  //         }
-  //       }
-  //       modelNum--;
-  //     },
-  //     function (xhr) {
-  //       progress = parseFloat(
-  //         ((xhr.loaded / model.userData.modelTotal) * 100).toFixed(2)
-  //       );
-
-  //       ModalConfirm3d({
-  //         title: "提示",
-  //         body: <ProgressBar now={progress} label={`${progress}%`} />,
-  //         confirmButton: {
-  //           show: true,
-  //           closeButton: false,
-  //           hasButton: false,
-  //         },
-  //       });
-  //     },
-  //     function (error) {
-  //       ModalConfirm3d({
-  //         title: "提示",
-  //         body: " An error happened" + error,
-  //         confirmButton: {
-  //           show: true,
-  //           closeButton: true,
-  //           hasButton: true,
-  //         },
-  //       });
-  //     }
-  //   );
-  // }
+  //默认图片
   const defaultImage3dUrl = new URL(
     "/static/images/defaultImage3d.png",
     import.meta.url
   ).href;
+
+  //获取url的参数 值
+  const urlParams = new URLSearchParams(window.location.search);
+  const sceneId = urlParams.get("sceneId");
+
   return (
     <Container fluid className="d-flex flex-wrap">
       {list.map((item: RecordItem, index: number) => {
-        const selectStyle =
+        let selectStyle =
           item.des === "Scene" && scene.payload.userData.projectId === item.id
             ? "bg-success"
             : "";
+
+        if (sceneId && sceneId === item.id.toString()) {
+          selectStyle = "bg-success";
+        }
+
         const cardBodyImg = (
           <Card.Img
             src={loadAssets(item.cover)}
@@ -365,8 +315,7 @@ function RecordItemCard(props: Props) {
                   if (item.des === "Scene") {
                     navigate({
                       to: "/editor3d/?sceneId=" + item.id,
-                    });
-                    loadScene(item);
+                    }); // loadScene(item);
                     return;
                   }
                   _modelLen = 1;

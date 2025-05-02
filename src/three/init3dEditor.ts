@@ -276,7 +276,7 @@ export function setSelectedObject<T>(obj: T) {
 
 export function setCameraType(cameraType: string, cameraUp: Vector3) {
   if (cameraType === "PerspectiveCamera") {
-    const { x, y, z } = scene.userData.perspectiveCameraPosition;
+    const { x, y, z } = scene.userData.fixedCameraPosition;
     // perspectiveCamera.position.set(x, y, z);
     const tween = cameraTween(camera, new Vector3(x, y, z));
     tween.start();
@@ -290,7 +290,7 @@ export function setCameraType(cameraType: string, cameraUp: Vector3) {
 
   if (cameraType === "OrthographicCamera") {
     if (camera.type === "PerspectiveCamera") {
-      scene.userData.perspectiveCameraPosition = camera.position.clone();
+      scene.userData.fixedCameraPosition = camera.position.clone();
     }
 
     camera = orthographicCamera;

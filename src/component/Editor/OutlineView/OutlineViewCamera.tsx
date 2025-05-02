@@ -51,7 +51,7 @@ export function OutlineViewCamera({
               e.preventDefault();
               e.stopPropagation();
               const _scene = getScene();
-              _scene.userData.fiexedCameraPosition =
+              _scene.userData.fixedCameraPosition =
                 getPerspectiveCamera().position.clone();
               Toast3d("初始位置已设置");
             }}
@@ -68,8 +68,8 @@ export function OutlineViewCamera({
               e.stopPropagation();
               const _scene = getScene();
               const camera = getPerspectiveCamera();
-              const { fiexedCameraPosition } = _scene.userData;
-              cameraTween(camera, fiexedCameraPosition, 500).start();
+              const { fixedCameraPosition } = _scene.userData;
+              cameraTween(camera, fixedCameraPosition, 500).start();
             }}
           >
             初始
