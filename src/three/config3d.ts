@@ -22,7 +22,6 @@ export const config3d = {
 export const userData = {
   isSelected: false,
   fixedCameraPosition: new Vector3(-5, 5, 8),
-
   config3d,
   backgroundHDR: {
     name: "venice_sunset_1k.hdr",
@@ -36,8 +35,8 @@ export const userData = {
     iconFill: "",
     sceneCanSave: false,
   },
-  bindCameraPerspective: [],
-  bindSceneById: [],
+  // bindCameraPerspective: [],
+  // bindSceneById: [],
 };
 export const parameters = {
   clock: new Clock(),

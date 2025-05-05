@@ -38,7 +38,7 @@ import Trigger3d from "../common/Trigger3d";
 import { getActionList } from "../../viewer3d/viewer3dUtils";
 import { Scene } from "three";
 import { GLOBAL_CONSTANT } from "../../three/GLOBAL_CONSTANT";
-import { useNavigate } from "@tanstack/react-router";
+import { useLocation, useNavigate } from "@tanstack/react-router";
 
 interface Props {
   list: RecordItem[];
@@ -51,7 +51,7 @@ function RecordItemCard(props: Props) {
   const { scene, updateScene } = useUpdateScene();
   const { themeColor } = getThemeByScene(scene);
   const navigate = useNavigate();
-
+  const location = useLocation();
   const { dispatchTourWindow } = useContext(MyContext);
 
   //错误提示
@@ -312,9 +312,15 @@ function RecordItemCard(props: Props) {
             >
               <div
                 onClick={() => {
+                  let pathname = location.pathname;
+                  // if (pathname.includes("editor3d")) {
+                  //   pathname = pathname + "/";
+                  // }
+
                   if (item.des === "Scene") {
+                    const url = `${pathname}?sceneId=${item.id}`;
                     navigate({
-                      to: "/editor3d/?sceneId=" + item.id,
+                      to: url,
                     }); // loadScene(item);
                     return;
                   }
