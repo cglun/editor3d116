@@ -22,7 +22,7 @@ interface ResponseData {
   };
 }
 
-// 更新路由定义，添加 sceneID 参数
+// 更新路由定义，添加 sceneID参数
 export const Route = createLazyFileRoute("/editor3d/model")({
   component: ModelList,
 });
