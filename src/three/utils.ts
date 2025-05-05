@@ -236,16 +236,16 @@ export function getModelGroup(model: GlbModel, gltf: GLTF, context: Scene) {
   }
 
   if (scene.children.length === 1) {
-    const gltfmModel = scene.children[0];
-    gltfmModel.position.set(position.x, position.y, position.z);
-    gltfmModel.setRotationFromEuler(rotation);
-    gltfmModel.scale.set(scale.x, scale.y, scale.z);
+    const gltfModel = scene.children[0];
+    gltfModel.position.set(position.x, position.y, position.z);
+    gltfModel.setRotationFromEuler(rotation);
+    gltfModel.scale.set(scale.x, scale.y, scale.z);
 
-    gltfmModel.userData = {
+    gltfModel.userData = {
       ...model.userData,
       type: UserDataType.GlbModel,
     };
-    MODEL_GROUP.add(gltfmModel);
+    MODEL_GROUP.add(gltfModel);
     return MODEL_GROUP;
   }
   const group = new Group();

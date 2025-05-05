@@ -84,13 +84,14 @@ function RouteComponent() {
       </Row>
       <Row className="mt-2">
         <Col xl={8}>
-          <InputGroup className="mb-3">
+          <InputGroup>
             <div className="d-flex ">
               <i
                 className={setClassName(logo)}
                 style={{ fontSize: "1.4rem" }}
               ></i>
               <Form.Select
+                size="sm"
                 aria-label="logo"
                 onChange={(e) => {
                   setLogo(e.target.value);
@@ -104,12 +105,13 @@ function RouteComponent() {
               </Form.Select>
             </div>
             <Form.Control
+              size="sm"
               placeholder="名称"
               onChange={(e) => {
                 setMarkName(e.target.value);
               }}
             />
-            <ButtonGroup>
+            <ButtonGroup size="sm">
               <Button
                 variant={getButtonColor(themeColor)}
                 disabled={!config3d.css2d}

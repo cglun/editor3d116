@@ -32,12 +32,7 @@ const header = {
   if (header.Authorization !== "TOKEN") {
     return;
   }
-  if (import.meta.env.MODE === "development") {
-    localStorage.setItem(
-      "TOKEN",
-      "73dd13c066eca2273e4622959ecfcc0bef55c9e0ff1d76f203c6680c0a57189de08b8c52d56e5b988e13b7c34da1faf161668949e052c14fab158489cad268c374fb4d43a649d461119eb44973f57a6c61da716ed2ff6f9fbef518e33a290c4bf72b3c50b1b5d8fd3241ee8f3f42dd47a74a3dc4488f407a03e1340a74b10f6753fb110f18b0a983748756e0295641fd6143f6a4dc9414e7dc1bfa75efce25322de43db3111f1dbd089d70e1c65b5a770c92aeb45e86221860f646087a946fd4313a04267be9e7cffef71a27a3ba3b7b9de61b7dcff8befbb34d6d89436b8ab9f75b8646d69e6c1c584acbd62e4033ad449f1ee26b4f0eb6dc2db45f0d9b11b0"
-    );
-  }
+
   interface StoreConfig {
     type: "localStorage" | "sessionStorage";
     expire: number;
@@ -52,9 +47,17 @@ const header = {
   if (!__localStorage || JSON.stringify(__localStorage) === "null") {
     return null;
   }
-  const storage = config.isEncrypt
-    ? JSON.parse(decrypt(__localStorage!))
-    : JSON.parse(__localStorage!);
+
+  let decryptToken = "";
+  try {
+    decryptToken = JSON.parse(decrypt(__localStorage!));
+  } catch (error) {
+    alert("TOKEN错误或者过期。");
+    localStorage.removeItem(key);
+    location.reload();
+  }
+
+  const storage = config.isEncrypt ? decryptToken : JSON.parse(__localStorage!);
   header.Authorization = storage.value;
 })();
 

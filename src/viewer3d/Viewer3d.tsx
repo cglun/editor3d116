@@ -73,6 +73,7 @@ export default function Viewer3d({
       getActionList,
       getAll,
     };
+
     getProjectData(item.id)
       .then((data: string) => {
         setProgress(0);
