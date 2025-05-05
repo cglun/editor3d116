@@ -61,7 +61,6 @@ function ModelList() {
   function updateList(_time: number): void {
     setUpdateTime(_time);
   }
-
   // 创建一个适配函数，解决 setFilterList 类型不匹配问题
   const handleFilterList = (newList: RecordItem[]) => {
     const mappedList = newList.map((item) => {
