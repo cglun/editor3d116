@@ -15,21 +15,14 @@ import { setTextureBackground } from "../../../three/common3d";
 import { userData } from "../../../three/config3d";
 import { APP_COLOR, SelectedObject } from "../../../app/type";
 import { InputAttrNumber } from "./InputAttrNumber";
-import ScriptEditor from "../../common/ScriptEditor";
-import { generateButtonGroup } from "../../../viewer3d/viewer3dUtils";
 import Toast3d from "../../common/Toast3d";
 
 const step = 0.1;
 function SceneProperty() {
   const { scene, updateScene } = useUpdateScene();
+
   const { themeColor } = getThemeByScene(scene);
-  const { customButtonList } = scene.payload.userData;
-  // 检查 customButtonList 是否存在，若不存在则使用空数组
-  const safeCustomButtonList = customButtonList || [];
-  const [code, setCode] = useState<string>(
-    JSON.stringify(safeCustomButtonList)
-  );
-  const [error, setError] = useState("自定义按钮，类型：数组");
+
   const _scene = getScene();
   let bgColor = "#000116";
   const background = _scene.background as Color | Texture;
@@ -127,7 +120,7 @@ function SceneProperty() {
   }
   return (
     <Container fluid>
-      <AlertBase type={themeColor} text={"背景色和背景图，只选其一"} />
+      <AlertBase type={themeColor} text={"背景色和背景图，只选其一"} />{" "}
       <ButtonGroup className="mb-2" size="sm">
         <Button
           variant={getButtonColor(themeColor)}
@@ -160,20 +153,6 @@ function SceneProperty() {
         >
           重置雾气
         </Button>
-
-        <Button
-          variant={getButtonColor(themeColor)}
-          onClick={() => {
-            const c = JSON.parse(code);
-            const res = generateButtonGroup(c);
-
-            setCode(JSON.stringify(res, null, 1));
-
-            Toast3d("已生成按钮组");
-          }}
-        >
-          生成按钮
-        </Button>
       </ButtonGroup>
       {enableColor ? setBgColorColor() : setBgColorTexture()}
       <InputGroup size="sm">
@@ -194,7 +173,6 @@ function SceneProperty() {
           }}
         />
       </InputGroup>
-
       <InputAttrNumber
         title={"雾气近端"}
         min={0}
@@ -202,7 +180,6 @@ function SceneProperty() {
         attr={"near"}
         step={step}
       />
-
       <InputAttrNumber
         title={"雾气远端"}
         min={0}
@@ -210,38 +187,10 @@ function SceneProperty() {
         attr={"far"}
         step={step}
       />
-
       <AlertBase
         className="mb-1 mt-1"
         type={APP_COLOR.Warning}
         text={"自定义按钮，类型：数组"}
-      />
-      <span>{error}</span>
-      <ScriptEditor
-        code={code}
-        setCode={setCode}
-        callback={function (): void {
-          //如果code为空，return
-          if (code.trim().length === 0) {
-            setCode("[]");
-            getScene().userData.customButtonList = [];
-            setError("格式正确");
-            return;
-          }
-          try {
-            const parsedData = JSON.parse(code);
-            if (Array.isArray(parsedData)) {
-              getScene().userData.customButtonList = parsedData;
-              setError("格式正确");
-            } else {
-              setError("格式错误 ");
-            }
-          } catch (error) {
-            console.error("解析JSON时发生错误:", error);
-            setError("格式错误 ");
-            // 处理解析错误的逻辑
-          }
-        }}
       />
     </Container>
   );

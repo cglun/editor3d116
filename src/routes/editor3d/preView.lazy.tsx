@@ -1,13 +1,20 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import Viewer3d from "../../viewer3d/Viewer3d";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { setEnableScreenshot } from "../../three/config3d";
 import _axios from "../../app/http";
 
-import { Button, ButtonGroup } from "react-bootstrap";
+import {
+  Button,
+  ButtonGroup,
+  Container,
+  ListGroup,
+  ListGroupItem,
+  Modal,
+} from "react-bootstrap";
 import { useUpdateScene } from "../../app/hooks";
 import { getButtonColor, getThemeByScene } from "../../app/utils";
-import { ActionItem, Context116, RecordItem } from "../../app/type";
+import { ActionItem, APP_COLOR, Context116, RecordItem } from "../../app/type";
 
 // 定义响应数据的类型
 interface PageListResponse {
@@ -32,7 +39,7 @@ function RouteComponent() {
   const [actionList, setActionList] = useState<ActionItem[]>([]);
   const { scene } = useUpdateScene();
   const { themeColor } = getThemeByScene(scene);
-  const btnColor = getButtonColor(themeColor);
+  const buttonColor = getButtonColor(themeColor);
   const [_item, _setItem] = useState<RecordItem>();
 
   useEffect(() => {
@@ -46,16 +53,29 @@ function RouteComponent() {
           if (message) {
             return;
           }
-          const records = res.data.data.records;
+          const records: RecordItem[] = res.data.data.records;
           const sceneList = records.filter((item) => {
             if (item.des === "Scene") {
+              item.id = parseInt(item.id.toString());
               return item;
             }
           });
           setList(sceneList);
+          //获取url的参数 值
+          const urlParams = new URLSearchParams(window.location.search);
+          const sceneId = urlParams.get("sceneId");
+          if (sceneId) {
+            _setItem({
+              id: parseInt(sceneId),
+              name: "场景预览",
+              des: "Scene",
+              cover: "",
+            });
+            return;
+          }
           _setItem(sceneList[0]);
-          const element = document.getElementById("pre-view-top");
-          element?.scrollIntoView();
+          // const element = document.getElementById("pre-view-top");
+          // element?.scrollIntoView();
         }
       });
   }, []);
@@ -64,14 +84,103 @@ function RouteComponent() {
     const actionList = instance.getActionList();
 
     setActionList(actionList);
-  }
+    console.log("加载完成----------------", instance.getScene());
+  } //@ts-expect-error
   function callBackError(error: unknown) {
-    console.log("加载失败----------------", error);
+    // console.log("加载失败----------------", error);
   }
   //@ts-expect-error
   function getProgress(progress: number) {
-    console.log("加载进度----------------", progress);
+    // console.log("加载进度----------------", progress);
   }
+
+  const [show, setShow] = useState(false);
+  function handleClose() {
+    setShow(false);
+  }
+  useEffect(() => {
+    setShow(true);
+  }, []);
+  const modalBody = useRef<HTMLDivElement>(null);
+  const beishu = 1080 / 1920;
+  const w = 1100;
+  const h = w * beishu;
+
+  return (
+    <ListGroup>
+      <ListGroupItem>
+        <ButtonGroup size="sm">
+          <Button
+            variant={buttonColor}
+            onClick={() => {
+              setShow(true);
+            }}
+          >
+            预览场景
+          </Button>
+        </ButtonGroup>
+        <Modal size="xl" show={show} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>场景预览</Modal.Title>
+          </Modal.Header>
+          <Container>
+            <ButtonGroup size="sm" className="mt-2">
+              {list.map((item: RecordItem) => {
+                return (
+                  <Button
+                    variant={buttonColor}
+                    key={item.id}
+                    // Bug 修复：添加 _item 判空检查
+                    disabled={_item && item.id === _item.id}
+                    onClick={() => {
+                      setActionList([]);
+                      _setItem(item);
+                    }}
+                  >
+                    id_{item.id}_{item.name}
+                  </Button>
+                );
+              })}
+            </ButtonGroup>
+          </Container>
+          <Modal.Body ref={modalBody}>
+            {_item && (
+              <Viewer3d
+                canvasStyle={{
+                  width: w + "px",
+                  height: h + "px",
+                }}
+                item={_item}
+                callBack={callBack}
+                callBackError={callBackError}
+              />
+            )}
+          </Modal.Body>
+          <Modal.Footer>
+            <ButtonGroup size="sm" className="ms-2">
+              {actionList &&
+                actionList.map((item: ActionItem, index: number) => {
+                  return (
+                    <Button
+                      variant={buttonColor}
+                      key={index}
+                      onClick={() => {
+                        item.handler();
+                      }}
+                    >
+                      {item.name}
+                    </Button>
+                  );
+                })}{" "}
+              <Button variant={APP_COLOR.Danger} onClick={handleClose}>
+                关闭
+              </Button>
+            </ButtonGroup>
+          </Modal.Footer>
+        </Modal>
+      </ListGroupItem>
+    </ListGroup>
+  );
 
   return (
     <div
@@ -93,7 +202,7 @@ function RouteComponent() {
           (item: { id: number; name: string; des: string; cover: string }) => {
             return (
               <Button
-                variant={btnColor}
+                variant={buttonColor}
                 key={item.id}
                 // Bug 修复：添加 _item 判空检查
                 disabled={_item && item.id === _item.id}
@@ -113,7 +222,7 @@ function RouteComponent() {
           actionList.map((item: ActionItem, index: number) => {
             return (
               <Button
-                variant={btnColor}
+                variant={buttonColor}
                 key={index}
                 onClick={() => {
                   item.handler();

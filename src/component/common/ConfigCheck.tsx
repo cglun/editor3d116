@@ -16,6 +16,9 @@ export function ConfigCheck({
   callBack?: () => void;
 }) {
   const { scene, updateScene } = useUpdateScene();
+  if (scene.payload.userData.config3d === undefined) {
+    return;
+  }
   const _configKey = configKey as keyof typeof config3d;
   let checked = scene.payload.userData.config3d[_configKey];
 

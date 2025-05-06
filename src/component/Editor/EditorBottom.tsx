@@ -6,7 +6,6 @@ export default function EditorBottom() {
   const location = useLocation();
   const BASE_URL = import.meta.env.BASE_URL;
   function handleSelect(eventKey: string | null) {
-    console.log("handleSelect", eventKey);
     if (eventKey !== null) {
       navigate({
         to: eventKey + location.searchStr,
@@ -19,60 +18,60 @@ export default function EditorBottom() {
     defaultActiveKey = location.pathname;
     // navigate({ to: location.href });
   }
-  const xx = [
+  const tabsList = [
     {
       title: "首页",
-      url: "",
+      path: "",
       icon: "house-door",
     },
     {
       title: "模型",
-      url: "model",
+      path: "model",
       icon: "box",
     },
     {
       title: "几何体",
-      url: "mesh",
+      path: "mesh",
       icon: "patch-plus",
     },
     {
       title: "标注",
-      url: "mark",
+      path: "mark",
       icon: "pin-map",
     },
     {
       title: "脚本",
-      url: "script",
+      path: "script",
       icon: "bi bi-filetype-js",
     },
     {
       title: "特效",
-      url: "effects",
+      path: "effects",
       icon: "bi bi-stars",
     },
     {
       title: "配置",
-      url: "config",
+      path: "config",
       icon: "gear",
     },
     {
       title: "文档",
-      url: "document",
+      path: "document",
       icon: "file-code",
     },
     {
       title: "预览",
-      url: "preView",
+      path: "preView",
       icon: "eye",
     },
     {
       title: "测试",
-      url: "test",
+      path: "test",
       icon: "triangle",
     },
     {
       title: "关于",
-      url: "about",
+      path: "about",
       icon: "info-circle",
     },
   ];
@@ -84,14 +83,14 @@ export default function EditorBottom() {
         defaultActiveKey={defaultActiveKey}
         onSelect={(eventKey) => handleSelect(eventKey)}
       >
-        {xx.map((item, index) => {
-          const { title, url, icon } = item;
+        {tabsList.map((item, index) => {
+          const { title, path, icon } = item;
           return (
             <Nav.Item key={index}>
-              <Nav.Link eventKey={BASE_URL + url}>
+              <Nav.Link eventKey={BASE_URL + path}>
                 <i
                   className={icon.includes("bi-") ? icon : setClassName(icon)}
-                ></i>{" "}
+                ></i>
                 {title}
               </Nav.Link>
             </Nav.Item>

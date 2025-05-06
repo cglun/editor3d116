@@ -94,6 +94,12 @@ export interface ActionItem {
   bindSceneById?: number;
   bindCameraView?: Vector3;
 }
+export interface ActionItemMap {
+  name: string;
+  data: {
+    cameraView: Vector3 | undefined;
+  };
+}
 
 // 定义 item 的类型
 export type TourItem = {

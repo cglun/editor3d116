@@ -1,5 +1,5 @@
-import { Object3D, Object3DEventMap } from "three";
-import { ActionItem } from "../app/type";
+import { Object3D, Object3DEventMap, Scene } from "three";
+import { ActionItem, ActionItemMap } from "../app/type";
 
 import { createGroupIfNotExist } from "../three/utils";
 import { GLOBAL_CONSTANT } from "../three/GLOBAL_CONSTANT";
@@ -90,21 +90,19 @@ export function getActionList(): ActionItem[] {
 
 // 修改返回类型为 ActionItem[]
 export function generateButtonGroup(
-  originalCodeArr: ActionItem[]
-): ActionItem[] {
-  const actionList: ActionItem[] = [];
+  originalCodeArr: ActionItemMap[],
+  sceneContext: Scene
+): ActionItemMap[] {
+  const actionList: ActionItemMap[] = [];
 
   const MODEL_GROUP = createGroupIfNotExist(
-    getScene(),
+    sceneContext,
     GLOBAL_CONSTANT.MODEL_GROUP,
     false
   );
   if (MODEL_GROUP) {
-    // _rootGroupName = MODEL_GROUP.children[0].name;
     const { children } = MODEL_GROUP;
-    const envMesh = children.find((item) =>
-      item.name.toUpperCase().includes("_ENV")
-    );
+
     //二层
     children.forEach((item) => {
       const level2 = item.children;
@@ -113,8 +111,8 @@ export function generateButtonGroup(
           const { name } = item;
           actionList.push({
             name,
-            handler: () => {
-              showModelByName(item.name);
+            data: {
+              cameraView: undefined,
             },
           });
         }
@@ -129,20 +127,25 @@ export function generateButtonGroup(
           const { name } = item;
           actionList.push({
             name,
-            handler: () => {
-              showModelByName(name);
-              if (envMesh) {
-                envMesh.visible = true;
-              }
+            data: {
+              cameraView: undefined,
             },
           });
         });
       });
     });
   }
+
+  const _code = [...actionList, ...originalCodeArr];
+
+  //  _code去除重复项
+  const uniqueActionList = Array.from(
+    new Map(_code.map((item) => [item.name, item])).values()
+  );
+  return uniqueActionList;
   // 把actionList和originalCode两个数组拼接成一个新的数组
   // 修改：将 originalCode 替换为 originalCodeArr
-  const _code = [...actionList, ...originalCodeArr];
+
   // navigator.clipboard
   //   .writeText(_code)
   //   .then(() => {
@@ -154,5 +157,4 @@ export function generateButtonGroup(
   //     Toast3d("复制失败", "失败", APP_COLOR.Danger);
   //   });
   // 原选中代码，无需修改
-  return _code;
 }
