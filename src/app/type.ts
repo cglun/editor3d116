@@ -91,11 +91,10 @@ export interface ProjectListResponse {
 export interface ActionItem {
   name: string;
   handler: () => void;
-  bindSceneById?: number;
-  bindCameraView?: Vector3;
 }
 export interface ActionItemMap {
   name: string;
+  handler: () => void;
   data: {
     cameraView: Vector3 | undefined;
   };
@@ -120,4 +119,5 @@ export interface Context116 {
   getCamera: () => PerspectiveCamera | OrthographicCamera; // 返回 PerspectiveCamera 类型
   getActionList: () => ActionItem[]; // 返回 ActionItem[] 类型
   getAll: () => object; // 返回 object 类型
+  getActionListByButtonMap: () => ActionItemMap[]; // 返回 ActionItemMap[] 类型
 }

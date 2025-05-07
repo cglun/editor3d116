@@ -14,7 +14,13 @@ import {
 } from "react-bootstrap";
 import { useUpdateScene } from "../../app/hooks";
 import { getButtonColor, getThemeByScene } from "../../app/utils";
-import { ActionItem, APP_COLOR, Context116, RecordItem } from "../../app/type";
+import {
+  ActionItem,
+  ActionItemMap,
+  APP_COLOR,
+  Context116,
+  RecordItem,
+} from "../../app/type";
 
 // 定义响应数据的类型
 interface PageListResponse {
@@ -36,6 +42,7 @@ export const Route = createLazyFileRoute("/editor3d/preView")({
 
 function RouteComponent() {
   const [list, setList] = useState<RecordItem[]>([]);
+  const [listAction, setListAction] = useState<ActionItemMap[]>();
   const [actionList, setActionList] = useState<ActionItem[]>([]);
   const { scene } = useUpdateScene();
   const { themeColor } = getThemeByScene(scene);
@@ -60,6 +67,7 @@ function RouteComponent() {
               return item;
             }
           });
+
           setList(sceneList);
           //获取url的参数 值
           const urlParams = new URLSearchParams(window.location.search);
@@ -84,7 +92,8 @@ function RouteComponent() {
     const actionList = instance.getActionList();
 
     setActionList(actionList);
-    console.log("加载完成----------------", instance.getScene());
+    const xx = instance.getActionListByButtonMap();
+    setListAction(xx);
   } //@ts-expect-error
   function callBackError(error: unknown) {
     // console.log("加载失败----------------", error);
@@ -158,20 +167,19 @@ function RouteComponent() {
           </Modal.Body>
           <Modal.Footer>
             <ButtonGroup size="sm" className="ms-2">
-              {actionList &&
-                actionList.map((item: ActionItem, index: number) => {
-                  return (
-                    <Button
-                      variant={buttonColor}
-                      key={index}
-                      onClick={() => {
-                        item.handler();
-                      }}
-                    >
-                      {item.name}
-                    </Button>
-                  );
-                })}{" "}
+              {listAction?.map((item: ActionItem, index: number) => {
+                return (
+                  <Button
+                    variant={buttonColor}
+                    key={index}
+                    onClick={() => {
+                      item.handler();
+                    }}
+                  >
+                    {item.name}
+                  </Button>
+                );
+              })}
               <Button variant={APP_COLOR.Danger} onClick={handleClose}>
                 关闭
               </Button>

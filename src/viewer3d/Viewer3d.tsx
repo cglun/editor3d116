@@ -31,7 +31,7 @@ import {
   setLabel,
 } from "../three/utils";
 import { raycasterSelect } from "../three/common3d";
-import { getActionList } from "./viewer3dUtils";
+import { getActionList, getActionListByButtonMap } from "./viewer3dUtils";
 
 /**
  * 其他应用可以调用此组件，
@@ -72,6 +72,7 @@ export default function Viewer3d({
       getControls,
       getActionList,
       getAll,
+      getActionListByButtonMap,
     };
 
     getProjectData(item.id)

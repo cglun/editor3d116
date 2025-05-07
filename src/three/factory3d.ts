@@ -2,6 +2,7 @@ import {
   DirectionalLight,
   DirectionalLightHelper,
   GridHelper,
+  PCFSoftShadowMap,
   PerspectiveCamera,
   Scene,
   Vector2,
@@ -25,6 +26,7 @@ import { setClassName } from "../app/utils";
 import { setTextureBackground } from "./common3d";
 import { TourWindow } from "../app/MyContext";
 import { GLOBAL_CONSTANT } from "./GLOBAL_CONSTANT";
+import { getScene } from "./init3dEditor";
 
 export function createPerspectiveCamera(
   node: HTMLElement,
@@ -58,6 +60,7 @@ export function createDirectionalLight(name = "平行光") {
   light.shadow.camera.top = 10;
   light.shadow.camera.bottom = -10;
   light.position.set(3, 3, 3);
+  light.shadow.bias = -0.0001;
 
   light.lookAt(0, 0, 0);
   return light;
@@ -80,6 +83,12 @@ export function createGridHelper(name = "网格辅助", wh = new Vector2(10, 10)
 export function createRenderer(node: HTMLElement) {
   const renderer = new WebGLRenderer();
   renderer.shadowMap.enabled = true;
+
+  // 使用 PCFSoftShadowMap 类型让阴影更柔和
+  renderer.shadowMap.type = PCFSoftShadowMap;
+  // 增大阴影贴图尺寸以提高阴影质量
+  renderer.shadowMap.autoUpdate = true;
+  renderer.shadowMap.needsUpdate = true;
 
   renderer.setSize(node.offsetWidth, node.offsetHeight);
   return renderer;

@@ -16,7 +16,7 @@ import initScene, {
 import { Button, ButtonGroup, Container, ProgressBar } from "react-bootstrap";
 
 import { TransformControlsMode } from "three/addons/controls/TransformControls.js";
-import { Object3D, Vector3 } from "three";
+import { DirectionalLightHelper, Object3D, Vector3 } from "three";
 import { getThemeByScene, setClassName } from "../../app/utils";
 import {
   createGroupIfNotExist,
@@ -32,12 +32,16 @@ import { useUpdateScene } from "../../app/hooks";
 import ModalTour from "../common/ModalTour";
 import {
   createDirectionalLight,
+  createDirectionalLightHelper,
   createGridHelper,
 } from "../../three/factory3d";
 
 import { MyContext } from "../../app/MyContext";
 import { APP_COLOR, Context116, GlbModel, RecordItem } from "../../app/type";
-import { getActionList } from "../../viewer3d/viewer3dUtils";
+import {
+  getActionList,
+  getActionListByButtonMap,
+} from "../../viewer3d/viewer3dUtils";
 import ModalConfirm3d from "../common/ModalConfirm3d";
 import Toast3d from "../common/Toast3d";
 import { GLOBAL_CONSTANT } from "../../three/GLOBAL_CONSTANT";
@@ -135,6 +139,7 @@ function EditorViewer3d() {
     getControls,
     getActionList,
     getAll,
+    getActionListByButtonMap,
   };
   function loadScene(item: RecordItem) {
     ModalConfirm3d({

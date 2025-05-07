@@ -21,7 +21,6 @@ const CodeEditor = (props: CodeEditorProps) => {
   const {
     language,
     show,
-
     setShow,
     children,
     code,
@@ -73,7 +72,7 @@ const CodeEditor = (props: CodeEditorProps) => {
       setValue(value);
     }
   }
-  debugger;
+
   return (
     <Modal size="lg" show={show} onHide={handleClose}>
       <Modal.Header closeButton>
