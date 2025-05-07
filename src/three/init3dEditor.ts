@@ -40,7 +40,7 @@ let scene: Scene,
   transfControls1: TransformControls,
   transfControls2: TransformControls,
   extra3d = extra;
-const parameters3d = parameters;
+const parameters3d = { ...parameters };
 
 export function getAll() {
   return {
@@ -50,6 +50,7 @@ export function getAll() {
     renderer,
     divElement,
     extra3d,
+    parameters3d,
   };
 }
 
@@ -107,6 +108,8 @@ export default function initScene(node: HTMLDivElement): void {
     scene,
     node
   );
+  console.log("labelRenderer2d, labelRenderer3d");
+
   extra3d = {
     ...extra3d,
     labelRenderer2d,

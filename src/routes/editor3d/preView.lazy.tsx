@@ -21,6 +21,7 @@ import {
   Context116,
   RecordItem,
 } from "../../app/type";
+import { getAll } from "../../three/init3dViewer";
 
 // 定义响应数据的类型
 interface PageListResponse {
@@ -183,6 +184,14 @@ function RouteComponent() {
               <Button variant={APP_COLOR.Danger} onClick={handleClose}>
                 关闭
               </Button>
+              <Button
+                variant={APP_COLOR.Primary}
+                onClick={() => {
+                  console.log(getAll().parameters3d.actionMixerList);
+                }}
+              >
+                漫游
+              </Button>
             </ButtonGroup>
           </Modal.Footer>
         </Modal>
@@ -249,6 +258,7 @@ function RouteComponent() {
       >
         {_item && (
           <Viewer3d
+            // @ts-ignore
             item={_item}
             callBack={callBack}
             callBackError={callBackError}

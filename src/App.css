@@ -64,11 +64,7 @@ h5 {
 .da-gang .list-group-item {
   cursor: pointer;
 }
-
-svg {
-  width: 1rem;
-}
-
+ 
 btn-group-sm > .btn,
 .btn-sm {
   --bs-btn-padding-y: 0;

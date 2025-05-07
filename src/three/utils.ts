@@ -1,11 +1,13 @@
 import React from "react";
 import {
+  AnimationClip,
   AnimationMixer,
   Group,
   Object3D,
   ObjectLoader,
   PerspectiveCamera,
   Scene,
+  VectorKeyframeTrack,
   WebGLRenderer,
 } from "three";
 import { Context116, GlbModel, RecordItem, UserDataType } from "../app/type";
@@ -18,12 +20,13 @@ import { enableShadow, setTextureBackground } from "./common3d";
 import { TourWindow } from "../app/MyContext";
 import {
   enableScreenshot,
-  extra3d,
+  Parameters3d,
   setEnableScreenshot,
   userData,
 } from "./config3d";
 import { runScript } from "./scriptDev";
 import { GLOBAL_CONSTANT } from "./GLOBAL_CONSTANT";
+import { getCamera } from "./init3dEditor";
 
 export function getObjectNameByName(object3D: Object3D): string {
   return object3D.name.trim() === "" ? object3D.type : object3D.name;
@@ -63,7 +66,7 @@ export function setLabel(
   scene: Scene,
   dispatchTourWindow?: React.Dispatch<TourWindow>
 ) {
-  cleaerOldLabel();
+  clearOldLabel();
 
   const MARK_LABEL_GROUP = createGroupIfNotExist(
     scene,
@@ -101,7 +104,7 @@ export function setLabel(
   MARK_LABEL_GROUP.children = labelList;
 }
 //删除之前的标签
-export function cleaerOldLabel() {
+export function clearOldLabel() {
   const labelDiv = document.querySelectorAll(".mark-label");
   if (labelDiv.length > 0) {
     labelDiv.forEach((element) => {
@@ -213,8 +216,23 @@ export function removeCanvasChild(canvas3d: React.RefObject<HTMLDivElement>) {
     }
   }
 }
+//创建动画剪辑
+function cameraClip(clip1: AnimationClip): AnimationClip {
+  // 创建关键帧数组
+  const track = new VectorKeyframeTrack(
+    ".position",
+    clip1.tracks[0].times,
+    clip1.tracks[0].values
+  );
+  return new AnimationClip("CameraAnimation", -1, [track]);
+}
 
-export function getModelGroup(model: GlbModel, gltf: GLTF, context: Scene) {
+function getModelGroup(
+  model: GlbModel,
+  gltf: GLTF,
+  context: Scene,
+  parameters3d: Parameters3d
+) {
   const { position, rotation, scale } = model;
   let MODEL_GROUP = createGroupIfNotExist(context, GLOBAL_CONSTANT.MODEL_GROUP);
   if (!MODEL_GROUP) {
@@ -227,10 +245,25 @@ export function getModelGroup(model: GlbModel, gltf: GLTF, context: Scene) {
   const { config3d } = context.userData as typeof userData;
   if (config3d.useKeyframe) {
     const mixer = new AnimationMixer(scene);
-    extra3d.mixer.push(mixer);
+    const cameraMixer = new AnimationMixer(getCamera()); // 将相机作为动画目标
+
+    parameters3d.mixer.push(mixer);
+    parameters3d.mixer.push(cameraMixer);
+
     if (gltf.animations.length > 0) {
       for (let i = 0; i < gltf.animations.length; i++) {
-        mixer.clipAction(gltf.animations[i]).play();
+        const clip = gltf.animations[i];
+        console.log(clip.name);
+
+        if (clip.name.trim().includes("CAMERA")) {
+          const cameraAnimationAction = cameraMixer.clipAction(
+            cameraClip(clip)
+          );
+          parameters3d.actionMixerList.push(cameraAnimationAction);
+        } else {
+          const action = mixer.clipAction(clip);
+          parameters3d.actionMixerList.push(action);
+        }
       }
     }
   }
@@ -289,6 +322,7 @@ export function createGroupIfNotExist(
 export function loadModelByUrl(
   model: GlbModel,
   scene: Scene,
+  parameters3d: Parameters3d,
   getProgress: (progress: number) => void,
   getError: (error: unknown) => void
 ) {
@@ -297,7 +331,7 @@ export function loadModelByUrl(
   loader.load(
     model.userData.modelUrl + "?url",
     function (gltf) {
-      const group = getModelGroup(model, gltf, scene);
+      const group = getModelGroup(model, gltf, scene, parameters3d);
       enableShadow(group, scene);
       scene.add(group);
 

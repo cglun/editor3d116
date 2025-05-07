@@ -29,6 +29,7 @@ function ModalConfirm({
   update: number;
 }) {
   const scene = getScene();
+
   const { themeColor } = scene.userData.APP_THEME;
   const buttonColor = getButtonColor(themeColor);
   const [show, setShow] = useState(confirmButton.show);

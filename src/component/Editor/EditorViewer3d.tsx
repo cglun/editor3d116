@@ -16,7 +16,7 @@ import initScene, {
 import { Button, ButtonGroup, Container, ProgressBar } from "react-bootstrap";
 
 import { TransformControlsMode } from "three/addons/controls/TransformControls.js";
-import { DirectionalLightHelper, Object3D, Vector3 } from "three";
+import { Object3D, Vector3 } from "three";
 import { getThemeByScene, setClassName } from "../../app/utils";
 import {
   createGroupIfNotExist,
@@ -32,7 +32,6 @@ import { useUpdateScene } from "../../app/hooks";
 import ModalTour from "../common/ModalTour";
 import {
   createDirectionalLight,
-  createDirectionalLightHelper,
   createGridHelper,
 } from "../../three/factory3d";
 
@@ -142,14 +141,9 @@ function EditorViewer3d() {
     getActionListByButtonMap,
   };
   function loadScene(item: RecordItem) {
-    ModalConfirm3d({
-      title: "提示",
-      body: "加载开始",
-      confirmButton: {
-        show: true,
-      },
-    });
-
+    const { parameters3d } = getAll();
+    parameters3d.actionMixerList = [];
+    parameters3d.mixer = [];
     getProjectData(item.id)
       .then((data) => {
         const { scene, camera, modelList } = sceneDeserialize(data, item);
@@ -183,6 +177,7 @@ function EditorViewer3d() {
           loadModelByUrl(
             model,
             scene,
+            parameters3d,
             (_progress: number) => {
               ModalConfirm3d({
                 title: "提示",

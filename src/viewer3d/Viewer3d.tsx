@@ -66,6 +66,9 @@ export default function Viewer3d({
 
   let modelNum = 0;
   function loadScene(item: RecordItem) {
+    const { parameters3d } = getAll();
+    parameters3d.actionMixerList = [];
+    parameters3d.mixer = [];
     const context: Context116 = {
       getScene,
       getCamera,
@@ -100,6 +103,7 @@ export default function Viewer3d({
           loadModelByUrl(
             model,
             scene,
+            parameters3d,
             (_progress: number) => {
               setProgress(_progress);
               if (getProgress) {
@@ -142,9 +146,11 @@ export default function Viewer3d({
   function loadMesh(item: RecordItem) {
     getProjectData(item.id)
       .then((res: string) => {
+        const { parameters3d } = getAll();
         loadModelByUrl(
           JSON.parse(res),
           getScene(),
+          parameters3d,
           (_progress: number) => {
             setProgress(_progress);
           },

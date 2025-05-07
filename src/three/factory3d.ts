@@ -19,14 +19,13 @@ import {
 } from "three/addons/renderers/CSS3DRenderer.js";
 
 import { UserDataType } from "../app/type";
-import { cleaerOldLabel, createGroupIfNotExist, getTourSrc } from "./utils";
+import { clearOldLabel, createGroupIfNotExist, getTourSrc } from "./utils";
 import { userData } from "./config3d";
 import { setClassName } from "../app/utils";
 
 import { setTextureBackground } from "./common3d";
 import { TourWindow } from "../app/MyContext";
 import { GLOBAL_CONSTANT } from "./GLOBAL_CONSTANT";
-import { getScene } from "./init3dEditor";
 
 export function createPerspectiveCamera(
   node: HTMLElement,
@@ -119,7 +118,7 @@ export function createScene() {
   return scene;
 }
 export function createNewScene() {
-  cleaerOldLabel();
+  clearOldLabel();
   const newScene = new Scene();
   //const { themeColor } = userData.APP_THEME;
   // newScene.background =

@@ -12,7 +12,7 @@ import {
 } from "react-bootstrap";
 import { useContext, useEffect, useState } from "react";
 import { getButtonColor, getThemeByScene, setClassName } from "../../app/utils";
-import { cleaerOldLabel, createGroupIfNotExist } from "../../three/utils";
+import { clearOldLabel, createGroupIfNotExist } from "../../three/utils";
 import { getScene } from "../../three/init3dEditor";
 import { CSS2DObject, CSS3DSprite } from "three/examples/jsm/Addons.js";
 import Toast3d from "../../component/common/Toast3d";
@@ -72,14 +72,14 @@ function RouteComponent() {
               <ConfigCheck
                 label="2D标签"
                 configKey="css2d"
-                callBack={cleaerOldLabel}
+                callBack={clearOldLabel}
               />
             </ListGroup.Item>
             <ListGroup.Item>
               <ConfigCheck
                 label="3D标签"
                 configKey="css3d"
-                callBack={cleaerOldLabel}
+                callBack={clearOldLabel}
               />
             </ListGroup.Item>
           </ListGroup>

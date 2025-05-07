@@ -35,7 +35,10 @@ import { useUpdateScene } from "../../app/hooks";
 import { MyContext } from "../../app/MyContext";
 import { createGridHelper, createNewScene } from "../../three/factory3d";
 import Trigger3d from "../common/Trigger3d";
-import { getActionList } from "../../viewer3d/viewer3dUtils";
+import {
+  getActionList,
+  getActionListByButtonMap,
+} from "../../viewer3d/viewer3dUtils";
 import { Scene } from "three";
 import { GLOBAL_CONSTANT } from "../../three/GLOBAL_CONSTANT";
 import { useLocation, useNavigate } from "@tanstack/react-router";
@@ -148,6 +151,7 @@ function RecordItemCard(props: Props) {
     getControls,
     getActionList,
     getAll,
+    getActionListByButtonMap,
   };
   let modelNum = 0,
     _modelLen = 0;

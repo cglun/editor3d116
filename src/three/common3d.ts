@@ -111,7 +111,7 @@ export function commonAnimate({
   const { css2d, css3d, useTween, FPS, useKeyframe } = scene.userData
     .config3d as typeof config3d;
 
-  const { clock } = parameters3d;
+  const { clock, mixer } = parameters3d;
   const T = clock.getDelta();
   parameters3d.timeS = parameters3d.timeS + T;
   let renderT = 1 / FPS;
@@ -134,7 +134,7 @@ export function commonAnimate({
     parameters3d.timeS = 0;
   }
   if (useKeyframe) {
-    extra3d.mixer.forEach((mixer) => {
+    mixer.forEach((mixer) => {
       mixer.update(T);
     });
   }
