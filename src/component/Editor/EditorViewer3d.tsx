@@ -37,10 +37,7 @@ import {
 
 import { MyContext } from "../../app/MyContext";
 import { APP_COLOR, Context116, GlbModel, RecordItem } from "../../app/type";
-import {
-  getActionList,
-  getActionListByButtonMap,
-} from "../../viewer3d/viewer3dUtils";
+
 import ModalConfirm3d from "../common/ModalConfirm3d";
 import Toast3d from "../common/Toast3d";
 import { GLOBAL_CONSTANT } from "../../three/GLOBAL_CONSTANT";
@@ -136,9 +133,7 @@ function EditorViewer3d() {
     getScene,
     getCamera,
     getControls,
-    getActionList,
     getAll,
-    getActionListByButtonMap,
   };
   function loadScene(item: RecordItem) {
     const { parameters3d } = getAll();

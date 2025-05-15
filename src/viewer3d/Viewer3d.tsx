@@ -3,11 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import { Container, ProgressBar } from "react-bootstrap";
 import { APP_COLOR, Context116, GlbModel, RecordItem } from "../app/type";
 import { Object3D } from "three";
-import {
-  finishLoadExecute,
-  loadModelByUrl,
-  removeCanvasChild,
-} from "../three/utils";
 
 import Toast3d from "../component/common/Toast3d";
 import { initEditorScene, initTourWindow, MyContext } from "../app/MyContext";
@@ -23,12 +18,16 @@ import initScene, {
   getDivElement,
   getControls,
   getAll,
+  getUserData,
 } from "../three/init3dViewer";
 import {
   getProjectData,
   onWindowResize,
   sceneDeserialize,
   setLabel,
+  finishLoadExecute,
+  loadModelByUrl,
+  removeCanvasChild,
 } from "../three/utils";
 import { raycasterSelect } from "../three/common3d";
 import { getActionList, getActionListByButtonMap } from "./viewer3dUtils";
@@ -67,14 +66,17 @@ export default function Viewer3d({
   let modelNum = 0;
   function loadScene(item: RecordItem) {
     const { parameters3d } = getAll();
+
     parameters3d.actionMixerList = [];
     parameters3d.mixer = [];
+
     const context: Context116 = {
       getScene,
       getCamera,
       getControls,
       getActionList,
       getAll,
+      getUserData,
       getActionListByButtonMap,
     };
 
@@ -102,7 +104,7 @@ export default function Viewer3d({
         modelList.forEach((model: GlbModel) => {
           loadModelByUrl(
             model,
-            scene,
+            getScene(),
             parameters3d,
             (_progress: number) => {
               setProgress(_progress);

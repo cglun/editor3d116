@@ -13,7 +13,7 @@ import {
 } from "three";
 import { UserDataType } from "../app/type";
 import TWEEN from "three/addons/libs/tween.module.js";
-import { config3d, enableScreenshot, Extra3d, parameters } from "./config3d";
+import { enableScreenshot, Extra3d, Parameters3d } from "./config3d";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
 import { createGroupIfNotExist } from "./utils";
@@ -98,18 +98,14 @@ export interface AnimateProps {
   controls: OrbitControls;
   renderer: WebGLRenderer;
   extra3d: Extra3d;
-  parameters3d: typeof parameters;
+  parameters3d: Parameters3d;
 }
-export function commonAnimate({
-  scene,
-  camera,
-  controls,
-  renderer,
-  extra3d,
-  parameters3d,
-}: AnimateProps) {
-  const { css2d, css3d, useTween, FPS, useKeyframe } = scene.userData
-    .config3d as typeof config3d;
+export function commonAnimate(animateProps: AnimateProps) {
+  const { scene, camera, controls, renderer, extra3d, parameters3d } =
+    animateProps;
+
+  const { css2d, css3d, useTween, FPS, useKeyframe } =
+    animateProps.scene.userData.config3d;
 
   const { clock, mixer } = parameters3d;
   const T = clock.getDelta();

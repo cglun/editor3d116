@@ -6,8 +6,10 @@ import {
   PerspectiveCamera,
   Scene,
   Vector3,
+  WebGLRenderer,
 } from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { Extra3d, Parameters3d } from "../three/config3d";
 
 export interface CanvasNode {
   width: number;
@@ -94,11 +96,13 @@ export interface ActionItem {
 }
 export interface ActionItemMap {
   name: string;
-  handler: () => void;
-  data: {
+  handler?: () => void;
+  data?: {
     cameraView: Vector3 | undefined;
   };
 }
+// 使用 = 定义类型，并且明确成员类型为字符串字面量类型
+export type CustomButtonType = "TOGGLE" | "BUTTON" | "DRAWER";
 
 // 定义 item 的类型
 export type TourItem = {
@@ -117,7 +121,16 @@ export interface Context116 {
   getScene: () => Scene; // 返回 Scene 类型
   getControls: () => OrbitControls; // 返回 OrbitControls 类型
   getCamera: () => PerspectiveCamera | OrthographicCamera; // 返回 PerspectiveCamera 类型
-  getActionList: () => ActionItem[]; // 返回 ActionItem[] 类型
-  getAll: () => object; // 返回 object 类型
-  getActionListByButtonMap: () => ActionItemMap[]; // 返回 ActionItemMap[] 类型
+  getAll: () => {
+    scene: Scene;
+    camera: PerspectiveCamera | OrthographicCamera;
+    controls: OrbitControls;
+    renderer: WebGLRenderer;
+    divElement: HTMLDivElement;
+    extra3d: Extra3d;
+    parameters3d: Parameters3d;
+  }; // 返回 object 类型
+  getUserData?: () => {}; // 返回 {}
+  getActionList?: () => ActionItem[]; // 返回 ActionItem[] 类型
+  getActionListByButtonMap?: () => ActionItemMap[]; // 返回 ActionItemMap[] 类型
 }

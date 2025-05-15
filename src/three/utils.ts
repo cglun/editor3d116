@@ -224,13 +224,15 @@ function cameraClip(clip1: AnimationClip): AnimationClip {
     clip1.tracks[0].times,
     clip1.tracks[0].values
   );
-  return new AnimationClip("CameraAnimation", -1, [track]);
+
+  return new AnimationClip("Animation_" + clip1.name, -1, [track]);
 }
 
 function getModelGroup(
   model: GlbModel,
   gltf: GLTF,
   context: Scene,
+
   parameters3d: Parameters3d
 ) {
   const { position, rotation, scale } = model;
@@ -248,7 +250,7 @@ function getModelGroup(
     const cameraMixer = new AnimationMixer(getCamera()); // 将相机作为动画目标
 
     parameters3d.mixer.push(mixer);
-    parameters3d.mixer.push(cameraMixer);
+    // parameters3d.mixer.push(cameraMixer);
 
     if (gltf.animations.length > 0) {
       for (let i = 0; i < gltf.animations.length; i++) {
@@ -322,6 +324,7 @@ export function loadModelByUrl(
   model: GlbModel,
   scene: Scene,
   parameters3d: Parameters3d,
+
   getProgress: (progress: number) => void,
   getError: (error: unknown) => void
 ) {

@@ -4,6 +4,7 @@ import { ActionItem, ActionItemMap } from "../app/type";
 import { createGroupIfNotExist } from "../three/utils";
 import { GLOBAL_CONSTANT } from "../three/GLOBAL_CONSTANT";
 import { getScene } from "../three/init3dViewer";
+import { userData } from "../three/config3d";
 
 // 显示和隐藏模型
 
@@ -89,17 +90,23 @@ export function getActionList(): ActionItem[] {
   return actionList;
 }
 export function getActionListByButtonMap(): ActionItemMap[] {
-  const { customButtonList } = getScene().userData;
-  return customButtonList.map((item: ActionItemMap) => {
+  const data = getScene().userData as typeof userData;
+  const { listGroup, type } = data.customButtonList.toggleButtonGroup;
+  return listGroup.map((item: ActionItemMap) => {
     const { name, data } = item;
     return {
       name,
       handler: () => {
-        if (name === "全景") {
-          showModelByName(GLOBAL_CONSTANT.MODEL_GROUP);
-          return;
+        if (type === "TOGGLE") {
+          if (name === "全景") {
+            showModelByName(GLOBAL_CONSTANT.MODEL_GROUP);
+            return;
+          }
+          showModelByName(name);
         }
-        showModelByName(name);
+        if (type === "DRAWER") {
+          console.log("DRAWER");
+        }
       },
       data,
     };
@@ -120,17 +127,8 @@ export function generateButtonGroup(
   );
   if (MODEL_GROUP) {
     const { children } = MODEL_GROUP;
-    //全部
-    const allName = MODEL_GROUP.children[0].name;
-    // allName.replace(".glb", "");
     actionList.push({
       name: "全景",
-      data: {
-        cameraView: undefined,
-      },
-      handler: function (): void {
-        showModelByName(allName);
-      },
     });
 
     //二层
@@ -141,12 +139,6 @@ export function generateButtonGroup(
           const { name } = item;
           actionList.push({
             name,
-            data: {
-              cameraView: undefined,
-            },
-            handler: function (): void {
-              showModelByName(name);
-            },
           });
         }
       });
@@ -160,12 +152,6 @@ export function generateButtonGroup(
           const { name } = item;
           actionList.push({
             name,
-            data: {
-              cameraView: undefined,
-            },
-            handler: function (): void {
-              showModelByName(name);
-            },
           });
         });
       });

@@ -239,7 +239,9 @@ export function setTransformControls(selectedMesh: Object3D) {
     child.userData = userData;
   });
 }
-
+export function getUserData() {
+  return scene.userData;
+}
 export function getControls() {
   return controls;
 }

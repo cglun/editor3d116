@@ -4,11 +4,12 @@ import { Button, ButtonGroup, Container, ListGroup } from "react-bootstrap";
 import { getScene } from "../../three/init3dEditor";
 import { useUpdateScene } from "../../app/hooks";
 import AlertBase from "../../component/common/AlertBase";
-import { ActionItemMap, APP_COLOR } from "../../app/type";
+import { ActionItemMap, APP_COLOR, CustomButtonType } from "../../app/type";
 import { getButtonColor, getThemeByScene } from "../../app/utils";
 import CodeEditor from "../../component/common/CodeEditor";
 import { generateButtonGroup } from "../../viewer3d/viewer3dUtils";
 import Toast3d from "../../component/common/Toast3d";
+import { userData } from "../../three/config3d";
 
 import ModalConfirm3d from "../../component/common/ModalConfirm3d";
 export const Route = createLazyFileRoute("/editor3d/script")({
@@ -30,7 +31,7 @@ function RouteComponent() {
   const [showJavaScript, setShowJavaScript] = useState(false); // 是否为调试场景[调试场景不允许修改代码]
 
   const [show, setShow] = useState(false);
-  const code = JSON.stringify(customButtonList, null, 5);
+  const buttonList = JSON.stringify(customButtonList, null, 5);
 
   //@ts-ignore
   const list = [{ name: "A" }, { name: "B" }, { name: "C" }, { name: "A_F1" }];
@@ -82,7 +83,7 @@ function RouteComponent() {
               tipsTitle="按钮组编辑"
               isValidate={true}
               language="json"
-              code={code}
+              code={buttonList}
               show={show}
               setShow={setShow}
               callback={(value) => {
@@ -105,11 +106,11 @@ function RouteComponent() {
               }}
             >
               <ButtonGroup>
-                {customButtonList.length > 0 ? (
+                {Object.keys(customButtonList).length !== 0 ? (
                   <Button
                     variant={buttonColor}
                     onClick={() => {
-                      getScene().userData.customButtonList = [];
+                      getScene().userData.customButtonList = {};
                       updateScene(getScene());
                       Toast3d("已重置按钮组");
                     }}
@@ -120,22 +121,34 @@ function RouteComponent() {
                   <Button
                     variant={buttonColor}
                     onClick={() => {
-                      const scene = getScene();
+                      const { toggleButtonGroup } = JSON.parse(buttonList);
 
-                      const { toggleButtonGroup, manyouButtonGroup } =
-                        JSON.parse(code);
-                      const res = generateButtonGroup(
+                      const gerToggleButtonGroup = generateButtonGroup(
                         toggleButtonGroup || [],
-                        scene
+                        getScene()
                       );
-
-                      scene.userData.customButtonList = {
-                        toggleButtonGroup: res,
-                        manyouButtonGroup: {},
+                      type CustomButtonListType =
+                        typeof userData.customButtonList;
+                      const buttonGroup: CustomButtonListType = {
+                        toggleButtonGroup: {
+                          name: "切换按钮组",
+                          type: "TOGGLE",
+                          listGroup: gerToggleButtonGroup,
+                        },
+                        roamButtonGroup: {
+                          name: "漫游按钮组",
+                          type: "ROAM",
+                          listGroup: [
+                            { name: "开始漫游" },
+                            { name: "停止漫游" },
+                          ],
+                        },
                       };
-                      console.log(getScene().userData.customButtonList);
+                      getScene().userData.customButtonList = buttonGroup;
 
                       updateScene(getScene());
+                      console.log(getScene().userData.customButtonList);
+
                       Toast3d("已生成按钮组");
                     }}
                   >

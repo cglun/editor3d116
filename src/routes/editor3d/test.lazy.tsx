@@ -1,7 +1,7 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { Button, ButtonGroup } from "react-bootstrap";
 import { getAll, getCamera, getScene } from "../../three/init3dEditor";
-import { AnimationAction, Scene } from "three";
+import { Scene } from "three";
 import { cameraTween } from "../../three/animate";
 import Toast3d from "../../component/common/Toast3d";
 import { getButtonColor, getThemeByScene } from "../../app/utils";
@@ -19,12 +19,6 @@ function RouteComponent() {
   const { useTween } = getScene().userData.config3d;
   const { themeColor } = getThemeByScene(scene);
   const btnColor = getButtonColor(themeColor);
-  const { parameters3d } = getAll();
-  const mapxx: { name: string; clip: AnimationAction }[] = [];
-  parameters3d.actionMixerList.forEach((element) => {
-    //  mapxx.set(element.getClip().name, element.getClip());
-    mapxx.push({ name: element.getClip().name, clip: element });
-  });
 
   return (
     <ButtonGroup className="mt-2 ms-2" size="sm">
@@ -44,19 +38,19 @@ function RouteComponent() {
       >
         相机动画
       </Button>
-      <button
+      <Button
         onClick={() => {
-          const { parameters3d } = getAll();
+          const { actionMixerList } = getAll().parameters3d;
 
-          const array = parameters3d.actionMixerList;
-          for (let index = 0; index < array.length; index++) {
-            const element = array[index];
+          for (let index = 0; index < actionMixerList.length; index++) {
+            const element = actionMixerList[index];
             element.play();
           }
+          console.log(actionMixerList);
         }}
       >
-        关键帧
-      </button>
+        XX
+      </Button>
     </ButtonGroup>
   );
 

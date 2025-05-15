@@ -15,7 +15,6 @@ import {
 import { useUpdateScene } from "../../app/hooks";
 import { getButtonColor, getThemeByScene } from "../../app/utils";
 import {
-  ActionItem,
   ActionItemMap,
   APP_COLOR,
   Context116,
@@ -42,13 +41,15 @@ export const Route = createLazyFileRoute("/editor3d/preView")({
 });
 
 function RouteComponent() {
-  const [list, setList] = useState<RecordItem[]>([]);
+  const [listScene, setListScene] = useState<RecordItem[]>([]);
   const [listAction, setListAction] = useState<ActionItemMap[]>();
-  const [actionList, setActionList] = useState<ActionItem[]>([]);
+
   const { scene } = useUpdateScene();
   const { themeColor } = getThemeByScene(scene);
   const buttonColor = getButtonColor(themeColor);
   const [_item, _setItem] = useState<RecordItem>();
+
+  const [manyoulist, setmanyoulist] = useState([]);
 
   useEffect(() => {
     setEnableScreenshot(true);
@@ -69,7 +70,7 @@ function RouteComponent() {
             }
           });
 
-          setList(sceneList);
+          setListScene(sceneList);
           //获取url的参数 值
           const urlParams = new URLSearchParams(window.location.search);
           const sceneId = urlParams.get("sceneId");
@@ -83,19 +84,15 @@ function RouteComponent() {
             return;
           }
           _setItem(sceneList[0]);
-          // const element = document.getElementById("pre-view-top");
-          // element?.scrollIntoView();
         }
       });
   }, []);
 
   function callBack(instance: Context116) {
-    const actionList = instance.getActionList();
-
-    setActionList(actionList);
-    const xx = instance.getActionListByButtonMap();
-    setListAction(xx);
-  } //@ts-expect-error
+    // 检查 getActionListByButtonMap 方法是否存在
+    setListAction(instance.getActionListByButtonMap || []);
+  }
+  //@ts-expect-error
   function callBackError(error: unknown) {
     // console.log("加载失败----------------", error);
   }
@@ -135,7 +132,7 @@ function RouteComponent() {
           </Modal.Header>
           <Container>
             <ButtonGroup size="sm" className="mt-2">
-              {list.map((item: RecordItem) => {
+              {listScene.map((item: RecordItem) => {
                 return (
                   <Button
                     variant={buttonColor}
@@ -143,7 +140,6 @@ function RouteComponent() {
                     // Bug 修复：添加 _item 判空检查
                     disabled={_item && item.id === _item.id}
                     onClick={() => {
-                      setActionList([]);
                       _setItem(item);
                     }}
                   >
@@ -168,13 +164,15 @@ function RouteComponent() {
           </Modal.Body>
           <Modal.Footer>
             <ButtonGroup size="sm" className="ms-2">
-              {listAction?.map((item: ActionItem, index: number) => {
+              {listAction?.map((item: ActionItemMap, index: number) => {
                 return (
                   <Button
                     variant={buttonColor}
                     key={index}
                     onClick={() => {
-                      item.handler();
+                      if (item.handler) {
+                        item.handler();
+                      }
                     }}
                   >
                     {item.name}
@@ -187,7 +185,14 @@ function RouteComponent() {
               <Button
                 variant={APP_COLOR.Primary}
                 onClick={() => {
-                  console.log(getAll().parameters3d.actionMixerList);
+                  const { actionMixerList } = getAll().parameters3d;
+                  console.log(actionMixerList);
+
+                  for (let index = 0; index < actionMixerList.length; index++) {
+                    const element = actionMixerList[index];
+
+                    element.play();
+                  }
                 }}
               >
                 漫游
@@ -197,74 +202,5 @@ function RouteComponent() {
         </Modal>
       </ListGroupItem>
     </ListGroup>
-  );
-
-  return (
-    <div
-      onMouseLeave={() => {
-        const element = document.getElementById("root");
-        element?.scrollIntoView();
-      }}
-    >
-      <div
-        id="pre-view-top"
-        className="sticky-top"
-        style={{ height: "2rem", scrollBehavior: "smooth" }}
-      >
-        —————————————————鼠标滑到下面画布—————————————————
-      </div>
-
-      <ButtonGroup size="sm">
-        {list.map(
-          (item: { id: number; name: string; des: string; cover: string }) => {
-            return (
-              <Button
-                variant={buttonColor}
-                key={item.id}
-                // Bug 修复：添加 _item 判空检查
-                disabled={_item && item.id === _item.id}
-                onClick={() => {
-                  _setItem(item);
-                }}
-              >
-                id_{item.id}_{item.name}
-              </Button>
-            );
-          }
-        )}
-      </ButtonGroup>
-
-      <ButtonGroup size="sm" className="ms-2">
-        {actionList &&
-          actionList.map((item: ActionItem, index: number) => {
-            return (
-              <Button
-                variant={buttonColor}
-                key={index}
-                onClick={() => {
-                  item.handler();
-                }}
-              >
-                {item.name}
-              </Button>
-            );
-          })}
-      </ButtonGroup>
-      <div
-        onMouseEnter={() => {
-          const element = document.getElementById("pre-view-top");
-          element?.scrollIntoView();
-        }}
-      >
-        {_item && (
-          <Viewer3d
-            // @ts-ignore
-            item={_item}
-            callBack={callBack}
-            callBackError={callBackError}
-          />
-        )}
-      </div>
-    </div>
   );
 }

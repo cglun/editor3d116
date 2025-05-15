@@ -15,7 +15,6 @@ import Toast3d from "../common/Toast3d";
 import EditorForm from "../common/EditorForm";
 import axios, { loadAssets } from "../../app/http";
 import {
-  setCamera,
   setScene,
   getScene,
   getControls,
@@ -25,22 +24,16 @@ import {
 
 import {
   getProjectData,
-  sceneDeserialize,
-  setLabel,
-  createGroupIfNotExist,
   loadModelByUrl,
   finishLoadExecute,
 } from "../../three/utils";
 import { useUpdateScene } from "../../app/hooks";
-import { MyContext } from "../../app/MyContext";
-import { createGridHelper, createNewScene } from "../../three/factory3d";
+
+import { createNewScene } from "../../three/factory3d";
 import Trigger3d from "../common/Trigger3d";
-import {
-  getActionList,
-  getActionListByButtonMap,
-} from "../../viewer3d/viewer3dUtils";
+
 import { Scene } from "three";
-import { GLOBAL_CONSTANT } from "../../three/GLOBAL_CONSTANT";
+
 import { useLocation, useNavigate } from "@tanstack/react-router";
 
 interface Props {
@@ -55,7 +48,7 @@ function RecordItemCard(props: Props) {
   const { themeColor } = getThemeByScene(scene);
   const navigate = useNavigate();
   const location = useLocation();
-  const { dispatchTourWindow } = useContext(MyContext);
+
   const { parameters3d } = getAll();
 
   //错误提示
@@ -150,48 +143,11 @@ function RecordItemCard(props: Props) {
     getScene,
     getCamera,
     getControls,
-    getActionList,
     getAll,
-    getActionListByButtonMap,
   };
   let modelNum = 0,
     _modelLen = 0;
-  //@ts-expect-error
-  function loadScene116(item: RecordItem) {
-    parameters3d.actionMixerList = [];
-    parameters3d.mixer = [];
-    modelNum = 0;
-    _modelLen = 0;
-    getProjectData(item.id)
-      .then((data) => {
-        const { scene, camera, modelList } = sceneDeserialize(data, item);
-        const HELPER_GROUP = createGroupIfNotExist(
-          scene,
-          GLOBAL_CONSTANT.HELPER_GROUP
-        );
-        HELPER_GROUP?.add(createGridHelper());
-        if (HELPER_GROUP) {
-          scene.add(HELPER_GROUP);
-        }
-        setScene(scene);
-        setCamera(camera);
-        // 加载完成后，设置标签
-        setLabel(scene, dispatchTourWindow);
-        modelNum = modelList.length;
 
-        _modelLen = modelList.length;
-        if (modelNum === 0) {
-          finishLoadExecute(context);
-          updateScene(getScene());
-        }
-        modelList.forEach((model: GlbModel) => {
-          loadOneModel(model, scene);
-        });
-      })
-      .catch((error) => {
-        Toast3d(error, "提示", APP_COLOR.Danger);
-      });
-  }
   function loadMesh(item: RecordItem) {
     getProjectData(item.id)
       .then((res: string) => {
@@ -311,7 +267,11 @@ function RecordItemCard(props: Props) {
               {item.name.trim() === "" ? (
                 <span className="text-warning"> 未命名</span>
               ) : (
-                <Trigger3d title={item.name} />
+                <Trigger3d
+                  title={
+                    (item.des === "Scene" ? item.id : "") + "_" + item.name
+                  }
+                />
               )}
             </Card.Header>
             <Card.Body
@@ -321,15 +281,12 @@ function RecordItemCard(props: Props) {
               <div
                 onClick={() => {
                   let pathname = location.pathname;
-                  // if (pathname.includes("editor3d")) {
-                  //   pathname = pathname + "/";
-                  // }
 
                   if (item.des === "Scene") {
                     const url = `${pathname}?sceneId=${item.id}`;
                     navigate({
                       to: url,
-                    }); // loadScene(item);
+                    });
                     return;
                   }
                   _modelLen = 1;

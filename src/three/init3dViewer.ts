@@ -25,7 +25,7 @@ let scene: Scene,
   renderer: WebGLRenderer,
   divElement: HTMLDivElement,
   extra3d = extra;
-const parameters3d = { ...parameters };
+const parameters3d = { ...parameters, flag: "3d" };
 function animate() {
   const animateProps: AnimateProps = {
     scene,
@@ -89,6 +89,9 @@ export function getAll() {
     extra3d,
     parameters3d,
   };
+}
+export function getUserData() {
+  return scene.userData;
 }
 export function getCamera() {
   return camera;
