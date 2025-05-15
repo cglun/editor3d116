@@ -82,7 +82,7 @@ export function setLabel(
     let label = createCss3dLabel(
       item.name,
       item.userData.labelLogo,
-      item.userData.tourObjectect,
+      item.userData.tourObject,
       dispatchTourWindow
     );
 
@@ -112,12 +112,12 @@ export function clearOldLabel() {
     });
   }
 }
-export function getTourSrc(tourObjectect: string) {
+export function getTourSrc(tourObject: string) {
   let tourSrc = "/#/preview/";
-  if (tourObjectect) {
-    tourSrc = "/#/preview/" + tourObjectect;
+  if (tourObject) {
+    tourSrc = "/#/preview/" + tourObject;
     if (import.meta.env.DEV) {
-      tourSrc = "http://localhost:5173/#/preview/" + tourObjectect;
+      tourSrc = "http://localhost:5173/#/preview/" + tourObject;
     }
   }
   return tourSrc;
@@ -250,7 +250,7 @@ function getModelGroup(
     const cameraMixer = new AnimationMixer(getCamera()); // 将相机作为动画目标
 
     parameters3d.mixer.push(mixer);
-    // parameters3d.mixer.push(cameraMixer);
+    parameters3d.mixer.push(cameraMixer);
 
     if (gltf.animations.length > 0) {
       for (let i = 0; i < gltf.animations.length; i++) {
@@ -261,9 +261,11 @@ function getModelGroup(
             cameraClip(clip)
           );
           parameters3d.actionMixerList.push(cameraAnimationAction);
+          cameraAnimationAction.play();
         } else {
           const action = mixer.clipAction(clip);
           parameters3d.actionMixerList.push(action);
+          action.play();
         }
       }
     }

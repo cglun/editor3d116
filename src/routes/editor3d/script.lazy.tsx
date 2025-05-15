@@ -4,7 +4,7 @@ import { Button, ButtonGroup, Container, ListGroup } from "react-bootstrap";
 import { getScene } from "../../three/init3dEditor";
 import { useUpdateScene } from "../../app/hooks";
 import AlertBase from "../../component/common/AlertBase";
-import { ActionItemMap, APP_COLOR, CustomButtonType } from "../../app/type";
+import { APP_COLOR } from "../../app/type";
 import { getButtonColor, getThemeByScene } from "../../app/utils";
 import CodeEditor from "../../component/common/CodeEditor";
 import { generateButtonGroup } from "../../viewer3d/viewer3dUtils";

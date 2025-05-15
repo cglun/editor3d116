@@ -1,4 +1,4 @@
-import { memo, useContext } from "react";
+import { memo } from "react";
 import {
   Button,
   ButtonGroup,
@@ -269,7 +269,7 @@ function RecordItemCard(props: Props) {
               ) : (
                 <Trigger3d
                   title={
-                    (item.des === "Scene" ? item.id : "") + "_" + item.name
+                    (item.des === "Scene" ? item.id + "_" : "") + item.name
                   }
                 />
               )}

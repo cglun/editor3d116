@@ -49,7 +49,7 @@ function RouteComponent() {
   const buttonColor = getButtonColor(themeColor);
   const [_item, _setItem] = useState<RecordItem>();
 
-  const [manyoulist, setmanyoulist] = useState([]);
+  // const [manyoulist, setmanyoulist] = useState([]);
 
   useEffect(() => {
     setEnableScreenshot(true);

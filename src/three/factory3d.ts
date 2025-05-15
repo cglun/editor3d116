@@ -215,13 +215,13 @@ function createDiv(
 export function createCss3dLabel(
   name: string,
   logo: string,
-  tourObjectect?: {
+  tourObject?: {
     id: string;
     title: string;
   },
   dispatchTourWindow?: React.Dispatch<TourWindow>
 ) {
-  const div = createDiv(logo, name, tourObjectect, dispatchTourWindow);
+  const div = createDiv(logo, name, tourObject, dispatchTourWindow);
   const css3DSprite = new CSS3DSprite(div);
 
   css3DSprite.name = name;
@@ -230,7 +230,7 @@ export function createCss3dLabel(
   css3DSprite.userData = {
     type: UserDataType.CSS3DObject,
     labelLogo: logo,
-    tourObjectect: tourObjectect,
+    tourObject: tourObject,
   };
   return css3DSprite;
 }

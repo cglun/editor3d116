@@ -31,6 +31,7 @@ const CodeEditor = (props: CodeEditorProps) => {
     readOnly = false,
   } = props;
   const [error, setError] = useState(false);
+
   const [value, setValue] = useState<string>(code);
   const { scene } = useUpdateScene();
   const { themeColor } = getThemeByScene(scene);
