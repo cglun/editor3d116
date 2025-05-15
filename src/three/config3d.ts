@@ -29,7 +29,10 @@ export const userData = {
   },
   javascript: `//const scene = getScene(); 
   console.log("116");`,
-  customButtonList: [],
+  customButtonList: {
+    toggleButtonGroup: {},
+    roamButtonGroup: {},
+  },
   APP_THEME: {
     themeColor: APP_COLOR.Dark,
     iconFill: "",

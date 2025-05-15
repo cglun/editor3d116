@@ -1,7 +1,7 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { Button, ButtonGroup } from "react-bootstrap";
 import { getAll, getCamera, getScene } from "../../three/init3dEditor";
-import { AnimationAction, AnimationClip, Scene } from "three";
+import { AnimationAction, Scene } from "three";
 import { cameraTween } from "../../three/animate";
 import Toast3d from "../../component/common/Toast3d";
 import { getButtonColor, getThemeByScene } from "../../app/utils";
@@ -26,23 +26,6 @@ function RouteComponent() {
     mapxx.push({ name: element.getClip().name, clip: element });
   });
 
-  {
-    return mapxx.map((item, index) => {
-      return (
-        <Button
-          key={index}
-          variant={btnColor}
-          onClick={() => {
-            item.clip.play();
-          }}
-        >
-          {item.name}
-        </Button>
-      );
-    });
-  }
-
-  return;
   return (
     <ButtonGroup className="mt-2 ms-2" size="sm">
       <ButtonXX />

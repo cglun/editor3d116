@@ -290,7 +290,7 @@ function CommonProperty({ selected3d }: { selected3d: SelectedObject }) {
       </>
     );
   }
-  //@ts-ignore
+  //@ts-expect-error
   function BindObject() {
     if (selected3d instanceof Light) {
       return;

@@ -253,7 +253,6 @@ function getModelGroup(
     if (gltf.animations.length > 0) {
       for (let i = 0; i < gltf.animations.length; i++) {
         const clip = gltf.animations[i];
-        console.log(clip.name);
 
         if (clip.name.trim().includes("CAMERA")) {
           const cameraAnimationAction = cameraMixer.clipAction(

@@ -89,6 +89,7 @@ function RouteComponent() {
               show={show}
               setShow={setShow}
               callback={function (): void {}}
+              readOnly={true}
             />
           </ListGroupItem>
         )}

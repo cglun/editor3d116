@@ -4,7 +4,7 @@ import { Button, ButtonGroup, Container, ListGroup } from "react-bootstrap";
 import { getScene } from "../../three/init3dEditor";
 import { useUpdateScene } from "../../app/hooks";
 import AlertBase from "../../component/common/AlertBase";
-import { APP_COLOR } from "../../app/type";
+import { ActionItemMap, APP_COLOR } from "../../app/type";
 import { getButtonColor, getThemeByScene } from "../../app/utils";
 import CodeEditor from "../../component/common/CodeEditor";
 import { generateButtonGroup } from "../../viewer3d/viewer3dUtils";
@@ -81,6 +81,7 @@ function RouteComponent() {
             <CodeEditor
               tipsTitle="按钮组编辑"
               isValidate={true}
+              language="json"
               code={code}
               show={show}
               setShow={setShow}
@@ -120,8 +121,19 @@ function RouteComponent() {
                     variant={buttonColor}
                     onClick={() => {
                       const scene = getScene();
-                      const res = generateButtonGroup(JSON.parse(code), scene);
-                      scene.userData.customButtonList = res;
+
+                      const { toggleButtonGroup, manyouButtonGroup } =
+                        JSON.parse(code);
+                      const res = generateButtonGroup(
+                        toggleButtonGroup || [],
+                        scene
+                      );
+
+                      scene.userData.customButtonList = {
+                        toggleButtonGroup: res,
+                        manyouButtonGroup: {},
+                      };
+                      console.log(getScene().userData.customButtonList);
 
                       updateScene(getScene());
                       Toast3d("已生成按钮组");

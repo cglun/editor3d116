@@ -14,12 +14,13 @@ interface CodeEditorProps {
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
   isValidate: boolean;
   children?: React.ReactNode;
+  readOnly?: boolean;
 }
 
 // 使用 forwardRef 高阶函数
 const CodeEditor = (props: CodeEditorProps) => {
   const {
-    language,
+    language = "javascript",
     show,
     setShow,
     children,
@@ -27,6 +28,7 @@ const CodeEditor = (props: CodeEditorProps) => {
     tipsTitle,
     callback,
     isValidate,
+    readOnly = false,
   } = props;
   const [error, setError] = useState(false);
   const [value, setValue] = useState<string>(code);
@@ -81,8 +83,8 @@ const CodeEditor = (props: CodeEditorProps) => {
       <Modal.Body>
         <Editor
           height="76vh"
-          defaultLanguage={language || "javascript"}
-          defaultValue={"[]"}
+          defaultLanguage={language}
+          defaultValue={"{}"}
           value={value}
           onChange={handleEditorChange}
           theme={themeColor ? `vs-${themeColor}` : "vs-dark"}
@@ -94,6 +96,7 @@ const CodeEditor = (props: CodeEditorProps) => {
             scrollBeyondLastLine: true,
             fontSize: 14,
             wordWrap: "on",
+            readOnly,
           }}
         />
       </Modal.Body>

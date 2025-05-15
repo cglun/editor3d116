@@ -56,6 +56,7 @@ function RecordItemCard(props: Props) {
   const navigate = useNavigate();
   const location = useLocation();
   const { dispatchTourWindow } = useContext(MyContext);
+  const { parameters3d } = getAll();
 
   //错误提示
   if (error.trim().length > 0) {
@@ -155,8 +156,10 @@ function RecordItemCard(props: Props) {
   };
   let modelNum = 0,
     _modelLen = 0;
-  //@ts-ignore
+  //@ts-expect-error
   function loadScene116(item: RecordItem) {
+    parameters3d.actionMixerList = [];
+    parameters3d.mixer = [];
     modelNum = 0;
     _modelLen = 0;
     getProjectData(item.id)
@@ -203,6 +206,7 @@ function RecordItemCard(props: Props) {
     loadModelByUrl(
       model,
       scene,
+      parameters3d,
       (_progress: number) => {
         ModalConfirm3d({
           title: "提示",
