@@ -91,11 +91,13 @@ export interface ProjectListResponse {
   };
 }
 export interface ActionItem {
-  name: string;
+  showName: string;
+  NAME_ID: string;
   handler: () => void;
 }
 export interface ActionItemMap {
-  name: string;
+  showName: string;
+  NAME_ID: string;
   handler?: () => void;
   data?: {
     cameraView: Vector3 | undefined;

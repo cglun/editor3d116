@@ -105,6 +105,7 @@ export default function Viewer3d({
           loadModelByUrl(
             model,
             getScene(),
+            getCamera(),
             parameters3d,
             (_progress: number) => {
               setProgress(_progress);
@@ -152,6 +153,7 @@ export default function Viewer3d({
         loadModelByUrl(
           JSON.parse(res),
           getScene(),
+          getCamera(),
           parameters3d,
           (_progress: number) => {
             setProgress(_progress);

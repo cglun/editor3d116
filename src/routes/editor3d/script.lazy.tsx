@@ -7,7 +7,10 @@ import AlertBase from "../../component/common/AlertBase";
 import { APP_COLOR } from "../../app/type";
 import { getButtonColor, getThemeByScene } from "../../app/utils";
 import CodeEditor from "../../component/common/CodeEditor";
-import { generateButtonGroup } from "../../viewer3d/viewer3dUtils";
+import {
+  generateRoamButtonGroup,
+  generateToggleButtonGroup,
+} from "../../viewer3d/viewer3dUtils";
 import Toast3d from "../../component/common/Toast3d";
 import { userData } from "../../three/config3d";
 
@@ -123,10 +126,11 @@ function RouteComponent() {
                     onClick={() => {
                       const { toggleButtonGroup } = JSON.parse(buttonList);
 
-                      const gerToggleButtonGroup = generateButtonGroup(
+                      const gerToggleButtonGroup = generateToggleButtonGroup(
                         toggleButtonGroup || [],
                         getScene()
                       );
+                      const xxxxx = generateRoamButtonGroup();
                       type CustomButtonListType =
                         typeof userData.customButtonList;
                       const buttonGroup: CustomButtonListType = {
@@ -138,10 +142,7 @@ function RouteComponent() {
                         roamButtonGroup: {
                           name: "漫游按钮组",
                           type: "ROAM",
-                          listGroup: [
-                            { name: "开始漫游" },
-                            { name: "停止漫游" },
-                          ],
+                          listGroup: xxxxx,
                         },
                       };
                       getScene().userData.customButtonList = buttonGroup;

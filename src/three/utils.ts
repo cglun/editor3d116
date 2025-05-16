@@ -5,6 +5,7 @@ import {
   Group,
   Object3D,
   ObjectLoader,
+  OrthographicCamera,
   PerspectiveCamera,
   Scene,
   VectorKeyframeTrack,
@@ -26,7 +27,6 @@ import {
 } from "./config3d";
 import { runScript } from "./scriptDev";
 import { GLOBAL_CONSTANT } from "./GLOBAL_CONSTANT";
-import { getCamera } from "./init3dEditor";
 
 export function getObjectNameByName(object3D: Object3D): string {
   return object3D.name.trim() === "" ? object3D.type : object3D.name;
@@ -225,14 +225,14 @@ function cameraClip(clip1: AnimationClip): AnimationClip {
     clip1.tracks[0].values
   );
 
-  return new AnimationClip("Animation_" + clip1.name, -1, [track]);
+  return new AnimationClip("AN_" + clip1.name, -1, [track]);
 }
 
 function getModelGroup(
   model: GlbModel,
   gltf: GLTF,
   context: Scene,
-
+  camera: PerspectiveCamera | OrthographicCamera,
   parameters3d: Parameters3d
 ) {
   const { position, rotation, scale } = model;
@@ -247,7 +247,7 @@ function getModelGroup(
   const { config3d } = context.userData as typeof userData;
   if (config3d.useKeyframe) {
     const mixer = new AnimationMixer(scene);
-    const cameraMixer = new AnimationMixer(getCamera()); // 将相机作为动画目标
+    const cameraMixer = new AnimationMixer(camera); // 将相机作为动画目标
 
     parameters3d.mixer.push(mixer);
     parameters3d.mixer.push(cameraMixer);
@@ -261,11 +261,11 @@ function getModelGroup(
             cameraClip(clip)
           );
           parameters3d.actionMixerList.push(cameraAnimationAction);
-          cameraAnimationAction.play();
+          //  cameraAnimationAction.play();
         } else {
           const action = mixer.clipAction(clip);
           parameters3d.actionMixerList.push(action);
-          action.play();
+          //  action.play();
         }
       }
     }
@@ -325,8 +325,8 @@ export function createGroupIfNotExist(
 export function loadModelByUrl(
   model: GlbModel,
   scene: Scene,
+  camera: PerspectiveCamera | OrthographicCamera,
   parameters3d: Parameters3d,
-
   getProgress: (progress: number) => void,
   getError: (error: unknown) => void
 ) {
@@ -335,7 +335,7 @@ export function loadModelByUrl(
   loader.load(
     model.userData.modelUrl + "?url",
     function (gltf) {
-      const group = getModelGroup(model, gltf, scene, parameters3d);
+      const group = getModelGroup(model, gltf, scene, camera, parameters3d);
       enableShadow(group, scene);
       scene.add(group);
 
@@ -366,7 +366,8 @@ export function finishLoadExecute(
 
   if (javascript) {
     // 使用类型正确的 context 调用方法
-    const { getScene, getControls, getCamera } = context; // 这里的 context 需要根据实际情况修改类型为 Context116 或正确的类型定义
+    // 这里的 context 需要根据实际情况修改类型为 Context116 或正确的类型定义;
+    const { getScene, getControls, getCamera } = context;
 
     getScene();
     getControls();

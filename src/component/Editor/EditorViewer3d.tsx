@@ -141,8 +141,6 @@ function EditorViewer3d() {
     parameters3d.mixer = [];
     getProjectData(item.id)
       .then((data) => {
-        console.log(data);
-
         const { scene, camera, modelList } = sceneDeserialize(data, item);
         const HELPER_GROUP = createGroupIfNotExist(
           scene,
@@ -174,6 +172,7 @@ function EditorViewer3d() {
           loadModelByUrl(
             model,
             scene,
+            getCamera(),
             parameters3d,
             (_progress: number) => {
               ModalConfirm3d({

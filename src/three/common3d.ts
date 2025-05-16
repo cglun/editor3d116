@@ -130,8 +130,8 @@ export function commonAnimate(animateProps: AnimateProps) {
     parameters3d.timeS = 0;
   }
   if (useKeyframe) {
-    mixer.forEach((mixer) => {
-      mixer.update(T);
+    mixer.forEach((_mixer) => {
+      _mixer.update(T);
     });
   }
 }

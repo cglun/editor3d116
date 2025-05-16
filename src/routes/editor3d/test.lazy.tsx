@@ -1,11 +1,13 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { Button, ButtonGroup } from "react-bootstrap";
-import { getAll, getCamera, getScene } from "../../three/init3dEditor";
+import { getCamera, getScene } from "../../three/init3dEditor";
 import { Scene } from "three";
 import { cameraTween } from "../../three/animate";
 import Toast3d from "../../component/common/Toast3d";
 import { getButtonColor, getThemeByScene } from "../../app/utils";
 import { useUpdateScene } from "../../app/hooks";
+
+import { getRoamListByRoamButtonMap } from "../../viewer3d/viewer3dUtils";
 
 export const Route = createLazyFileRoute("/editor3d/test")({
   component: RouteComponent,
@@ -16,7 +18,8 @@ function RouteComponent() {
   if (scene.payload.userData.config3d === undefined) {
     return;
   }
-  const { useTween } = getScene().userData.config3d;
+  const { userData } = scene.payload;
+  const { useTween } = userData.config3d;
   const { themeColor } = getThemeByScene(scene);
   const btnColor = getButtonColor(themeColor);
 
@@ -39,17 +42,36 @@ function RouteComponent() {
         相机动画
       </Button>
       <Button
+        variant={btnColor}
         onClick={() => {
-          const { actionMixerList } = getAll().parameters3d;
-
-          for (let index = 0; index < actionMixerList.length; index++) {
-            const element = actionMixerList[index];
-            element.play();
+          const list = getRoamListByRoamButtonMap();
+          if (list.length === 0) {
+            Toast3d("没有动画");
+            return;
           }
-          console.log(actionMixerList);
+
+          if (list[0].handler) {
+            list[0].handler();
+          }
         }}
       >
-        XX
+        漫游开始
+      </Button>
+      <Button
+        variant={btnColor}
+        onClick={() => {
+          const list = getRoamListByRoamButtonMap();
+          if (list.length === 0) {
+            Toast3d("没有动画");
+            return;
+          }
+
+          if (list[1].handler) {
+            list[1].handler();
+          }
+        }}
+      >
+        漫游结束
       </Button>
     </ButtonGroup>
   );

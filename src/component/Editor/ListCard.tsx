@@ -162,6 +162,7 @@ function RecordItemCard(props: Props) {
     loadModelByUrl(
       model,
       scene,
+      getCamera(),
       parameters3d,
       (_progress: number) => {
         ModalConfirm3d({
