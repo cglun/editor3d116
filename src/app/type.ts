@@ -100,11 +100,33 @@ export interface ActionItemMap {
   NAME_ID: string;
   handler?: () => void;
   data?: {
-    cameraView: Vector3 | undefined;
+    isSelected: boolean;
+    isRunning?: boolean;
   };
 }
 // 使用 = 定义类型，并且明确成员类型为字符串字面量类型
-export type CustomButtonType = "TOGGLE" | "BUTTON" | "DRAWER";
+export type CustomButtonType = "TOGGLE" | "DRAWER" | "STRETCH";
+
+export type CustomButtonListType = {
+  toggleButtonGroup: {
+    name: string;
+    type: CustomButtonType;
+    listGroup: ActionItemMap[];
+    userSetting?: {
+      modelOffset: {
+        x: number;
+        y: number;
+        z: number;
+      };
+      animationTime: number;
+    };
+  };
+  roamButtonGroup: {
+    name: string;
+    type: "ROAM";
+    listGroup: ActionItemMap[];
+  };
+};
 
 // 定义 item 的类型
 export type TourItem = {
@@ -133,7 +155,7 @@ export interface Context116 {
     parameters3d: Parameters3d;
   }; // 返回 object 类型
   getUserData?: () => {}; // 返回 {}
-  getActionList?: () => ActionItem[]; // 返回 ActionItem[] 类型
+
   getActionListByButtonMap?: () => ActionItemMap[]; // 返回 ActionItemMap[] 类型
   getRoamListByRoamButtonMap?: () => ActionItemMap[]; // 返回 ActionItemMap[] 类型
 }

@@ -1,7 +1,7 @@
 import { AnimationAction, AnimationMixer, Clock, Vector3 } from "three";
 import { CSS2DRenderer } from "three/addons/renderers/CSS2DRenderer.js";
 import { CSS3DRenderer } from "three/addons/renderers/CSS3DRenderer.js";
-import { ActionItemMap, APP_COLOR, CustomButtonType } from "../app/type";
+import { APP_COLOR } from "../app/type";
 
 export const enableScreenshot = {
   enable: false,
@@ -29,25 +29,12 @@ export const userData = {
   },
   javascript: `//const scene = getScene(); 
   console.log("116");`,
-  customButtonList: {
-    toggleButtonGroup: {
-      name: "切换按钮组",
-      type: "TOGGLE" as CustomButtonType,
-      listGroup: [] as ActionItemMap[],
-    },
-    roamButtonGroup: {
-      name: "漫游按钮组",
-      type: "ROAM" as "ROAM",
-      listGroup: [] as ActionItemMap[],
-    },
-  },
+  customButtonList: {},
   APP_THEME: {
     themeColor: APP_COLOR.Dark,
     iconFill: "",
     sceneCanSave: false,
   },
-  // bindCameraPerspective: [],
-  // bindSceneById: [],
 };
 
 export interface Parameters3d {

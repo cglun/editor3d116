@@ -31,7 +31,6 @@ import {
 } from "../three/utils";
 import { raycasterSelect } from "../three/common3d";
 import {
-  getActionList,
   getActionListByButtonMap,
   getRoamListByRoamButtonMap,
 } from "./viewer3dUtils";
@@ -78,7 +77,6 @@ export default function Viewer3d({
       getScene,
       getCamera,
       getControls,
-      getActionList,
       getAll,
       getUserData,
       getActionListByButtonMap,

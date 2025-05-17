@@ -1,10 +1,20 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Button, ButtonGroup, Container, ListGroup } from "react-bootstrap";
+import {
+  Button,
+  ButtonGroup,
+  Container,
+  Form,
+  ListGroup,
+} from "react-bootstrap";
 import { getScene } from "../../three/init3dEditor";
 import { useUpdateScene } from "../../app/hooks";
 import AlertBase from "../../component/common/AlertBase";
-import { APP_COLOR } from "../../app/type";
+import {
+  APP_COLOR,
+  CustomButtonListType,
+  CustomButtonType,
+} from "../../app/type";
 import { getButtonColor, getThemeByScene } from "../../app/utils";
 import CodeEditor from "../../component/common/CodeEditor";
 import {
@@ -12,7 +22,6 @@ import {
   generateToggleButtonGroup,
 } from "../../viewer3d/viewer3dUtils";
 import Toast3d from "../../component/common/Toast3d";
-import { userData } from "../../three/config3d";
 
 import ModalConfirm3d from "../../component/common/ModalConfirm3d";
 export const Route = createLazyFileRoute("/editor3d/script")({
@@ -35,6 +44,7 @@ function RouteComponent() {
 
   const [show, setShow] = useState(false);
   const buttonList = JSON.stringify(customButtonList, null, 5);
+  const [buttonType, setButtonType] = useState<CustomButtonType>("TOGGLE");
 
   //@ts-ignore
   const list = [{ name: "A" }, { name: "B" }, { name: "C" }, { name: "A_F1" }];
@@ -115,46 +125,93 @@ function RouteComponent() {
                     onClick={() => {
                       getScene().userData.customButtonList = {};
                       updateScene(getScene());
+                      setButtonType("DRAWER");
                       Toast3d("已重置按钮组");
                     }}
                   >
                     重置
                   </Button>
                 ) : (
-                  <Button
-                    variant={buttonColor}
-                    onClick={() => {
-                      const { toggleButtonGroup } = JSON.parse(buttonList);
+                  <>
+                    <Form key={"inline-radio-2"}>
+                      <Form.Check
+                        inline
+                        label="切换"
+                        name="buttonType"
+                        type={"radio"}
+                        id={`inline-radio-1`}
+                        onClick={() => {
+                          setButtonType("TOGGLE");
+                        }}
+                      />
+                      <Form.Check
+                        inline
+                        label="拉伸"
+                        name="buttonType"
+                        type={"radio"}
+                        id={`inline-radio-2`}
+                        onClick={() => {
+                          setButtonType("STRETCH");
+                        }}
+                      />
+                      <Form.Check
+                        defaultChecked
+                        inline
+                        label="抽屉"
+                        name="buttonType"
+                        type={"radio"}
+                        id={`inline-radio-3`}
+                        onClick={() => {
+                          setButtonType("DRAWER");
+                        }}
+                      />
+                    </Form>
+                    <Button
+                      variant={buttonColor}
+                      onClick={() => {
+                        const { toggleButtonGroup } = JSON.parse(buttonList);
 
-                      const gerToggleButtonGroup = generateToggleButtonGroup(
-                        toggleButtonGroup || [],
-                        getScene()
-                      );
-                      const xxxxx = generateRoamButtonGroup();
-                      type CustomButtonListType =
-                        typeof userData.customButtonList;
-                      const buttonGroup: CustomButtonListType = {
-                        toggleButtonGroup: {
-                          name: "切换按钮组",
-                          type: "TOGGLE",
-                          listGroup: gerToggleButtonGroup,
-                        },
-                        roamButtonGroup: {
-                          name: "漫游按钮组",
-                          type: "ROAM",
-                          listGroup: xxxxx,
-                        },
-                      };
-                      getScene().userData.customButtonList = buttonGroup;
+                        const gerToggleButtonGroup = generateToggleButtonGroup(
+                          toggleButtonGroup || [],
+                          getScene(),
+                          buttonType
+                        );
+                        const offset = {
+                          x: 0,
+                          y: 0,
+                          z: 0.3,
+                        };
+                        if (buttonType === "STRETCH") {
+                          offset.x = 0;
+                          offset.y = 0.3;
+                          offset.z = 0;
+                        }
 
-                      updateScene(getScene());
-                      console.log(getScene().userData.customButtonList);
+                        const buttonGroup: CustomButtonListType = {
+                          toggleButtonGroup: {
+                            name: "切换按钮组",
+                            type: buttonType,
+                            userSetting: {
+                              modelOffset: offset,
+                              animationTime: 300,
+                            },
+                            listGroup: gerToggleButtonGroup,
+                          },
+                          roamButtonGroup: {
+                            name: "漫游按钮组",
+                            type: "ROAM",
+                            listGroup: generateRoamButtonGroup(),
+                          },
+                        };
+                        getScene().userData.customButtonList = buttonGroup;
+                        updateScene(getScene());
 
-                      Toast3d("已生成按钮组");
-                    }}
-                  >
-                    生成按钮
-                  </Button>
+                        Toast3d("已生成按钮组");
+                      }}
+                    >
+                      生成按钮
+                    </Button>
+                  </>
                 )}
               </ButtonGroup>
             </CodeEditor>

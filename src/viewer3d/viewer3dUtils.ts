@@ -1,5 +1,16 @@
-import { AnimationAction, Object3D, Object3DEventMap, Scene } from "three";
-import { ActionItem, ActionItemMap } from "../app/type";
+import {
+  AnimationAction,
+  Object3D,
+  Object3DEventMap,
+  Scene,
+  Vector3,
+} from "three";
+import {
+  ActionItem,
+  ActionItemMap,
+  CustomButtonListType,
+  CustomButtonType,
+} from "../app/type";
 
 import { createGroupIfNotExist } from "../three/utils";
 import { GLOBAL_CONSTANT } from "../three/GLOBAL_CONSTANT";
@@ -8,10 +19,22 @@ import {
   getScene as editorScene,
   getAll as editorGetAll,
 } from "../three/init3dEditor";
-import { userData } from "../three/config3d";
 
-// 显示和隐藏模型
-export function showModelByName(targetGroupName: string) {
+import { meshTween } from "../three/animate";
+
+function getUserSetting(customButtonList: CustomButtonListType) {
+  const userSetting = customButtonList.toggleButtonGroup.userSetting;
+  const modelOffset = userSetting?.modelOffset ?? {
+    x: 0,
+    y: 0,
+    z: 0,
+  };
+  const animationTime = userSetting?.animationTime ?? 1000;
+  return { userSetting, modelOffset, animationTime };
+}
+
+// 显示模型-显示和隐藏
+function showModelByNameId(NAME_ID: string) {
   const MODEL_GROUP = createGroupIfNotExist(
     getScene(),
     GLOBAL_CONSTANT.MODEL_GROUP,
@@ -24,7 +47,7 @@ export function showModelByName(targetGroupName: string) {
     // targetGroup.visible = true;
   }
 
-  const groups = createGroupIfNotExist(getScene(), targetGroupName, false);
+  const groups = createGroupIfNotExist(getScene(), NAME_ID, false);
   if (groups) {
     groups.traverse((item) => {
       item.visible = true;
@@ -39,89 +62,102 @@ export function showModelByName(targetGroupName: string) {
     }
   }
 }
+// 显示模型-抽屉
+function drawerOutByNameId(
+  item: ActionItemMap,
+  customButtonList: CustomButtonListType
+) {
+  // 使用可选链操作符和默认值确保解构安全
 
-export function getActionList(): ActionItem[] {
-  const scene = getScene();
-  if (!scene) {
-    return [];
-  }
+  const MODEL_GROUP = createGroupIfNotExist(getScene(), item.NAME_ID, false);
+  item.data = {
+    isSelected: true,
+    isRunning: true,
+  };
+  if (MODEL_GROUP) {
+    const { x, y, z } = MODEL_GROUP.position;
+    const { modelOffset, animationTime } = getUserSetting(customButtonList);
 
-  let _rootGroupName = "";
-  const MODEL_GROUP = createGroupIfNotExist(
-    scene,
-    GLOBAL_CONSTANT.MODEL_GROUP,
-    false
-  );
-  if (MODEL_GROUP?.children?.length) {
-    _rootGroupName = MODEL_GROUP.children[0].name;
+    meshTween(
+      MODEL_GROUP,
+      new Vector3(x + modelOffset.x, y + modelOffset.y, z + modelOffset.z),
+      animationTime
+    )
+      .start()
+      .onComplete(() => {
+        item.data = {
+          isSelected: true,
+          isRunning: false,
+        };
+      });
   }
-  const actionList: ActionItem[] = [
-    {
-      showName: "全部",
-      NAME_ID: "全景",
-      handler: () => {
-        showModelByName(_rootGroupName);
-      },
-    },
-  ];
-  const targetGroup = createGroupIfNotExist(scene, _rootGroupName, false);
-  if (targetGroup) {
-    const { children } = targetGroup;
-    const envMesh = children.find((item) =>
-      item.name.toUpperCase().includes("_ENV_")
-    );
-    children.forEach((item) => {
-      const itemName = item.name;
-      if (!itemName.toUpperCase().includes("_ENV_")) {
-        const { children } = item;
-        for (let i = 0; i < children.length; i++) {
-          const { name } = children[i];
-          actionList.push({
-            showName: name,
-            NAME_ID: name,
-            handler: () => {
-              showModelByName(name);
-              if (envMesh) {
-                envMesh.visible = true;
-              }
-            },
-          });
-        }
-      }
-    });
-  }
-
-  return actionList;
 }
-export function getActionListByButtonMap(): ActionItemMap[] {
-  const data = getScene().userData as typeof userData;
-  const { listGroup, type } = data.customButtonList.toggleButtonGroup;
-  return listGroup.map((item: ActionItemMap) => {
-    const { showName, NAME_ID, data } = item;
-    return {
-      showName: showName,
-      NAME_ID: NAME_ID,
-      handler: () => {
-        if (type === "TOGGLE") {
-          if (NAME_ID === "全景") {
-            showModelByName(GLOBAL_CONSTANT.MODEL_GROUP);
-            return;
-          }
-          showModelByName(NAME_ID);
-        }
-        if (type === "DRAWER") {
-          console.log("DRAWER");
-        }
-      },
-      data,
+// 显示模型-拉伸
+function stretchModelByNameId(
+  NAME_ID: string,
+  customButtonList: CustomButtonListType
+) {
+  const MODEL_GROUP = createGroupIfNotExist(getScene(), NAME_ID, false);
+  if (MODEL_GROUP) {
+    const isStretch = MODEL_GROUP.userData.childrenIsStretch;
+    const isStretchRunning = MODEL_GROUP.userData.childrenIsRunning;
+    if (isStretchRunning) {
+      return;
+    }
+    MODEL_GROUP.userData.childrenIsRunning = true;
+    isStretch
+      ? stretchListGroup(MODEL_GROUP, customButtonList, false, false)
+      : stretchListGroup(MODEL_GROUP, customButtonList, true, false);
+  }
+}
+
+function stretchListGroup(
+  MODEL_GROUP: Object3D<Object3DEventMap>,
+  customButtonList: CustomButtonListType,
+  childrenIsStretch: boolean,
+  childrenIsRunning: boolean
+) {
+  const { animationTime, modelOffset } = getUserSetting(customButtonList);
+  const array = MODEL_GROUP.children;
+  const xxxxxx = MODEL_GROUP.userData.childrenIsStretch ? -1 : 1;
+  for (let index = 0; index < array.length; index++) {
+    const element = array[index];
+    const { x, y, z } = element.position;
+    meshTween(
+      element,
+      new Vector3(
+        x + modelOffset.x * index * xxxxxx,
+        y + modelOffset.y * index * xxxxxx,
+        z + modelOffset.z * index * xxxxxx
+      ),
+      animationTime
+    )
+      .start()
+      .onComplete(() => {
+        MODEL_GROUP.userData.childrenIsStretch = childrenIsStretch;
+        MODEL_GROUP.userData.childrenIsRunning = childrenIsRunning;
+      });
+  }
+}
+
+function getActionItem(
+  item: ActionItemMap,
+  customButtonType: CustomButtonType
+): ActionItemMap {
+  if (customButtonType === "DRAWER") {
+    item.data = {
+      isSelected: false,
+      isRunning: false,
     };
-  });
+  }
+  return item;
 }
 
 // 生成切换按钮组 ActionItem[]
 export function generateToggleButtonGroup(
   originalCodeArr: ActionItemMap[],
-  sceneContext: Scene
+  sceneContext: Scene,
+  customButtonType: CustomButtonType
 ): ActionItemMap[] {
   const actionList: ActionItemMap[] = [];
 
@@ -132,24 +168,41 @@ export function generateToggleButtonGroup(
   );
   if (MODEL_GROUP) {
     const { children } = MODEL_GROUP;
-    actionList.push({
-      showName: "全景",
-      NAME_ID: "全景",
-    });
-
+    actionList.push(
+      getActionItem(
+        {
+          showName: "全景",
+          NAME_ID: MODEL_GROUP.name,
+        },
+        customButtonType
+      )
+    );
     //二层
     children.forEach((item) => {
       const level2 = item.children;
       level2.forEach((item) => {
         if (!item.name.toUpperCase().includes("_ENV_")) {
           const { name } = item;
-          actionList.push({
-            showName: name,
-            NAME_ID: name,
-          });
+
+          actionList.push(
+            getActionItem(
+              {
+                showName: name,
+                NAME_ID: name,
+              },
+              customButtonType
+            )
+          );
         }
       });
     });
+
+    if (customButtonType === "STRETCH") {
+      //移除第一项
+      actionList.shift();
+      return actionList;
+    }
+
     //三层
     children.forEach((item) => {
       const level2 = item.children;
@@ -159,10 +212,15 @@ export function generateToggleButtonGroup(
         if (!item.name.toUpperCase().includes("_ENV_")) {
           level3.forEach((item) => {
             const { name } = item;
-            actionList.push({
-              showName: name,
-              NAME_ID: name,
-            });
+            actionList.push(
+              getActionItem(
+                {
+                  showName: name,
+                  NAME_ID: name,
+                },
+                customButtonType
+              )
+            );
           });
         }
       });
@@ -170,28 +228,101 @@ export function generateToggleButtonGroup(
   }
 
   const _code = [...actionList, ...originalCodeArr];
-
   //  _code去除重复项
   const uniqueActionList = Array.from(
     new Map(_code.map((item) => [item.NAME_ID, item])).values()
   );
   return uniqueActionList;
-  // 把actionList和originalCode两个数组拼接成一个新的数组
-  // 修改：将 originalCode 替换为 originalCodeArr
-
-  // navigator.clipboard
-  //   .writeText(_code)
-  //   .then(() => {
-  //     Toast3d("复制成功");
-  //   })
-  //   .catch((error) => {
-  //     // 处理复制过程中出现的错误
-  //     console.error("复制时发生错误:", error);
-  //     Toast3d("复制失败", "失败", APP_COLOR.Danger);
-  //   });
-  // 原选中代码，无需修改
 }
+// 获取切换按钮组 ActionItem[]
+export function getActionListByButtonMap(): ActionItemMap[] {
+  const customButtonList = getScene().userData
+    .customButtonList as CustomButtonListType;
+  const { listGroup, type, userSetting } = customButtonList.toggleButtonGroup;
 
+  let list: ActionItemMap[] = [];
+  if (type === "TOGGLE") {
+    list = listGroup.map((item: ActionItemMap) => {
+      const { showName, NAME_ID, data } = item;
+      return {
+        showName: showName,
+        NAME_ID: NAME_ID,
+        handler: () => {
+          if (NAME_ID === "全景") {
+            showModelByNameId(GLOBAL_CONSTANT.MODEL_GROUP);
+            return;
+          }
+          showModelByNameId(NAME_ID);
+        },
+        data,
+      };
+    });
+  }
+
+  if (type === "DRAWER") {
+    list = listGroup.map((item: ActionItemMap) => {
+      const { showName, NAME_ID, data } = item;
+      return {
+        showName: showName,
+        NAME_ID: NAME_ID,
+        handler: () => {
+          listGroup.forEach((_item: ActionItemMap) => {
+            const _d = _item.data;
+            if (_item.data?.isSelected && !_d?.isRunning) {
+              const model = createGroupIfNotExist(
+                getScene(),
+                _item.NAME_ID,
+                false
+              );
+              _item.data = {
+                isRunning: true,
+                isSelected: true,
+              };
+
+              if (model) {
+                const mp = model.position;
+                const { x, y, z } = userSetting?.modelOffset || {
+                  x: 0,
+                  y: 0,
+                  z: 0,
+                };
+                meshTween(
+                  model,
+                  new Vector3(mp.x - x, mp.y - y, mp.z - z),
+                  userSetting?.animationTime ?? 1000
+                )
+                  .start()
+                  .onComplete(() => {
+                    _item.data = {
+                      isRunning: false,
+                      isSelected: false,
+                    };
+                  });
+              }
+            }
+          });
+          if (!item.data?.isSelected && !item.data?.isRunning) {
+            drawerOutByNameId(item, customButtonList);
+          }
+        },
+        data,
+      };
+    });
+  }
+  if (type === "STRETCH") {
+    list = listGroup.map((item: ActionItemMap) => {
+      const { showName, NAME_ID } = item;
+      return {
+        showName: showName,
+        NAME_ID: NAME_ID,
+        handler: () => {
+          stretchModelByNameId(NAME_ID, customButtonList);
+        },
+      };
+    });
+  }
+  return list;
+}
 //生成漫游动画按钮组
 export function generateRoamButtonGroup() {
   const { actionMixerList } = editorGetAll().parameters3d;

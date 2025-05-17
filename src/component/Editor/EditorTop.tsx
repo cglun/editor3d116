@@ -33,6 +33,7 @@ import { useUpdateScene } from "../../app/hooks";
 import { Serch3d } from "./Serch3d";
 
 import { createNewScene } from "../../three/factory3d";
+import { useLocation, useNavigate } from "@tanstack/react-router";
 
 export default function EditorTop() {
   //打开场景列表
@@ -43,6 +44,8 @@ export default function EditorTop() {
   const { themeColor, iconFill, sceneCanSave } = getThemeByScene(scene);
   document.body.setAttribute("data-bs-theme", themeColor);
   const logoUrl = new URL("/static/images/logo.png", import.meta.url).href;
+  const navigate = useNavigate();
+  const location = useLocation();
 
   function notJavascript() {
     const userData = getScene().userData;
@@ -223,6 +226,9 @@ export default function EditorTop() {
               <Button
                 variant={themeColor}
                 onClick={() => {
+                  navigate({
+                    to: location.pathname,
+                  });
                   const newScene = createNewScene();
                   setScene(newScene);
                   updateScene(newScene);
