@@ -45,13 +45,9 @@ function RouteComponent() {
         variant={btnColor}
         onClick={() => {
           const list = getRoamListByRoamButtonMap();
-          if (list.length === 0) {
-            Toast3d("没有动画");
-            return;
-          }
-
-          if (list[0].handler) {
-            list[0].handler();
+          const item = list[list.length - 2];
+          if (item.handler) {
+            item.handler();
           }
         }}
       >
@@ -61,13 +57,9 @@ function RouteComponent() {
         variant={btnColor}
         onClick={() => {
           const list = getRoamListByRoamButtonMap();
-          if (list.length === 0) {
-            Toast3d("没有动画");
-            return;
-          }
-
-          if (list[1].handler) {
-            list[1].handler();
+          const item = list[list.length - 1];
+          if (item.handler) {
+            item.handler();
           }
         }}
       >

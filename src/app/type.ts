@@ -135,4 +135,5 @@ export interface Context116 {
   getUserData?: () => {}; // 返回 {}
   getActionList?: () => ActionItem[]; // 返回 ActionItem[] 类型
   getActionListByButtonMap?: () => ActionItemMap[]; // 返回 ActionItemMap[] 类型
+  getRoamListByRoamButtonMap?: () => ActionItemMap[]; // 返回 ActionItemMap[] 类型
 }

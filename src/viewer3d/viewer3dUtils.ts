@@ -68,11 +68,11 @@ export function getActionList(): ActionItem[] {
   if (targetGroup) {
     const { children } = targetGroup;
     const envMesh = children.find((item) =>
-      item.name.toUpperCase().includes("_ENV")
+      item.name.toUpperCase().includes("_ENV_")
     );
     children.forEach((item) => {
       const itemName = item.name;
-      if (!itemName.toUpperCase().includes("_ENV")) {
+      if (!itemName.toUpperCase().includes("_ENV_")) {
         const { children } = item;
         for (let i = 0; i < children.length; i++) {
           const { name } = children[i];
@@ -118,6 +118,103 @@ export function getActionListByButtonMap(): ActionItemMap[] {
   });
 }
 
+// 生成切换按钮组 ActionItem[]
+export function generateToggleButtonGroup(
+  originalCodeArr: ActionItemMap[],
+  sceneContext: Scene
+): ActionItemMap[] {
+  const actionList: ActionItemMap[] = [];
+
+  const MODEL_GROUP = createGroupIfNotExist(
+    sceneContext,
+    GLOBAL_CONSTANT.MODEL_GROUP,
+    false
+  );
+  if (MODEL_GROUP) {
+    const { children } = MODEL_GROUP;
+    actionList.push({
+      showName: "全景",
+      NAME_ID: "全景",
+    });
+
+    //二层
+    children.forEach((item) => {
+      const level2 = item.children;
+      level2.forEach((item) => {
+        if (!item.name.toUpperCase().includes("_ENV_")) {
+          const { name } = item;
+          actionList.push({
+            showName: name,
+            NAME_ID: name,
+          });
+        }
+      });
+    });
+    //三层
+    children.forEach((item) => {
+      const level2 = item.children;
+      level2.forEach((item) => {
+        const level3 = item.children;
+
+        if (!item.name.toUpperCase().includes("_ENV_")) {
+          level3.forEach((item) => {
+            const { name } = item;
+            actionList.push({
+              showName: name,
+              NAME_ID: name,
+            });
+          });
+        }
+      });
+    });
+  }
+
+  const _code = [...actionList, ...originalCodeArr];
+
+  //  _code去除重复项
+  const uniqueActionList = Array.from(
+    new Map(_code.map((item) => [item.NAME_ID, item])).values()
+  );
+  return uniqueActionList;
+  // 把actionList和originalCode两个数组拼接成一个新的数组
+  // 修改：将 originalCode 替换为 originalCodeArr
+
+  // navigator.clipboard
+  //   .writeText(_code)
+  //   .then(() => {
+  //     Toast3d("复制成功");
+  //   })
+  //   .catch((error) => {
+  //     // 处理复制过程中出现的错误
+  //     console.error("复制时发生错误:", error);
+  //     Toast3d("复制失败", "失败", APP_COLOR.Danger);
+  //   });
+  // 原选中代码，无需修改
+}
+
+//生成漫游动画按钮组
+export function generateRoamButtonGroup() {
+  const { actionMixerList } = editorGetAll().parameters3d;
+  const roamButtonGroup: ActionItemMap[] = [];
+
+  actionMixerList.forEach((item) => {
+    const { name } = item.getClip();
+
+    if (name.includes("AN_")) {
+      roamButtonGroup.push({
+        showName: name + "_开始",
+        NAME_ID: name + "_START",
+      });
+      roamButtonGroup.push({
+        showName: name + "_停止",
+        NAME_ID: name + "_STOP",
+      });
+    }
+  });
+
+  return roamButtonGroup;
+}
+//获取漫游动画按钮组
 export function getRoamListByRoamButtonMap(): ActionItemMap[] {
   let data = import.meta.env.PROD
     ? getScene().userData
@@ -170,96 +267,4 @@ export function getRoamListByRoamButtonMap(): ActionItemMap[] {
   //     }
   //   }
   // }
-}
-
-// 生成切换按钮组 ActionItem[]
-export function generateToggleButtonGroup(
-  originalCodeArr: ActionItemMap[],
-  sceneContext: Scene
-): ActionItemMap[] {
-  const actionList: ActionItemMap[] = [];
-
-  const MODEL_GROUP = createGroupIfNotExist(
-    sceneContext,
-    GLOBAL_CONSTANT.MODEL_GROUP,
-    false
-  );
-  if (MODEL_GROUP) {
-    const { children } = MODEL_GROUP;
-    actionList.push({
-      showName: "全景",
-      NAME_ID: "全景",
-    });
-
-    //二层
-    children.forEach((item) => {
-      const level2 = item.children;
-      level2.forEach((item) => {
-        if (!item.name.toUpperCase().includes("_ENV")) {
-          const { name } = item;
-          actionList.push({
-            showName: name,
-            NAME_ID: name,
-          });
-        }
-      });
-    });
-    //三层
-    children.forEach((item) => {
-      const level2 = item.children;
-      level2.forEach((item) => {
-        const level3 = item.children;
-        level3.forEach((item) => {
-          const { name } = item;
-          actionList.push({
-            showName: name,
-            NAME_ID: name,
-          });
-        });
-      });
-    });
-  }
-
-  const _code = [...actionList, ...originalCodeArr];
-
-  //  _code去除重复项
-  const uniqueActionList = Array.from(
-    new Map(_code.map((item) => [item.NAME_ID, item])).values()
-  );
-  return uniqueActionList;
-  // 把actionList和originalCode两个数组拼接成一个新的数组
-  // 修改：将 originalCode 替换为 originalCodeArr
-
-  // navigator.clipboard
-  //   .writeText(_code)
-  //   .then(() => {
-  //     Toast3d("复制成功");
-  //   })
-  //   .catch((error) => {
-  //     // 处理复制过程中出现的错误
-  //     console.error("复制时发生错误:", error);
-  //     Toast3d("复制失败", "失败", APP_COLOR.Danger);
-  //   });
-  // 原选中代码，无需修改
-}
-
-//生成漫游动画按钮组
-export function generateRoamButtonGroup() {
-  const { actionMixerList } = getAll().parameters3d;
-  const roamButtonGroup: ActionItemMap[] = [];
-  actionMixerList.forEach((item) => {
-    const { name } = item.getClip();
-    if (name.includes("AN_")) {
-      roamButtonGroup.push({
-        showName: name + "_开始",
-        NAME_ID: name + "_START",
-      });
-      roamButtonGroup.push({
-        showName: name + "_停止",
-        NAME_ID: name + "_STOP",
-      });
-    }
-  });
-
-  return roamButtonGroup;
 }

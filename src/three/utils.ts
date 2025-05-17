@@ -256,16 +256,16 @@ function getModelGroup(
       for (let i = 0; i < gltf.animations.length; i++) {
         const clip = gltf.animations[i];
 
-        if (clip.name.trim().includes("CAMERA")) {
+        if (clip.name.trim().toUpperCase().includes("CAMERA")) {
           const cameraAnimationAction = cameraMixer.clipAction(
             cameraClip(clip)
           );
           parameters3d.actionMixerList.push(cameraAnimationAction);
-          //  cameraAnimationAction.play();
+          // cameraAnimationAction.play();
         } else {
           const action = mixer.clipAction(clip);
           parameters3d.actionMixerList.push(action);
-          //  action.play();
+          action.play();
         }
       }
     }

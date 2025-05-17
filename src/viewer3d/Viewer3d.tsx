@@ -30,7 +30,11 @@ import {
   removeCanvasChild,
 } from "../three/utils";
 import { raycasterSelect } from "../three/common3d";
-import { getActionList, getActionListByButtonMap } from "./viewer3dUtils";
+import {
+  getActionList,
+  getActionListByButtonMap,
+  getRoamListByRoamButtonMap,
+} from "./viewer3dUtils";
 
 /**
  * 其他应用可以调用此组件，
@@ -78,6 +82,7 @@ export default function Viewer3d({
       getAll,
       getUserData,
       getActionListByButtonMap,
+      getRoamListByRoamButtonMap,
     };
 
     getProjectData(item.id)
