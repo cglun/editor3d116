@@ -1,4 +1,3 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import {
   Button,
@@ -7,6 +6,9 @@ import {
   Form,
   ListGroup,
 } from "react-bootstrap";
+import { createLazyFileRoute } from "@tanstack/react-router";
+
+import CodeEditor from "../../component/common/CodeEditor";
 import { getScene } from "../../three/init3dEditor";
 import { useUpdateScene } from "../../app/hooks";
 import AlertBase from "../../component/common/AlertBase";
@@ -16,7 +18,7 @@ import {
   CustomButtonType,
 } from "../../app/type";
 import { getButtonColor, getThemeByScene } from "../../app/utils";
-import CodeEditor from "../../component/common/CodeEditor";
+
 import {
   generateRoamButtonGroup,
   generateToggleButtonGroup,
@@ -24,6 +26,9 @@ import {
 import Toast3d from "../../component/common/Toast3d";
 
 import ModalConfirm3d from "../../component/common/ModalConfirm3d";
+
+import { Vector3 } from "three";
+
 export const Route = createLazyFileRoute("/editor3d/script")({
   component: RouteComponent,
 });
@@ -37,14 +42,26 @@ function RouteComponent() {
 
   const { themeColor } = getThemeByScene(scene);
   const buttonColor = getButtonColor(themeColor);
-  const { javascript, projectId, customButtonList } = scene.payload.userData;
+
+  // 使用可选属性和类型断言
+  const {
+    javascript,
+    projectId,
+    customButtonList = {} as CustomButtonListType,
+  } = scene.payload.userData as {
+    javascript: string;
+    projectId: number;
+    customButtonList?: CustomButtonListType;
+  };
 
   // const [javaScriptCode, setJavaScriptCode] = useState<string>(javascript);
   const [showJavaScript, setShowJavaScript] = useState(false); // 是否为调试场景[调试场景不允许修改代码]
 
   const [show, setShow] = useState(false);
   const buttonList = JSON.stringify(customButtonList, null, 5);
-  const [buttonType, setButtonType] = useState<CustomButtonType>("TOGGLE");
+  const [buttonType, setButtonType] = useState<CustomButtonType>(
+    customButtonList.toggleButtonGroup?.type || "TOGGLE"
+  );
 
   //@ts-ignore
   const list = [{ name: "A" }, { name: "B" }, { name: "C" }, { name: "A_F1" }];
@@ -61,7 +78,7 @@ function RouteComponent() {
       </ListGroup.Item>
 
       <ListGroup>
-        {projectId && (
+        {projectId && projectId !== -1 && (
           <ListGroup.Item>
             <ButtonGroup size="sm">
               <Button
@@ -125,7 +142,7 @@ function RouteComponent() {
                     onClick={() => {
                       getScene().userData.customButtonList = {};
                       updateScene(getScene());
-                      setButtonType("DRAWER");
+                      setButtonType(buttonType);
                       Toast3d("已重置按钮组");
                     }}
                   >
@@ -135,6 +152,7 @@ function RouteComponent() {
                   <>
                     <Form key={"inline-radio-2"}>
                       <Form.Check
+                        defaultChecked={buttonType === "TOGGLE"}
                         inline
                         label="切换"
                         name="buttonType"
@@ -145,6 +163,7 @@ function RouteComponent() {
                         }}
                       />
                       <Form.Check
+                        defaultChecked={buttonType === "STRETCH"}
                         inline
                         label="拉伸"
                         name="buttonType"
@@ -155,7 +174,7 @@ function RouteComponent() {
                         }}
                       />
                       <Form.Check
-                        defaultChecked
+                        defaultChecked={buttonType === "DRAWER"}
                         inline
                         label="抽屉"
                         name="buttonType"
@@ -176,23 +195,30 @@ function RouteComponent() {
                           getScene(),
                           buttonType
                         );
-                        const offset = {
-                          x: 0,
-                          y: 0,
-                          z: 0.3,
-                        };
+                        const modelOffset = new Vector3(0, 0, 0);
+                        const cameraOffset = new Vector3(0, 0, 0);
+                        const offset = 2;
                         if (buttonType === "STRETCH") {
-                          offset.x = 0;
-                          offset.y = 0.3;
-                          offset.z = 0;
+                          modelOffset.y = offset;
+                        }
+                        if (buttonType === "DRAWER") {
+                          modelOffset.x = offset;
+                        }
+                        if (buttonType === "TOGGLE") {
+                          cameraOffset.z = offset;
                         }
 
                         const buttonGroup: CustomButtonListType = {
+                          canBeSelectedModel: {
+                            groupNameList: [],
+                            modelNameList: [],
+                          },
                           toggleButtonGroup: {
                             name: "切换按钮组",
                             type: buttonType,
                             userSetting: {
-                              modelOffset: offset,
+                              cameraOffset,
+                              modelOffset,
                               animationTime: 300,
                             },
                             listGroup: gerToggleButtonGroup,
@@ -200,6 +226,9 @@ function RouteComponent() {
                           roamButtonGroup: {
                             name: "漫游按钮组",
                             type: "ROAM",
+                            userSetting: {
+                              speed: 2,
+                            },
                             listGroup: generateRoamButtonGroup(),
                           },
                         };

@@ -1,6 +1,7 @@
 import {
   BoxHelper,
   Camera,
+  CatmullRomCurve3,
   Color,
   DataTexture,
   MOUSE,
@@ -14,7 +15,7 @@ import {
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { TransformControls } from "three/addons/controls/TransformControls.js";
 import { DragControls } from "three/addons/controls/DragControls.js";
-import { GlbModel, UserDataType } from "../app/type";
+import { CustomButtonListType, GlbModel, UserDataType } from "../app/type";
 import { cameraTween } from "./animate";
 import { setBoxHelper, commonAnimate, AnimateProps } from "./common3d";
 import { extra3d as extra, parameters } from "./config3d";
@@ -26,6 +27,8 @@ import {
 } from "./factory3d";
 import { createGroupIfNotExist } from "./utils";
 import { GLOBAL_CONSTANT } from "./GLOBAL_CONSTANT";
+
+import { getObjectWorldPosition } from "../viewer3d/viewer3dUtils";
 
 let scene: Scene,
   camera: PerspectiveCamera | OrthographicCamera,
@@ -92,6 +95,8 @@ export default function initScene(node: HTMLDivElement): void {
   // 初始化轨道控制器
   controls1 = new OrbitControls(perspectiveCamera, renderer.domElement);
   controls2 = new OrbitControls(orthographicCamera, renderer.domElement);
+  //controls3 = new FirstPersonControls(perspectiveCamera, renderer.domElement);
+
   controls = controls1;
 
   // 初始化变换控制器
@@ -108,7 +113,6 @@ export default function initScene(node: HTMLDivElement): void {
     scene,
     node
   );
-  console.log("labelRenderer2d, labelRenderer3d");
 
   extra3d = {
     ...extra3d,
@@ -245,6 +249,7 @@ export function getUserData() {
 export function getControls() {
   return controls;
 }
+
 export function getTransfControls() {
   return transfControls;
 }
@@ -316,4 +321,112 @@ export function setCameraType(cameraType: string, cameraUp: Vector3) {
     };
     controls = controls2;
   }
+}
+
+let _isRunning = false;
+//创建一条曲线
+export function createCurve(
+  scene: Scene,
+  camera: PerspectiveCamera,
+  controls: OrbitControls,
+  curveName: string,
+  roamButtonGroup: CustomButtonListType["roamButtonGroup"],
+  isRunning: boolean
+) {
+  const vector: Vector3[] = [];
+  const _curve = createGroupIfNotExist(scene, curveName, false);
+  if (!_curve) {
+    return;
+  }
+  _isRunning = isRunning;
+
+  _curve.children.forEach((child) => {
+    const position = getObjectWorldPosition(child);
+    vector.push(position);
+  });
+
+  const curve = new CatmullRomCurve3(vector, true);
+
+  // const points = curve.getPoints(50); // 创建线条材质
+  // const material = new LineBasicMaterial({ color: 0xff0000 });
+  // // 创建 BufferGeometry 并设置顶点
+  // const geometry = new BufferGeometry().setFromPoints(points);
+
+  // // 创建线条对象
+  // const line = new Line(geometry, material);
+
+  // 将线条添加到场景中
+  //scene.add(line);
+  // const model = getScene().getObjectByName("box");
+  // const model = getCamera();
+
+  //
+  if (camera) {
+    // 初始化进度变量
+    let progress = 0;
+    // 移动速度，可根据需要调整
+    const speed = (roamButtonGroup?.userSetting?.speed ?? 2) / 10000;
+
+    function moveModelAlongCurve() {
+      if (progress <= 1 && _isRunning) {
+        // 根据进度获取曲线上的点
+        const point = curve.getPoint(progress);
+        // 设置相机的位置
+        camera.position.copy(point);
+        // 获取曲线的切线方向
+        const tangent = curve.getTangent(progress).normalize();
+        // 计算相机的目标点，使其始终朝前
+        const target = camera.position.clone().add(tangent);
+
+        // 设置相机的朝向
+        //  model.lookAt(target.x, target.y, target.z);
+        controls.target.set(target.x, target.y, target.z);
+        controls.update();
+        // 增加进度
+        progress += speed;
+        if (progress > 1) {
+          progress = 0;
+        }
+
+        requestAnimationFrame(moveModelAlongCurve);
+      }
+    }
+
+    // 开始移动
+    moveModelAlongCurve();
+  }
+}
+
+export function setMyControls() {
+  const camera = getCamera();
+  const controls = getControls();
+
+  // 定义相机前方的距离，可按需调整
+  const distanceInFront = 5;
+  // 存储相机前方点的向量
+  const pointInFrontOfCamera = new Vector3();
+
+  // 更新控制器目标的函数
+  function updateControlsTarget() {
+    // 获取相机的世界方向
+    const cameraDirection = new Vector3();
+    camera.getWorldDirection(cameraDirection);
+
+    // 计算相机前方的点
+    pointInFrontOfCamera
+      .copy(camera.position)
+      .add(cameraDirection.multiplyScalar(distanceInFront));
+
+    // 设置控制器的目标点
+    controls.target.copy(pointInFrontOfCamera);
+
+    // 更新控制器
+    controls.update();
+
+    // 请求下一帧继续更新
+    requestAnimationFrame(updateControlsTarget);
+  }
+
+  // 启动更新循环
+  updateControlsTarget();
 }

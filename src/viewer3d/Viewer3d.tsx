@@ -1,8 +1,14 @@
-import React from "react";
+import { RefObject, useReducer } from "react";
 import { useEffect, useRef, useState } from "react";
 import { Container, ProgressBar } from "react-bootstrap";
-import { APP_COLOR, Context116, GlbModel, RecordItem } from "../app/type";
-import { Object3D } from "three";
+import {
+  APP_COLOR,
+  Context116,
+  CustomButtonListType,
+  GlbModel,
+  RecordItem,
+} from "../app/type";
+import { Object3D, Vector2 } from "three";
 
 import Toast3d from "../component/common/Toast3d";
 import { initEditorScene, initTourWindow, MyContext } from "../app/MyContext";
@@ -34,6 +40,7 @@ import {
   getActionListByButtonMap,
   getRoamListByRoamButtonMap,
 } from "./viewer3dUtils";
+import InfoPanel from "./InfoPanel";
 
 /**
  * 其他应用可以调用此组件，
@@ -54,14 +61,11 @@ export default function Viewer3d({
   getProgress?: (progress: number) => void;
 }) {
   // 修改为明确指定 HTMLDivElement 类型
-  const canvas3d: React.RefObject<HTMLDivElement> = useRef(null);
+  const canvas3d: RefObject<HTMLDivElement> = useRef(null);
 
   const [progress, setProgress] = useState(0);
-  const [scene, dispatchScene] = React.useReducer(
-    reducerScene,
-    initEditorScene
-  );
-  const [tourWindow, dispatchTourWindow] = React.useReducer(
+  const [scene, dispatchScene] = useReducer(reducerScene, initEditorScene);
+  const [tourWindow, dispatchTourWindow] = useReducer(
     reducerTour,
     initTourWindow
   );
@@ -200,6 +204,7 @@ export default function Viewer3d({
       removeCanvasChild(canvas3d);
     };
   }, [item]);
+  const [position, setPosition] = useState(new Vector2(0, 0));
 
   function clickHandler(event: MouseEvent) {
     const divElement = getDivElement();
@@ -216,27 +221,49 @@ export default function Viewer3d({
         selectedMesh.push(object);
       }
     }
+
     if (selectedMesh.length > 0) {
-      console.log(selectedMesh);
+      const customButtonList = getScene().userData
+        .customButtonList as CustomButtonListType;
+      const { groupNameList } = customButtonList.canBeSelectedModel;
+
+      const parentName = selectedMesh[0].parent?.name ?? "";
+      const isParentNameInList = groupNameList.includes(parentName);
+
+      if (!isParentNameInList) {
+        setShow(false);
+        return;
+      }
+
+      setPosition(new Vector2(event.offsetX + 16, event.offsetY + 6));
+      setShow(true);
+      const data = {
+        name: selectedMesh[0].name,
+        des: "",
+        cover: "",
+        id: 0,
+      };
+      setData(data);
+    }
+    if (selectedMesh.length === 0) {
+      setShow(false);
     }
   }
+  const [show, setShow] = useState(false);
+  const [data, setData] = useState<RecordItem>();
 
   return (
     <MyContext.Provider
       value={{ scene, dispatchScene, tourWindow, dispatchTourWindow }}
     >
-      <Container fluid>
+      <Container fluid className="position-relative">
         {progress < 100 && !getProgress && (
           <div className="mb-1 mx-auto" style={{ width: "300px" }}>
             <ProgressBar now={progress} label={`${progress}%`} />
           </div>
         )}
-
-        <div
-          className="mx-auto position-relative"
-          style={canvasStyle}
-          ref={canvas3d}
-        ></div>
+        <div className="mx-auto" style={canvasStyle} ref={canvas3d}></div>
+        <InfoPanel position={position} data={data} show={show} />
         <ModalTour />
       </Container>
     </MyContext.Provider>

@@ -23,6 +23,7 @@ export const userData = {
   isSelected: false,
   fixedCameraPosition: new Vector3(-5, 5, 8),
   config3d,
+  projectId: -1,
   backgroundHDR: {
     name: "venice_sunset_1k.hdr",
     asBackground: true,

@@ -20,6 +20,7 @@ import {
   Context116,
   RecordItem,
 } from "../../app/type";
+import { getCamera } from "../../three/init3dViewer";
 
 // 定义响应数据的类型
 interface PageListResponse {
@@ -42,6 +43,7 @@ export const Route = createLazyFileRoute("/editor3d/preView")({
 function RouteComponent() {
   const [listScene, setListScene] = useState<RecordItem[]>([]);
   const [listAction, setListAction] = useState<ActionItemMap[]>();
+  const [roamButtonlist, setRoamButtonlist] = useState<ActionItemMap[]>([]);
 
   const { scene } = useUpdateScene();
   const { themeColor } = getThemeByScene(scene);
@@ -90,6 +92,7 @@ function RouteComponent() {
   function callBack(instance: Context116) {
     // 检查 getActionListByButtonMap 方法是否存在
     setListAction(instance.getActionListByButtonMap || []);
+    setRoamButtonlist(instance.getRoamListByRoamButtonMap || []);
   }
   //@ts-expect-error
   function callBackError(error: unknown) {
@@ -148,7 +151,7 @@ function RouteComponent() {
               })}
             </ButtonGroup>
           </Container>
-          <Modal.Body ref={modalBody}>
+          <Modal.Body ref={modalBody} style={{ padding: "1rem 0" }}>
             {_item && (
               <Viewer3d
                 canvasStyle={{
@@ -178,6 +181,53 @@ function RouteComponent() {
                   </Button>
                 );
               })}
+
+              {roamButtonlist.map((item: ActionItemMap, index: number) => {
+                const isStart = item.NAME_ID.includes("START");
+                return (
+                  <Button
+                    variant={buttonColor}
+                    key={index}
+                    onClick={() => {
+                      if (item.handler) {
+                        const name = item.NAME_ID.split("_AN_")[0];
+                        item.handler(item.NAME_ID);
+                        const nameId = isStart
+                          ? `${name}_AN_STOP`
+                          : `${name}_AN_START`;
+                        setRoamButtonlist((prevList) => {
+                          return prevList.map((prevItem) => {
+                            if (prevItem.NAME_ID === item.NAME_ID) {
+                              return {
+                                ...prevItem,
+                                NAME_ID: nameId,
+                              };
+                            }
+                            return prevItem;
+                          });
+                        });
+                      }
+                    }}
+                  >
+                    {isStart ? item.showName[0] : item.showName[1]}
+                  </Button>
+                );
+              })}
+              <Button
+                variant={APP_COLOR.Primary}
+                onClick={() => {
+                  const { x, y, z } = getCamera().position;
+                  const cameraX = x.toFixed(2);
+                  const cameraY = y.toFixed(2);
+                  const cameraZ = z.toFixed(2);
+
+                  alert(
+                    `"cameraPosition":{"x":${cameraX},"y":${cameraY},"z":${cameraZ}}                        `
+                  );
+                }}
+              >
+                当前相机位置
+              </Button>
               <Button variant={APP_COLOR.Danger} onClick={handleClose}>
                 关闭
               </Button>

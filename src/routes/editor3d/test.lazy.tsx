@@ -7,8 +7,6 @@ import Toast3d from "../../component/common/Toast3d";
 import { getButtonColor, getThemeByScene } from "../../app/utils";
 import { useUpdateScene } from "../../app/hooks";
 
-import { getRoamListByRoamButtonMap } from "../../viewer3d/viewer3dUtils";
-
 export const Route = createLazyFileRoute("/editor3d/test")({
   component: RouteComponent,
 });
@@ -40,30 +38,6 @@ function RouteComponent() {
         }}
       >
         相机动画
-      </Button>
-      <Button
-        variant={btnColor}
-        onClick={() => {
-          const list = getRoamListByRoamButtonMap();
-          const item = list[list.length - 2];
-          if (item.handler) {
-            item.handler();
-          }
-        }}
-      >
-        漫游开始
-      </Button>
-      <Button
-        variant={btnColor}
-        onClick={() => {
-          const list = getRoamListByRoamButtonMap();
-          const item = list[list.length - 1];
-          if (item.handler) {
-            item.handler();
-          }
-        }}
-      >
-        漫游结束
       </Button>
     </ButtonGroup>
   );

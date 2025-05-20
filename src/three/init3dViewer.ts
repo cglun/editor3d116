@@ -68,6 +68,7 @@ export default function initScene(node: HTMLDivElement): void {
 export function getControls() {
   return controls;
 }
+
 export function getLabelRenderer() {
   return extra.labelRenderer2d;
 }

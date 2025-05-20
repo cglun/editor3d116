@@ -247,6 +247,7 @@ function getModelGroup(
   const { config3d } = context.userData as typeof userData;
   if (config3d.useKeyframe) {
     const mixer = new AnimationMixer(scene);
+
     const cameraMixer = new AnimationMixer(camera); // 将相机作为动画目标
 
     parameters3d.mixer.push(mixer);
@@ -255,8 +256,9 @@ function getModelGroup(
     if (gltf.animations.length > 0) {
       for (let i = 0; i < gltf.animations.length; i++) {
         const clip = gltf.animations[i];
-
-        if (clip.name.trim().toUpperCase().includes("CAMERA")) {
+        const clipName = clip.name.trim().toUpperCase();
+        if (clipName.includes("CAMERA") || clipName.includes("摄像机")) {
+          continue;
           const cameraAnimationAction = cameraMixer.clipAction(
             cameraClip(clip)
           );

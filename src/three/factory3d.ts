@@ -32,7 +32,7 @@ export function createPerspectiveCamera(
   cameraName = "透视相机"
 ) {
   const camera = new PerspectiveCamera(
-    75,
+    50,
     node.offsetWidth / node.offsetHeight,
     0.1,
     1000

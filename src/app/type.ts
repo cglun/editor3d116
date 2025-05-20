@@ -90,40 +90,57 @@ export interface ProjectListResponse {
     records: RecordItem[];
   };
 }
-export interface ActionItem {
-  showName: string;
-  NAME_ID: string;
-  handler: () => void;
-}
+// export interface ActionItem {
+//   showName: string;
+//   NAME_ID: string;
+//   handler: (obj?: {}) => void;
+// }
 export interface ActionItemMap {
-  showName: string;
+  showName: string | string[];
   NAME_ID: string;
-  handler?: () => void;
+  handler?: (nameId?: string) => void;
   data?: {
     isSelected: boolean;
     isRunning?: boolean;
+    cameraPosition?: {
+      x: number;
+      y: number;
+      z: number;
+    };
   };
 }
 // 使用 = 定义类型，并且明确成员类型为字符串字面量类型
 export type CustomButtonType = "TOGGLE" | "DRAWER" | "STRETCH";
+interface UserSetting {
+  modelOffset?: {
+    x: number;
+    y: number;
+    z: number;
+  };
+  cameraOffset?: {
+    x: number;
+    y: number;
+    z: number;
+  };
+  animationTime?: number;
+  speed?: number;
+}
 
 export type CustomButtonListType = {
+  canBeSelectedModel: {
+    groupNameList: string[];
+    modelNameList: string[];
+  };
   toggleButtonGroup: {
     name: string;
     type: CustomButtonType;
     listGroup: ActionItemMap[];
-    userSetting?: {
-      modelOffset: {
-        x: number;
-        y: number;
-        z: number;
-      };
-      animationTime: number;
-    };
+    userSetting?: UserSetting;
   };
   roamButtonGroup: {
     name: string;
     type: "ROAM";
+    userSetting?: UserSetting;
     listGroup: ActionItemMap[];
   };
 };
