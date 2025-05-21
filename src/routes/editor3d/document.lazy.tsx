@@ -70,16 +70,18 @@ function RouteComponent() {
   return (
     <ListGroup>
       <ListGroupItem>
-        <ButtonGroup size="sm">
-          <Button
-            variant={buttonColor}
-            onClick={() => {
-              setShow(true);
-            }}
-          >
-            查看文档
-          </Button>
-        </ButtonGroup>
+        {!show && (
+          <ButtonGroup size="sm">
+            <Button
+              variant={buttonColor}
+              onClick={() => {
+                setShow(true);
+              }}
+            >
+              查看文档
+            </Button>
+          </ButtonGroup>
+        )}
         {show && (
           <ListGroupItem>
             <CodeEditor

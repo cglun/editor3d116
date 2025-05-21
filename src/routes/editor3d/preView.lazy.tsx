@@ -90,8 +90,8 @@ function RouteComponent() {
   }, []);
 
   function callBack(instance: Context116) {
-    // 检查 getActionListByButtonMap 方法是否存在
-    setListAction(instance.getActionListByButtonMap || []);
+    // 检查 getToggleButtonGroup 方法是否存在
+    setListAction(instance.getToggleButtonGroup || []);
     setRoamButtonlist(instance.getRoamListByRoamButtonMap || []);
   }
   //@ts-expect-error
@@ -119,14 +119,16 @@ function RouteComponent() {
     <ListGroup>
       <ListGroupItem>
         <ButtonGroup size="sm">
-          <Button
-            variant={buttonColor}
-            onClick={() => {
-              setShow(true);
-            }}
-          >
-            预览场景
-          </Button>
+          {!show && (
+            <Button
+              variant={buttonColor}
+              onClick={() => {
+                setShow(true);
+              }}
+            >
+              预览场景
+            </Button>
+          )}
         </ButtonGroup>
         <Modal size="xl" show={show} onHide={handleClose}>
           <Modal.Header closeButton>

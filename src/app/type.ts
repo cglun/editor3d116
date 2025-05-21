@@ -173,6 +173,6 @@ export interface Context116 {
   }; // 返回 object 类型
   getUserData?: () => {}; // 返回 {}
 
-  getActionListByButtonMap?: () => ActionItemMap[]; // 返回 ActionItemMap[] 类型
+  getToggleButtonGroup?: () => ActionItemMap[]; // 返回 ActionItemMap[] 类型
   getRoamListByRoamButtonMap?: () => ActionItemMap[]; // 返回 ActionItemMap[] 类型
 }

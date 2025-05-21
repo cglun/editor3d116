@@ -58,7 +58,7 @@ export function getThemeByScene(scene: EditorScene) {
   return theme;
 }
 
-export function fixedEditorLleft(fixed = true) {
+export function fixedEditorLeft(fixed = true) {
   const editorLeft = document.getElementById("editor-left");
   const editorRight = document.getElementById("editor-right");
   editorLeft?.classList.remove("position-fixed");

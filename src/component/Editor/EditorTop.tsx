@@ -11,11 +11,7 @@ import {
   Stack,
   Container,
 } from "react-bootstrap";
-import {
-  fixedEditorLleft,
-  getThemeByScene,
-  setClassName,
-} from "../../app/utils";
+import { getThemeByScene, setClassName } from "../../app/utils";
 
 import ListCard from "./ListCard";
 import Toast3d from "../common/Toast3d";
@@ -198,17 +194,7 @@ export default function EditorTop() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <ButtonGroup size="sm">
-              <Button
-                variant={themeColor}
-                onClick={handleShow}
-                onMouseEnter={() => {
-                  fixedEditorLleft();
-                  // handleShow();
-                }}
-                onMouseLeave={() => {
-                  fixedEditorLleft(false);
-                }}
-              >
+              <Button variant={themeColor} onClick={handleShow}>
                 <i className={setClassName("badge-3d")}></i> 切换场景
               </Button>
             </ButtonGroup>{" "}

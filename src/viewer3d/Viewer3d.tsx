@@ -37,7 +37,7 @@ import {
 } from "../three/utils";
 import { raycasterSelect } from "../three/common3d";
 import {
-  getActionListByButtonMap,
+  getToggleButtonGroup,
   getRoamListByRoamButtonMap,
 } from "./viewer3dUtils";
 import InfoPanel from "./InfoPanel";
@@ -83,7 +83,7 @@ export default function Viewer3d({
       getControls,
       getAll,
       getUserData,
-      getActionListByButtonMap,
+      getToggleButtonGroup,
       getRoamListByRoamButtonMap,
     };
 
@@ -225,6 +225,10 @@ export default function Viewer3d({
     if (selectedMesh.length > 0) {
       const customButtonList = getScene().userData
         .customButtonList as CustomButtonListType;
+      if (!customButtonList.canBeSelectedModel) {
+        setShow(false);
+        return;
+      }
       const { groupNameList } = customButtonList.canBeSelectedModel;
 
       const parentName = selectedMesh[0].parent?.name ?? "";

@@ -64,7 +64,7 @@ h5 {
 .da-gang .list-group-item {
   cursor: pointer;
 }
- 
+
 btn-group-sm > .btn,
 .btn-sm {
   --bs-btn-padding-y: 0;
@@ -86,8 +86,9 @@ btn-group-sm > .btn,
   font-size: 1.16rem;
   padding: 0.2rem;
   border-radius: 0.4rem;
-  background: var(--bs-purple);
+  background: var(--bs-gray-500);
   color: var(--bs-primary-bg-subtle);
+  opacity: 0.6; 
 }
 
 .bi-image {
@@ -101,4 +102,15 @@ btn-group-sm > .btn,
 
 #editor-canvas canvas {
   width: 100% !important;
+}
+
+#editor-right {
+  right: 0;
+  scrollbar-width: none;
+}
+
+#editor-right .accordion-item {
+  overflow-y: scroll;
+  scrollbar-width: thin;
+ height: 46vh;
 }

@@ -234,7 +234,6 @@ function RouteComponent() {
                         };
                         getScene().userData.customButtonList = buttonGroup;
                         updateScene(getScene());
-
                         Toast3d("已生成按钮组");
                       }}
                     >

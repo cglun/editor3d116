@@ -4,6 +4,7 @@ import { Button, Modal } from "react-bootstrap";
 import ModalConfirm3d from "./ModalConfirm3d";
 import { useUpdateScene } from "../../app/hooks";
 import { getThemeByScene } from "../../app/utils";
+import { APP_COLOR } from "../../app/type";
 
 interface CodeEditorProps {
   language?: string;
@@ -77,7 +78,7 @@ const CodeEditor = (props: CodeEditorProps) => {
   }
 
   return (
-    <Modal size="lg" show={show} onHide={handleClose}>
+    <Modal size="lg" show={show} onHide={handleClose} backdrop="static">
       <Modal.Header closeButton>
         <Modal.Title>{tipsTitle ? tipsTitle : "代码编辑器"}</Modal.Title>
       </Modal.Header>
@@ -102,10 +103,10 @@ const CodeEditor = (props: CodeEditorProps) => {
         />
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose}>
+        {children}
+        <Button variant={APP_COLOR.Danger} onClick={handleClose}>
           关闭
         </Button>
-        {children}
       </Modal.Footer>
     </Modal>
   );

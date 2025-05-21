@@ -238,7 +238,7 @@ export function generateToggleButtonGroup(
   return uniqueActionList;
 }
 // 获取切换按钮组
-export function getActionListByButtonMap(): ActionItemMap[] {
+export function getToggleButtonGroup(): ActionItemMap[] {
   const customButtonList = getScene().userData
     .customButtonList as CustomButtonListType;
 

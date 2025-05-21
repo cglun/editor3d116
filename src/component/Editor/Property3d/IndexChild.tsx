@@ -13,7 +13,7 @@ import { getButtonColor, getThemeByScene } from "../../../app/utils";
 import AlertBase from "../../common/AlertBase";
 import { setTextureBackground } from "../../../three/common3d";
 import { userData } from "../../../three/config3d";
-import { APP_COLOR, SelectedObject } from "../../../app/type";
+import { SelectedObject } from "../../../app/type";
 import { InputAttrNumber } from "./InputAttrNumber";
 import Toast3d from "../../common/Toast3d";
 
@@ -186,11 +186,6 @@ function SceneProperty() {
         selected3d={_scene.fog as Fog}
         attr={"far"}
         step={step}
-      />
-      <AlertBase
-        className="mb-1 mt-1"
-        type={APP_COLOR.Warning}
-        text={"自定义按钮，类型：数组"}
       />
     </Container>
   );

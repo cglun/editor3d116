@@ -1,5 +1,5 @@
 import { Accordion } from "react-bootstrap";
-import { fixedEditorLleft, setClassName } from "../../../app/utils";
+import { setClassName } from "../../../app/utils";
 
 import IndexChild from "./IndexChild";
 import { SelectedObject } from "../../../app/type";
@@ -13,10 +13,15 @@ export default function Index({ selected3d }: { selected3d: SelectedObject }) {
   const refAccordion = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const focusHandler = () => {
-      fixedEditorLleft();
+      if (refAccordion.current) {
+        debugger;
+        refAccordion.current.style.overflow = "hidden";
+      }
     };
     const mouseLeaveHandler = () => {
-      fixedEditorLleft(false);
+      if (refAccordion.current) {
+        refAccordion.current.style.overflowY = "scroll";
+      }
     };
     let inputList = null;
     if (refAccordion.current) {
@@ -40,16 +45,7 @@ export default function Index({ selected3d }: { selected3d: SelectedObject }) {
 
   return (
     selected3d && (
-      <Accordion.Item
-        eventKey="1"
-        ref={refAccordion}
-        // onMouseLeave={() => {
-        //    fixedEditorLleft(false);
-        // }}
-        // onMouseEnter={() => {
-        //     fixedEditorLleft();
-        // }}
-      >
+      <Accordion.Item eventKey="1" ref={refAccordion}>
         <Accordion.Header>
           <i className={setClassName("menu-button")}></i>
           <span className="px-2 ellipsis-3d">属性</span>

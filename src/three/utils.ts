@@ -60,6 +60,20 @@ export function onWindowResize(
       labelRenderer.setSize(width, height);
     }
   }
+  const accordionItem = document.querySelectorAll<HTMLElement>(
+    "#editor-right .accordion-item"
+  );
+  if (accordionItem) {
+    if (window.innerWidth < 1200) {
+      accordionItem.forEach((item) => {
+        item.style.height = "auto";
+      });
+      return;
+    }
+    accordionItem.forEach((item) => {
+      item.style.height = "46vh";
+    });
+  }
 }
 
 export function setLabel(
