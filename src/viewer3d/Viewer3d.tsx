@@ -266,7 +266,7 @@ export default function Viewer3d({
             <ProgressBar now={progress} label={`${progress}%`} />
           </div>
         )}
-        <div className="mx-auto" style={canvasStyle} ref={canvas3d}></div>
+        <div style={canvasStyle} ref={canvas3d}></div>
         <InfoPanel position={position} data={data} show={show} />
         <ModalTour />
       </Container>

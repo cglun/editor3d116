@@ -98,6 +98,7 @@ export interface ProjectListResponse {
 export interface ActionItemMap {
   showName: string | string[];
   NAME_ID: string;
+  showButton: boolean;
   handler?: (nameId?: string) => void;
   data?: {
     isSelected: boolean;

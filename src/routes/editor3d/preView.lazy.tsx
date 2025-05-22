@@ -42,7 +42,7 @@ export const Route = createLazyFileRoute("/editor3d/preView")({
 
 function RouteComponent() {
   const [listScene, setListScene] = useState<RecordItem[]>([]);
-  const [listAction, setListAction] = useState<ActionItemMap[]>();
+  const [toggleButtonList, setToggleButtonList] = useState<ActionItemMap[]>();
   const [roamButtonlist, setRoamButtonlist] = useState<ActionItemMap[]>([]);
 
   const { scene } = useUpdateScene();
@@ -91,8 +91,11 @@ function RouteComponent() {
 
   function callBack(instance: Context116) {
     // 检查 getToggleButtonGroup 方法是否存在
-    setListAction(instance.getToggleButtonGroup || []);
+    setToggleButtonList(instance.getToggleButtonGroup || []);
     setRoamButtonlist(instance.getRoamListByRoamButtonMap || []);
+    if (instance.getToggleButtonGroup) {
+      console.log(instance.getToggleButtonGroup());
+    }
   }
   //@ts-expect-error
   function callBackError(error: unknown) {
@@ -107,13 +110,14 @@ function RouteComponent() {
   function handleClose() {
     setShow(false);
   }
+  const modalBody = useRef<HTMLDivElement>(null);
+  const beishu = window.innerHeight / window.innerWidth;
+  const w = 1138;
+  const h = w * beishu;
+
   useEffect(() => {
     setShow(true);
   }, []);
-  const modalBody = useRef<HTMLDivElement>(null);
-  const beishu = 1080 / 1920;
-  const w = 1100;
-  const h = w * beishu;
 
   return (
     <ListGroup>
@@ -134,8 +138,8 @@ function RouteComponent() {
           <Modal.Header closeButton>
             <Modal.Title>场景预览</Modal.Title>
           </Modal.Header>
-          <Container>
-            <ButtonGroup size="sm" className="mt-2">
+          <Container fluid>
+            <ButtonGroup size="sm">
               {listScene.map((item: RecordItem) => {
                 return (
                   <Button
@@ -153,7 +157,7 @@ function RouteComponent() {
               })}
             </ButtonGroup>
           </Container>
-          <Modal.Body ref={modalBody} style={{ padding: "1rem 0" }}>
+          <Modal.Body ref={modalBody} style={{ padding: 0 }}>
             {_item && (
               <Viewer3d
                 canvasStyle={{
@@ -167,8 +171,8 @@ function RouteComponent() {
             )}
           </Modal.Body>
           <Modal.Footer>
-            <ButtonGroup size="sm" className="ms-2">
-              {listAction?.map((item: ActionItemMap, index: number) => {
+            <ButtonGroup size="sm">
+              {toggleButtonList?.map((item: ActionItemMap, index: number) => {
                 return (
                   <Button
                     variant={buttonColor}
@@ -215,6 +219,8 @@ function RouteComponent() {
                   </Button>
                 );
               })}
+            </ButtonGroup>
+            <ButtonGroup size="sm" className="mt-2">
               <Button
                 variant={APP_COLOR.Primary}
                 onClick={() => {

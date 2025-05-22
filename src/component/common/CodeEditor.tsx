@@ -1,16 +1,20 @@
 import Editor from "@monaco-editor/react";
 import React, { useState, useEffect } from "react";
-import { Button, Modal } from "react-bootstrap";
+import { Button, Modal, Tab, Tabs } from "react-bootstrap";
 import ModalConfirm3d from "./ModalConfirm3d";
 import { useUpdateScene } from "../../app/hooks";
 import { getThemeByScene } from "../../app/utils";
 import { APP_COLOR } from "../../app/type";
+import UiButtonEditor from "./routes/UiButtonEditor";
+
+import { monaco } from "react-monaco-editor";
+import { getScene } from "../../three/init3dEditor";
 
 interface CodeEditorProps {
   language?: string;
   code: string;
   show: boolean;
-  tipsTitle?: string;
+  tipsTitle: string;
   callback?: (value: string) => void;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
   isValidate: boolean;
@@ -76,6 +80,80 @@ const CodeEditor = (props: CodeEditorProps) => {
       setValue(value);
     }
   }
+  const [editorInstance, setEditorInstance] =
+    useState<monaco.editor.IStandaloneCodeEditor | null>(null);
+
+  // 格式化代码函数
+  const formatCode = async () => {
+    if (editorInstance) {
+      // 获取格式化操作实例
+      const formatAction = editorInstance.getAction(
+        "editor.action.formatDocument"
+      );
+      // 检查操作实例是否存在
+      if (formatAction) {
+        // 存在则执行格式化操作
+        await formatAction.run();
+        // 滚动到代码开头
+        const position = { lineNumber: 1, column: 1 };
+        editorInstance.revealPosition(
+          position,
+          monaco.editor.ScrollType.Smooth
+        );
+        editorInstance.setPosition(position);
+      }
+    }
+  };
+  function commonEditor() {
+    return (
+      <Editor
+        height="66vh"
+        defaultLanguage={language}
+        defaultValue={"{}"}
+        value={value}
+        onChange={handleEditorChange}
+        theme={themeColor ? `vs-${themeColor}` : "vs-dark"}
+        onValidate={(e) => {
+          setError(e.length > 0);
+        }}
+        onMount={(editor) => {
+          setEditorInstance(editor);
+        }}
+        options={{
+          minimap: { enabled: false },
+          scrollBeyondLastLine: true,
+          fontSize: 14,
+          wordWrap: "on",
+          readOnly,
+          // 启用格式化功能
+          formatOnType: true,
+          formatOnPaste: true,
+        }}
+      />
+    );
+  }
+
+  function getToggleButton() {
+    if (tipsTitle === "按钮组编辑") {
+      return (
+        <Tabs
+          defaultActiveKey="home"
+          id="uncontrolled-tab-example"
+          onSelect={() => {
+            formatCode();
+            getScene().userData.customButtonList = JSON.parse(value);
+          }}
+        >
+          <Tab eventKey="home" title="UI编辑">
+            <UiButtonEditor value={value} setValue={setValue}></UiButtonEditor>
+          </Tab>
+          <Tab eventKey="profile" title="代码编辑">
+            {commonEditor()}
+          </Tab>
+        </Tabs>
+      );
+    }
+  }
 
   return (
     <Modal size="lg" show={show} onHide={handleClose} backdrop="static">
@@ -83,24 +161,7 @@ const CodeEditor = (props: CodeEditorProps) => {
         <Modal.Title>{tipsTitle ? tipsTitle : "代码编辑器"}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Editor
-          height="76vh"
-          defaultLanguage={language}
-          defaultValue={"{}"}
-          value={value}
-          onChange={handleEditorChange}
-          theme={themeColor ? `vs-${themeColor}` : "vs-dark"}
-          onValidate={(e) => {
-            setError(e.length > 0);
-          }}
-          options={{
-            minimap: { enabled: false },
-            scrollBeyondLastLine: true,
-            fontSize: 14,
-            wordWrap: "on",
-            readOnly,
-          }}
-        />
+        {tipsTitle === "按钮组编辑" ? getToggleButton() : commonEditor()}
       </Modal.Body>
       <Modal.Footer>
         {children}

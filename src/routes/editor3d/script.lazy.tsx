@@ -69,7 +69,7 @@ function RouteComponent() {
     <Container fluid>
       <ListGroup.Item>
         <AlertBase
-          className="  mb-0 mt-0"
+          className="mb-0 mt-0"
           type={APP_COLOR.Secondary}
           text={
             "开发调试，可以在【/src/three/scriptDev.ts】中编写脚本进行调试，调试完成后，复制到此处保存!"
