@@ -63,8 +63,6 @@ function RouteComponent() {
     customButtonList.toggleButtonGroup?.type || "TOGGLE"
   );
 
-  //@ts-ignore
-  const list = [{ name: "A" }, { name: "B" }, { name: "C" }, { name: "A_F1" }];
   return (
     <Container fluid>
       <ListGroup.Item>
@@ -135,7 +133,7 @@ function RouteComponent() {
                 }
               }}
             >
-              <ButtonGroup>
+              <ButtonGroup size="sm">
                 {Object.keys(customButtonList).length !== 0 ? (
                   <Button
                     variant={buttonColor}
@@ -197,7 +195,7 @@ function RouteComponent() {
                         );
                         const modelOffset = new Vector3(0, 0, 0);
                         const cameraOffset = new Vector3(0, 0, 0);
-                        const offset = 2;
+                        const offset = 1;
                         if (buttonType === "STRETCH") {
                           modelOffset.y = offset;
                         }

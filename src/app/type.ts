@@ -99,6 +99,7 @@ export interface ActionItemMap {
   showName: string | string[];
   NAME_ID: string;
   showButton: boolean;
+  isClick: boolean;
   handler?: (nameId?: string) => void;
   data?: {
     isSelected: boolean;

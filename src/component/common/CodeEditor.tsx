@@ -1,14 +1,15 @@
 import Editor from "@monaco-editor/react";
 import React, { useState, useEffect } from "react";
-import { Button, Modal, Tab, Tabs } from "react-bootstrap";
+import { Button, ButtonGroup, Modal, Tab, Tabs } from "react-bootstrap";
 import ModalConfirm3d from "./ModalConfirm3d";
 import { useUpdateScene } from "../../app/hooks";
 import { getThemeByScene } from "../../app/utils";
-import { APP_COLOR } from "../../app/type";
+import { APP_COLOR, CustomButtonListType } from "../../app/type";
 import UiButtonEditor from "./routes/UiButtonEditor";
 
 import { monaco } from "react-monaco-editor";
 import { getScene } from "../../three/init3dEditor";
+import Toast3d from "./Toast3d";
 
 interface CodeEditorProps {
   language?: string;
@@ -140,6 +141,17 @@ const CodeEditor = (props: CodeEditorProps) => {
           defaultActiveKey="home"
           id="uncontrolled-tab-example"
           onSelect={() => {
+            let customButtonList: CustomButtonListType | null = null;
+            try {
+              // 尝试解析 JSON 字符串
+              customButtonList = JSON.parse(value) as CustomButtonListType;
+            } catch (error) {
+              Toast3d("JSON 解析失败", "错误", APP_COLOR.Danger);
+            }
+            if (customButtonList === null) {
+              return;
+            }
+
             formatCode();
             getScene().userData.customButtonList = JSON.parse(value);
           }}
@@ -160,14 +172,16 @@ const CodeEditor = (props: CodeEditorProps) => {
       <Modal.Header closeButton>
         <Modal.Title>{tipsTitle ? tipsTitle : "代码编辑器"}</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body className="p-0 mt-1">
         {tipsTitle === "按钮组编辑" ? getToggleButton() : commonEditor()}
       </Modal.Body>
       <Modal.Footer>
         {children}
-        <Button variant={APP_COLOR.Danger} onClick={handleClose}>
-          关闭
-        </Button>
+        <ButtonGroup size="sm">
+          <Button variant={APP_COLOR.Danger} onClick={handleClose}>
+            关闭
+          </Button>
+        </ButtonGroup>
       </Modal.Footer>
     </Modal>
   );

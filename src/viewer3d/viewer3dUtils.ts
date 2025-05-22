@@ -42,23 +42,19 @@ function showModelByNameId(NAME_ID: string) {
   );
   if (MODEL_GROUP) {
     MODEL_GROUP.traverse((item) => {
-      // item.visible = false;
       item.layers.set(1);
     });
-    // targetGroup.visible = true;
   }
 
   const groups = createGroupIfNotExist(getScene(), NAME_ID, false);
   if (groups) {
     groups.traverse((item) => {
-      //  item.visible = true;
       item.layers.set(0);
     });
     showParentGroup(groups);
   }
   // 递归显示父级，新版本需要递归显示父级，才能显示模型
   function showParentGroup(group: Object3D<Object3DEventMap>) {
-    //  group.visible = true;
     group.layers.set(0);
     if (group.parent) {
       showParentGroup(group.parent);
@@ -225,12 +221,15 @@ function cameraBackHome(
   controls: OrbitControls,
   animationTime: number
 ) {
-  cameraTween(camera, getUserData().fixedCameraPosition, animationTime).start();
-
-  controls.reset();
-  controls.update();
-  isMoveCamera = false;
+  cameraTween(camera, getUserData().fixedCameraPosition, animationTime)
+    .start()
+    .onComplete(() => {
+      controls.target.set(0, 0, 0);
+      controls.update();
+      isMoveCamera = false;
+    });
 }
+
 // 得到物体的世界坐标
 export function getObjectWorldPosition(model: Object3D) {
   const worldPosition = new Vector3();
@@ -259,6 +258,7 @@ export function generateToggleButtonGroup(
           showName: "全景",
           NAME_ID: MODEL_GROUP.name,
           showButton: true,
+          isClick: false,
         },
         customButtonType
       )
@@ -276,6 +276,7 @@ export function generateToggleButtonGroup(
                 showName: name,
                 NAME_ID: name,
                 showButton: true,
+                isClick: false,
               },
               customButtonType
             )
@@ -305,6 +306,7 @@ export function generateToggleButtonGroup(
                   showName: name,
                   NAME_ID: name,
                   showButton: true,
+                  isClick: false,
                 },
                 customButtonType
               )
@@ -322,132 +324,15 @@ export function generateToggleButtonGroup(
   );
   return uniqueActionList;
 }
-// 获取切换按钮组
-export function getToggleButtonGroup1(): ActionItemMap[] {
-  const customButtonList = getScene().userData
-    .customButtonList as CustomButtonListType;
 
-  if (!customButtonList.toggleButtonGroup) {
-    return [];
-  }
-  const { listGroup, type, userSetting } = customButtonList.toggleButtonGroup;
-
-  let list: ActionItemMap[] = [];
-  if (type === "TOGGLE") {
-    list = listGroup
-      .map((item: ActionItemMap) => {
-        const { showName, NAME_ID, data, showButton } = item;
-        if (!showButton) {
-          // 当 showButton 为 false 时，返回 undefined
-          return undefined;
-        }
-        return {
-          showName,
-          NAME_ID,
-          showButton,
-          handler: () => {
-            const { cameraOffset, animationTime } =
-              getUserSetting(customButtonList);
-            if (NAME_ID === GLOBAL_CONSTANT.MODEL_GROUP) {
-              showModelByNameId(GLOBAL_CONSTANT.MODEL_GROUP);
-              cameraBackHome(getCamera(), getControls(), animationTime);
-              return;
-            }
-            showModelByNameId(NAME_ID);
-            const model = createGroupIfNotExist(getScene(), NAME_ID, false);
-            if (model) {
-              const { x, y, z } = getObjectWorldPosition(model);
-              const camera = getCamera();
-              cameraTween(
-                camera,
-                new Vector3(
-                  x + cameraOffset.x,
-                  y + cameraOffset.y,
-                  z + cameraOffset.z
-                ),
-                animationTime
-              )
-                .start()
-                .onComplete(() => {
-                  const controls = getControls();
-                  controls.target.set(x, y, z);
-                  controls.update();
-                });
-            }
-          },
-          data,
-        };
-      })
-      .filter((item) => item !== undefined);
-  }
-
-  if (type === "DRAWER") {
-    list = listGroup.map((item: ActionItemMap) => {
-      const { showName, NAME_ID, data } = item;
-      return {
-        showName: showName,
-        NAME_ID: NAME_ID,
-        showButton: true,
-        handler: () => {
-          listGroup.forEach((_item: ActionItemMap) => {
-            const _d = _item.data;
-            if (_item.data?.isSelected && !_d?.isRunning) {
-              const model = createGroupIfNotExist(
-                getScene(),
-                _item.NAME_ID,
-                false
-              );
-              _item.data = {
-                isRunning: true,
-                isSelected: true,
-              };
-
-              if (model) {
-                const mp = model.position;
-                const { x, y, z } = userSetting?.modelOffset || {
-                  x: 0,
-                  y: 0,
-                  z: 0,
-                };
-                meshTween(
-                  model,
-                  new Vector3(mp.x - x, mp.y - y, mp.z - z),
-                  userSetting?.animationTime ?? 1000
-                )
-                  .start()
-                  .onComplete(() => {
-                    _item.data = {
-                      isRunning: false,
-                      isSelected: false,
-                    };
-                  });
-              }
-            }
-          });
-          if (!item.data?.isSelected && !item.data?.isRunning) {
-            drawerOutByNameId(item, customButtonList);
-            moveCameraDRAWER(item, customButtonList);
-          }
-        },
-        data,
-      };
-    });
-  }
-  if (type === "STRETCH") {
-    list = listGroup.map((item: ActionItemMap) => {
-      const { showName, NAME_ID } = item;
-      return {
-        showName: showName,
-        NAME_ID: NAME_ID,
-        showButton: true,
-        handler: () => {
-          stretchModelByNameId(NAME_ID, customButtonList);
-          moveCameraSTRETCH(item, customButtonList);
-        },
-      };
-    });
-  }
-  return list;
+//重置按钮组的isClick为false
+export function resetListGroupIsClick(listGroup: ActionItemMap[]) {
+  return listGroup.map((item: ActionItemMap) => {
+    return {
+      ...item,
+      isClick: false,
+    };
+  });
 }
 
 // 获取切换按钮组
@@ -462,17 +347,23 @@ export function getToggleButtonGroup(): ActionItemMap[] {
 
   return listGroup
     .map((item: ActionItemMap) => {
-      const { showName, NAME_ID, data, showButton } = item;
+      const { showName, NAME_ID, data, showButton, isClick } = item;
 
       if (!showButton) {
         return undefined; // 当 showButton 为 false 时，返回 undefined
       }
+      const common = {
+        showName,
+        NAME_ID,
+        showButton,
+        isClick,
+        data,
+      };
       if (type === "TOGGLE") {
         return {
-          showName,
-          NAME_ID,
-          showButton,
+          ...common,
           handler: () => {
+            item.isClick = !item.isClick;
             const { cameraOffset, animationTime } =
               getUserSetting(customButtonList);
             if (NAME_ID === GLOBAL_CONSTANT.MODEL_GROUP) {
@@ -502,15 +393,12 @@ export function getToggleButtonGroup(): ActionItemMap[] {
                 });
             }
           },
-          data,
         };
       }
 
       if (type === "STRETCH") {
         return {
-          showName: showName,
-          NAME_ID: NAME_ID,
-          showButton: true,
+          ...common,
           handler: () => {
             stretchModelByNameId(NAME_ID, customButtonList);
             moveCameraSTRETCH(item, customButtonList);
@@ -519,9 +407,7 @@ export function getToggleButtonGroup(): ActionItemMap[] {
       }
       if (type === "DRAWER") {
         return {
-          showName: showName,
-          NAME_ID: NAME_ID,
-          showButton: true,
+          ...common,
           handler: () => {
             listGroup.forEach((_item: ActionItemMap) => {
               const _d = _item.data;
@@ -563,7 +449,6 @@ export function getToggleButtonGroup(): ActionItemMap[] {
               moveCameraDRAWER(item, customButtonList);
             }
           },
-          data,
         };
       }
     })
@@ -582,6 +467,7 @@ export function generateRoamButtonGroup() {
         showName: [name + "_开始", name + "_停止"],
         NAME_ID: name + "_AN_START",
         showButton: true,
+        isClick: false,
       });
       // roamButtonGroup.push({
       //   showName: name + "_停止",

@@ -1,5 +1,16 @@
-import { Form, InputGroup, ListGroup, ListGroupItem } from "react-bootstrap";
-import { ActionItemMap, CustomButtonListType } from "../../../app/type";
+import {
+  Badge,
+  Form,
+  InputGroup,
+  ListGroup,
+  ListGroupItem,
+} from "react-bootstrap";
+import {
+  ActionItemMap,
+  APP_COLOR,
+  CustomButtonListType,
+  CustomButtonType,
+} from "../../../app/type";
 import { setClassName } from "../../../app/utils";
 
 export default function UiButtonEditor({
@@ -9,11 +20,39 @@ export default function UiButtonEditor({
   value: string;
   setValue: (value: string) => void;
 }) {
-  const v: CustomButtonListType = JSON.parse(value);
-  const toggleButtonGroup = v.toggleButtonGroup?.listGroup || [];
-  const roamButtonGroup = v.roamButtonGroup?.listGroup || [];
+  let customButtonList: CustomButtonListType | null = null;
+  try {
+    // 尝试解析 JSON 字符串
+    customButtonList = JSON.parse(value);
+  } catch (error) {}
+  if (customButtonList === null) {
+    return null; // 返回 null 避免潜在警告
+  }
+  const toggleButtonGroup = customButtonList.toggleButtonGroup?.listGroup || [];
+  const roamButtonGroup = customButtonList.roamButtonGroup?.listGroup || [];
 
-  function buttonGroupDiv(buttonGroup: ActionItemMap[]) {
+  // 更新按钮组数据的通用函数
+  function updateButtonGroup(
+    buttonGroupKey: "toggleButtonGroup" | "roamButtonGroup",
+    index: number,
+    updateFn: (item: ActionItemMap) => ActionItemMap
+  ) {
+    // 创建 customButtonList 的副本
+    const newCustomButtonList = { ...customButtonList };
+
+    // 创建按钮组列表的副本
+    const newListGroup = [...newCustomButtonList[buttonGroupKey]!.listGroup];
+    // 创建当前按钮项的副本并更新
+    newListGroup[index] = updateFn({ ...newListGroup[index] });
+    // 更新副本中的按钮组列表
+    newCustomButtonList[buttonGroupKey]!.listGroup = newListGroup;
+    return newCustomButtonList;
+  }
+
+  function buttonGroupDiv(
+    buttonGroup: ActionItemMap[],
+    buttonGroupKey: "toggleButtonGroup" | "roamButtonGroup"
+  ) {
     return buttonGroup?.map((item, index) => {
       return (
         <ListGroupItem key={index} style={{ padding: 0, border: 0 }}>
@@ -23,61 +62,65 @@ export default function UiButtonEditor({
                 <i
                   className={setClassName("eye")}
                   onClick={() => {
-                    buttonGroup[index].showButton =
-                      !buttonGroup[index].showButton;
-                    setValue(JSON.stringify(v));
+                    const newCustomButtonList = updateButtonGroup(
+                      buttonGroupKey,
+                      index,
+                      (item) => ({ ...item, showButton: !item.showButton })
+                    );
+                    setValue(JSON.stringify(newCustomButtonList));
                   }}
                 ></i>
               ) : (
                 <i
                   className={setClassName("eye-slash")}
                   onClick={() => {
-                    buttonGroup[index].showButton =
-                      !buttonGroup[index].showButton;
-                    setValue(JSON.stringify(v));
+                    const newCustomButtonList = updateButtonGroup(
+                      buttonGroupKey,
+                      index,
+                      (item) => ({ ...item, showButton: !item.showButton })
+                    );
+                    setValue(JSON.stringify(newCustomButtonList));
                   }}
                 ></i>
               )}
             </InputGroup.Text>
-            {/* <InputGroup.Checkbox
-              aria-label={item.NAME_ID}
-              checked={buttonGroup[index].showButton}
-              onChange={() => {
-                buttonGroup[index].showButton = !buttonGroup[index].showButton;
-                setValue(JSON.stringify(v));
-              }}
-            /> */}
             {Array.isArray(item.showName)
               ? item.showName.map((_item, innerIndex) => {
                   return (
                     <Form.Control
+                      key={innerIndex}
                       placeholder={_item}
                       aria-label={_item}
                       aria-describedby={_item}
                       value={_item}
                       onChange={(e) => {
-                        // 复制 showName 数组
-                        const newShowName = [...item.showName];
-                        // 修改复制后的数组
-                        newShowName[innerIndex] = e.target.value;
-                        // 更新原始数据中的 showName
-                        buttonGroup[index].showName = newShowName;
-                        setValue(JSON.stringify(v));
+                        const newCustomButtonList = updateButtonGroup(
+                          buttonGroupKey,
+                          index,
+                          (item) => {
+                            const newShowName = [
+                              ...(item.showName as string[]),
+                            ];
+                            newShowName[innerIndex] = e.target.value;
+                            return { ...item, showName: newShowName };
+                          }
+                        );
+                        setValue(JSON.stringify(newCustomButtonList));
                       }}
                     />
                   );
                 })
-              : fffffssss(item, index, buttonGroup)}
+              : renderSingleShowName(item, index, buttonGroupKey)}
           </InputGroup>
         </ListGroupItem>
       );
     });
   }
 
-  function fffffssss(
+  function renderSingleShowName(
     item: ActionItemMap,
     index: number,
-    buttonGroup: ActionItemMap[]
+    buttonGroupKey: "toggleButtonGroup" | "roamButtonGroup"
   ) {
     return (
       <Form.Control
@@ -86,25 +129,45 @@ export default function UiButtonEditor({
         aria-describedby={item.NAME_ID}
         value={item.showName}
         onChange={(e) => {
-          buttonGroup[index].showName = e.target.value;
-          setValue(JSON.stringify(v));
+          const newCustomButtonList = updateButtonGroup(
+            buttonGroupKey,
+            index,
+            (item) => ({ ...item, showName: e.target.value })
+          );
+          setValue(JSON.stringify(newCustomButtonList));
         }}
       />
     );
   }
+  function getBadgeByType(buttonGroup: CustomButtonType) {
+    if (buttonGroup === "TOGGLE") {
+      return "切换";
+    }
+    if (buttonGroup === "DRAWER") {
+      return "抽屉";
+    }
+    if (buttonGroup === "STRETCH") {
+      return "拉伸";
+    }
+  }
 
   return (
-    <ListGroup horizontal className="mt-2 d-flex flex-wrap">
-      {buttonGroupDiv(toggleButtonGroup)}
-      <div
-        className="custom-separator"
-        style={{
-          width: "100%",
-          borderBottom: " 1px solid #ccc",
-          margin: " 10px 0",
-        }}
-      ></div>
-      {buttonGroupDiv(roamButtonGroup)}
-    </ListGroup>
+    <>
+      {toggleButtonGroup.length > 0 && (
+        <Badge bg={APP_COLOR.Primary}>
+          {getBadgeByType(customButtonList.toggleButtonGroup!.type)}
+        </Badge>
+      )}
+
+      <ListGroup horizontal className="mt-2 d-flex flex-wrap">
+        {buttonGroupDiv(toggleButtonGroup, "toggleButtonGroup")}
+      </ListGroup>
+      {roamButtonGroup.length > 0 && (
+        <Badge bg={APP_COLOR.Primary}>漫游按钮组</Badge>
+      )}
+      <ListGroup horizontal className="mt-2 d-flex flex-wrap">
+        {buttonGroupDiv(roamButtonGroup, "roamButtonGroup")}
+      </ListGroup>
+    </>
   );
 }

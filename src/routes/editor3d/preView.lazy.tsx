@@ -21,6 +21,7 @@ import {
   RecordItem,
 } from "../../app/type";
 import { getCamera } from "../../three/init3dViewer";
+import { resetListGroupIsClick } from "../../viewer3d/viewer3dUtils";
 
 // 定义响应数据的类型
 interface PageListResponse {
@@ -93,9 +94,6 @@ function RouteComponent() {
     // 检查 getToggleButtonGroup 方法是否存在
     setToggleButtonList(instance.getToggleButtonGroup || []);
     setRoamButtonlist(instance.getRoamListByRoamButtonMap || []);
-    if (instance.getToggleButtonGroup) {
-      console.log(instance.getToggleButtonGroup());
-    }
   }
   //@ts-expect-error
   function callBackError(error: unknown) {
@@ -111,13 +109,42 @@ function RouteComponent() {
     setShow(false);
   }
   const modalBody = useRef<HTMLDivElement>(null);
-  const beishu = window.innerHeight / window.innerWidth;
-  const w = 1138;
-  const h = w * beishu;
+  const beishu = window.innerHeight / window.innerWidth; // 将 beishu 计算移到这里
+  const [size3d, setSize3d] = useState({
+    w: 1138,
+    h: 1138 * beishu,
+  });
 
   useEffect(() => {
     setShow(true);
+    function handleResize3d() {
+      if (modalBody.current) {
+        const _w = modalBody.current?.clientWidth || 1138;
+        const _h =
+          modalBody.current?.clientHeight ||
+          modalBody.current?.clientWidth * beishu;
+
+        setSize3d({ w: _w, h: _h });
+      }
+    }
+    window.addEventListener("resize", handleResize3d);
+    handleResize3d();
+
+    return () => {
+      window.removeEventListener("resize", handleResize3d);
+    };
   }, []);
+
+  // 点击按钮后，将其他按钮的 isClick 置为 false
+  function handleClickResize(
+    index: number,
+    buttonList: ActionItemMap[],
+    setToggleButtonList: (value: ActionItemMap[]) => void
+  ) {
+    const newListGroup = resetListGroupIsClick(buttonList);
+    newListGroup[index].isClick = !newListGroup[index].isClick;
+    setToggleButtonList(newListGroup);
+  }
 
   return (
     <ListGroup>
@@ -161,8 +188,8 @@ function RouteComponent() {
             {_item && (
               <Viewer3d
                 canvasStyle={{
-                  width: w + "px",
-                  height: h + "px",
+                  width: size3d.w + "px",
+                  height: size3d.h + "px",
                 }}
                 item={_item}
                 callBack={callBack}
@@ -180,10 +207,15 @@ function RouteComponent() {
                     onClick={() => {
                       if (item.handler) {
                         item.handler();
+                        handleClickResize(
+                          index,
+                          toggleButtonList,
+                          setToggleButtonList
+                        );
                       }
                     }}
                   >
-                    {item.showName}
+                    {item.showName} {/* 显示按钮的名称 */}
                   </Button>
                 );
               })}
@@ -196,6 +228,11 @@ function RouteComponent() {
                     key={index}
                     onClick={() => {
                       if (item.handler) {
+                        // handleClickResize(
+                        //   index,
+                        //   roamButtonlist,
+                        //   setRoamButtonlist
+                        // );
                         const name = item.NAME_ID.split("_AN_")[0];
                         item.handler(item.NAME_ID);
                         const nameId = isStart
