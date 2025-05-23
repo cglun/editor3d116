@@ -146,6 +146,8 @@ const CodeEditor = (props: CodeEditorProps) => {
               // 尝试解析 JSON 字符串
               customButtonList = JSON.parse(value) as CustomButtonListType;
             } catch (error) {
+              // 解析失败，打印错误信息
+              console.error("JSON 解析失败:", error);
               Toast3d("JSON 解析失败", "错误", APP_COLOR.Danger);
             }
             if (customButtonList === null) {

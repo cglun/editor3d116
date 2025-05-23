@@ -281,7 +281,7 @@ function RecordItemCard(props: Props) {
             >
               <div
                 onClick={() => {
-                  let pathname = location.pathname;
+                  const pathname = location.pathname;
 
                   if (item.des === "Scene") {
                     const url = `${pathname}?sceneId=${item.id}`;

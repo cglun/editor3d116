@@ -111,7 +111,7 @@ export default function EditorForm({
       <div className="mt-2 d-flex flex-column align-items-center ">
         {loadScene ? (
           <Viewer3d
-            canvasStyle={{ height: "300px", width: "300px" }}
+            canvasStyle={{ height: "300px", width: "300px", margin: "0 auto" }}
             item={item}
           />
         ) : _item.cover?.trim().length > 0 ? (

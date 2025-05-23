@@ -216,6 +216,7 @@ export default function EditorTop() {
                     to: location.pathname,
                   });
                   const newScene = createNewScene();
+                  Toast3d("场景已新建");
                   setScene(newScene);
                   updateScene(newScene);
                 }}

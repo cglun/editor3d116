@@ -36,11 +36,12 @@ import {
   removeCanvasChild,
 } from "../three/utils";
 import { raycasterSelect } from "../three/common3d";
-import {
-  getToggleButtonGroup,
-  getRoamListByRoamButtonMap,
-} from "./viewer3dUtils";
+
 import InfoPanel from "./InfoPanel";
+import {
+  getRoamListByRoamButtonMap,
+  getToggleButtonGroup,
+} from "./buttonList/buttonGroup";
 
 /**
  * 其他应用可以调用此组件，
@@ -55,7 +56,7 @@ export default function Viewer3d({
   getProgress,
 }: {
   item: RecordItem;
-  canvasStyle?: { height: string; width: string };
+  canvasStyle?: { height: string; width: string } & React.CSSProperties;
   callBack?: (item: Context116) => void;
   callBackError?: (error: unknown) => void;
   getProgress?: (progress: number) => void;

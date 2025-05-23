@@ -1,9 +1,3 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
-import Viewer3d from "../../viewer3d/Viewer3d";
-import { useEffect, useRef, useState } from "react";
-import { setEnableScreenshot } from "../../three/config3d";
-import _axios from "../../app/http";
-
 import {
   Button,
   ButtonGroup,
@@ -12,6 +6,12 @@ import {
   ListGroupItem,
   Modal,
 } from "react-bootstrap";
+import { createLazyFileRoute } from "@tanstack/react-router";
+import Viewer3d from "../../viewer3d/Viewer3d";
+import { useEffect, useRef, useState } from "react";
+import { setEnableScreenshot } from "../../three/config3d";
+import _axios from "../../app/http";
+
 import { useUpdateScene } from "../../app/hooks";
 import { getButtonColor, getThemeByScene } from "../../app/utils";
 import {
@@ -21,7 +21,7 @@ import {
   RecordItem,
 } from "../../app/type";
 import { getCamera } from "../../three/init3dViewer";
-import { resetListGroupIsClick } from "../../viewer3d/viewer3dUtils";
+import { resetListGroupIsClick } from "../../viewer3d/buttonList/buttonGroup";
 
 // 定义响应数据的类型
 interface PageListResponse {
@@ -44,14 +44,12 @@ export const Route = createLazyFileRoute("/editor3d/preView")({
 function RouteComponent() {
   const [listScene, setListScene] = useState<RecordItem[]>([]);
   const [toggleButtonList, setToggleButtonList] = useState<ActionItemMap[]>();
-  const [roamButtonlist, setRoamButtonlist] = useState<ActionItemMap[]>([]);
+  const [roamButtonList, setRoamButtonList] = useState<ActionItemMap[]>([]);
 
   const { scene } = useUpdateScene();
   const { themeColor } = getThemeByScene(scene);
   const buttonColor = getButtonColor(themeColor);
   const [_item, _setItem] = useState<RecordItem>();
-
-  // const [manyoulist, setmanyoulist] = useState([]);
 
   useEffect(() => {
     setEnableScreenshot(true);
@@ -93,13 +91,13 @@ function RouteComponent() {
   function callBack(instance: Context116) {
     // 检查 getToggleButtonGroup 方法是否存在
     setToggleButtonList(instance.getToggleButtonGroup || []);
-    setRoamButtonlist(instance.getRoamListByRoamButtonMap || []);
+    setRoamButtonList(instance.getRoamListByRoamButtonMap || []);
   }
-  //@ts-expect-error
+
   function callBackError(error: unknown) {
-    // console.log("加载失败----------------", error);
+    console.log("加载失败", error);
   }
-  //@ts-expect-error
+  //@ts-expect-error 忽略类型检查，暂时不清楚 progress 相关完整类型定义
   function getProgress(progress: number) {
     // console.log("加载进度----------------", progress);
   }
@@ -165,7 +163,7 @@ function RouteComponent() {
           <Modal.Header closeButton>
             <Modal.Title>场景预览</Modal.Title>
           </Modal.Header>
-          <Container fluid>
+          <Container>
             <ButtonGroup size="sm">
               {listScene.map((item: RecordItem) => {
                 return (
@@ -220,7 +218,7 @@ function RouteComponent() {
                 );
               })}
 
-              {roamButtonlist.map((item: ActionItemMap, index: number) => {
+              {roamButtonList.map((item: ActionItemMap, index: number) => {
                 const isStart = item.NAME_ID.includes("START");
                 return (
                   <Button
@@ -230,15 +228,15 @@ function RouteComponent() {
                       if (item.handler) {
                         // handleClickResize(
                         //   index,
-                        //   roamButtonlist,
-                        //   setRoamButtonlist
+                        //   roamButtonList,
+                        //   setRoamButtonList
                         // );
                         const name = item.NAME_ID.split("_AN_")[0];
                         item.handler(item.NAME_ID);
                         const nameId = isStart
                           ? `${name}_AN_STOP`
                           : `${name}_AN_START`;
-                        setRoamButtonlist((prevList) => {
+                        setRoamButtonList((prevList) => {
                           return prevList.map((prevItem) => {
                             if (prevItem.NAME_ID === item.NAME_ID) {
                               return {

@@ -19,31 +19,24 @@ import {
 } from "../../app/type";
 import { getButtonColor, getThemeByScene } from "../../app/utils";
 
-import {
-  generateRoamButtonGroup,
-  generateToggleButtonGroup,
-} from "../../viewer3d/viewer3dUtils";
 import Toast3d from "../../component/common/Toast3d";
 
 import ModalConfirm3d from "../../component/common/ModalConfirm3d";
 
 import { Vector3 } from "three";
+import {
+  generateRoamButtonGroup,
+  generateToggleButtonGroup,
+} from "../../viewer3d/buttonList/buttonGroup";
 
 export const Route = createLazyFileRoute("/editor3d/script")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const { scene, updateScene } = useUpdateScene();
-
-  if (scene.payload.userData === undefined) {
-    return;
-  }
-
-  const { themeColor } = getThemeByScene(scene);
-  const buttonColor = getButtonColor(themeColor);
-
-  // 使用可选属性和类型断言
+  const { scene, updateScene } = useUpdateScene(); // const [javaScriptCode, setJavaScriptCode] = useState<string>(javascript);
+  const [showJavaScript, setShowJavaScript] = useState(false); // 是否为调试场景[调试场景不允许修改代码]
+  const [show, setShow] = useState(false); // 使用可选属性和类型断言
   const {
     javascript,
     projectId,
@@ -53,15 +46,17 @@ function RouteComponent() {
     projectId: number;
     customButtonList?: CustomButtonListType;
   };
-
-  // const [javaScriptCode, setJavaScriptCode] = useState<string>(javascript);
-  const [showJavaScript, setShowJavaScript] = useState(false); // 是否为调试场景[调试场景不允许修改代码]
-
-  const [show, setShow] = useState(false);
   const buttonList = JSON.stringify(customButtonList, null, 5);
   const [buttonType, setButtonType] = useState<CustomButtonType>(
     customButtonList.toggleButtonGroup?.type || "TOGGLE"
   );
+
+  if (scene.payload.userData === undefined) {
+    return;
+  }
+
+  const { themeColor } = getThemeByScene(scene);
+  const buttonColor = getButtonColor(themeColor);
 
   return (
     <Container fluid>

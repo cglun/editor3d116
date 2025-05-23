@@ -14,7 +14,6 @@ export default function Index({ selected3d }: { selected3d: SelectedObject }) {
   useEffect(() => {
     const focusHandler = () => {
       if (refAccordion.current) {
-        debugger;
         refAccordion.current.style.overflow = "hidden";
       }
     };

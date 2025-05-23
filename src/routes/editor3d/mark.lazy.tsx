@@ -29,17 +29,15 @@ export const Route = createLazyFileRoute("/editor3d/mark")({
 });
 
 function RouteComponent() {
-  const { scene, updateScene } = useUpdateScene();
-  if (scene.payload.userData.config3d === undefined) {
-    return;
-  }
   const [markName, setMarkName] = useState("mark");
   const [logo, setLogo] = useState<string>("geo-alt");
   const [listTour, setListTour] = useState([]);
-
   const { dispatchTourWindow } = useContext(MyContext);
-
+  const { scene, updateScene } = useUpdateScene();
   const { themeColor } = getThemeByScene(scene);
+  if (scene.payload.userData.config3d === undefined) {
+    return;
+  }
 
   function addMark(label: CSS3DSprite | CSS2DObject) {
     const scene = getScene();

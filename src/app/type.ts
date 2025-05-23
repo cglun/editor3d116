@@ -173,7 +173,7 @@ export interface Context116 {
     extra3d: Extra3d;
     parameters3d: Parameters3d;
   }; // 返回 object 类型
-  getUserData?: () => {}; // 返回 {}
+  getUserData?: () => object; // 返回 {}
 
   getToggleButtonGroup?: () => ActionItemMap[]; // 返回 ActionItemMap[] 类型
   getRoamListByRoamButtonMap?: () => ActionItemMap[]; // 返回 ActionItemMap[] 类型

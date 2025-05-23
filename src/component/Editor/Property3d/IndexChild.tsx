@@ -285,37 +285,7 @@ function CommonProperty({ selected3d }: { selected3d: SelectedObject }) {
       </>
     );
   }
-  //@ts-expect-error
-  function BindObject() {
-    if (selected3d instanceof Light) {
-      return;
-    }
-    return (
-      <ButtonGroup size="sm">
-        <Button
-          variant={buttonColor}
-          onClick={() => {
-            const scene = getScene();
-            console.log(scene);
-          }}
-        >
-          绑定视角
-        </Button>
-        <Button
-          variant={buttonColor}
-          onClick={() => {
-            alert("请在threejs中添加视角");
-          }}
-        >
-          绑定场景
-        </Button>
-      </ButtonGroup>
-    );
-  }
 
-  const { scene } = useUpdateScene();
-  const { themeColor } = getThemeByScene(scene);
-  const buttonColor = getButtonColor(themeColor);
   return (
     selected3d && (
       <Container fluid>

@@ -4,7 +4,11 @@ import { Vector2 } from "three";
 interface InfoPanelProps {
   show: boolean; // 面板是否显示
   position: Vector2; // 面板的位置
-  data: any; // 要显示的数据
+  data: {
+    name: string; // 面板的名称
+    des: string; // 面板的描述
+    cover: string; // 面板的封面图片
+  }; // 要显示的数据
 }
 export default function InfoPanel({
   show = false,

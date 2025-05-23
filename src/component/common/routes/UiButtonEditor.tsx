@@ -24,7 +24,9 @@ export default function UiButtonEditor({
   try {
     // 尝试解析 JSON 字符串
     customButtonList = JSON.parse(value);
-  } catch (error) {}
+  } catch (error) {
+    console.log("解析JSON 字符串", error);
+  }
   if (customButtonList === null) {
     return null; // 返回 null 避免潜在警告
   }
