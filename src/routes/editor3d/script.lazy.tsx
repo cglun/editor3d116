@@ -57,6 +57,56 @@ function RouteComponent() {
 
   const { themeColor } = getThemeByScene(scene);
   const buttonColor = getButtonColor(themeColor);
+  function generateButton() {
+    const { toggleButtonGroup } = JSON.parse(buttonList);
+
+    const gerToggleButtonGroup = generateToggleButtonGroup(
+      toggleButtonGroup || [],
+      getScene(),
+      buttonType
+    );
+
+    const offset = 1;
+
+    const modelPositionOffset = {
+      TOGGLE: new Vector3(0, 0, 0),
+      STRETCH: new Vector3(0, offset, 0),
+      DRAWER: new Vector3(offset, 0, 0),
+    };
+    const cameraPositionOffset = {
+      TOGGLE: new Vector3(offset, offset, offset),
+      STRETCH: new Vector3(0, offset, 0),
+      DRAWER: new Vector3(offset, offset, 0),
+    };
+
+    const buttonGroup: CustomButtonListType = {
+      canBeSelectedModel: {
+        groupNameList: [],
+        modelNameList: [],
+      },
+      toggleButtonGroup: {
+        name: "切换按钮组",
+        type: buttonType,
+        userSetting: {
+          cameraOffset: cameraPositionOffset[buttonType],
+          modelOffset: modelPositionOffset[buttonType],
+          animationTime: 300,
+        },
+        listGroup: gerToggleButtonGroup,
+      },
+      roamButtonGroup: {
+        name: "漫游按钮组",
+        type: "ROAM",
+        userSetting: {
+          speed: 2,
+        },
+        listGroup: generateRoamButtonGroup(),
+      },
+    };
+    getScene().userData.customButtonList = buttonGroup;
+    updateScene(getScene());
+    Toast3d("已生成按钮组");
+  }
 
   return (
     <Container fluid>
@@ -178,58 +228,7 @@ function RouteComponent() {
                         }}
                       />
                     </Form>
-                    <Button
-                      variant={buttonColor}
-                      onClick={() => {
-                        const { toggleButtonGroup } = JSON.parse(buttonList);
-
-                        const gerToggleButtonGroup = generateToggleButtonGroup(
-                          toggleButtonGroup || [],
-                          getScene(),
-                          buttonType
-                        );
-                        const modelOffset = new Vector3(0, 0, 0);
-                        const cameraOffset = new Vector3(0, 0, 0);
-                        const offset = 1;
-                        if (buttonType === "STRETCH") {
-                          modelOffset.y = offset;
-                        }
-                        if (buttonType === "DRAWER") {
-                          modelOffset.x = offset;
-                        }
-                        if (buttonType === "TOGGLE") {
-                          cameraOffset.z = offset;
-                        }
-
-                        const buttonGroup: CustomButtonListType = {
-                          canBeSelectedModel: {
-                            groupNameList: [],
-                            modelNameList: [],
-                          },
-                          toggleButtonGroup: {
-                            name: "切换按钮组",
-                            type: buttonType,
-                            userSetting: {
-                              cameraOffset,
-                              modelOffset,
-                              animationTime: 300,
-                            },
-                            listGroup: gerToggleButtonGroup,
-                          },
-                          roamButtonGroup: {
-                            name: "漫游按钮组",
-                            type: "ROAM",
-                            userSetting: {
-                              speed: 2,
-                            },
-                            listGroup: generateRoamButtonGroup(),
-                          },
-                        };
-                        getScene().userData.customButtonList = buttonGroup;
-                        updateScene(getScene());
-                        Toast3d("已生成按钮组");
-                      }}
-                    >
+                    <Button variant={buttonColor} onClick={generateButton}>
                       生成按钮
                     </Button>
                   </>

@@ -1,4 +1,4 @@
-import { CatmullRomCurve3, PerspectiveCamera, Scene, Vector3 } from "three";
+import { Scene } from "three";
 import {
   ActionItemMap,
   CustomButtonListType,
@@ -7,20 +7,29 @@ import {
 
 import { createGroupIfNotExist } from "../../three/utils";
 import { GLOBAL_CONSTANT } from "../../three/GLOBAL_CONSTANT";
-import { getScene, getCamera, getControls } from "../../three/init3dViewer";
+import {
+  getScene,
+  getCamera,
+  getControls,
+  getAll,
+  getUserData,
+} from "../../three/init3dViewer";
 
 import { getScene as editorScene } from "../../three/init3dEditor";
 import {
+  _roamIsRunning,
   animateDRAWER,
   animateROAM,
   animateSTRETCH,
   animateTOGGLE,
   cameraBackHome,
+  drawerBackHome,
+  showModelBackHome,
+  stretchModelBackHome,
 } from "./animateByButton";
-import { getObjectWorldPosition } from "../viewer3dUtils";
 
 import { userData } from "../../three/config3d";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+
 import { hasValueString } from "./utils";
 
 function getActionItemByMap(
@@ -84,7 +93,7 @@ export function generateToggleButtonGroup(
 
     if (customButtonType === "STRETCH") {
       //移除第一项
-      actionList.shift();
+      //actionList.shift();
       return actionList;
     }
 
@@ -157,7 +166,7 @@ export function getToggleButtonGroup(): ActionItemMap[] {
         return animateSTRETCH(item, customButtonList);
       }
       if (type === "DRAWER") {
-        return animateDRAWER(item, customButtonList, listGroup);
+        return animateDRAWER(item, customButtonList);
       }
     })
     .filter((item) => item !== undefined);
@@ -207,22 +216,34 @@ export function getRoamListByRoamButtonMap(): ActionItemMap[] {
         showName: showName,
         NAME_ID: NAME_ID,
         handler: (state: string) => {
-          const NAME = NAME_ID.split("_AN_")[0];
-          const scene = getScene();
-          const camera = getCamera();
-          const controls = getControls();
-
           if (state.includes("_START")) {
-            animateROAM(scene, camera, controls, NAME, roamButtonGroup, true);
-            controls.enabled = false;
+            roamAnimation(true);
           }
           if (state.includes("_STOP")) {
-            animateROAM(scene, camera, controls, NAME, roamButtonGroup, false);
+            roamAnimation(false);
             cameraBackHome(getCamera(), getControls(), 1000);
-            controls.enabled = true;
           }
+          const customButtonListType =
+            data.customButtonList as CustomButtonListType;
+
+          showModelBackHome(customButtonListType);
+          stretchModelBackHome(customButtonListType);
+          drawerBackHome(customButtonListType);
         },
       } as ActionItemMap;
     })
     .filter((item): item is ActionItemMap => item !== undefined); // 过滤掉 undefined 值，并做类型保护
+}
+
+export function roamAnimation(isRunning: boolean) {
+  const { scene, camera, controls } = getAll();
+  const listGroup = getRoamListByRoamButtonMap();
+  const { roamButtonGroup } = getUserData().customButtonList;
+  listGroup.map((item) => {
+    const { NAME_ID } = item;
+    const NAME = NAME_ID.split("_AN_")[0];
+
+    animateROAM(scene, camera, controls, NAME, roamButtonGroup, isRunning);
+  });
+  controls.enabled = !isRunning;
 }

@@ -20,7 +20,6 @@ import {
 import { cameraTween, meshTween } from "../../three/animate";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { getObjectWorldPosition, getUserSetting } from "../viewer3dUtils";
-import { roamAnimation } from "./buttonGroup";
 
 // 显示模型-显示和隐藏
 export function showModelByNameId(NAME_ID: string) {
@@ -50,14 +49,6 @@ export function showModelByNameId(NAME_ID: string) {
     }
   }
 }
-export function showModelBackHome(customButtonList: CustomButtonListType) {
-  if (customButtonList.toggleButtonGroup.type === "TOGGLE") {
-    showModelByNameId(GLOBAL_CONSTANT.MODEL_GROUP);
-    const { animationTime } = getUserSetting(customButtonList);
-    cameraBackHome(getCamera(), getControls(), animationTime);
-  }
-}
-
 // 显示模型-抽屉
 export function drawerOutByNameId(
   item: ActionItemMap,
@@ -88,41 +79,6 @@ export function drawerOutByNameId(
       });
   }
 }
-// 抽屉，回到初始位置
-export function drawerBackHome(customButtonList: CustomButtonListType) {
-  debugger;
-  if (customButtonList.toggleButtonGroup.type === "DRAWER") {
-    const { listGroup } = customButtonList.toggleButtonGroup;
-    const userSetting = getUserSetting(getScene().userData.customButtonList);
-    listGroup.forEach((_item: ActionItemMap) => {
-      const _d = _item.data;
-      if (_item.data?.isSelected && !_d?.isRunning) {
-        const model = createGroupIfNotExist(getScene(), _item.NAME_ID, false);
-        _item.data = {
-          isRunning: true,
-          isSelected: true,
-        };
-
-        if (model) {
-          const mp = model.position;
-          const { x, y, z } = userSetting.modelOffset;
-          meshTween(
-            model,
-            new Vector3(mp.x - x, mp.y - y, mp.z - z),
-            userSetting?.animationTime ?? 1000
-          )
-            .start()
-            .onComplete(() => {
-              _item.data = {
-                isRunning: false,
-                isSelected: false,
-              };
-            });
-        }
-      }
-    });
-  }
-}
 // 显示模型-拉伸
 export function stretchModelByNameId(
   NAME_ID: string,
@@ -130,79 +86,16 @@ export function stretchModelByNameId(
 ) {
   const MODEL_GROUP = createGroupIfNotExist(getScene(), NAME_ID, false);
   if (MODEL_GROUP) {
-    let isStretch = MODEL_GROUP.userData.childrenIsStretch;
+    const isStretch = MODEL_GROUP.userData.childrenIsStretch;
     const isStretchRunning = MODEL_GROUP.userData.childrenIsRunning;
     if (isStretchRunning) {
       return;
     }
     MODEL_GROUP.userData.childrenIsRunning = true;
-
     isStretch
       ? stretchListGroup(MODEL_GROUP, customButtonList, false)
       : stretchListGroup(MODEL_GROUP, customButtonList, true);
   }
-}
-
-//展开的模型回到初始位置
-export function stretchModelBackHome(customButtonList: CustomButtonListType) {
-  if (customButtonList.toggleButtonGroup.type === "STRETCH") {
-    const MODEL_GROUP = createGroupIfNotExist(
-      getScene(),
-      GLOBAL_CONSTANT.MODEL_GROUP,
-      false
-    );
-    if (!MODEL_GROUP) {
-      return;
-    }
-    MODEL_GROUP.children.forEach((_item) => {
-      const { children } = _item;
-      for (let index = 0; index < children.length; index++) {
-        const element = children[index];
-        for (let index = 0; index < element.children.length; index++) {
-          const _element = element.children[index];
-
-          if (
-            !element.userData.childrenIsRunning &&
-            element.userData.childrenIsStretch
-          ) {
-            closeStretchModel(_element, customButtonList, index);
-          }
-        }
-
-        // const { x, y, z } = element.position;
-
-        //  stretchListGroup(element, customButtonList, false);
-      }
-      const { animationTime } = getUserSetting(customButtonList);
-      cameraBackHome(getCamera(), getControls(), animationTime);
-    });
-  }
-}
-
-function closeStretchModel(
-  group: Object3D<Object3DEventMap>,
-  customButtonList: CustomButtonListType,
-  index: number
-) {
-  const { x, y, z } = group.position;
-  const { modelOffset, animationTime } = getUserSetting(customButtonList);
-
-  meshTween(
-    group,
-    new Vector3(
-      x - modelOffset.x * index,
-      y - modelOffset.y * index,
-      z - modelOffset.z * index
-    ),
-    animationTime
-  )
-    .start()
-    .onComplete(() => {
-      if (group.parent) {
-        group.parent.userData.childrenIsStretch = false;
-        group.parent.userData.childrenIsRunning = false;
-      }
-    });
 }
 
 function stretchListGroup(
@@ -282,7 +175,7 @@ export function moveCameraDRAWER(
       if (MODEL_GROUP.name === GLOBAL_CONSTANT.MODEL_GROUP) {
         return;
       }
-      const { x, y, z } = getObjectWorldPosition(MODEL_GROUP);
+      const { x, y, z } = MODEL_GROUP.position;
 
       const cameraPosition = new Vector3(
         x + cameraOffset.x,
@@ -321,9 +214,6 @@ export function animateTOGGLE(
   return {
     ...item,
     handler: () => {
-      if (_roamIsRunning) {
-        roamAnimation(false);
-      }
       item.isClick = !item.isClick;
       const { cameraOffset, animationTime } = getUserSetting(customButtonList);
       if (NAME_ID === GLOBAL_CONSTANT.MODEL_GROUP) {
@@ -357,16 +247,44 @@ export function animateTOGGLE(
 }
 export function animateDRAWER(
   item: ActionItemMap,
-  customButtonList: CustomButtonListType
+  customButtonList: CustomButtonListType,
+  listGroup: ActionItemMap[]
 ) {
+  const { userSetting } = customButtonList.toggleButtonGroup;
   return {
     ...item,
     handler: () => {
-      if (_roamIsRunning) {
-        roamAnimation(false);
-      }
+      listGroup.forEach((_item: ActionItemMap) => {
+        const _d = _item.data;
+        if (_item.data?.isSelected && !_d?.isRunning) {
+          const model = createGroupIfNotExist(getScene(), _item.NAME_ID, false);
+          _item.data = {
+            isRunning: true,
+            isSelected: true,
+          };
 
-      drawerBackHome(customButtonList);
+          if (model) {
+            const mp = model.position;
+            const { x, y, z } = userSetting?.modelOffset || {
+              x: 0,
+              y: 0,
+              z: 0,
+            };
+            meshTween(
+              model,
+              new Vector3(mp.x - x, mp.y - y, mp.z - z),
+              userSetting?.animationTime ?? 1000
+            )
+              .start()
+              .onComplete(() => {
+                _item.data = {
+                  isRunning: false,
+                  isSelected: false,
+                };
+              });
+          }
+        }
+      });
       if (!item.data?.isSelected && !item.data?.isRunning) {
         drawerOutByNameId(item, customButtonList);
         moveCameraDRAWER(item, customButtonList);
@@ -382,23 +300,28 @@ export function animateSTRETCH(
   return {
     ...item,
     handler: () => {
-      if (_roamIsRunning) {
-        roamAnimation(false);
-      }
-      //如果是全景按钮，
       if (NAME_ID === GLOBAL_CONSTANT.MODEL_GROUP) {
-        //const customButtonList = getScene().userData
-        stretchModelBackHome(customButtonList);
+        const MODEL_GROUP = createGroupIfNotExist(
+          getScene(),
+          GLOBAL_CONSTANT.MODEL_GROUP,
+          false
+        );
+        if (MODEL_GROUP) {
+          MODEL_GROUP.children.forEach((item) => {
+            stretchModelByNameId(item.name, customButtonList);
+          });
+        }
+        const { animationTime } = getUserSetting(customButtonList);
+        cameraBackHome(getCamera(), getControls(), animationTime);
         return;
       }
       stretchModelByNameId(NAME_ID, customButtonList);
       moveCameraSTRETCH(item, customButtonList);
-      drawerBackHome(customButtonList);
     },
   };
 }
 
-export let _roamIsRunning = false;
+let _isRunning = false;
 //ROAM动画
 export function animateROAM(
   scene: Scene,
@@ -413,7 +336,7 @@ export function animateROAM(
   if (!_curve) {
     return;
   }
-  _roamIsRunning = isRunning;
+  _isRunning = isRunning;
 
   _curve.children.forEach((child) => {
     const position = getObjectWorldPosition(child);
@@ -443,7 +366,7 @@ export function animateROAM(
     const speed = (roamButtonGroup?.userSetting?.speed ?? 2) / 10000;
 
     function moveModelAlongCurve() {
-      if (progress <= 1 && _roamIsRunning) {
+      if (progress <= 1 && _isRunning) {
         // 根据进度获取曲线上的点
         const point = curve.getPoint(progress);
         // 设置相机的位置
