@@ -65,6 +65,15 @@ export default function Viewer3d({
   const canvas3d: RefObject<HTMLDivElement> = useRef(null);
 
   const [progress, setProgress] = useState(0);
+  const [position, setPosition] = useState(new Vector2(0, 0));
+  const [show, setShow] = useState(false);
+  const [info, setInfo] = useState<RecordItem>({
+    id: 3,
+    name: "",
+    des: "",
+    cover: "",
+  });
+
   const [scene, dispatchScene] = useReducer(reducerScene, initEditorScene);
   const [tourWindow, dispatchTourWindow] = useReducer(
     reducerTour,
@@ -205,7 +214,6 @@ export default function Viewer3d({
       removeCanvasChild(canvas3d);
     };
   }, [item]);
-  const [position, setPosition] = useState(new Vector2(0, 0));
 
   function clickHandler(event: MouseEvent) {
     const divElement = getDivElement();
@@ -242,20 +250,17 @@ export default function Viewer3d({
 
       setPosition(new Vector2(event.offsetX + 16, event.offsetY + 6));
       setShow(true);
-      const data = {
+      setInfo({
         name: selectedMesh[0].name,
         des: "",
         cover: "",
         id: 0,
-      };
-      setData(data);
+      });
     }
     if (selectedMesh.length === 0) {
       setShow(false);
     }
   }
-  const [show, setShow] = useState(false);
-  const [data, setData] = useState<RecordItem>();
 
   return (
     <MyContext.Provider
@@ -268,7 +273,7 @@ export default function Viewer3d({
           </div>
         )}
         <div style={canvasStyle} ref={canvas3d}></div>
-        <InfoPanel position={position} data={data} show={show} />
+        <InfoPanel position={position} info={info} show={show} />
         <ModalTour />
       </Container>
     </MyContext.Provider>

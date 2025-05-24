@@ -9,7 +9,7 @@ import {
   setSelectedObject,
   setTransformControls,
 } from "../../../three/init3dEditor";
-import { setClassName } from "../../../app/utils";
+
 import { Accordion, Card, ListGroup } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import Property3d from "../Property3d/Index";
@@ -18,6 +18,7 @@ import { useUpdateScene } from "../../../app/hooks";
 import { OutlineViewCamera } from "./OutlineViewCamera";
 import { OutlineViewScene } from "./OutlineViewScene";
 import { hideBoxHelper, raycasterSelect } from "../../../three/common3d";
+import Icon from "../../common/Icon";
 
 export default function Index() {
   const [_camera, _setCamera] = useState<
@@ -140,13 +141,14 @@ export default function Index() {
     <Accordion defaultActiveKey={["0", "1"]} alwaysOpen style={{}}>
       <Accordion.Item eventKey="0">
         <Accordion.Header>
-          <i className={setClassName("archive")}></i>
+          <Icon iconName="archive" />
           <span className="px-2">大纲视图</span>
         </Accordion.Header>
         <Accordion.Body className="outline-view">
           <Card>
             <Card.Header className="text-center">
-              <i className={setClassName("camera-reels")}></i> 相机
+              <Icon iconName="camera-reels" />
+              相机
             </Card.Header>
             <Card.Body>
               <ListGroup>
@@ -159,7 +161,8 @@ export default function Index() {
           </Card>
           <Card>
             <Card.Header className="text-center">
-              <i className={setClassName("box2")}></i> 场景
+              <Icon iconName="box2" />
+              场景
             </Card.Header>
             <Card.Body>
               <ListGroup>
@@ -169,7 +172,8 @@ export default function Index() {
           </Card>
           <Card>
             <Card.Header className="text-center">
-              <i className={setClassName("lightbulb")}></i> 灯光
+              <Icon iconName="lightbulb" />
+              灯光
             </Card.Header>
             <Card.Body>
               <ListGroup className="da-gang">
@@ -184,7 +188,8 @@ export default function Index() {
           </Card>
           <Card>
             <Card.Header className="text-center">
-              <i className={setClassName("box")}></i> 模型
+              <Icon iconName="box" />
+              模型
             </Card.Header>
             <Card.Body>
               <ListGroup className="da-gang">

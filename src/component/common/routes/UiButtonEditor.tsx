@@ -11,8 +11,7 @@ import {
   CustomButtonListType,
   CustomButtonType,
 } from "../../../app/type";
-import { setClassName } from "../../../app/utils";
-
+import Icon from "../Icon";
 export default function UiButtonEditor({
   value,
   setValue,
@@ -59,31 +58,23 @@ export default function UiButtonEditor({
       return (
         <ListGroupItem key={index} style={{ padding: 0, border: 0 }}>
           <InputGroup>
-            <InputGroup.Text id={item.NAME_ID} title="显示或隐藏按钮">
+            <InputGroup.Text
+              id={item.NAME_ID}
+              title="显示或隐藏按钮"
+              onClick={() => {
+                console.log("点击了", item);
+                const newCustomButtonList = updateButtonGroup(
+                  buttonGroupKey,
+                  index,
+                  (item) => ({ ...item, showButton: !item.showButton })
+                );
+                setValue(JSON.stringify(newCustomButtonList));
+              }}
+            >
               {item.showButton ? (
-                <i
-                  className={setClassName("eye")}
-                  onClick={() => {
-                    const newCustomButtonList = updateButtonGroup(
-                      buttonGroupKey,
-                      index,
-                      (item) => ({ ...item, showButton: !item.showButton })
-                    );
-                    setValue(JSON.stringify(newCustomButtonList));
-                  }}
-                ></i>
+                <Icon iconName="eye" gap={0} title="已显示" />
               ) : (
-                <i
-                  className={setClassName("eye-slash")}
-                  onClick={() => {
-                    const newCustomButtonList = updateButtonGroup(
-                      buttonGroupKey,
-                      index,
-                      (item) => ({ ...item, showButton: !item.showButton })
-                    );
-                    setValue(JSON.stringify(newCustomButtonList));
-                  }}
-                ></i>
+                <Icon iconName="eye-slash" gap={0} title="已隐藏" />
               )}
             </InputGroup.Text>
             {Array.isArray(item.showName)

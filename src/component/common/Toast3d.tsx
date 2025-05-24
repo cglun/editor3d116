@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { Toast as BootToast } from "react-bootstrap";
 import { createRoot } from "react-dom/client";
 import { APP_COLOR, DELAY } from "../../app/type";
-import { setClassName } from "../../app/utils";
+
+import Icon from "./Icon";
 /**
  * 消息提示
  * 用法：Toast3d("成功添加");
@@ -34,7 +35,7 @@ function App116({ update, _toast }: { update: number; _toast: Toast }) {
       autohide
     >
       <BootToast.Header>
-        <i className={setClassName("info-circle") + " me-1"}></i>
+        <Icon iconName="info-circle" />
         <strong className="me-auto ">{title}</strong>
       </BootToast.Header>
       <BootToast.Body

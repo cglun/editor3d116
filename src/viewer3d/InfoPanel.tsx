@@ -1,19 +1,21 @@
 import Card from "react-bootstrap/esm/Card";
 import { Vector2 } from "three";
+import { RecordItem } from "../app/type";
 
-interface InfoPanelProps {
+export interface InfoPanelProps {
   show: boolean; // 面板是否显示
   position: Vector2; // 面板的位置
-  data: {
-    name: string; // 面板的名称
-    des: string; // 面板的描述
-    cover: string; // 面板的封面图片
-  }; // 要显示的数据
+  info: RecordItem; // 面板的数据
 }
 export default function InfoPanel({
   show = false,
   position = new Vector2(0, 0),
-  data = { name: "name", des: "des", cover: "cover" },
+  info = {
+    name: "name",
+    des: "des",
+    cover: "cover",
+    id: 0,
+  },
 }: InfoPanelProps) {
   const { x, y } = position;
 
@@ -29,10 +31,10 @@ export default function InfoPanel({
 
   return (
     <Card className="position-absolute" style={style}>
-      <Card.Header>位置：{data.name}</Card.Header>
+      <Card.Header>位置：{info.name}</Card.Header>
       <Card.Body>
-        <Card.Title>{data.name}</Card.Title>
-        <Card.Text>{data.des}</Card.Text>
+        <Card.Title>{info.name}</Card.Title>
+        <Card.Text>{info.des}</Card.Text>
         {/* <Button variant="primary">Go somewhere</Button> */}
       </Card.Body>
     </Card>

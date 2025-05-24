@@ -5,12 +5,7 @@ import Form from "react-bootstrap/esm/Form";
 import { Button, ButtonGroup, Card, Container } from "react-bootstrap";
 import Viewer3d from "../../viewer3d/Viewer3d";
 import Toast3d from "./Toast3d";
-import {
-  base64ToBlob,
-  blobToFile,
-  getButtonColor,
-  setClassName,
-} from "../../app/utils";
+import { base64ToBlob, blobToFile, getButtonColor } from "../../app/utils";
 import { takeScreenshot } from "../../three/init3dViewer";
 import axios, { loadAssets } from "../../app/http";
 import { APP_COLOR, RecordItem } from "../../app/type";
@@ -18,6 +13,7 @@ import { APP_COLOR, RecordItem } from "../../app/type";
 import { getScene } from "../../three/init3dEditor";
 
 import { setEnableScreenshot } from "../../three/config3d";
+import Icon from "./Icon";
 
 export default function EditorForm({
   item,
@@ -75,7 +71,7 @@ export default function EditorForm({
       style={{ cursor: "crosshair", width: "300px" }}
     />
   );
-  //  <i className="bi bi-image" style={{ fontSize: "11.6rem" }}> </i>
+
   return (
     <Container fluid>
       <InputGroup size="sm">
@@ -131,7 +127,8 @@ export default function EditorForm({
               setEnableScreenshot(true);
             }}
           >
-            <i className={setClassName("box")}></i> 使用场景
+            <Icon iconName="box" />
+            使用场景
           </Button>
 
           <Button
@@ -143,7 +140,8 @@ export default function EditorForm({
               Toast3d("截图成功");
             }}
           >
-            <i className={setClassName("camera")}></i> 截图
+            <Icon iconName="camera" />
+            截图
           </Button>
 
           <Button
@@ -151,7 +149,7 @@ export default function EditorForm({
             disabled={imgBase64.trim() === ""}
             onClick={uploadScreenshot}
           >
-            <i className={setClassName("cloud-arrow-up")}></i>
+            <Icon iconName="cloud-arrow-up" />
             上传截图
           </Button>
         </ButtonGroup>

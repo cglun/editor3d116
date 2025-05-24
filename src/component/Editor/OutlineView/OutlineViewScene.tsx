@@ -1,11 +1,9 @@
 import ListGroup from "react-bootstrap/esm/ListGroup";
 
 import { getScene, setSelectedObject } from "../../../three/init3dEditor";
-import { setClassName } from "../../../app/utils";
-
-import { SPACE } from "../../../app/utils";
 
 import { useUpdateScene } from "../../../app/hooks";
+import Icon from "../../common/Icon";
 
 export function OutlineViewScene() {
   const { scene, updateScene } = useUpdateScene();
@@ -22,8 +20,8 @@ export function OutlineViewScene() {
         }}
       >
         <div>
-          <i className={setClassName("box2")}></i>
-          {SPACE + "场景"}
+          <Icon iconName="box2" gap={2} />
+          场景
         </div>
       </ListGroup.Item>
     )

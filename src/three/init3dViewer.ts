@@ -3,10 +3,20 @@ import {
   Object3DEventMap,
   PerspectiveCamera,
   Scene,
+  Vector2,
   WebGLRenderer,
 } from "three";
 
+import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
+import { OutlinePass } from "three/addons/postprocessing/OutlinePass.js";
+import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+
+import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
+
+import { FXAAShader } from "three/addons/shaders/FXAAShader.js";
+
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 
 import {
   createConfigRenderer,
@@ -24,7 +34,12 @@ let scene: Scene,
   controls: OrbitControls,
   renderer: WebGLRenderer,
   divElement: HTMLDivElement,
-  extra3d = extra;
+  extra3d = extra,
+  composer: EffectComposer,
+  effectFXAA: ShaderPass,
+  outlinePass: OutlinePass,
+  selectedObjects: Object3D<Object3DEventMap>[] = [];
+
 const parameters3d = { ...parameters, flag: "3d" };
 function animate() {
   const animateProps: AnimateProps = {
@@ -34,6 +49,7 @@ function animate() {
     renderer,
     extra3d,
     parameters3d,
+    composer,
   };
 
   commonAnimate(animateProps);
@@ -50,7 +66,9 @@ export default function initScene(node: HTMLDivElement): void {
   scene.add(light);
 
   renderer = createRenderer(node);
+
   node.appendChild(renderer.domElement);
+
   controls = new OrbitControls(camera, renderer.domElement);
 
   const { labelRenderer2d, labelRenderer3d } = createConfigRenderer(
@@ -62,11 +80,49 @@ export default function initScene(node: HTMLDivElement): void {
     labelRenderer2d,
     labelRenderer3d,
   };
+
   animate();
 }
+export function initPostProcessing() {
+  const { offsetWidth, offsetHeight } = divElement;
+  if (offsetWidth <= 0 || offsetHeight <= 0) {
+    console.warn("Div element size is invalid");
+    return;
+  }
+  composer = new EffectComposer(renderer);
 
+  const renderPass = new RenderPass(scene, camera);
+  composer.addPass(renderPass);
+
+  outlinePass = new OutlinePass(
+    new Vector2(offsetWidth, offsetHeight),
+    scene,
+    camera
+  );
+  outlinePass.selectedObjects = selectedObjects; // 设置选中对象
+  composer.addPass(outlinePass);
+
+  // const textureLoader = new TextureLoader();
+  // textureLoader.load("textures/tri_pattern.jpg", function (texture) {
+  //   outlinePass.patternTexture = texture;
+  //   texture.wrapS = RepeatWrapping;
+  //   texture.wrapT = RepeatWrapping;
+  // });
+  const outputPass = new OutputPass();
+  composer.addPass(outputPass);
+
+  effectFXAA = new ShaderPass(FXAAShader);
+  effectFXAA.uniforms["resolution"].value.set(
+    1 / offsetWidth,
+    1 / offsetHeight
+  );
+  composer.addPass(effectFXAA);
+}
 export function getControls() {
   return controls;
+}
+export function getSelectedObjects() {
+  return outlinePass.selectedObjects;
 }
 
 export function getLabelRenderer() {

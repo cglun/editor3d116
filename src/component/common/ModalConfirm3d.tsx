@@ -7,7 +7,8 @@ import { getScene } from "../../three/init3dEditor";
 import { ConfirmButton } from "../../app/type";
 // 从新文件中引入常量
 import { _confirmButton } from "./ModalConfirmUtils";
-import { getButtonColor, setClassName } from "../../app/utils";
+import { getButtonColor } from "../../app/utils";
+import Icon from "./Icon";
 
 let container = document.getElementById("toast");
 if (container === null) {
@@ -50,7 +51,8 @@ function ModalConfirm({
       >
         <Modal.Header closeButton={confirmButton.closeButton}>
           <Modal.Title id="contained-modal-title-vcenter">
-            <i className={setClassName("info-circle")}></i> {title}
+            <Icon iconName="info-circle" />
+            {title}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>{body}</Modal.Body>
@@ -58,7 +60,8 @@ function ModalConfirm({
           <Modal.Footer>
             <ButtonGroup>
               <Button variant={buttonColor} onClick={onClose}>
-                <i className={setClassName("x-circle")}></i> 取消
+                <Icon iconName="x-circle" />
+                取消
               </Button>
               <Button
                 variant={buttonColor}
@@ -67,7 +70,8 @@ function ModalConfirm({
                   onClose();
                 }}
               >
-                <i className={setClassName("check-circle")}></i> 确定
+                <Icon iconName="check-circle" />
+                确定
               </Button>
             </ButtonGroup>
           </Modal.Footer>

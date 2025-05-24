@@ -8,7 +8,7 @@ import {
   Spinner,
 } from "react-bootstrap";
 import AlertBase from "../common/AlertBase";
-import { getThemeByScene, setClassName } from "../../app/utils";
+import { getThemeByScene } from "../../app/utils";
 import { APP_COLOR, Context116, GlbModel, RecordItem } from "../../app/type";
 import ModalConfirm3d from "../common/ModalConfirm3d";
 import Toast3d from "../common/Toast3d";
@@ -35,6 +35,7 @@ import Trigger3d from "../common/Trigger3d";
 import { Scene } from "three";
 
 import { useLocation, useNavigate } from "@tanstack/react-router";
+import Icon from "../common/Icon";
 
 interface Props {
   list: RecordItem[];
@@ -303,14 +304,14 @@ function RecordItemCard(props: Props) {
                   size="sm"
                   onClick={() => editorBtn(item, index)}
                 >
-                  <i className={setClassName("pencil")} title="编辑"></i>
+                  <Icon iconName="pencil" title="编辑" gap={0} />
                 </Button>
                 <Button
                   variant={themeColor}
                   size="sm"
                   onClick={() => deleteBtn(item, index)}
                 >
-                  <i className={setClassName("trash")} title="删除"></i>
+                  <Icon iconName="trash" title="删除" gap={0} />
                 </Button>
               </ButtonGroup>
             </Card.Body>

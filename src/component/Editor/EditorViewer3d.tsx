@@ -17,7 +17,7 @@ import { Button, ButtonGroup, Container, ProgressBar } from "react-bootstrap";
 
 import { TransformControlsMode } from "three/addons/controls/TransformControls.js";
 import { Object3D, Vector3 } from "three";
-import { getThemeByScene, setClassName } from "../../app/utils";
+import { getThemeByScene } from "../../app/utils";
 import {
   createGroupIfNotExist,
   finishLoadExecute,
@@ -43,6 +43,7 @@ import Toast3d from "../common/Toast3d";
 import { GLOBAL_CONSTANT } from "../../three/GLOBAL_CONSTANT";
 import { cameraTween } from "../../three/animate";
 import { userData } from "../../three/config3d";
+import Icon from "../common/Icon";
 
 function EditorViewer3d() {
   const editorCanvas: React.RefObject<HTMLDivElement> =
@@ -257,7 +258,7 @@ function EditorViewer3d() {
             setMode("translate");
           }}
         >
-          <i className="bi bi-arrows-move"></i>
+          <Icon iconName="bi bi-arrows-move" gap={0} />
         </Button>
         <Button
           variant={themeColor}
@@ -266,7 +267,7 @@ function EditorViewer3d() {
             setMode("rotate");
           }}
         >
-          <i className="bi bi-arrow-repeat"></i>
+          <Icon iconName="bi bi-arrow-repeat" gap={0} />
         </Button>
         <Button
           variant={themeColor}
@@ -275,7 +276,7 @@ function EditorViewer3d() {
             setMode("scale");
           }}
         >
-          <i className="bi bi-arrows-angle-expand"></i>
+          <Icon iconName="bi bi-arrows-angle-expand" gap={0} />
         </Button>
         <Button
           variant={themeColor}
@@ -284,7 +285,7 @@ function EditorViewer3d() {
             setCameraType("OrthographicCamera", new Vector3(0, 1, 0));
           }}
         >
-          <i className="bi bi-align-top"></i>
+          <Icon iconName="bi bi-align-top" gap={0} />
         </Button>
         <Button
           variant={themeColor}
@@ -293,7 +294,7 @@ function EditorViewer3d() {
             setCameraType("OrthographicCamera", new Vector3(0, 0, 1));
           }}
         >
-          <i className="bi bi-align-middle"></i>
+          <Icon iconName="bi bi-align-middle" gap={0} />
         </Button>
         <Button
           variant={themeColor}
@@ -302,7 +303,7 @@ function EditorViewer3d() {
             setCameraType("OrthographicCamera", new Vector3(1, 0, 0));
           }}
         >
-          <i className="bi bi-align-start"></i>
+          <Icon iconName="bi bi-align-start" />
         </Button>
         <Button
           variant={themeColor}
@@ -311,7 +312,7 @@ function EditorViewer3d() {
             setCameraType("PerspectiveCamera", Object3D.DEFAULT_UP);
           }}
         >
-          <i className={setClassName("box")}></i>
+          <Icon iconName="box" gap={0} />
         </Button>
       </ButtonGroup>
 

@@ -99,9 +99,10 @@ export interface AnimateProps {
   renderer: WebGLRenderer;
   extra3d: Extra3d;
   parameters3d: Parameters3d;
+  composer?: EffectComposer;
 }
 export function commonAnimate(animateProps: AnimateProps) {
-  const { scene, camera, controls, renderer, extra3d, parameters3d } =
+  const { scene, camera, controls, renderer, extra3d, parameters3d, composer } =
     animateProps;
 
   const { css2d, css3d, useTween, FPS, useKeyframe } = animateProps.scene
@@ -126,7 +127,10 @@ export function commonAnimate(animateProps: AnimateProps) {
       TWEEN.update();
     }
     controls.update();
-    renderer.render(scene, camera); //执行渲染操作
+    renderer.render(scene, camera);
+    if (composer) {
+      composer.render(); // 使用 composer 进行渲染
+    }
     parameters3d.timeS = 0;
   }
   if (useKeyframe) {
@@ -138,6 +142,7 @@ export function commonAnimate(animateProps: AnimateProps) {
 import venice_sunset_1k from "/static/file3d/hdr/venice_sunset_1k.hdr?url";
 import spruit_sunrise_1k from "/static/file3d/hdr/spruit_sunrise_1k.hdr?url";
 import { GLOBAL_CONSTANT } from "./GLOBAL_CONSTANT";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 
 //环境贴图设置
 export function setTextureBackground(scene: Scene) {

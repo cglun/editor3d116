@@ -8,7 +8,7 @@ import {
 } from "react-bootstrap";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import Viewer3d from "../../viewer3d/Viewer3d";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { setEnableScreenshot } from "../../three/config3d";
 import _axios from "../../app/http";
 
@@ -20,8 +20,10 @@ import {
   Context116,
   RecordItem,
 } from "../../app/type";
-import { getCamera } from "../../three/init3dViewer";
+import { getCamera, initPostProcessing } from "../../three/init3dViewer";
 import { resetListGroupIsClick } from "../../viewer3d/buttonList/buttonGroup";
+import { createLabelInfo } from "../../viewer3d/label/LabelFactory";
+import { MyContext } from "../../app/MyContext";
 
 // 定义响应数据的类型
 interface PageListResponse {
@@ -50,6 +52,7 @@ function RouteComponent() {
   const { themeColor } = getThemeByScene(scene);
   const buttonColor = getButtonColor(themeColor);
   const [_item, _setItem] = useState<RecordItem>();
+  const { dispatchTourWindow } = useContext(MyContext);
 
   useEffect(() => {
     setEnableScreenshot(true);
@@ -92,6 +95,9 @@ function RouteComponent() {
     // 检查 getToggleButtonGroup 方法是否存在
     setToggleButtonList(instance.getToggleButtonGroup || []);
     setRoamButtonList(instance.getRoamListByRoamButtonMap || []);
+    initPostProcessing();
+    //创建标签信息
+    createLabelInfo(dispatchTourWindow);
   }
 
   function callBackError(error: unknown) {

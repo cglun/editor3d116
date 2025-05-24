@@ -17,6 +17,8 @@ export const Route = createLazyFileRoute("/editor3d/config")({
 
 function RouteComponent() {
   const { scene, updateScene } = useUpdateScene();
+  const t = localStorage.getItem("TOKEN");
+  const [token, setToken] = useState(t || "TOKEN");
   if (scene.payload.userData.config3d === undefined) {
     return;
   }
@@ -24,9 +26,6 @@ function RouteComponent() {
 
   const { themeColor } = getThemeByScene(scene);
   const btnColor = getButtonColor(themeColor);
-
-  const t = localStorage.getItem("TOKEN");
-  const [token, setToken] = useState(t || "TOKEN");
 
   // 关键帧动画设置
   function setKeyframe() {

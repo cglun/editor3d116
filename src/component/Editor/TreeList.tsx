@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import { Button, Container, ListGroupItem } from "react-bootstrap";
-import { setClassName } from "../../app/utils";
+
 import { getObjectNameByName } from "../../three/utils";
 import { SPACE } from "../../app/utils";
 import { APP_COLOR, UserDataType } from "../../app/type";
@@ -16,6 +16,7 @@ import {
 } from "../../three/init3dEditor";
 
 import { useUpdateScene } from "../../app/hooks";
+import Icon from "../common/Icon";
 
 function TreeNode({
   node,
@@ -85,7 +86,7 @@ function TreeNode({
     if (item instanceof Group) logo = "collection";
     if (item instanceof Light) logo = "lightbulb";
 
-    return <i className={setClassName(logo)}></i>;
+    return <Icon iconName={logo} />;
   }
 
   const light = `d-flex justify-content-between ${node.userData.isSelected ? "text-warning" : ""}`;
@@ -114,16 +115,16 @@ function TreeNode({
               className="me-1"
               onClick={(e) => delMesh(e, node)}
             >
-              <i className={setClassName("trash")}></i>
+              <Icon iconName="trash" />
             </Button>
           ) : (
             ""
           )}
           {hasChildren ? (
             isExpanded ? (
-              <i className={setClassName("dash-square")}></i>
+              <Icon iconName="dash-square" />
             ) : (
-              <i className={setClassName("plus-square")}></i>
+              <Icon iconName="plus-square" />
             )
           ) : (
             ""

@@ -23,6 +23,7 @@ import _axios from "../../app/http";
 
 import { MyContext } from "../../app/MyContext";
 import { createCss2dLabel, createCss3dLabel } from "../../three/factory3d";
+import { GLOBAL_CONSTANT } from "../../three/GLOBAL_CONSTANT";
 
 export const Route = createLazyFileRoute("/editor3d/mark")({
   component: RouteComponent,
@@ -41,7 +42,10 @@ function RouteComponent() {
 
   function addMark(label: CSS3DSprite | CSS2DObject) {
     const scene = getScene();
-    const MARK_LABEL_GROUP = createGroupIfNotExist(scene, "MARK_LABEL_GROUP");
+    const MARK_LABEL_GROUP = createGroupIfNotExist(
+      scene,
+      GLOBAL_CONSTANT.MARK_LABEL_GROUP
+    );
 
     if (!MARK_LABEL_GROUP) return;
 

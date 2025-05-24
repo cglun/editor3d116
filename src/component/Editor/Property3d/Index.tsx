@@ -1,9 +1,9 @@
 import { Accordion } from "react-bootstrap";
-import { setClassName } from "../../../app/utils";
 
 import IndexChild from "./IndexChild";
 import { SelectedObject } from "../../../app/type";
 import { useEffect, useRef } from "react";
+import Icon from "../../common/Icon";
 /**
  * 物体属性
  * @returns
@@ -46,7 +46,7 @@ export default function Index({ selected3d }: { selected3d: SelectedObject }) {
     selected3d && (
       <Accordion.Item eventKey="1" ref={refAccordion}>
         <Accordion.Header>
-          <i className={setClassName("menu-button")}></i>
+          <Icon iconName="menu-button" />
           <span className="px-2 ellipsis-3d">属性</span>
         </Accordion.Header>
         <Accordion.Body>

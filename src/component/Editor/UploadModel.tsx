@@ -5,10 +5,11 @@ import { Euler, Vector3 } from "three";
 
 import { useRef, useState } from "react";
 import Toast3d from "../common/Toast3d";
-import { getButtonColor, getThemeByScene, setClassName } from "../../app/utils";
+import { getButtonColor, getThemeByScene } from "../../app/utils";
 import axios from "../../app/http";
 import { APP_COLOR, GlbModel } from "../../app/type";
 import { useUpdateScene } from "../../app/hooks";
+import Icon from "../common/Icon";
 
 export function UploadModel({ updateList = () => {} }) {
   const fileRef = useRef<HTMLInputElement>(null);
@@ -108,12 +109,12 @@ export function UploadModel({ updateList = () => {} }) {
               className="custom-file-progress"
               style={{ cursor: "pointer", marginBottom: 0 }}
             >
-              <i
-                className={setClassName("cloud-plus")}
+              {/* <i
+                className={setClassName()}
                 style={{ fontSize: "1rem" }}
-              >
-                上传模型
-              </i>
+              ></i>{" "} */}
+              <Icon iconName="cloud-plus" fontSize={1.2} />
+              <em style={{ fontSize: "1.2rem" }}>上传模型</em>
             </Form.Label>
           </Button>
           <Form.Control
@@ -157,7 +158,8 @@ export function UploadModel({ updateList = () => {} }) {
             setBtn(true);
           }}
         >
-          <i className={setClassName("trash2")}></i>清空
+          <Icon iconName="trash2" />
+          清空
         </Button>
         <Button
           variant={buttonColor}
@@ -166,7 +168,8 @@ export function UploadModel({ updateList = () => {} }) {
           }}
           disabled={btn}
         >
-          <i className={setClassName("cloud-arrow-up")}></i>上传
+          <Icon iconName="cloud-arrow-up" />
+          上传
         </Button>
       </ButtonGroup>
     </ListGroupItem>

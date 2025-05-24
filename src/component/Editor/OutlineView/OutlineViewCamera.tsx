@@ -5,13 +5,13 @@ import {
   getScene,
   setSelectedObject,
 } from "../../../three/init3dEditor";
-import { setClassName } from "../../../app/utils";
-import { SPACE } from "../../../app/utils";
+
 import Button from "react-bootstrap/esm/Button";
 import { APP_COLOR } from "../../../app/type";
 import Toast3d from "../../common/Toast3d";
 import { cameraTween } from "../../../three/animate";
 import { useUpdateScene } from "../../../app/hooks";
+import Icon from "../../common/Icon";
 
 export function OutlineViewCamera({
   object3D,
@@ -39,11 +39,8 @@ export function OutlineViewCamera({
         }}
       >
         <div>
-          <i className={setClassName("camera-reels")}></i>
-          {SPACE + "相机"}
-
+          <Icon iconName="camera-reels" gap={2} />
           <Button
-            className="ms-2"
             size="sm"
             title="相机初始位置"
             variant={APP_COLOR.Secondary}

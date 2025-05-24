@@ -1,6 +1,7 @@
 import { Alert } from "react-bootstrap";
 import { setClassName } from "../../app/utils";
 import { APP_COLOR } from "../../app/type";
+import Icon from "./Icon";
 
 export default function AlertBase({
   text = "内容",
@@ -17,7 +18,7 @@ export default function AlertBase({
   }
   return (
     <Alert variant={type} className={className}>
-      <i className={setClassName(iconClassName)}></i>
+      <Icon iconName={iconClassName} />
       {text}
     </Alert>
   );

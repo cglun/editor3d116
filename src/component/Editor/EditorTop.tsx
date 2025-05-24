@@ -11,7 +11,7 @@ import {
   Stack,
   Container,
 } from "react-bootstrap";
-import { getThemeByScene, setClassName } from "../../app/utils";
+import { getThemeByScene } from "../../app/utils";
 
 import ListCard from "./ListCard";
 import Toast3d from "../common/Toast3d";
@@ -30,6 +30,7 @@ import { Serch3d } from "./Serch3d";
 
 import { createNewScene } from "../../three/factory3d";
 import { useLocation, useNavigate } from "@tanstack/react-router";
+import Icon from "../common/Icon";
 
 export default function EditorTop() {
   //打开场景列表
@@ -37,6 +38,11 @@ export default function EditorTop() {
   const handleClose = () => setShowScene(false);
   const handleShow = () => setShowScene(true);
   const { scene, updateScene } = useUpdateScene();
+  const [list, setList] = useState<RecordItem[]>([]);
+  const [error, setError] = useState("");
+  const [filterList, setFilterList] = useState<RecordItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   const { themeColor, iconFill, sceneCanSave } = getThemeByScene(scene);
   document.body.setAttribute("data-bs-theme", themeColor);
   const logoUrl = new URL("/static/images/logo.png", import.meta.url).href;
@@ -141,11 +147,6 @@ export default function EditorTop() {
     );
   }
 
-  const [list, setList] = useState<RecordItem[]>([]);
-  const [error, setError] = useState("");
-  const [filterList, setFilterList] = useState<RecordItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
   useEffect(() => {
     setIsLoading(true);
 
@@ -195,7 +196,8 @@ export default function EditorTop() {
           <Nav className="me-auto">
             <ButtonGroup size="sm">
               <Button variant={themeColor} onClick={handleShow}>
-                <i className={setClassName("badge-3d")}></i> 切换场景
+                <Icon iconName="badge-3d" />
+                切换场景
               </Button>
             </ButtonGroup>{" "}
             {scene.payload.userData.sceneName && (
@@ -221,7 +223,8 @@ export default function EditorTop() {
                   updateScene(newScene);
                 }}
               >
-                <i className={setClassName("plus-square")}></i> 新建场景
+                <Icon iconName="plus-square" />
+                新建场景
               </Button>
               <Button
                 variant={themeColor}
@@ -230,7 +233,8 @@ export default function EditorTop() {
                   saveScene();
                 }}
               >
-                <i className={setClassName("floppy")}></i> 保存场景
+                <Icon iconName="floppy" />
+                保存场景
               </Button>
               <Button
                 variant={themeColor}
@@ -238,7 +242,8 @@ export default function EditorTop() {
                   saveAsNewScene();
                 }}
               >
-                <i className={setClassName("floppy2")}></i> 场景另存
+                <Icon iconName="floppy2" />
+                场景另存
               </Button>
               <Button
                 as="div"
@@ -252,9 +257,9 @@ export default function EditorTop() {
                     size="sm"
                   >
                     {themeColor === "light" ? (
-                      <i className={setClassName("sun")}></i>
+                      <Icon iconName="sun" />
                     ) : (
-                      <i className={setClassName("moon-stars")}></i>
+                      <Icon iconName="moon-stars" />
                     )}
                     主题
                   </Dropdown.Toggle>
@@ -271,7 +276,8 @@ export default function EditorTop() {
                           }
                         }}
                       >
-                        <i className={setClassName("sun")}></i> 白天模式
+                        <Icon iconName="sun" />
+                        白天模式
                       </Dropdown.Item>
                     ) : (
                       <Dropdown.Item
@@ -285,7 +291,8 @@ export default function EditorTop() {
                           }
                         }}
                       >
-                        <i className={setClassName("moon-stars")}></i> 黑夜模式
+                        <Icon iconName="moon-stars" />
+                        黑夜模式
                       </Dropdown.Item>
                     )}
                     {iconFill === "-fill" ? (
@@ -294,7 +301,7 @@ export default function EditorTop() {
                           setThemeIcons("");
                         }}
                       >
-                        <i className={"bi bi-emoji-expressionless"}></i>{" "}
+                        <Icon iconName="bi bi-emoji-expressionless" />
                         空心图标
                       </Dropdown.Item>
                     ) : (
@@ -303,7 +310,7 @@ export default function EditorTop() {
                           setThemeIcons("-fill");
                         }}
                       >
-                        <i className={"bi bi-emoji-expressionless-fill"}></i>
+                        <Icon iconName="bi bi-emoji-expressionless-fill" />
                         填充图标
                       </Dropdown.Item>
                     )}
@@ -320,7 +327,8 @@ export default function EditorTop() {
                   );
                 }}
               >
-                <i className={setClassName("camera-video")}></i> 教程
+                <Icon iconName="camera-video" />
+                教程
               </Button>
             </ButtonGroup>
           </Nav>
@@ -329,7 +337,8 @@ export default function EditorTop() {
           <Offcanvas show={showScene} onHide={handleClose}>
             <Offcanvas.Header closeButton>
               <Offcanvas.Title>
-                <i className={setClassName("badge-3d")}></i> 所有场景
+                <Icon iconName="badge-3d" />
+                所有场景
               </Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>

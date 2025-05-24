@@ -5,9 +5,10 @@ import Button from "react-bootstrap/esm/Button";
 import Form from "react-bootstrap/esm/Form";
 import InputGroup from "react-bootstrap/esm/InputGroup";
 
-import { getButtonColor, getThemeByScene, setClassName } from "../../app/utils";
+import { getButtonColor, getThemeByScene } from "../../app/utils";
 import { useUpdateScene } from "../../app/hooks";
 import { RecordItem } from "../../app/type";
+import Icon from "../common/Icon";
 
 // 定义一个接口来描述 list 数组中元素的类型
 interface SearchableItem {
@@ -69,7 +70,7 @@ export function Serch3d({
             setFilterList(newList);
           }}
         >
-          <i className={setClassName("search-heart")}></i>
+          <Icon iconName="search-heart" />
         </Button>
       </InputGroup>
     </ListGroup.Item>
