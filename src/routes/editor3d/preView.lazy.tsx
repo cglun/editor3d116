@@ -20,7 +20,7 @@ import {
   Context116,
   RecordItem,
 } from "../../app/type";
-import { getCamera, initPostProcessing } from "../../three/init3dViewer";
+import { getCamera } from "../../three/init3dViewer";
 import { resetListGroupIsClick } from "../../viewer3d/buttonList/buttonGroup";
 import { createLabelInfo } from "../../viewer3d/label/LabelFactory";
 import { MyContext } from "../../app/MyContext";
@@ -95,13 +95,12 @@ function RouteComponent() {
     // 检查 getToggleButtonGroup 方法是否存在
     setToggleButtonList(instance.getToggleButtonGroup || []);
     setRoamButtonList(instance.getRoamListByRoamButtonMap || []);
-    initPostProcessing();
     //创建标签信息
     createLabelInfo(dispatchTourWindow);
   }
 
   function callBackError(error: unknown) {
-    console.log("加载失败", error);
+    console.error("加载失败", error);
   }
   //@ts-expect-error 忽略类型检查，暂时不清楚 progress 相关完整类型定义
   function getProgress(progress: number) {

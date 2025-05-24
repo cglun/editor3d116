@@ -17,6 +17,7 @@ export interface Config3d {
   useTween: boolean; //是否开启动画
   useShadow: boolean; //是否开启阴影
   useKeyframe: boolean; //是否开启关键帧动画
+  useComposer: boolean; //是否开启后处理
   FPS: number; //帧率
 }
 
@@ -27,6 +28,7 @@ export const config3d: Config3d = {
   useShadow: true, //是否开启阴影
   useKeyframe: true, //是否开启关键帧动画
   FPS: 30, //帧率
+  useComposer: true,
 };
 export const userData = {
   isSelected: false,

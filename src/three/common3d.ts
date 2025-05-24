@@ -105,8 +105,8 @@ export function commonAnimate(animateProps: AnimateProps) {
   const { scene, camera, controls, renderer, extra3d, parameters3d, composer } =
     animateProps;
 
-  const { css2d, css3d, useTween, FPS, useKeyframe } = animateProps.scene
-    .userData.config3d as Config3d;
+  const { css2d, css3d, useTween, FPS, useKeyframe, useComposer } = animateProps
+    .scene.userData.config3d as Config3d;
 
   const { clock, mixer } = parameters3d;
   const T = clock.getDelta();
@@ -128,7 +128,7 @@ export function commonAnimate(animateProps: AnimateProps) {
     }
     controls.update();
     renderer.render(scene, camera);
-    if (composer) {
+    if (composer && useComposer) {
       composer.render(); // 使用 composer 进行渲染
     }
     parameters3d.timeS = 0;

@@ -104,6 +104,11 @@ function RouteComponent() {
       </ListGroup.Item>
       <ListGroup.Item>
         <InputGroup size="sm">
+          <ConfigCheck label="使用合成" configKey="useComposer" />
+        </InputGroup>
+      </ListGroup.Item>
+      <ListGroup.Item>
+        <InputGroup size="sm">
           <InputGroup.Text>帧率</InputGroup.Text>
           <Form.Select
             aria-label="FPS"

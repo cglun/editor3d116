@@ -32,6 +32,7 @@ export function ConfigCheck({
       <Form.Text>
         <Form.Check
           label={label}
+          id={`switch${_configKey}`}
           type="switch"
           checked={checked}
           disabled={disabled}

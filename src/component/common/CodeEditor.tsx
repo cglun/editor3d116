@@ -170,7 +170,7 @@ const CodeEditor = (props: CodeEditorProps) => {
   }
 
   return (
-    <Modal size="lg" show={show} onHide={handleClose} backdrop="static">
+    <Modal size="xl" show={show} onHide={handleClose} backdrop="static">
       <Modal.Header closeButton>
         <Modal.Title>{tipsTitle ? tipsTitle : "代码编辑器"}</Modal.Title>
       </Modal.Header>

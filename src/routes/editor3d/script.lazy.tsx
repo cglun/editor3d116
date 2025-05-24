@@ -57,6 +57,8 @@ function RouteComponent() {
 
   const { themeColor } = getThemeByScene(scene);
   const buttonColor = getButtonColor(themeColor);
+
+  // 生成按钮组
   function generateButton() {
     const { toggleButtonGroup } = JSON.parse(buttonList);
 
@@ -72,18 +74,16 @@ function RouteComponent() {
       TOGGLE: new Vector3(0, 0, 0),
       STRETCH: new Vector3(0, offset, 0),
       DRAWER: new Vector3(offset, 0, 0),
+      ROAM: new Vector3(0, 0, 0),
     };
     const cameraPositionOffset = {
-      TOGGLE: new Vector3(offset, offset, offset),
+      TOGGLE: new Vector3(offset, 0, 0),
       STRETCH: new Vector3(0, offset, 0),
       DRAWER: new Vector3(offset, offset, 0),
+      ROAM: new Vector3(0, 0, 0),
     };
-
+    const afafafaaafaf = gerToggleButtonGroup;
     const buttonGroup: CustomButtonListType = {
-      canBeSelectedModel: {
-        groupNameList: [],
-        modelNameList: [],
-      },
       toggleButtonGroup: {
         name: "切换按钮组",
         type: buttonType,
@@ -92,7 +92,7 @@ function RouteComponent() {
           modelOffset: modelPositionOffset[buttonType],
           animationTime: 300,
         },
-        listGroup: gerToggleButtonGroup,
+        listGroup: afafafaaafaf,
       },
       roamButtonGroup: {
         name: "漫游按钮组",

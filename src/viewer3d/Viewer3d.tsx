@@ -2,6 +2,7 @@ import { RefObject, useReducer } from "react";
 import { useEffect, useRef, useState } from "react";
 import { Container, ProgressBar } from "react-bootstrap";
 import {
+  ActionItemMap,
   APP_COLOR,
   Context116,
   CustomButtonListType,
@@ -9,7 +10,6 @@ import {
   RecordItem,
 } from "../app/type";
 import { Object3D, Vector2 } from "three";
-
 import Toast3d from "../component/common/Toast3d";
 import { initEditorScene, initTourWindow, MyContext } from "../app/MyContext";
 import ModalTour from "../component/common/ModalTour";
@@ -149,7 +149,7 @@ export default function Viewer3d({
                 callBackError({ error, item });
               }
               Toast3d("加载失败:" + error, "error", APP_COLOR.Danger);
-              console.log("加载失败", error, item);
+              console.error("加载失败", error, item);
             }
           );
         });
@@ -159,7 +159,7 @@ export default function Viewer3d({
           callBackError({ error, item });
         }
         Toast3d("加载失败:" + error, "error", APP_COLOR.Danger);
-        console.log("加载失败", error, item);
+        console.error("加载失败", error, item);
       });
   }
 
@@ -232,21 +232,46 @@ export default function Viewer3d({
     }
 
     if (selectedMesh.length > 0) {
-      const customButtonList = getScene().userData
-        .customButtonList as CustomButtonListType;
-      if (!customButtonList.canBeSelectedModel) {
+      const customButtonList: CustomButtonListType =
+        getScene().userData.customButtonList;
+      const { listGroup } = customButtonList.toggleButtonGroup;
+      const listGroupCanBeClick = listGroup.filter(
+        (item: ActionItemMap) => item.isClick
+      );
+
+      const parentName = selectedMesh[0].parent?.name ?? "";
+
+      // 修改为检查 groupNameList 中是否有对象的 NAME_ID 等于 parentName
+
+      // const isParentNameInList = listGroup.some(
+      //   (item: ActionItemMap) => item.isClick && item.NAME_ID === parentName
+      // );
+
+      // const isParentNameInList = listGroupCanBeClick.find(
+      //   (_actionItem1: ActionItemMap) => {
+      //     if (_actionItem1.NAME_ID === parentName) {
+      //       return true;
+      //     }
+      //     return false;
+      //   }
+      // );
+
+      // const isParentNameInList = listGroupCanBeClick.includes(parentName);
+      const isParentNameInList = listGroupCanBeClick.some(
+        (item: ActionItemMap) =>
+          item.NAME_ID === parentName && item.groupCanBeRaycast
+      );
+      debugger;
+      if (!isParentNameInList) {
         setShow(false);
         return;
       }
-      const { groupNameList } = customButtonList.canBeSelectedModel;
-
-      const parentName = selectedMesh[0].parent?.name ?? "";
-      const isParentNameInList = groupNameList.includes(parentName);
 
       if (!isParentNameInList) {
         setShow(false);
         return;
       }
+      Toast3d("选中的模型" + selectedMesh[0].name, "提示", APP_COLOR.Primary);
 
       setPosition(new Vector2(event.offsetX + 16, event.offsetY + 6));
       setShow(true);

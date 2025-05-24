@@ -84,11 +84,11 @@ export default function initScene(node: HTMLDivElement): void {
   animate();
 }
 export function initPostProcessing() {
-  const { offsetWidth, offsetHeight } = divElement;
-  if (offsetWidth <= 0 || offsetHeight <= 0) {
-    console.warn("Div element size is invalid");
+  if (!divElement) {
     return;
   }
+  const { offsetWidth, offsetHeight } = divElement;
+
   composer = new EffectComposer(renderer);
 
   const renderPass = new RenderPass(scene, camera);
@@ -122,7 +122,7 @@ export function getControls() {
   return controls;
 }
 export function getSelectedObjects() {
-  return outlinePass.selectedObjects;
+  return selectedObjects;
 }
 
 export function getLabelRenderer() {

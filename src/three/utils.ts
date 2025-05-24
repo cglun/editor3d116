@@ -27,6 +27,7 @@ import {
 } from "./config3d";
 import { runScript } from "./scriptDev";
 import { GLOBAL_CONSTANT } from "./GLOBAL_CONSTANT";
+import { initPostProcessing } from "./init3dViewer";
 
 export function getObjectNameByName(object3D: Object3D): string {
   return object3D.name.trim() === "" ? object3D.type : object3D.name;
@@ -373,11 +374,17 @@ export function loadModelByUrl(
 
 export function finishLoadExecute(
   context: Context116,
+
   callBack?: (context: Context116) => void
 ) {
-  const { javascript } = context.getScene().userData;
+  const { javascript, config3d } = context.getScene()
+    .userData as typeof userData;
   if (enableScreenshot.enable) {
     setEnableScreenshot(true);
+  }
+  const { useComposer } = config3d;
+  if (useComposer) {
+    initPostProcessing();
   }
 
   if (javascript) {

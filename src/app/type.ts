@@ -98,8 +98,9 @@ export interface ProjectListResponse {
 export interface ActionItemMap {
   showName: string | string[];
   NAME_ID: string;
-  showButton: boolean;
-  isClick: boolean;
+  showButton: boolean; //是否显示按钮
+  isClick: boolean; //是否点击, 改变选中状态
+  groupCanBeRaycast: boolean; //射线检测是否选中组的children
   handler?: (nameId?: string) => void;
   data?: {
     isSelected: boolean;
@@ -112,7 +113,7 @@ export interface ActionItemMap {
   };
 }
 // 使用 = 定义类型，并且明确成员类型为字符串字面量类型
-export type CustomButtonType = "TOGGLE" | "DRAWER" | "STRETCH";
+export type CustomButtonType = "TOGGLE" | "DRAWER" | "STRETCH" | "ROAM";
 interface UserSetting {
   modelOffset?: {
     x: number;
@@ -129,10 +130,6 @@ interface UserSetting {
 }
 
 export type CustomButtonListType = {
-  canBeSelectedModel: {
-    groupNameList: string[];
-    modelNameList: string[];
-  };
   toggleButtonGroup: {
     name: string;
     type: CustomButtonType;

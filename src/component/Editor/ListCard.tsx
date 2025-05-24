@@ -219,6 +219,7 @@ function RecordItemCard(props: Props) {
             show: true,
           },
         });
+        console.error("加载失败", error);
       }
     );
   }

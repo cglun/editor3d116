@@ -231,6 +231,7 @@ function EditorViewer3d() {
                   show: true,
                 },
               });
+              console.error("加载失败", error);
             }
           );
         });

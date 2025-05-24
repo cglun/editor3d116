@@ -66,6 +66,7 @@ export function generateToggleButtonGroup(
           NAME_ID: MODEL_GROUP.name,
           showButton: true,
           isClick: false,
+          groupCanBeRaycast: false,
         },
         customButtonType
       )
@@ -83,6 +84,7 @@ export function generateToggleButtonGroup(
                 NAME_ID: name,
                 showButton: true,
                 isClick: false,
+                groupCanBeRaycast: false,
               },
               customButtonType
             )
@@ -113,6 +115,7 @@ export function generateToggleButtonGroup(
                   NAME_ID: name,
                   showButton: true,
                   isClick: false,
+                  groupCanBeRaycast: false,
                 },
                 customButtonType
               )
@@ -185,6 +188,7 @@ export function generateRoamButtonGroup() {
         NAME_ID: name + "_AN_START",
         showButton: true,
         isClick: false,
+        groupCanBeRaycast: false,
       });
     });
   }
