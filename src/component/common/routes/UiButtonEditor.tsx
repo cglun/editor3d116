@@ -59,7 +59,7 @@ export default function UiButtonEditor({
   ) {
     return (
       <>
-        {buttonGroup.length > 0 &&
+        {buttonGroup?.length > 0 &&
           getBadgeByType(customButtonList?.[buttonGroupKey]?.type || "TOGGLE")}
         <ListGroup horizontal className="mt-2 d-flex flex-wrap">
           {buttonGroup?.map((item, index) => {
@@ -99,7 +99,6 @@ export default function UiButtonEditor({
                       }}
                     >
                       <OverlayTrigger
-                        placement="top"
                         delay={{ show: 250, hide: 250 }}
                         overlay={
                           <Tooltip>
@@ -111,7 +110,7 @@ export default function UiButtonEditor({
                       >
                         <Form>
                           <Form.Check
-                            checked={item.groupCanBeRaycast}
+                            defaultChecked={item.groupCanBeRaycast}
                             type="switch"
                             id={`check-${item.NAME_ID}`}
                           ></Form.Check>

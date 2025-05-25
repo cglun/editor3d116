@@ -242,12 +242,20 @@ export function getRoamListByRoamButtonMap(): ActionItemMap[] {
 export function roamAnimation(isRunning: boolean) {
   const { scene, camera, controls } = getAll();
   const listGroup = getRoamListByRoamButtonMap();
-  const { roamButtonGroup } = getUserData().customButtonList;
-  listGroup.map((item) => {
-    const { NAME_ID } = item;
-    const NAME = NAME_ID.split("_AN_")[0];
+  // 获取用户数据并进行类型断言
 
-    animateROAM(scene, camera, controls, NAME, roamButtonGroup, isRunning);
-  });
+  const { customButtonList } = scene.userData as {
+    customButtonList?: CustomButtonListType;
+  };
+
+  // 进行空值检查
+  if (customButtonList && customButtonList.roamButtonGroup) {
+    const { roamButtonGroup } = customButtonList;
+    listGroup.map((item) => {
+      const { NAME_ID } = item;
+      const NAME = NAME_ID.split("_AN_")[0];
+      animateROAM(scene, camera, controls, NAME, roamButtonGroup, isRunning);
+    });
+  }
   controls.enabled = !isRunning;
 }

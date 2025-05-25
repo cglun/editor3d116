@@ -307,9 +307,20 @@ export function cameraBackHome(
     .start()
     .onComplete(() => {
       controls.target.set(0, 0, 0);
-      controls.update();
+      // window.a =
       isMoveCamera = false;
     });
+}
+
+//export let currentlyActionItemMap: (item: ActionItemMap) => void;
+//currentlyActionItemMap = (item: ActionItemMap) => {};
+function commonHandler(item: ActionItemMap) {
+  if (_roamIsRunning) {
+    roamAnimation(false);
+  }
+  if (document.getCurrentActionItemMap) {
+    document.getCurrentActionItemMap(item);
+  }
 }
 
 export function animateTOGGLE(
@@ -321,9 +332,11 @@ export function animateTOGGLE(
   return {
     ...item,
     handler: () => {
-      if (_roamIsRunning) {
-        roamAnimation(false);
-      }
+      // if (_roamIsRunning) {
+      //   roamAnimation(false);
+      // }
+      // document.getCurrentActionItemMap(item);
+      commonHandler(item);
       item.isClick = !item.isClick;
       const { cameraOffset, animationTime } = getUserSetting(customButtonList);
       if (NAME_ID === GLOBAL_CONSTANT.MODEL_GROUP) {
@@ -362,9 +375,7 @@ export function animateDRAWER(
   return {
     ...item,
     handler: () => {
-      if (_roamIsRunning) {
-        roamAnimation(false);
-      }
+      commonHandler(item);
 
       drawerBackHome(customButtonList);
       if (!item.data?.isSelected && !item.data?.isRunning) {
@@ -382,9 +393,7 @@ export function animateSTRETCH(
   return {
     ...item,
     handler: () => {
-      if (_roamIsRunning) {
-        roamAnimation(false);
-      }
+      commonHandler(item);
       //如果是全景按钮，
       if (NAME_ID === GLOBAL_CONSTANT.MODEL_GROUP) {
         //const customButtonList = getScene().userData

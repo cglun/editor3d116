@@ -5,7 +5,6 @@ import {
   getScene,
   setSelectedObject,
 } from "../../../three/init3dEditor";
-
 import Button from "react-bootstrap/esm/Button";
 import { APP_COLOR } from "../../../app/type";
 import Toast3d from "../../common/Toast3d";
@@ -38,11 +37,11 @@ export function OutlineViewCamera({
           updateScene(getScene());
         }}
       >
+        <Icon iconName="camera-reels" />
         <div>
-          <Icon iconName="camera-reels" gap={2} />
           <Button
+            className="me-1"
             size="sm"
-            title="相机初始位置"
             variant={APP_COLOR.Secondary}
             onClick={(e) => {
               e.preventDefault();
@@ -53,10 +52,14 @@ export function OutlineViewCamera({
               Toast3d("初始位置已设置");
             }}
           >
-            固定
+            <Icon
+              iconName="pin-angle"
+              gap={0}
+              title="固定相机位置"
+              fontSize={0.8}
+            />
           </Button>
           <Button
-            className="ms-2"
             size="sm"
             title="到初始位置"
             variant={APP_COLOR.Secondary}
@@ -69,7 +72,12 @@ export function OutlineViewCamera({
               cameraTween(camera, fixedCameraPosition, 500).start();
             }}
           >
-            初始
+            <Icon
+              iconName="display"
+              gap={0}
+              title="到初始位置"
+              fontSize={0.8}
+            />
           </Button>
         </div>
       </ListGroup.Item>

@@ -64,6 +64,7 @@ function SceneProperty() {
           <Form.Check
             label="使用HDR作为背景"
             type="switch"
+            id="custom-switch-hdr"
             checked={enableTexture}
             onChange={() => {
               const { backgroundHDR } = _scene.userData;

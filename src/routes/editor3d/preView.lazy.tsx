@@ -20,7 +20,7 @@ import {
   Context116,
   RecordItem,
 } from "../../app/type";
-import { getCamera } from "../../three/init3dViewer";
+
 import { resetListGroupIsClick } from "../../viewer3d/buttonList/buttonGroup";
 import { createLabelInfo } from "../../viewer3d/label/LabelFactory";
 import { MyContext } from "../../app/MyContext";
@@ -261,21 +261,28 @@ function RouteComponent() {
               })}
             </ButtonGroup>
             <ButtonGroup size="sm" className="mt-2">
-              <Button
-                variant={APP_COLOR.Primary}
+              {/* <Button
+                variant={buttonColor}
                 onClick={() => {
                   const { x, y, z } = getCamera().position;
                   const cameraX = x.toFixed(2);
                   const cameraY = y.toFixed(2);
                   const cameraZ = z.toFixed(2);
+                  const position = `"cameraPosition":{"x":${cameraX},"y":${cameraY},"z":${cameraZ}} `;
 
-                  alert(
-                    `"cameraPosition":{"x":${cameraX},"y":${cameraY},"z":${cameraZ}}                        `
-                  );
+                  navigator.clipboard
+                    .writeText(position)
+                    .then(() => {
+                      Toast3d("复制成功", "提示", APP_COLOR.Success, 2000);
+                    })
+                    .catch((err) => {
+                      alert("复制失败,查看控制台");
+                      console.error("复制失败:", err);
+                    });
                 }}
               >
-                当前相机位置
-              </Button>
+                复制相机位置
+              </Button> */}
               <Button variant={APP_COLOR.Danger} onClick={handleClose}>
                 关闭
               </Button>

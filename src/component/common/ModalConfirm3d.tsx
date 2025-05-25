@@ -60,8 +60,7 @@ function ModalConfirm({
           <Modal.Footer>
             <ButtonGroup>
               <Button variant={buttonColor} onClick={onClose}>
-                <Icon iconName="x-circle" />
-                取消
+                <Icon iconName="x-circle" title="取消" gap={0} />
               </Button>
               <Button
                 variant={buttonColor}
@@ -70,8 +69,7 @@ function ModalConfirm({
                   onClose();
                 }}
               >
-                <Icon iconName="check-circle" />
-                确定
+                <Icon iconName="check-circle" title="确定" gap={0} />
               </Button>
             </ButtonGroup>
           </Modal.Footer>

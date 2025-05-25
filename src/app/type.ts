@@ -161,6 +161,7 @@ export interface Context116 {
   getScene: () => Scene; // 返回 Scene 类型
   getControls: () => OrbitControls; // 返回 OrbitControls 类型
   getCamera: () => PerspectiveCamera | OrthographicCamera; // 返回 PerspectiveCamera 类型
+
   getAll: () => {
     scene: Scene;
     camera: PerspectiveCamera | OrthographicCamera;
@@ -171,7 +172,11 @@ export interface Context116 {
     parameters3d: Parameters3d;
   }; // 返回 object 类型
   getUserData?: () => object; // 返回 {}
-
   getToggleButtonGroup?: () => ActionItemMap[]; // 返回 ActionItemMap[] 类型
   getRoamListByRoamButtonMap?: () => ActionItemMap[]; // 返回 ActionItemMap[] 类型
+}
+declare global {
+  interface Document {
+    getCurrentActionItemMap: (item: ActionItemMap) => void;
+  }
 }

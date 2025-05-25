@@ -26,7 +26,7 @@ import {
   createScene,
 } from "./factory3d";
 
-import { extra3d as extra, parameters } from "./config3d";
+import { extra3d as extra, parameters, userData } from "./config3d";
 import { AnimateProps, commonAnimate } from "./common3d";
 
 let scene: Scene,
@@ -147,8 +147,8 @@ export function getAll() {
     parameters3d,
   };
 }
-export function getUserData() {
-  return scene.userData;
+export function getUserData(): typeof userData {
+  return scene.userData as typeof userData;
 }
 export function getCamera() {
   return camera;

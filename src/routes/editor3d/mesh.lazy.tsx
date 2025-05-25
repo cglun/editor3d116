@@ -21,6 +21,7 @@ import {
 } from "../../three/factory3d";
 import { enableShadow } from "../../three/common3d";
 import { glbLoader } from "../../three/utils";
+import Icon from "../../component/common/Icon";
 
 export const Route = createLazyFileRoute("/editor3d/mesh")({
   component: RouteComponent,
@@ -164,7 +165,7 @@ function RouteComponent() {
       </Card>
       <Card className="ms-2">
         <Card.Header>
-          <i className={setClassName("lightbulb")}></i> 灯光
+          <Icon iconName={"lightbulb"}></Icon>灯光
         </Card.Header>
         <Card.Body className="pt-1">
           <ButtonGroup>

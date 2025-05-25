@@ -143,6 +143,10 @@ function EditorViewer3d() {
     getProjectData(item.id)
       .then((data) => {
         const { scene, camera, modelList } = sceneDeserialize(data, item);
+
+        const id = scene.userData.projectId;
+        document.title = `【id:${id}】`;
+
         const HELPER_GROUP = createGroupIfNotExist(
           scene,
           GLOBAL_CONSTANT.HELPER_GROUP
@@ -254,66 +258,59 @@ function EditorViewer3d() {
       >
         <Button
           variant={themeColor}
-          title="移动"
           onClick={() => {
             setMode("translate");
           }}
         >
-          <Icon iconName="bi bi-arrows-move" gap={0} />
+          <Icon iconName="bi bi-arrows-move" gap={0} title="移动" />
         </Button>
         <Button
           variant={themeColor}
-          title="旋转"
           onClick={() => {
             setMode("rotate");
           }}
         >
-          <Icon iconName="bi bi-arrow-repeat" gap={0} />
+          <Icon iconName="bi bi-arrow-repeat" gap={0} title="旋转" />
         </Button>
         <Button
           variant={themeColor}
-          title="缩放"
           onClick={() => {
             setMode("scale");
           }}
         >
-          <Icon iconName="bi bi-arrows-angle-expand" gap={0} />
+          <Icon iconName="bi bi-arrows-angle-expand" gap={0} title="绽放" />
         </Button>
         <Button
           variant={themeColor}
-          title="顶视"
           onClick={() => {
             setCameraType("OrthographicCamera", new Vector3(0, 1, 0));
           }}
         >
-          <Icon iconName="bi bi-align-top" gap={0} />
+          <Icon iconName="bi bi-align-top" gap={0} title="顶视" />
         </Button>
         <Button
           variant={themeColor}
-          title="前视"
           onClick={() => {
             setCameraType("OrthographicCamera", new Vector3(0, 0, 1));
           }}
         >
-          <Icon iconName="bi bi-align-middle" gap={0} />
+          <Icon iconName="bi bi-align-middle" gap={0} title="前视" />
         </Button>
         <Button
           variant={themeColor}
-          title="左视"
           onClick={() => {
             setCameraType("OrthographicCamera", new Vector3(1, 0, 0));
           }}
         >
-          <Icon iconName="bi bi-align-start" />
+          <Icon iconName="bi bi-align-start" title="左视" />
         </Button>
         <Button
           variant={themeColor}
-          title="透视"
           onClick={() => {
             setCameraType("PerspectiveCamera", Object3D.DEFAULT_UP);
           }}
         >
-          <Icon iconName="box" gap={0} />
+          <Icon iconName="box" gap={0} title="透视" />
         </Button>
       </ButtonGroup>
 

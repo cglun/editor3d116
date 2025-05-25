@@ -4,12 +4,10 @@ import {
   ButtonGroup,
   Dropdown,
   Offcanvas,
-  Image,
   Navbar,
   Nav,
-  Badge,
-  Stack,
   Container,
+  Badge,
 } from "react-bootstrap";
 import { getThemeByScene } from "../../app/utils";
 
@@ -35,17 +33,23 @@ import Icon from "../common/Icon";
 export default function EditorTop() {
   //打开场景列表
   const [showScene, setShowScene] = useState(false);
-  const handleClose = () => setShowScene(false);
-  const handleShow = () => setShowScene(true);
+
   const { scene, updateScene } = useUpdateScene();
   const [list, setList] = useState<RecordItem[]>([]);
   const [error, setError] = useState("");
   const [filterList, setFilterList] = useState<RecordItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const handleClose = () => setShowScene(false);
+  const handleShow = () => setShowScene(true);
+
+  //  {scene.payload.userData.sceneName}【id:
+  //                 {scene.payload.userData.projectId}】
+  // 场景名称
+
   const { themeColor, iconFill, sceneCanSave } = getThemeByScene(scene);
   document.body.setAttribute("data-bs-theme", themeColor);
-  const logoUrl = new URL("/static/images/logo.png", import.meta.url).href;
+  //const logoUrl = new URL("/static/images/logo.png", import.meta.url).href;
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -189,25 +193,24 @@ export default function EditorTop() {
           className="d-flex"
           style={{ padding: 0, marginRight: "0" }}
         >
-          <Image style={{ width: "1.6rem" }} src={logoUrl} title="logo" />
+          {/* <Image style={{ width: "1.6rem" }} src={logoUrl} title="logo" /> */}
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <ButtonGroup size="sm">
               <Button variant={themeColor} onClick={handleShow}>
-                <Icon iconName="badge-3d" />
-                切换场景
+                <Icon iconName="badge-3d" title="切换场景" placement="right" />
               </Button>
-            </ButtonGroup>{" "}
-            {scene.payload.userData.sceneName && (
+            </ButtonGroup>
+            {/* {scene.payload.userData.sceneName && (
               <Stack direction="horizontal" gap={2}>
                 <Badge bg={APP_COLOR.Secondary}>
                   {scene.payload.userData.sceneName}【id:
                   {scene.payload.userData.projectId}】
                 </Badge>
               </Stack>
-            )}
+            )} */}
           </Nav>
           <Nav className="me-2">
             <ButtonGroup aria-label="Basic example" size="sm">
@@ -217,14 +220,18 @@ export default function EditorTop() {
                   navigate({
                     to: location.pathname,
                   });
+                  document.title = "3d新场景";
                   const newScene = createNewScene();
                   Toast3d("场景已新建");
                   setScene(newScene);
                   updateScene(newScene);
                 }}
               >
-                <Icon iconName="plus-square" />
-                新建场景
+                <Icon
+                  iconName="plus-square"
+                  title=" 新建场景"
+                  placement="left"
+                />
               </Button>
               <Button
                 variant={themeColor}
@@ -233,8 +240,7 @@ export default function EditorTop() {
                   saveScene();
                 }}
               >
-                <Icon iconName="floppy" />
-                保存场景
+                <Icon iconName="floppy" title="保存场景" placement="left" />
               </Button>
               <Button
                 variant={themeColor}
@@ -242,29 +248,31 @@ export default function EditorTop() {
                   saveAsNewScene();
                 }}
               >
-                <Icon iconName="floppy2" />
-                场景另存
+                <Icon iconName="floppy2" title="场景另存" placement="left" />
               </Button>
               <Button
                 as="div"
                 variant={themeColor}
                 style={{ paddingLeft: "0", paddingRight: "0" }}
               >
-                <Dropdown className="d-inline">
+                <Dropdown>
                   <Dropdown.Toggle
                     id="dropdown-autoclose-true"
                     variant={themeColor}
                     size="sm"
                   >
                     {themeColor === "light" ? (
-                      <Icon iconName="sun" />
+                      <Icon iconName="sun" title="白天" placement="left" />
                     ) : (
-                      <Icon iconName="moon-stars" />
+                      <Icon
+                        iconName="moon-stars"
+                        title="黑夜"
+                        placement="left"
+                      />
                     )}
-                    主题
                   </Dropdown.Toggle>
 
-                  <Dropdown.Menu>
+                  <Dropdown.Menu style={{ minWidth: "1rem" }}>
                     {themeColor === APP_COLOR.Dark ? (
                       <Dropdown.Item
                         onClick={() => {
@@ -276,8 +284,7 @@ export default function EditorTop() {
                           }
                         }}
                       >
-                        <Icon iconName="sun" />
-                        白天模式
+                        <Icon iconName="sun" title="白天" placement="left" />
                       </Dropdown.Item>
                     ) : (
                       <Dropdown.Item
@@ -291,8 +298,11 @@ export default function EditorTop() {
                           }
                         }}
                       >
-                        <Icon iconName="moon-stars" />
-                        黑夜模式
+                        <Icon
+                          iconName="moon-stars"
+                          title="黑夜"
+                          placement="left"
+                        />
                       </Dropdown.Item>
                     )}
                     {iconFill === "-fill" ? (
@@ -301,8 +311,11 @@ export default function EditorTop() {
                           setThemeIcons("");
                         }}
                       >
-                        <Icon iconName="bi bi-emoji-expressionless" />
-                        空心图标
+                        <Icon
+                          iconName="bi bi-emoji-expressionless"
+                          title="空心图标"
+                          placement="left"
+                        />
                       </Dropdown.Item>
                     ) : (
                       <Dropdown.Item
@@ -310,8 +323,11 @@ export default function EditorTop() {
                           setThemeIcons("-fill");
                         }}
                       >
-                        <Icon iconName="bi bi-emoji-expressionless-fill" />
-                        填充图标
+                        <Icon
+                          iconName="bi bi-emoji-expressionless-fill"
+                          title="填充图标"
+                          placement="left"
+                        />
                       </Dropdown.Item>
                     )}
                   </Dropdown.Menu>
@@ -327,8 +343,7 @@ export default function EditorTop() {
                   );
                 }}
               >
-                <Icon iconName="camera-video" />
-                教程
+                <Icon iconName="camera-video" title="教程" placement="left" />
               </Button>
             </ButtonGroup>
           </Nav>
@@ -341,7 +356,12 @@ export default function EditorTop() {
                 所有场景
               </Offcanvas.Title>
             </Offcanvas.Header>
-            <Offcanvas.Body>
+            <Offcanvas.Body className="pt-0">
+              <Badge bg={APP_COLOR.Secondary} className="mb-2">
+                当前：【id:
+                {scene.payload.userData.projectId}】
+                {scene.payload.userData.sceneName}
+              </Badge>
               <Serch3d list={list} setFilterList={setFilterList} type="场景" />
               <ListCard
                 list={filterList}

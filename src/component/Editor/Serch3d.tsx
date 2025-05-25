@@ -60,7 +60,6 @@ export function Serch3d({
         <Button
           variant={buttonColor}
           id="button-addon2"
-          title="搜索"
           onClick={() => {
             const newList = list.filter((item: SearchableItem) => {
               return item.name
@@ -70,7 +69,7 @@ export function Serch3d({
             setFilterList(newList);
           }}
         >
-          <Icon iconName="search-heart" />
+          <Icon iconName="search-heart" title="搜索" placement="left" />
         </Button>
       </InputGroup>
     </ListGroup.Item>

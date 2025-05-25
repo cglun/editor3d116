@@ -113,8 +113,8 @@ export function UploadModel({ updateList = () => {} }) {
                 className={setClassName()}
                 style={{ fontSize: "1rem" }}
               ></i>{" "} */}
-              <Icon iconName="cloud-plus" fontSize={1.2} />
-              <em style={{ fontSize: "1.2rem" }}>上传模型</em>
+              <Icon iconName="cloud-plus" fontSize={1.6} />
+              <em style={{ fontSize: "1.4rem" }}>选择模型</em>
             </Form.Label>
           </Button>
           <Form.Control

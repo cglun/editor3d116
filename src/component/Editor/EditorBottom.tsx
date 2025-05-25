@@ -1,9 +1,11 @@
 import { useNavigate, Outlet, useLocation } from "@tanstack/react-router";
 import { Container, Nav } from "react-bootstrap";
-import { setClassName } from "../../app/utils";
+import Icon from "../common/Icon";
+import { useState } from "react";
 export default function EditorBottom() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [showIcons, setShowIcons] = useState(false);
   const BASE_URL = import.meta.env.BASE_URL;
   function handleSelect(eventKey: string | null) {
     if (eventKey !== null) {
@@ -27,12 +29,12 @@ export default function EditorBottom() {
     {
       title: "模型",
       path: "model",
-      icon: "box",
+      icon: "bi bi-boxes",
     },
     {
       title: "几何体",
       path: "mesh",
-      icon: "patch-plus",
+      icon: "box",
     },
     {
       title: "标注",
@@ -57,7 +59,7 @@ export default function EditorBottom() {
     {
       title: "文档",
       path: "document",
-      icon: "file-code",
+      icon: "file-earmark-word",
     },
     {
       title: "预览",
@@ -85,13 +87,35 @@ export default function EditorBottom() {
       >
         {tabsList.map((item, index) => {
           const { title, path, icon } = item;
+          if (index === 0) {
+            return (
+              <Nav.Item
+                key={index}
+                onClick={() => {
+                  setShowIcons(!showIcons);
+                }}
+              >
+                <Nav.Link>
+                  {showIcons ? (
+                    <Icon iconName="chevron-right" title="收起logo" />
+                  ) : (
+                    <Icon iconName="chevron-down" title="展开logo" />
+                  )}
+                </Nav.Link>
+              </Nav.Item>
+            );
+          }
+
           return (
             <Nav.Item key={index}>
               <Nav.Link eventKey={BASE_URL + path}>
-                <i
-                  className={icon.includes("bi-") ? icon : setClassName(icon)}
-                ></i>
-                {title}
+                <Icon
+                  iconName={icon}
+                  title={title}
+                  gap={showIcons ? 1 : 0}
+                  fontSize={1.16}
+                />
+                {showIcons && title}
               </Nav.Link>
             </Nav.Item>
           );
