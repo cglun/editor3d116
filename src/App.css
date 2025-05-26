@@ -64,6 +64,7 @@ h5 {
 .da-gang .list-group-item {
   cursor: pointer;
 }
+ 
 
 btn-group-sm > .btn,
 .btn-sm {
@@ -90,7 +91,30 @@ btn-group-sm > .btn,
   color: var(--bs-primary-bg-subtle);
   opacity: 0.6; 
 }
+.mark-label-div {
+ background-color: #0f0404;
+ padding: .116rem .6rem;
+ border-radius: 0.4rem;  
+ opacity: .9;
+}
 
+
+.mark-label-div .mark-label-header  {
+ background-color: #161616;
+ display: flex;  
+
+}
+.mark-label-div .mark-label-header i, .mark-label-div .mark-label-header span  {
+  color: #eee  !important;
+
+}
+.mark-label-div .mark-label-body{
+ background-color: #1a1313;
+}
+.mark-label-body p{
+  margin-bottom: 0;color: #eee  !important;
+  font-size: 1rem;
+}
 .bi-image {
   cursor: crosshair;
 }

@@ -80,7 +80,9 @@ export function createGridHelper(name = "网格辅助", wh = new Vector2(10, 10)
 }
 
 export function createRenderer(node: HTMLElement) {
-  const renderer = new WebGLRenderer();
+  const renderer = new WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+
   renderer.shadowMap.enabled = true;
 
   // 使用 PCFSoftShadowMap 类型让阴影更柔和

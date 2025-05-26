@@ -11,6 +11,8 @@ import Toast3d from "../../common/Toast3d";
 import { cameraTween } from "../../../three/animate";
 import { useUpdateScene } from "../../../app/hooks";
 import Icon from "../../common/Icon";
+import { styleBody } from "./fontColor";
+import { getButtonColor } from "../../../app/utils";
 
 export function OutlineViewCamera({
   object3D,
@@ -24,7 +26,7 @@ export function OutlineViewCamera({
     object3D && (
       <ListGroup.Item
         className={"d-flex justify-content-between"}
-        style={{ cursor: "pointer" }}
+        style={styleBody}
         onClick={() => {
           // object3D.userData.isSelected = !object3D.userData.isSelected;
           if (
@@ -40,9 +42,10 @@ export function OutlineViewCamera({
         <Icon iconName="camera-reels" />
         <div>
           <Button
-            className="me-1"
             size="sm"
-            variant={APP_COLOR.Secondary}
+            as="div"
+            style={{ borderWidth: 0 }}
+            variant={getButtonColor(APP_COLOR.Dark)}
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -54,15 +57,15 @@ export function OutlineViewCamera({
           >
             <Icon
               iconName="pin-angle"
-              gap={0}
               title="固定相机位置"
               fontSize={0.8}
+              color={styleBody.color}
             />
           </Button>
           <Button
             size="sm"
-            title="到初始位置"
-            variant={APP_COLOR.Secondary}
+            style={{ borderWidth: 0 }}
+            variant={getButtonColor(APP_COLOR.Dark)}
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -74,9 +77,9 @@ export function OutlineViewCamera({
           >
             <Icon
               iconName="display"
-              gap={0}
               title="到初始位置"
               fontSize={0.8}
+              color={styleBody.color}
             />
           </Button>
         </div>

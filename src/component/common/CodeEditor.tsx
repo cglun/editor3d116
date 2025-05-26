@@ -10,6 +10,7 @@ import UiButtonEditor from "./routes/UiButtonEditor";
 import { monaco } from "react-monaco-editor";
 import { getScene } from "../../three/init3dEditor";
 import Toast3d from "./Toast3d";
+import Icon from "./Icon";
 
 interface CodeEditorProps {
   language?: string;
@@ -181,7 +182,7 @@ const CodeEditor = (props: CodeEditorProps) => {
         {children}
         <ButtonGroup size="sm">
           <Button variant={APP_COLOR.Danger} onClick={handleClose}>
-            关闭
+            <Icon iconName="x-circle" title="关闭" />
           </Button>
         </ButtonGroup>
       </Modal.Footer>

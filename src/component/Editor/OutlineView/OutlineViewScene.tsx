@@ -4,6 +4,7 @@ import { getScene, setSelectedObject } from "../../../three/init3dEditor";
 
 import { useUpdateScene } from "../../../app/hooks";
 import Icon from "../../common/Icon";
+import { styleBody } from "./fontColor";
 
 export function OutlineViewScene() {
   const { scene, updateScene } = useUpdateScene();
@@ -12,7 +13,7 @@ export function OutlineViewScene() {
     object3D && (
       <ListGroup.Item
         className={"d-flex justify-content-between"}
-        style={{ cursor: "pointer" }}
+        style={styleBody}
         onClick={() => {
           // object3D.userData.isSelected = !object3D.userData.isSelected;
           setSelectedObject(object3D);
@@ -20,7 +21,7 @@ export function OutlineViewScene() {
         }}
       >
         <div>
-          <Icon iconName="box2" gap={2} />
+          <Icon iconName="box2" gap={1} color={styleBody.color} />
           场景
         </div>
       </ListGroup.Item>

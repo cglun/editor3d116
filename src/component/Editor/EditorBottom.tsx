@@ -44,7 +44,8 @@ export default function EditorBottom() {
     {
       title: "脚本",
       path: "script",
-      icon: "bi bi-filetype-js",
+      icon: "bi bi-javascript",
+      // icon: "bi bi-filetype-js",
     },
     {
       title: "特效",

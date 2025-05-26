@@ -8,13 +8,15 @@ interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
   title?: string; // 给 title 设置默认值空字符串
   fontSize?: number; // 给 fontSize 设置默认值 16,
   placement?: "top" | "bottom" | "left" | "right"; // 给 placement 设置默认值 "top"
+  color?: string; // 给 color 设置默认值空字符串
 }
 export default function Icon({
   iconName = "search-heart",
-  gap = 1, // 给 gap 设置默认值 1
+  gap = 0, // 给 gap 设置默认值 1
   title = "", // 给 title 设置默认值空字符串
   fontSize = 1, // 给 fontSize 设置默认值 16
   placement = "top", // 给 placement 设置默认值 "top"
+  color,
 }: IconProps) {
   let iconClass = setClassName(iconName) + ` me-${gap}`;
   if (iconName.includes("bi bi-")) {
@@ -27,7 +29,10 @@ export default function Icon({
         delay={{ show: 116, hide: 250 }}
         overlay={title ? <Tooltip>{title}</Tooltip> : <></>}
       >
-        <i className={iconClass} style={{ fontSize: `${fontSize}rem` }}></i>
+        <i
+          className={iconClass}
+          style={{ fontSize: `${fontSize}rem`, color }}
+        ></i>
       </OverlayTrigger>
     </>
   );

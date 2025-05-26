@@ -4,6 +4,7 @@ import IndexChild from "./IndexChild";
 import { SelectedObject } from "../../../app/type";
 import { useEffect, useRef } from "react";
 import Icon from "../../common/Icon";
+
 /**
  * 物体属性
  * @returns
@@ -11,6 +12,7 @@ import Icon from "../../common/Icon";
 
 export default function Index({ selected3d }: { selected3d: SelectedObject }) {
   const refAccordion = useRef<HTMLDivElement>(null);
+  const gap = 1;
   useEffect(() => {
     const focusHandler = () => {
       if (refAccordion.current) {
@@ -46,8 +48,8 @@ export default function Index({ selected3d }: { selected3d: SelectedObject }) {
     selected3d && (
       <Accordion.Item eventKey="1" ref={refAccordion}>
         <Accordion.Header>
-          <Icon iconName="menu-button" />
-          <span className="px-2 ellipsis-3d">属性</span>
+          <Icon iconName="menu-button" gap={gap} />
+          属性
         </Accordion.Header>
         <Accordion.Body>
           <IndexChild selected3d={selected3d}></IndexChild>

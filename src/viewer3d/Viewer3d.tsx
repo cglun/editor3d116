@@ -261,16 +261,12 @@ export default function Viewer3d({
         (item: ActionItemMap) =>
           item.NAME_ID === parentName && item.groupCanBeRaycast
       );
-      debugger;
-      if (!isParentNameInList) {
-        setShow(false);
-        return;
-      }
 
       if (!isParentNameInList) {
         setShow(false);
         return;
       }
+
       Toast3d("选中的模型" + selectedMesh[0].name, "提示", APP_COLOR.Primary);
 
       setPosition(new Vector2(event.offsetX + 16, event.offsetY + 6));

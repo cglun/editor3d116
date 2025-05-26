@@ -107,7 +107,10 @@ export function UploadModel({ updateList = () => {} }) {
           <Button variant={buttonColor} className="custom-file-upload">
             <Form.Label
               className="custom-file-progress"
-              style={{ cursor: "pointer", marginBottom: 0 }}
+              style={{
+                cursor: "pointer",
+                marginBottom: 0,
+              }}
             >
               {/* <i
                 className={setClassName()}
@@ -158,8 +161,7 @@ export function UploadModel({ updateList = () => {} }) {
             setBtn(true);
           }}
         >
-          <Icon iconName="trash2" />
-          清空
+          <Icon iconName="trash2" title="清空" />
         </Button>
         <Button
           variant={buttonColor}
@@ -168,8 +170,7 @@ export function UploadModel({ updateList = () => {} }) {
           }}
           disabled={btn}
         >
-          <Icon iconName="cloud-arrow-up" />
-          上传
+          <Icon iconName="cloud-arrow-up" title="上传" />
         </Button>
       </ButtonGroup>
     </ListGroupItem>

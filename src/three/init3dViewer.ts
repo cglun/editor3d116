@@ -1,4 +1,5 @@
 import {
+  ACESFilmicToneMapping,
   Object3D,
   Object3DEventMap,
   PerspectiveCamera,
@@ -37,8 +38,8 @@ let scene: Scene,
   extra3d = extra,
   composer: EffectComposer,
   effectFXAA: ShaderPass,
-  outlinePass: OutlinePass,
-  selectedObjects: Object3D<Object3DEventMap>[] = [];
+  outlinePass: OutlinePass;
+const selectedObjects: Object3D<Object3DEventMap>[] = [];
 
 const parameters3d = { ...parameters, flag: "3d" };
 function animate() {
@@ -99,19 +100,25 @@ export function initPostProcessing() {
     scene,
     camera
   );
+
   outlinePass.selectedObjects = selectedObjects; // 设置选中对象
   composer.addPass(outlinePass);
+  //减少锯齿
 
-  // const textureLoader = new TextureLoader();
-  // textureLoader.load("textures/tri_pattern.jpg", function (texture) {
-  //   outlinePass.patternTexture = texture;
-  //   texture.wrapS = RepeatWrapping;
-  //   texture.wrapT = RepeatWrapping;
-  // });
+  renderer.setClearColor(0x000000, 0);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = 2;
+  renderer.shadowMap.autoUpdate = true;
+  renderer.shadowMap.needsUpdate = true;
+  renderer.toneMapping = ACESFilmicToneMapping; // 使用枚举值替代数字
+  renderer.toneMappingExposure = 1;
+  //减少纹路
+
   const outputPass = new OutputPass();
   composer.addPass(outputPass);
 
   effectFXAA = new ShaderPass(FXAAShader);
+
   effectFXAA.uniforms["resolution"].value.set(
     1 / offsetWidth,
     1 / offsetHeight

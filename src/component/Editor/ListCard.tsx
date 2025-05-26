@@ -305,14 +305,14 @@ function RecordItemCard(props: Props) {
                   size="sm"
                   onClick={() => editorBtn(item, index)}
                 >
-                  <Icon iconName="pencil" title="编辑" gap={0} />
+                  <Icon iconName="pencil" title="编辑" />
                 </Button>
                 <Button
                   variant={themeColor}
                   size="sm"
                   onClick={() => deleteBtn(item, index)}
                 >
-                  <Icon iconName="trash" title="删除" gap={0} />
+                  <Icon iconName="trash" title="删除" />
                 </Button>
               </ButtonGroup>
             </Card.Body>

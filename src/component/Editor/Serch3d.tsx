@@ -10,6 +10,8 @@ import { useUpdateScene } from "../../app/hooks";
 import { RecordItem } from "../../app/type";
 import Icon from "../common/Icon";
 
+import { styleBody } from "./OutlineView/fontColor";
+
 // 定义一个接口来描述 list 数组中元素的类型
 interface SearchableItem {
   name: string;
@@ -59,6 +61,7 @@ export function Serch3d({
         />
         <Button
           variant={buttonColor}
+          style={{ borderColor: styleBody.color }}
           id="button-addon2"
           onClick={() => {
             const newList = list.filter((item: SearchableItem) => {

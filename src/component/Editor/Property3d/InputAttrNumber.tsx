@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Form from "react-bootstrap/esm/Form";
 import InputGroup from "react-bootstrap/esm/InputGroup";
+import { styleBody } from "../OutlineView/fontColor";
 
 // 严格约束泛型 T，确保 T 的所有属性值类型为 number
 export function InputAttrNumber<T>({
@@ -37,7 +38,9 @@ export function InputAttrNumber<T>({
     selected3d &&
     Object.prototype.hasOwnProperty.call(selected3d, attr) && (
       <InputGroup size="sm">
-        <InputGroup.Text>{title}</InputGroup.Text>
+        <InputGroup.Text style={{ color: styleBody.color }}>
+          {title}
+        </InputGroup.Text>
         <Form.Control
           aria-label="Small"
           aria-describedby="inputGroup-sizing-sm"

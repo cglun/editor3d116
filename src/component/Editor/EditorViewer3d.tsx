@@ -262,7 +262,7 @@ function EditorViewer3d() {
             setMode("translate");
           }}
         >
-          <Icon iconName="bi bi-arrows-move" gap={0} title="移动" />
+          <Icon iconName="bi bi-arrows-move" title="移动" />
         </Button>
         <Button
           variant={themeColor}
@@ -270,7 +270,7 @@ function EditorViewer3d() {
             setMode("rotate");
           }}
         >
-          <Icon iconName="bi bi-arrow-repeat" gap={0} title="旋转" />
+          <Icon iconName="bi bi-arrow-repeat" title="旋转" />
         </Button>
         <Button
           variant={themeColor}
@@ -278,7 +278,7 @@ function EditorViewer3d() {
             setMode("scale");
           }}
         >
-          <Icon iconName="bi bi-arrows-angle-expand" gap={0} title="绽放" />
+          <Icon iconName="bi bi-arrows-angle-expand" title="绽放" />
         </Button>
         <Button
           variant={themeColor}
@@ -286,7 +286,7 @@ function EditorViewer3d() {
             setCameraType("OrthographicCamera", new Vector3(0, 1, 0));
           }}
         >
-          <Icon iconName="bi bi-align-top" gap={0} title="顶视" />
+          <Icon iconName="bi bi-align-top" title="顶视" />
         </Button>
         <Button
           variant={themeColor}
@@ -294,7 +294,7 @@ function EditorViewer3d() {
             setCameraType("OrthographicCamera", new Vector3(0, 0, 1));
           }}
         >
-          <Icon iconName="bi bi-align-middle" gap={0} title="前视" />
+          <Icon iconName="bi bi-align-middle" title="前视" />
         </Button>
         <Button
           variant={themeColor}
@@ -310,7 +310,7 @@ function EditorViewer3d() {
             setCameraType("PerspectiveCamera", Object3D.DEFAULT_UP);
           }}
         >
-          <Icon iconName="box" gap={0} title="透视" />
+          <Icon iconName="box" title="透视" />
         </Button>
       </ButtonGroup>
 

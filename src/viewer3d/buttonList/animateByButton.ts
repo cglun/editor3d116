@@ -90,7 +90,6 @@ export function drawerOutByNameId(
 }
 // 抽屉，回到初始位置
 export function drawerBackHome(customButtonList: CustomButtonListType) {
-  debugger;
   if (customButtonList.toggleButtonGroup.type === "DRAWER") {
     const { listGroup } = customButtonList.toggleButtonGroup;
     const userSetting = getUserSetting(getScene().userData.customButtonList);
@@ -130,7 +129,7 @@ export function stretchModelByNameId(
 ) {
   const MODEL_GROUP = createGroupIfNotExist(getScene(), NAME_ID, false);
   if (MODEL_GROUP) {
-    let isStretch = MODEL_GROUP.userData.childrenIsStretch;
+    const isStretch = MODEL_GROUP.userData.childrenIsStretch;
     const isStretchRunning = MODEL_GROUP.userData.childrenIsRunning;
     if (isStretchRunning) {
       return;
@@ -251,9 +250,14 @@ export function moveCameraSTRETCH(
     if (isMoveCamera) {
       cameraBackHome(camera, controls, animationTime);
     } else {
-      const cameraPosition1 =
+      const fixedPosition =
         item.data?.cameraPosition ?? getUserData().fixedCameraPosition;
-      cameraTween(camera, cameraPosition1, animationTime).start();
+
+      cameraTween(
+        camera,
+        new Vector3(fixedPosition.x, fixedPosition.y, fixedPosition.z),
+        animationTime
+      ).start();
       const { x, y, z } = MODEL_GROUP.position;
       controls.target.set(x, y, z);
       controls.update();

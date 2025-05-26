@@ -13,9 +13,10 @@ import { getButtonColor, getThemeByScene } from "../../../app/utils";
 import AlertBase from "../../common/AlertBase";
 import { setTextureBackground } from "../../../three/common3d";
 import { userData } from "../../../three/config3d";
-import { SelectedObject } from "../../../app/type";
+import { APP_COLOR, SelectedObject } from "../../../app/type";
 import { InputAttrNumber } from "./InputAttrNumber";
 import Toast3d from "../../common/Toast3d";
+import { styleBody, styleHeader } from "../OutlineView/fontColor";
 
 const step = 0.1;
 function SceneProperty() {
@@ -62,6 +63,7 @@ function SceneProperty() {
       <>
         <Form className="border px-2">
           <Form.Check
+            style={{ color: styleBody.color }}
             label="使用HDR作为背景"
             type="switch"
             id="custom-switch-hdr"
@@ -75,7 +77,9 @@ function SceneProperty() {
           />
         </Form>
         <InputGroup size="sm">
-          <InputGroup.Text>背景图</InputGroup.Text>
+          <InputGroup.Text style={{ color: styleBody.color }}>
+            背景图
+          </InputGroup.Text>
           <Form.Select
             aria-label="Default select example"
             disabled={!enableTexture}
@@ -121,9 +125,13 @@ function SceneProperty() {
   }
   return (
     <Container fluid>
-      <AlertBase type={themeColor} text={"背景色和背景图，只选其一"} />{" "}
+      <AlertBase
+        type={APP_COLOR.Warning}
+        text={"背景色和背景图，只能选择其一！"}
+      />
       <ButtonGroup className="mb-2" size="sm">
         <Button
+          style={{ color: styleBody.color, borderColor: styleBody.color }}
           variant={getButtonColor(themeColor)}
           onClick={() => {
             setEnableColor(!enableColor);
@@ -144,6 +152,7 @@ function SceneProperty() {
           {enableColor ? "使用贴图" : "使用颜色"}
         </Button>
         <Button
+          style={{ color: styleBody.color, borderColor: styleBody.color }}
           variant={getButtonColor(themeColor)}
           onClick={() => {
             // _scene.background = new Color("#000");
@@ -157,7 +166,9 @@ function SceneProperty() {
       </ButtonGroup>
       {enableColor ? setBgColorColor() : setBgColorTexture()}
       <InputGroup size="sm">
-        <InputGroup.Text>雾气色</InputGroup.Text>
+        <InputGroup.Text style={{ color: styleBody.color }}>
+          雾气色
+        </InputGroup.Text>
         <Form.Control
           aria-label="small"
           aria-describedby="inputGroup-sizing-sm"
@@ -294,7 +305,9 @@ function CommonProperty({ selected3d }: { selected3d: SelectedObject }) {
         <Input3d transform={selected3d.rotation} title={"旋转"} step={step} />
         <Input3d transform={selected3d.scale} title={"缩放"} step={step} />
         <Card>
-          <Card.Header>其他属性</Card.Header>
+          <Card.Header style={{ color: styleHeader.color }}>
+            其他属性
+          </Card.Header>
           <Card.Body>
             <InputAttrText
               title={"名称"}

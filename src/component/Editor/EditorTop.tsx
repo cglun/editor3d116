@@ -352,7 +352,7 @@ export default function EditorTop() {
           <Offcanvas show={showScene} onHide={handleClose}>
             <Offcanvas.Header closeButton>
               <Offcanvas.Title>
-                <Icon iconName="badge-3d" />
+                <Icon iconName="badge-3d" gap={1} />
                 所有场景
               </Offcanvas.Title>
             </Offcanvas.Header>

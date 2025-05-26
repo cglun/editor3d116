@@ -17,6 +17,7 @@ import {
 
 import { useUpdateScene } from "../../app/hooks";
 import Icon from "../common/Icon";
+import { styleBody } from "./OutlineView/fontColor";
 
 function TreeNode({
   node,
@@ -86,7 +87,7 @@ function TreeNode({
     if (item instanceof Group) logo = "collection";
     if (item instanceof Light) logo = "lightbulb";
 
-    return <Icon iconName={logo} />;
+    return <Icon iconName={logo} gap={1} />;
   }
 
   const light = `d-flex justify-content-between ${node.userData.isSelected ? "text-warning" : ""}`;
@@ -102,6 +103,7 @@ function TreeNode({
         onClick={handleToggle}
         onMouseEnter={() => setDelBtn(true)}
         onMouseLeave={() => setDelBtn(false)}
+        style={styleBody}
       >
         <div>
           {getLogo(node)}
@@ -110,25 +112,22 @@ function TreeNode({
         <div>
           {delBtn ? (
             <Button
+              className="me-1"
               size="sm"
               variant={APP_COLOR.Dark}
-              className="me-1"
               onClick={(e) => delMesh(e, node)}
             >
-              <Icon iconName="trash" />
+              <Icon iconName="trash" title="删除" />
             </Button>
           ) : (
             ""
           )}
-          {hasChildren ? (
-            isExpanded ? (
-              <Icon iconName="dash-square" />
+          {hasChildren &&
+            (isExpanded ? (
+              <Icon iconName="dash-square" title="收缩" />
             ) : (
-              <Icon iconName="plus-square" />
-            )
-          ) : (
-            ""
-          )}
+              <Icon iconName="plus-square" title="展开" />
+            ))}
         </div>
       </Container>
       {isExpanded && hasChildren && (

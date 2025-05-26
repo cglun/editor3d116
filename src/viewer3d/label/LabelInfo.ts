@@ -9,31 +9,33 @@ import { getObjectWorldPosition } from "../viewer3dUtils";
 export class LabelInfo {
   mesh;
   div = document.createElement("div");
+
   tourObject = {
     id: "id",
     title: "title",
   };
+
   size = new Vector3(0.04, 0.04, 0.04);
   css3DSprite = new CSS3DSprite(this.div);
   dispatchTourWindow: React.Dispatch<TourWindow>;
+
   constructor(
     mesh: Object3D<Object3DEventMap>,
+    size: number,
     dispatchTourWindow: React.Dispatch<TourWindow>
   ) {
     this.mesh = mesh;
     this.dispatchTourWindow = dispatchTourWindow;
     // this.tourObject = tourObject;
-
+    this.size = new Vector3(size, size, size);
     this.init();
   }
   init() {
     this.tourObject.title = getObjectNameByName(this.mesh);
-    this.createDiv("geo-alt");
-
+    this.createDiv();
     this.createCss3dLabel(this.tourObject.title);
   }
   createCss3dLabel(name: string) {
-    // const div = this.createDiv(logo, name, tourObject, dispatchTourWindow);
     const css3DSprite = new CSS3DSprite(this.div);
     css3DSprite.name = name;
     const { x, y, z } = getObjectWorldPosition(this.mesh);
@@ -43,20 +45,19 @@ export class LabelInfo {
     this.css3DSprite = css3DSprite;
   }
 
-  createDiv(logo: string) {
-    this.div.className = "mark-label";
-    const img = document.createElement("i");
-    img.className = setClassName(logo);
-    this.div.appendChild(img);
-    const span = document.createElement("span");
-    span.textContent = this.tourObject.title;
-    this.div.appendChild(span);
-    const i = document.createElement("i");
-    i.className = setClassName("eye");
-    i.classList.add("ms-2");
-    i.style.cursor = "pointer";
-    i.setAttribute("data-tour-id", this.tourObject.id);
-    i.addEventListener("click", () => {
+  createDiv() {
+    this.div.className = "mark-label mark-label-div";
+
+    const header = document.createElement("div");
+    header.className = "mark-label-header";
+
+    const eye = document.createElement("i");
+
+    eye.className = setClassName("eye");
+    eye.style.cursor = "pointer";
+    eye.setAttribute("data-tour-id", this.tourObject.id);
+    this.dispatchTourWindow;
+    eye.addEventListener("click", () => {
       // 使用箭头函数保证 this 指向实例
       if (this.dispatchTourWindow) {
         this.dispatchTourWindow({
@@ -69,6 +70,27 @@ export class LabelInfo {
         });
       }
     });
-    this.div.appendChild(i);
+    header.appendChild(eye);
+
+    const title = document.createElement("span");
+    title.className = "ms-1";
+    title.textContent = this.tourObject.title;
+    header.appendChild(title);
+
+    const body = document.createElement("div");
+    body.className = "mark-label-body";
+
+    const p1 = document.createElement("p");
+    p1.textContent = "档案号：116";
+    const p2 = document.createElement("p");
+    p2.textContent = "描述：档案描述";
+    const p3 = document.createElement("p");
+    p3.textContent = "详细信息：档案详细信息";
+    body.appendChild(p1);
+    body.appendChild(p2);
+    body.appendChild(p3);
+
+    this.div.appendChild(header);
+    this.div.appendChild(body);
   }
 }

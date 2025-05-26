@@ -127,7 +127,7 @@ export default function EditorForm({
               setEnableScreenshot(true);
             }}
           >
-            <Icon iconName="bi bi-boxes" title="使用场景" gap={0} />
+            <Icon iconName="bi bi-boxes" title="使用场景" />
           </Button>
 
           <Button
@@ -139,7 +139,7 @@ export default function EditorForm({
               Toast3d("截图成功");
             }}
           >
-            <Icon iconName="camera" title="截图" gap={0} />
+            <Icon iconName="camera" title="截图" />
           </Button>
 
           <Button
@@ -147,7 +147,7 @@ export default function EditorForm({
             disabled={imgBase64.trim() === ""}
             onClick={uploadScreenshot}
           >
-            <Icon iconName="cloud-arrow-up" title="上传截图" gap={0} />
+            <Icon iconName="cloud-arrow-up" title="上传截图" />
           </Button>
         </ButtonGroup>
       </div>

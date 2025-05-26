@@ -67,7 +67,6 @@ export default function UiButtonEditor({
               <ListGroupItem key={index} style={{ padding: 0, border: 0 }}>
                 <InputGroup>
                   <InputGroup.Text
-                    id={item.NAME_ID}
                     title="显示或隐藏按钮"
                     onClick={() => {
                       const newCustomButtonList = updateButtonGroup(
@@ -80,7 +79,6 @@ export default function UiButtonEditor({
                   >
                     <Icon
                       iconName={item.showButton ? "eye" : "eye-slash"}
-                      gap={0}
                       title={item.showButton ? "按钮已显示" : "按钮已隐藏"}
                     />
                   </InputGroup.Text>
@@ -111,8 +109,8 @@ export default function UiButtonEditor({
                         <Form>
                           <Form.Check
                             defaultChecked={item.groupCanBeRaycast}
-                            type="switch"
                             id={`check-${item.NAME_ID}`}
+                            type="switch"
                           ></Form.Check>
                         </Form>
                       </OverlayTrigger>
@@ -178,7 +176,7 @@ export default function UiButtonEditor({
   }
 
   function getBadgeByType(buttonGroup: CustomButtonType) {
-    let name = "按钮组-";
+    const name = "按钮组-";
     const typeName = {
       TOGGLE: `${name}切换`,
       DRAWER: `${name}拉伸`,

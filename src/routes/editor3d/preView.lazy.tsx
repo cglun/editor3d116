@@ -22,8 +22,10 @@ import {
 } from "../../app/type";
 
 import { resetListGroupIsClick } from "../../viewer3d/buttonList/buttonGroup";
-import { createLabelInfo } from "../../viewer3d/label/LabelFactory";
 import { MyContext } from "../../app/MyContext";
+
+import { jiajia, jianjian } from "../../viewer3d/label/LabelFactory";
+import { LabelInfoPanelController } from "../../viewer3d/label/LabelInfoPanelController";
 
 // 定义响应数据的类型
 interface PageListResponse {
@@ -53,6 +55,7 @@ function RouteComponent() {
   const buttonColor = getButtonColor(themeColor);
   const [_item, _setItem] = useState<RecordItem>();
   const { dispatchTourWindow } = useContext(MyContext);
+  const [controller, setController] = useState<LabelInfoPanelController>();
 
   useEffect(() => {
     setEnableScreenshot(true);
@@ -96,7 +99,16 @@ function RouteComponent() {
     setToggleButtonList(instance.getToggleButtonGroup || []);
     setRoamButtonList(instance.getRoamListByRoamButtonMap || []);
     //创建标签信息
-    createLabelInfo(dispatchTourWindow);
+    // createLabelInfo(dispatchTourWindow);
+
+    const controller = new LabelInfoPanelController(
+      "C",
+      false,
+      dispatchTourWindow
+    );
+    controller.isShow = true;
+
+    setController(controller);
   }
 
   function callBackError(error: unknown) {
@@ -285,6 +297,26 @@ function RouteComponent() {
               </Button> */}
               <Button variant={APP_COLOR.Danger} onClick={handleClose}>
                 关闭
+              </Button>
+              <Button
+                variant={APP_COLOR.Danger}
+                onClick={() => {
+                  if (controller) {
+                    jiajia(controller);
+                  }
+                }}
+              >
+                展开
+              </Button>
+              <Button
+                variant={APP_COLOR.Danger}
+                onClick={() => {
+                  if (controller) {
+                    jianjian(controller);
+                  }
+                }}
+              >
+                收缩
               </Button>
             </ButtonGroup>
           </Modal.Footer>

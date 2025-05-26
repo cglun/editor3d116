@@ -9,6 +9,7 @@ import { ConfirmButton } from "../../app/type";
 import { _confirmButton } from "./ModalConfirmUtils";
 import { getButtonColor } from "../../app/utils";
 import Icon from "./Icon";
+import { styleBody } from "../Editor/OutlineView/fontColor";
 
 let container = document.getElementById("toast");
 if (container === null) {
@@ -51,7 +52,7 @@ function ModalConfirm({
       >
         <Modal.Header closeButton={confirmButton.closeButton}>
           <Modal.Title id="contained-modal-title-vcenter">
-            <Icon iconName="info-circle" />
+            <Icon iconName="info-circle" fontSize={1.2} gap={2} />
             {title}
           </Modal.Title>
         </Modal.Header>
@@ -59,17 +60,22 @@ function ModalConfirm({
         {confirmButton.hasButton && (
           <Modal.Footer>
             <ButtonGroup>
-              <Button variant={buttonColor} onClick={onClose}>
-                <Icon iconName="x-circle" title="取消" gap={0} />
+              <Button
+                variant={buttonColor}
+                style={{ borderColor: styleBody.color }}
+                onClick={onClose}
+              >
+                <Icon iconName="x-circle" title="取消" />
               </Button>
               <Button
                 variant={buttonColor}
+                style={{ borderColor: styleBody.color }}
                 onClick={() => {
                   callback();
                   onClose();
                 }}
               >
-                <Icon iconName="check-circle" title="确定" gap={0} />
+                <Icon iconName="check-circle" title="确定" />
               </Button>
             </ButtonGroup>
           </Modal.Footer>

@@ -6,6 +6,7 @@ import { cameraTween } from "../../three/animate";
 import Toast3d from "../../component/common/Toast3d";
 import { getButtonColor, getThemeByScene } from "../../app/utils";
 import { useUpdateScene } from "../../app/hooks";
+import { styleBody } from "../../component/Editor/OutlineView/fontColor";
 
 export const Route = createLazyFileRoute("/editor3d/test")({
   component: RouteComponent,
@@ -27,13 +28,17 @@ function RouteComponent() {
       <ButtonXX attr="children" />
       <ButtonXX attr="userData" />
       <Button
+        style={{
+          borderColor: styleBody.color,
+        }}
         variant={btnColor}
         disabled={!useTween}
         onClick={() => {
-          const { perspectiveCameraPosition } = getScene().userData;
+          const { fixedCameraPosition } = getScene().userData;
           const c = getCamera();
+
           c.position.set(8, 8, 8);
-          cameraTween(c, perspectiveCameraPosition).start();
+          cameraTween(c, fixedCameraPosition).start();
           console.log(getScene().userData);
         }}
       >
@@ -50,6 +55,9 @@ function RouteComponent() {
     return (
       <Button
         variant={btnColor}
+        style={{
+          borderColor: styleBody.color,
+        }}
         onClick={() => {
           const scene = getScene();
           if (attr !== undefined) {

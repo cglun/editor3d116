@@ -3,6 +3,8 @@ import Card from "react-bootstrap/esm/Card";
 import Form from "react-bootstrap/esm/Form";
 import InputGroup from "react-bootstrap/esm/InputGroup";
 import { Euler, Vector3 } from "three";
+import Icon from "../../common/Icon";
+import { styleBody, styleHeader } from "../OutlineView/fontColor";
 
 export function Input3d({
   transform,
@@ -33,10 +35,21 @@ export function Input3d({
     return "缩放" === title ? true : false;
   }
 
+  const titleIcon = {
+    位置: "arrows-move",
+    旋转: "arrow-repeat",
+    缩放: "arrows-angle-expand",
+  };
+  type TitleIcon = keyof typeof titleIcon;
+
   return (
     <Card>
-      <Card.Header className="d-flex justify-content-between">
-        <span>{title}</span>
+      <Card.Header
+        className="d-flex justify-content-between"
+        style={{ color: styleHeader.color }}
+      >
+        <Icon iconName={titleIcon[title as TitleIcon]} title={title} />
+
         {_isScale && (
           <Form>
             <Form.Check // prettier-ignore
@@ -51,7 +64,9 @@ export function Input3d({
       </Card.Header>
       <Card.Body className="d-flex">
         <InputGroup size="sm">
-          <InputGroup.Text>X</InputGroup.Text>
+          <InputGroup.Text style={{ color: styleBody.color }}>
+            X
+          </InputGroup.Text>
           <Form.Control
             aria-label="Small"
             aria-describedby="inputGroup-sizing-sm"
@@ -72,14 +87,16 @@ export function Input3d({
           />
         </InputGroup>
         <InputGroup size="sm">
-          <InputGroup.Text>Y</InputGroup.Text>
+          <InputGroup.Text style={{ color: styleBody.color }}>
+            Y
+          </InputGroup.Text>
           <Form.Control
             aria-label="Small"
             aria-describedby="inputGroup-sizing-sm"
             placeholder={transform.y.toString()}
             type="number"
             step={step}
-            value={transformY}
+            value={_isScale && checked ? lockValue : transformY}
             disabled={_isScale && checked}
             title={
               _isScale && checked
@@ -98,13 +115,15 @@ export function Input3d({
           />
         </InputGroup>
         <InputGroup size="sm">
-          <InputGroup.Text>Z</InputGroup.Text>
+          <InputGroup.Text style={{ color: styleBody.color }}>
+            Z
+          </InputGroup.Text>
           <Form.Control
             aria-label="Small"
             aria-describedby="inputGroup-sizing-sm"
             placeholder={transform.z.toString()}
             type="number"
-            value={transformZ}
+            value={_isScale && checked ? lockValue : transformZ}
             step={step}
             disabled={_isScale && checked}
             title={

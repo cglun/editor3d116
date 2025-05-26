@@ -12,7 +12,6 @@ import {
   getCamera,
   getControls,
   getAll,
-  getUserData,
 } from "../../three/init3dViewer";
 
 import { getScene as editorScene } from "../../three/init3dEditor";

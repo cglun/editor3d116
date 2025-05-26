@@ -28,6 +28,8 @@ import {
   generateRoamButtonGroup,
   generateToggleButtonGroup,
 } from "../../viewer3d/buttonList/buttonGroup";
+import Icon from "../../component/common/Icon";
+import { styleBody } from "../../component/Editor/OutlineView/fontColor";
 
 export const Route = createLazyFileRoute("/editor3d/script")({
   component: RouteComponent,
@@ -126,19 +128,22 @@ function RouteComponent() {
             <ButtonGroup size="sm">
               <Button
                 variant={buttonColor}
+                style={{ borderColor: styleBody.color }}
                 onClick={() => {
                   setShowJavaScript(true);
                 }}
               >
-                编辑代码
+                <Icon iconName="pencil" /> 代码
               </Button>
               <Button
                 variant={buttonColor}
+                style={{ borderColor: styleBody.color }}
                 onClick={() => {
                   setShow(true);
                 }}
               >
-                编辑按钮
+                <Icon iconName="pencil" />
+                按钮
               </Button>
             </ButtonGroup>
             <CodeEditor
@@ -189,7 +194,7 @@ function RouteComponent() {
                       Toast3d("已重置按钮组");
                     }}
                   >
-                    重置
+                    <Icon iconName="recycle" /> 重置
                   </Button>
                 ) : (
                   <>

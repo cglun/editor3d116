@@ -35,7 +35,7 @@ function App116({ update, _toast }: { update: number; _toast: Toast }) {
       autohide
     >
       <BootToast.Header>
-        <Icon iconName="info-circle" />
+        <Icon iconName="info-circle" gap={1} />
         <strong className="me-auto ">{title}</strong>
       </BootToast.Header>
       <BootToast.Body

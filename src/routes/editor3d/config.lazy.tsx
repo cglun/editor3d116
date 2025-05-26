@@ -10,6 +10,9 @@ import Toast3d from "../../component/common/Toast3d";
 import { APP_COLOR, DELAY } from "../../app/type";
 import { useState } from "react";
 import { getButtonColor, getThemeByScene } from "../../app/utils";
+import Icon from "../../component/common/Icon";
+
+import { styleBody } from "../../component/Editor/OutlineView/fontColor";
 
 export const Route = createLazyFileRoute("/editor3d/config")({
   component: RouteComponent,
@@ -40,7 +43,9 @@ function RouteComponent() {
       return (
         <ListGroup.Item>
           <InputGroup size="sm">
-            <InputGroup.Text>TOKEN</InputGroup.Text>
+            <InputGroup.Text style={{ color: styleBody.color }}>
+              TOKEN
+            </InputGroup.Text>
             <Form.Control
               placeholder={token}
               aria-label={token}
@@ -51,6 +56,7 @@ function RouteComponent() {
             />
             <Button
               variant={btnColor}
+              style={{ borderColor: styleBody.color }}
               onClick={() => {
                 localStorage.setItem("TOKEN", token);
                 Toast3d("设置成功!", "提示", APP_COLOR.Success, DELAY.LONG);
@@ -59,10 +65,11 @@ function RouteComponent() {
                 }, 1000);
               }}
             >
-              设置
+              <Icon iconName="bi bi-check-lg" title="保存" fontSize={1} />
             </Button>
             <Button
               variant={btnColor}
+              style={{ borderColor: styleBody.color }}
               onClick={() => {
                 localStorage.removeItem("TOKEN");
                 Toast3d("清除成功!", "提示", APP_COLOR.Success);
@@ -71,7 +78,7 @@ function RouteComponent() {
                 }, 1000);
               }}
             >
-              清空
+              <Icon iconName="trash" title="清除" fontSize={1} />
             </Button>
           </InputGroup>
         </ListGroup.Item>
