@@ -2,6 +2,7 @@ import {
   ACESFilmicToneMapping,
   Object3D,
   Object3DEventMap,
+  PCFSoftShadowMap,
   PerspectiveCamera,
   Scene,
   Vector2,
@@ -29,6 +30,7 @@ import {
 
 import { extra3d as extra, parameters, userData } from "./config3d";
 import { AnimateProps, commonAnimate } from "./common3d";
+import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
 
 let scene: Scene,
   camera: PerspectiveCamera,
@@ -89,7 +91,6 @@ export function initPostProcessing() {
     return;
   }
   const { offsetWidth, offsetHeight } = divElement;
-
   composer = new EffectComposer(renderer);
 
   const renderPass = new RenderPass(scene, camera);
@@ -103,20 +104,37 @@ export function initPostProcessing() {
 
   outlinePass.selectedObjects = selectedObjects; // 设置选中对象
   composer.addPass(outlinePass);
-  //减少锯齿
+  //设置颜色
+  outlinePass.edgeStrength = 6; // 边缘强度
+  outlinePass.edgeGlow = 0.4; // 边缘发光
+  outlinePass.edgeThickness = 1; // 边缘厚度
+  outlinePass.pulsePeriod = 1.16; // 脉冲周期
 
-  renderer.setClearColor(0x000000, 0);
+  const color = scene.userData.userStyle.modelHighlightColor;
+
+  outlinePass.visibleEdgeColor.set(color); // 可见边缘颜色
+  outlinePass.hiddenEdgeColor.set(color); // 不可见边缘颜色
+
   renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = 2;
+  renderer.shadowMap.type = PCFSoftShadowMap;
   renderer.shadowMap.autoUpdate = true;
-  renderer.shadowMap.needsUpdate = true;
+  renderer.shadowMap.needsUpdate = true; // 增大阴影贴图尺寸以提高阴影质量
+
   renderer.toneMapping = ACESFilmicToneMapping; // 使用枚举值替代数字
   renderer.toneMappingExposure = 1;
-  //减少纹路
 
-  const outputPass = new OutputPass();
-  composer.addPass(outputPass);
+  const bloomPass = new UnrealBloomPass(
+    new Vector2(offsetWidth, offsetHeight),
+    1.5,
+    4.4,
+    0.85
+  );
+  bloomPass.threshold = 1.4;
+  bloomPass.strength = 0.4;
+  bloomPass.radius = 0.4;
+  composer.addPass(bloomPass);
 
+  // 调整 FXAAShader 的抗锯齿质量参数
   effectFXAA = new ShaderPass(FXAAShader);
 
   effectFXAA.uniforms["resolution"].value.set(
@@ -124,6 +142,9 @@ export function initPostProcessing() {
     1 / offsetHeight
   );
   composer.addPass(effectFXAA);
+
+  const outputPass = new OutputPass();
+  composer.addPass(outputPass);
 }
 export function getControls() {
   return controls;
@@ -131,6 +152,10 @@ export function getControls() {
 export function getSelectedObjects() {
   return selectedObjects;
 }
+// export function setOutLinePassColor(color: string) {
+//   outlinePass.visibleEdgeColor.set(color); // 可见边缘颜色
+//   outlinePass.hiddenEdgeColor.set(color); // 不可见边缘颜色
+// }
 
 export function getLabelRenderer() {
   return extra.labelRenderer2d;

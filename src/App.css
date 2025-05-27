@@ -100,20 +100,12 @@ btn-group-sm > .btn,
 
 
 .mark-label-div .mark-label-header  {
- background-color: #161616;
  display: flex;  
-
 }
-.mark-label-div .mark-label-header i, .mark-label-div .mark-label-header span  {
-  color: #eee  !important;
-
-}
-.mark-label-div .mark-label-body{
- background-color: #1a1313;
-}
+ 
+ 
 .mark-label-body p{
-  margin-bottom: 0;color: #eee  !important;
-  font-size: 1rem;
+  margin-bottom: 0; 
 }
 .bi-image {
   cursor: crosshair;

@@ -135,10 +135,11 @@ export function stretchModelByNameId(
       return;
     }
     MODEL_GROUP.userData.childrenIsRunning = true;
-
-    isStretch
-      ? stretchListGroup(MODEL_GROUP, customButtonList, false)
-      : stretchListGroup(MODEL_GROUP, customButtonList, true);
+    if (isStretch) {
+      stretchListGroup(MODEL_GROUP, customButtonList, false);
+      return;
+    }
+    stretchListGroup(MODEL_GROUP, customButtonList, true);
   }
 }
 

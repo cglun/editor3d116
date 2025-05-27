@@ -30,13 +30,13 @@ function RouteComponent() {
   const { themeColor } = getThemeByScene(scene);
   const btnColor = getButtonColor(themeColor);
 
-  // 关键帧动画设置
-  function setKeyframe() {
-    const { useKeyframe } = getScene().userData.config3d || 0;
-    if (useKeyframe) {
-      Toast3d("保存后，重新加载生效!", "提示", APP_COLOR.Warning, DELAY.LONG);
-    }
-  }
+  // // 关键帧动画设置
+  // function setKeyframe() {
+  //   const { useKeyframe } = getScene().userData.config3d || 0;
+  //   if (useKeyframe) {
+  //     Toast3d("保存后，重新加载生效!", "提示", APP_COLOR.Warning, DELAY.LONG);
+  //   }
+  // }
 
   function configToken() {
     if (import.meta.env.DEV) {
@@ -89,30 +89,33 @@ function RouteComponent() {
   return (
     <ListGroup horizontal className="mt-2">
       <ListGroup.Item>
-        <ConfigCheck label="启用Tween" configKey="useTween" />
+        <ConfigCheck
+          toolTip="相机视角动画"
+          label="启用Tween"
+          configKey="useTween"
+        />
       </ListGroup.Item>
       <ListGroup.Item>
-        <InputGroup size="sm">
-          <ConfigCheck
-            label="投射阴影"
-            configKey="useShadow"
-            callBack={() => enableShadow(getScene(), getScene())}
-          />
-        </InputGroup>
+        <ConfigCheck
+          label="投射阴影"
+          toolTip="模型阴影"
+          configKey="useShadow"
+          callBack={() => enableShadow(getScene(), getScene())}
+        />
       </ListGroup.Item>
       <ListGroup.Item>
-        <InputGroup size="sm">
-          <ConfigCheck
-            label="关键帧动画"
-            configKey="useKeyframe"
-            callBack={setKeyframe || 0}
-          />
-        </InputGroup>
+        <ConfigCheck
+          label="关键帧动画"
+          configKey="useKeyframe"
+          toolTip={"设置并保存后，重新加载场景生效"}
+        />
       </ListGroup.Item>
       <ListGroup.Item>
-        <InputGroup size="sm">
-          <ConfigCheck label="使用合成" configKey="useComposer" />
-        </InputGroup>
+        <ConfigCheck
+          label="使用合成"
+          configKey="useComposer"
+          toolTip="后期合成、模型高亮等"
+        />
       </ListGroup.Item>
       <ListGroup.Item>
         <InputGroup size="sm">

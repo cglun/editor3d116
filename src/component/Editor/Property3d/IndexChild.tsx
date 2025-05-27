@@ -12,7 +12,7 @@ import { InputAttrText } from "./InputAttrText";
 import { getButtonColor, getThemeByScene } from "../../../app/utils";
 import AlertBase from "../../common/AlertBase";
 import { setTextureBackground } from "../../../three/common3d";
-import { userData } from "../../../three/config3d";
+import { sceneUserData } from "../../../three/config3d";
 import { APP_COLOR, SelectedObject } from "../../../app/type";
 import { InputAttrNumber } from "./InputAttrNumber";
 import Toast3d from "../../common/Toast3d";
@@ -135,7 +135,7 @@ function SceneProperty() {
           variant={getButtonColor(themeColor)}
           onClick={() => {
             setEnableColor(!enableColor);
-            _scene.userData.backgroundHDR = userData.backgroundHDR;
+            _scene.userData.backgroundHDR = sceneUserData.backgroundHDR;
             const { backgroundHDR } = _scene.userData;
             backgroundHDR.asBackground = !backgroundHDR.asBackground;
             if (!backgroundHDR.asBackground) {

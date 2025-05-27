@@ -5,22 +5,26 @@ import { getScene, getSelectedObjects } from "../../three/init3dViewer";
 import { createGroupIfNotExist } from "../../three/utils";
 import { LabelInfo } from "./LabelInfo";
 
+import { Scene } from "three";
+import { SceneUserData } from "../../app/type";
+
 // 标签信息面板控制器
 export class LabelInfoPanelController {
   //全部标签信息面板
   allLabelInfo: LabelInfo[] = [];
   isShow = false;
   panelStatus = 0;
-  showPanelTest1 = [
+  scene: Scene;
+  private showPanelTest = [
     "1-001-001",
     "1-008-004",
     "1-002-006",
     "1-013-006",
     "1-004-006",
   ];
-  showPanelTest = ["C_F1", "C_F2"];
+  showPanelTest1 = ["C_F1"];
   // 使用箭头函数确保 this 指向正确
-  showList = [
+  private showList = [
     () => this.hideLabel(),
     () => this.showSmallCircle(),
     () => this.showLabel(),
@@ -29,10 +33,12 @@ export class LabelInfoPanelController {
   dispatchTourWindow: React.Dispatch<TourWindow> | null = null;
   constructor(
     modelName: string,
+    scene: Scene,
     isShow: boolean,
     dispatchTourWindow: React.Dispatch<TourWindow>
   ) {
     this.isShow = isShow;
+    this.scene = scene;
     this.dispatchTourWindow = dispatchTourWindow;
     this.createLabelInfoPanelByModelGroupName(modelName);
   }
@@ -40,6 +46,7 @@ export class LabelInfoPanelController {
 
   hideLabel() {
     console.log("hideLabel");
+    this.panelStatus = 0;
     for (let i = 0; i < this.allLabelInfo.length; i++) {
       const labelInfo = this.allLabelInfo[i];
       labelInfo.css3DSprite.visible = false;
@@ -48,17 +55,20 @@ export class LabelInfoPanelController {
 
   showSmallCircle() {
     console.log("showSmallCircle");
+    this.panelStatus = 1;
     this.show([true, false, false]);
   }
   showLabel() {
     console.log("showLabel");
+    this.panelStatus = 2;
     this.show([true, true, false]);
   }
   showPanel() {
     console.log("showPanel");
+    this.panelStatus = 3;
     this.show([true, true, true]);
   }
-  show(showAreYou: boolean[]) {
+  private show(showAreYou: boolean[]) {
     if (this.isShow) {
       for (let i = 0; i < this.allLabelInfo.length; i++) {
         const labelInfo = this.allLabelInfo[i];
@@ -101,16 +111,15 @@ export class LabelInfoPanelController {
   }
 
   createLabelInfoPanelByModelGroupName(modelGroupName: string) {
-    const scene = getScene();
     const MARK_LABEL_INFO = createGroupIfNotExist(
-      scene,
+      this.scene,
       GLOBAL_CONSTANT.MARK_LABEL_INFO,
       true
     );
     if (MARK_LABEL_INFO) {
-      scene.add(MARK_LABEL_INFO);
+      this.scene.add(MARK_LABEL_INFO);
     }
-    const group = createGroupIfNotExist(scene, modelGroupName, false);
+    const group = createGroupIfNotExist(this.scene, modelGroupName, false);
     if (group) {
       const { children } = group;
       if (children) {
@@ -119,9 +128,12 @@ export class LabelInfoPanelController {
           if (this.showPanelTest.includes(child.name)) {
             getSelectedObjects().push(child);
 
-            const lb = new LabelInfo(child, 0.03, this.dispatchTourWindow!);
+            const lb = new LabelInfo(child, this.dispatchTourWindow!);
+            const a = getScene().userData as SceneUserData;
+
+            lb.createLine(a.userStyle.modelHighlightColor);
             lb.css3DSprite.visible = false;
-            scene.add(lb.css3DSprite);
+            this.scene.add(lb.css3DSprite);
             this.allLabelInfo.push(lb);
           }
         }

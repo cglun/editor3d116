@@ -9,7 +9,7 @@ import {
   WebGLRenderer,
 } from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { Extra3d, Parameters3d } from "../three/config3d";
+import { Extra3d, Parameters3d, sceneUserData } from "../three/config3d";
 
 export interface CanvasNode {
   width: number;
@@ -180,3 +180,20 @@ declare global {
     getCurrentActionItemMap: (item: ActionItemMap) => void;
   }
 }
+export interface UserStyles {
+  cardWidth: number;
+  cardHeight: number;
+  cardSize: 0.04;
+  cardRadius: number;
+  cardBackgroundColor: string;
+  cardBackgroundUrl: string;
+  cardBackgroundAlpha: number;
+  headerFontSize: number;
+  headerColor: string;
+  bodyFontSize: number;
+  bodyColor: string;
+  modelHighlightColor: string;
+  offsetX: number;
+  offsetY: number;
+}
+export type SceneUserData = typeof sceneUserData;

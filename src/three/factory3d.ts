@@ -2,7 +2,6 @@ import {
   DirectionalLight,
   DirectionalLightHelper,
   GridHelper,
-  PCFSoftShadowMap,
   PerspectiveCamera,
   Scene,
   Vector2,
@@ -20,7 +19,7 @@ import {
 
 import { UserDataType } from "../app/type";
 import { clearOldLabel, createGroupIfNotExist, getTourSrc } from "./utils";
-import { userData } from "./config3d";
+import { sceneUserData } from "./config3d";
 import { setClassName } from "../app/utils";
 
 import { setTextureBackground } from "./common3d";
@@ -38,7 +37,7 @@ export function createPerspectiveCamera(
     1000
   );
   camera.name = cameraName;
-  const { x, y, z } = userData.fixedCameraPosition;
+  const { x, y, z } = sceneUserData.fixedCameraPosition;
   camera.position.set(x, y, z);
   camera.userData.isSelected = false;
 
@@ -81,15 +80,8 @@ export function createGridHelper(name = "网格辅助", wh = new Vector2(10, 10)
 
 export function createRenderer(node: HTMLElement) {
   const renderer = new WebGLRenderer({ antialias: true, alpha: true });
-  renderer.setPixelRatio(window.devicePixelRatio);
 
   renderer.shadowMap.enabled = true;
-
-  // 使用 PCFSoftShadowMap 类型让阴影更柔和
-  renderer.shadowMap.type = PCFSoftShadowMap;
-  // 增大阴影贴图尺寸以提高阴影质量
-  renderer.shadowMap.autoUpdate = true;
-  renderer.shadowMap.needsUpdate = true;
 
   renderer.setSize(node.offsetWidth, node.offsetHeight);
   return renderer;
@@ -114,7 +106,7 @@ export function createConfigRenderer(scene: Scene, node: HTMLElement) {
 
 export function createScene() {
   const scene = new Scene();
-  scene.userData = userData;
+  scene.userData = sceneUserData;
   //scene.background = new Color("#000116");
   setTextureBackground(scene);
   return scene;
@@ -126,7 +118,7 @@ export function createNewScene() {
   // newScene.background =
   //   themeColor === APP_COLOR.Dark ? new Color("#000116") : new Color("#eee");
 
-  newScene.userData = userData;
+  newScene.userData = sceneUserData;
   newScene.userData.APP_THEME.sceneCanSave = false;
   setTextureBackground(newScene);
   const HELPER_GROUP = createGroupIfNotExist(

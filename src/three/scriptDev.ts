@@ -9,5 +9,6 @@ export function runScript(context: Context116) {
   document.getCurrentActionItemMap = function (item: ActionItemMap) {
     console.log("当前按钮组：", item);
   };
+
   //===============结束==================//
 }

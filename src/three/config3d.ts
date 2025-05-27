@@ -1,7 +1,7 @@
 import { AnimationAction, AnimationMixer, Clock, Vector3 } from "three";
 import { CSS2DRenderer } from "three/addons/renderers/CSS2DRenderer.js";
 import { CSS3DRenderer } from "three/addons/renderers/CSS3DRenderer.js";
-import { APP_COLOR } from "../app/type";
+import { APP_COLOR, UserStyles } from "../app/type";
 
 export const enableScreenshot = {
   enable: false,
@@ -30,7 +30,7 @@ export const config3d: Config3d = {
   FPS: 30, //帧率
   useComposer: true,
 };
-export const userData = {
+export const sceneUserData = {
   isSelected: false,
   fixedCameraPosition: new Vector3(-5, 5, 8),
   config3d,
@@ -47,6 +47,21 @@ export const userData = {
     iconFill: "",
     sceneCanSave: false,
   },
+  userStyle: {
+    cardWidth: 116,
+    cardHeight: 116,
+    cardRadius: 0.8,
+    cardBackgroundColor: "#d85555",
+    cardBackgroundUrl: "/editor3d/public/static/images/defaultImage3d.png",
+    headerFontSize: 18,
+    headerColor: "#fe2ffe",
+    bodyFontSize: 14,
+    bodyColor: "#fee1e1",
+    modelHighlightColor: "#aaffaa",
+    offsetX: 116 / 2,
+    offsetY: 116 / 2,
+    cardSize: 0.04, // 标签大小
+  } as UserStyles,
 };
 
 export interface Parameters3d {

@@ -4,7 +4,7 @@
 
 import { getScene } from "../three/init3dEditor";
 import { EditorScene } from "./MyContext";
-import { userData } from "../three/config3d";
+import { sceneUserData } from "../three/config3d";
 import { APP_COLOR } from "./type";
 
 export function getButtonColor(theme: APP_COLOR) {
@@ -50,7 +50,7 @@ export function blobToFile(blob: Blob, fileName: string) {
 }
 
 export function getThemeByScene(scene: EditorScene) {
-  let theme = userData.APP_THEME;
+  let theme = sceneUserData.APP_THEME;
   if (scene.payload.userData.APP_THEME) {
     theme = scene.payload.userData.APP_THEME;
   }

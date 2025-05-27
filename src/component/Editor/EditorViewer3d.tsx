@@ -42,7 +42,7 @@ import ModalConfirm3d from "../common/ModalConfirm3d";
 import Toast3d from "../common/Toast3d";
 import { GLOBAL_CONSTANT } from "../../three/GLOBAL_CONSTANT";
 import { cameraTween } from "../../three/animate";
-import { userData } from "../../three/config3d";
+import { sceneUserData } from "../../three/config3d";
 import Icon from "../common/Icon";
 
 function EditorViewer3d() {
@@ -208,7 +208,7 @@ function EditorViewer3d() {
                   if (fixedCameraPosition) {
                     const { x, y, z } = fixedCameraPosition;
                     const camera = getPerspectiveCamera();
-                    const position = userData.fixedCameraPosition;
+                    const position = sceneUserData.fixedCameraPosition;
                     const multiple = 11.6;
                     camera.position.set(
                       position.x * multiple,

@@ -3,6 +3,7 @@ import {
   ActionItemMap,
   CustomButtonListType,
   CustomButtonType,
+  SceneUserData,
 } from "../../app/type";
 
 import { createGroupIfNotExist } from "../../three/utils";
@@ -26,8 +27,6 @@ import {
   showModelBackHome,
   stretchModelBackHome,
 } from "./animateByButton";
-
-import { userData } from "../../three/config3d";
 
 import { hasValueString } from "./utils";
 
@@ -196,7 +195,7 @@ export function generateRoamButtonGroup() {
 }
 //获取漫游动画按钮组
 export function getRoamListByRoamButtonMap(): ActionItemMap[] {
-  const data = getScene().userData as typeof userData;
+  const data = getScene().userData as SceneUserData;
 
   const { roamButtonGroup } = data.customButtonList as {
     roamButtonGroup?: CustomButtonListType["roamButtonGroup"];

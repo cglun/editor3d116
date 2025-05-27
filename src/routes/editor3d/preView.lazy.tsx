@@ -26,6 +26,7 @@ import { MyContext } from "../../app/MyContext";
 
 import { jiajia, jianjian } from "../../viewer3d/label/LabelFactory";
 import { LabelInfoPanelController } from "../../viewer3d/label/LabelInfoPanelController";
+import { getScene } from "../../three/init3dViewer";
 
 // 定义响应数据的类型
 interface PageListResponse {
@@ -99,16 +100,18 @@ function RouteComponent() {
     setToggleButtonList(instance.getToggleButtonGroup || []);
     setRoamButtonList(instance.getRoamListByRoamButtonMap || []);
     //创建标签信息
-    // createLabelInfo(dispatchTourWindow);
-
     const controller = new LabelInfoPanelController(
-      "C",
+      "huojia",
+      getScene(),
       false,
       dispatchTourWindow
     );
-    controller.isShow = true;
 
+    controller.isShow = true;
+    controller.showSmallCircle();
     setController(controller);
+
+    //const scene = getScene();
   }
 
   function callBackError(error: unknown) {
