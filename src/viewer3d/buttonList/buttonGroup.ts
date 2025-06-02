@@ -29,6 +29,7 @@ import {
 } from "./animateByButton";
 
 import { hasValueString } from "./utils";
+import { LabelInfoPanelController } from "../label/LabelInfoPanelController";
 
 function getActionItemByMap(
   item: ActionItemMap,
@@ -256,4 +257,65 @@ export function roamAnimation(isRunning: boolean) {
     });
   }
   controls.enabled = !isRunning;
+}
+
+export function generatePanelControllerButtonGroup() {
+  const panelControllerButtonGroup: ActionItemMap[] = [];
+
+  panelControllerButtonGroup.push({
+    showName: "展开",
+    NAME_ID: "expandLabelInfo",
+    showButton: true,
+    isClick: false,
+    groupCanBeRaycast: false,
+  });
+  panelControllerButtonGroup.push({
+    showName: "收起",
+    NAME_ID: "foldLabelInfo",
+    showButton: true,
+    isClick: false,
+    groupCanBeRaycast: false,
+  });
+  return panelControllerButtonGroup;
+}
+
+let panelController: LabelInfoPanelController;
+export function setPanelController(_panelController: LabelInfoPanelController) {
+  panelController = _panelController;
+}
+export function getPanelController() {
+  return panelController;
+}
+
+export function getPanelControllerButtonGroup(): ActionItemMap[] {
+  const data = getScene().userData as SceneUserData;
+
+  const { panelControllerButtonGroup } =
+    data.customButtonList as CustomButtonListType;
+  if (!panelControllerButtonGroup) {
+    return [];
+  }
+  const { listGroup } = panelControllerButtonGroup;
+
+  return listGroup
+    .map((item: ActionItemMap) => {
+      const { NAME_ID, showButton } = item;
+      if (!showButton) {
+        // 当 showButton 为 false 时，返回 undefined
+        return undefined;
+      }
+
+      return {
+        ...item, // 保留原有的属性
+        handler: () => {
+          if (NAME_ID === "expandLabelInfo") {
+            panelController?.expandLabelInfo(); // 调用 expandLabelInfo 方法
+          }
+          if (NAME_ID === "foldLabelInfo") {
+            panelController?.foldLabelInfo(); // 调用 foldLabelInfo 方法
+          }
+        },
+      } as ActionItemMap; // 显式类型断言
+    })
+    .filter((item): item is ActionItemMap => item !== undefined);
 }

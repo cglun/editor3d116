@@ -34,6 +34,8 @@ export default function UiButtonEditor({
   }
   const toggleButtonGroup = customButtonList.toggleButtonGroup?.listGroup;
   const roamButtonGroup = customButtonList.roamButtonGroup?.listGroup;
+  const panelControllerButtonGroup =
+    customButtonList.panelControllerButtonGroup?.listGroup;
 
   // 更新按钮组数据的通用函数
   function updateButtonGroup(
@@ -52,10 +54,16 @@ export default function UiButtonEditor({
     newCustomButtonList[buttonGroupKey]!.listGroup = newListGroup;
     return newCustomButtonList;
   }
-  type ButtonGroupKey = "toggleButtonGroup" | "roamButtonGroup";
+  type ButtonGroupKey =
+    | "toggleButtonGroup"
+    | "roamButtonGroup"
+    | "panelControllerButtonGroup";
   function buttonGroupDiv(
     buttonGroup: ActionItemMap[],
-    buttonGroupKey: "toggleButtonGroup" | "roamButtonGroup"
+    buttonGroupKey:
+      | "toggleButtonGroup"
+      | "roamButtonGroup"
+      | "panelControllerButtonGroup"
   ) {
     return (
       <>
@@ -82,40 +90,42 @@ export default function UiButtonEditor({
                       title={item.showButton ? "按钮已显示" : "按钮已隐藏"}
                     />
                   </InputGroup.Text>
-                  {!item.NAME_ID.includes("_AN_") && (
-                    <InputGroup.Text
-                      onClick={() => {
-                        const newCustomButtonList = updateButtonGroup(
-                          buttonGroupKey,
-                          index,
-                          (item) => ({
-                            ...item,
-                            groupCanBeRaycast: !item.groupCanBeRaycast,
-                          })
-                        );
-                        setValue(JSON.stringify(newCustomButtonList));
-                      }}
-                    >
-                      <OverlayTrigger
-                        delay={{ show: 250, hide: 250 }}
-                        overlay={
-                          <Tooltip>
-                            {item.groupCanBeRaycast ? "能" : "不能"} 选中
-                            {item.NAME_ID}
-                            模型组
-                          </Tooltip>
-                        }
+                  {!item.NAME_ID.includes("_AN_") &&
+                    buttonGroupKey !== "panelControllerButtonGroup" && (
+                      <InputGroup.Text
+                        onClick={() => {
+                          const newCustomButtonList = updateButtonGroup(
+                            buttonGroupKey,
+                            index,
+                            (item) => ({
+                              ...item,
+                              groupCanBeRaycast: !item.groupCanBeRaycast,
+                            })
+                          );
+                          setValue(JSON.stringify(newCustomButtonList));
+                        }}
                       >
-                        <Form>
-                          <Form.Check
-                            defaultChecked={item.groupCanBeRaycast}
-                            id={`check-${item.NAME_ID}`}
-                            type="switch"
-                          ></Form.Check>
-                        </Form>
-                      </OverlayTrigger>
-                    </InputGroup.Text>
-                  )}
+                        <OverlayTrigger
+                          delay={{ show: 250, hide: 250 }}
+                          overlay={
+                            <Tooltip>
+                              {item.groupCanBeRaycast ? "能" : "不能"} 选中
+                              {item.NAME_ID}
+                              模型组
+                            </Tooltip>
+                          }
+                        >
+                          <Form>
+                            <Form.Check
+                              defaultChecked={item.groupCanBeRaycast}
+                              id={`check-${item.NAME_ID}`}
+                              type="switch"
+                            ></Form.Check>
+                          </Form>
+                        </OverlayTrigger>
+                      </InputGroup.Text>
+                    )}
+
                   {Array.isArray(item.showName)
                     ? item.showName.map((_item, innerIndex) => {
                         return (
@@ -182,6 +192,7 @@ export default function UiButtonEditor({
       DRAWER: `${name}拉伸`,
       STRETCH: `${name}拉伸`,
       ROAM: `${name}漫游`,
+      PANEL_CONTROLLER: `${name}面板控制器`,
     };
 
     return <Badge bg={APP_COLOR.Primary}>{typeName[buttonGroup]}</Badge>;
@@ -192,6 +203,7 @@ export default function UiButtonEditor({
       {/* {canBeSelectedDiv(canBeSelectedGroup)} */}
       {buttonGroupDiv(toggleButtonGroup, "toggleButtonGroup")}
       {buttonGroupDiv(roamButtonGroup, "roamButtonGroup")}
+      {buttonGroupDiv(panelControllerButtonGroup, "panelControllerButtonGroup")}
     </>
   );
 }

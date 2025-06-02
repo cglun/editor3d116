@@ -31,7 +31,7 @@ export class LabelInfo {
     offsetX: 116 / 2,
     offsetY: 116 / 2,
   };
-
+  name = "";
   tourObject = {
     id: "id",
     title: "title",
@@ -57,11 +57,11 @@ export class LabelInfo {
   init() {
     this.tourObject.title = getObjectNameByName(this.mesh);
     this.createDiv();
-    this.createCss3dLabel(this.tourObject.title);
+    this.createCss3dLabel();
   }
-  private createCss3dLabel(name: string) {
+  private createCss3dLabel() {
     const css3DSprite = new CSS3DSprite(this.div);
-    css3DSprite.name = name;
+    css3DSprite.name = "SPRITE-" + this.tourObject.title;
     const { x, y, z } = getObjectWorldPosition(this.mesh);
     css3DSprite.position.set(x, y, z);
     css3DSprite.scale.set(this.size, this.size, this.size);
@@ -70,7 +70,7 @@ export class LabelInfo {
   }
 
   private createDiv() {
-    this.div.className = "mark-label mark-label-div";
+    this.div.className = "mark-label mark-label-controller-panel";
     const labelStyle = this.div.style;
     const {
       headerFontSize,
@@ -174,6 +174,9 @@ export class LabelInfo {
 
     this.div.appendChild(header);
     this.div.appendChild(body);
+  }
+  setName(name: string) {
+    this.name = name;
   }
   createLine(color: string) {
     // const a=new Vector3(this., 0, 0);

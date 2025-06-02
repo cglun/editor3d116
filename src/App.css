@@ -64,7 +64,6 @@ h5 {
 .da-gang .list-group-item {
   cursor: pointer;
 }
- 
 
 btn-group-sm > .btn,
 .btn-sm {
@@ -89,23 +88,21 @@ btn-group-sm > .btn,
   border-radius: 0.4rem;
   background: var(--bs-gray-500);
   color: var(--bs-primary-bg-subtle);
-  opacity: 0.6; 
+  opacity: 0.6;
 }
-.mark-label-div {
- background-color: #0f0404;
- padding: .116rem .6rem;
- border-radius: 0.4rem;  
- opacity: .9;
+.mark-label-controller-panel {
+  background-color: #0f0404;
+  padding: 0.116rem 0.6rem;
+  border-radius: 0.4rem;
+  opacity: 0.9;
 }
 
-
-.mark-label-div .mark-label-header  {
- display: flex;  
+.mark-label-controller-panel .mark-label-header {
+  display: flex;
 }
- 
- 
-.mark-label-body p{
-  margin-bottom: 0; 
+
+.mark-label-body p {
+  margin-bottom: 0;
 }
 .bi-image {
   cursor: crosshair;
@@ -128,6 +125,5 @@ btn-group-sm > .btn,
 #editor-right .accordion-item {
   overflow-y: scroll;
   scrollbar-width: thin;
- height: 46vh;
+  height: 46vh;
 }
- 

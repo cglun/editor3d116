@@ -8,7 +8,7 @@ import {
 } from "react-bootstrap";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import Viewer3d from "../../viewer3d/Viewer3d";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { setEnableScreenshot } from "../../three/config3d";
 import _axios from "../../app/http";
 
@@ -22,11 +22,7 @@ import {
 } from "../../app/type";
 
 import { resetListGroupIsClick } from "../../viewer3d/buttonList/buttonGroup";
-import { MyContext } from "../../app/MyContext";
-
-import { jiajia, jianjian } from "../../viewer3d/label/LabelFactory";
 import { LabelInfoPanelController } from "../../viewer3d/label/LabelInfoPanelController";
-import { getScene } from "../../three/init3dViewer";
 
 // 定义响应数据的类型
 interface PageListResponse {
@@ -50,13 +46,15 @@ function RouteComponent() {
   const [listScene, setListScene] = useState<RecordItem[]>([]);
   const [toggleButtonList, setToggleButtonList] = useState<ActionItemMap[]>();
   const [roamButtonList, setRoamButtonList] = useState<ActionItemMap[]>([]);
-
+  const [panelControllerButtonGroup, setPanelControllerButtonGroup] = useState<
+    ActionItemMap[]
+  >([]);
+  const [controller, setController] = useState<LabelInfoPanelController>();
+  const [showControllerButton, setShowControllerButton] = useState(false);
   const { scene } = useUpdateScene();
   const { themeColor } = getThemeByScene(scene);
   const buttonColor = getButtonColor(themeColor);
   const [_item, _setItem] = useState<RecordItem>();
-  const { dispatchTourWindow } = useContext(MyContext);
-  const [controller, setController] = useState<LabelInfoPanelController>();
 
   useEffect(() => {
     setEnableScreenshot(true);
@@ -99,19 +97,8 @@ function RouteComponent() {
     // 检查 getToggleButtonGroup 方法是否存在
     setToggleButtonList(instance.getToggleButtonGroup || []);
     setRoamButtonList(instance.getRoamListByRoamButtonMap || []);
-    //创建标签信息
-    const controller = new LabelInfoPanelController(
-      "huojia",
-      getScene(),
-      false,
-      dispatchTourWindow
-    );
-
-    controller.isShow = true;
-    controller.showSmallCircle();
-    setController(controller);
-
-    //const scene = getScene();
+    setPanelControllerButtonGroup(instance.getPanelControllerButtonGroup || []);
+    setController(instance.labelInfoPanelController);
   }
 
   function callBackError(error: unknown) {
@@ -230,6 +217,7 @@ function RouteComponent() {
                           toggleButtonList,
                           setToggleButtonList
                         );
+                        setShowControllerButton(false);
                       }
                     }}
                   >
@@ -301,26 +289,40 @@ function RouteComponent() {
               <Button variant={APP_COLOR.Danger} onClick={handleClose}>
                 关闭
               </Button>
+
               <Button
-                variant={APP_COLOR.Danger}
+                variant={buttonColor}
                 onClick={() => {
+                  //  const controller = getPanelController();
                   if (controller) {
-                    jiajia(controller);
+                    let modelNameList = ["2-001-001", "2-001-002", "2-001-003"];
+                    controller.findLabelInfoByModelBoxName(modelNameList);
+                    const isShow = controller.canBeShowLabelInfo.length > 0;
+                    setShowControllerButton(isShow);
                   }
                 }}
               >
-                展开
+                查找标签测试
               </Button>
-              <Button
-                variant={APP_COLOR.Danger}
-                onClick={() => {
-                  if (controller) {
-                    jianjian(controller);
-                  }
-                }}
-              >
-                收缩
-              </Button>
+
+              {panelControllerButtonGroup.map(
+                (item: ActionItemMap, index: number) => {
+                  return (
+                    <Button
+                      variant={buttonColor}
+                      disabled={!showControllerButton}
+                      key={index}
+                      onClick={() => {
+                        if (item.handler) {
+                          item.handler();
+                        }
+                      }}
+                    >
+                      {item.showName}
+                    </Button>
+                  );
+                }
+              )}
             </ButtonGroup>
           </Modal.Footer>
         </Modal>

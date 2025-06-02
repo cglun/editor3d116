@@ -10,6 +10,8 @@ import {
 } from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { Extra3d, Parameters3d, sceneUserData } from "../three/config3d";
+import { LabelInfoPanelController } from "../viewer3d/label/LabelInfoPanelController";
+import { TourWindow } from "./MyContext";
 
 export interface CanvasNode {
   width: number;
@@ -113,7 +115,12 @@ export interface ActionItemMap {
   };
 }
 // 使用 = 定义类型，并且明确成员类型为字符串字面量类型
-export type CustomButtonType = "TOGGLE" | "DRAWER" | "STRETCH" | "ROAM";
+export type CustomButtonType =
+  | "TOGGLE"
+  | "DRAWER"
+  | "STRETCH"
+  | "ROAM"
+  | "PANEL_CONTROLLER";
 interface UserSetting {
   modelOffset?: {
     x: number;
@@ -140,6 +147,11 @@ export type CustomButtonListType = {
     name: string;
     type: "ROAM";
     userSetting?: UserSetting;
+    listGroup: ActionItemMap[];
+  };
+  panelControllerButtonGroup: {
+    name: string;
+    type: "PANEL_CONTROLLER";
     listGroup: ActionItemMap[];
   };
 };
@@ -174,6 +186,12 @@ export interface Context116 {
   getUserData?: () => object; // 返回 {}
   getToggleButtonGroup?: () => ActionItemMap[]; // 返回 ActionItemMap[] 类型
   getRoamListByRoamButtonMap?: () => ActionItemMap[]; // 返回 ActionItemMap[] 类型
+  getPanelControllerButtonGroup?: () => ActionItemMap[]; // 返回 ActionItemMap[] 类型
+  labelInfoPanelController?: LabelInfoPanelController;
+  dispatchTourWindow?: React.Dispatch<TourWindow>;
+  setPanelController?: (
+    labelInfoPanelController: LabelInfoPanelController
+  ) => void;
 }
 declare global {
   interface Document {

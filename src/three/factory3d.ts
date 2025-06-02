@@ -25,6 +25,7 @@ import { setClassName } from "../app/utils";
 import { setTextureBackground } from "./common3d";
 import { TourWindow } from "../app/MyContext";
 import { GLOBAL_CONSTANT } from "./GLOBAL_CONSTANT";
+import { UnrealBloomPass } from "three/examples/jsm/Addons.js";
 
 export function createPerspectiveCamera(
   node: HTMLElement,
@@ -227,4 +228,18 @@ export function createCss3dLabel(
     tourObject: tourObject,
   };
   return css3DSprite;
+}
+
+export function createUnrealBloomPass(node: HTMLElement) {
+  const { offsetWidth, offsetHeight } = node;
+  const bloomPass = new UnrealBloomPass(
+    new Vector2(offsetWidth, offsetHeight),
+    1.5,
+    4.4,
+    0.85
+  );
+  bloomPass.threshold = 1.4;
+  bloomPass.strength = 0.4;
+  bloomPass.radius = 0.4;
+  return bloomPass;
 }

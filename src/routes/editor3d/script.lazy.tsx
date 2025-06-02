@@ -25,6 +25,7 @@ import ModalConfirm3d from "../../component/common/ModalConfirm3d";
 
 import { Vector3 } from "three";
 import {
+  generatePanelControllerButtonGroup,
   generateRoamButtonGroup,
   generateToggleButtonGroup,
 } from "../../viewer3d/buttonList/buttonGroup";
@@ -77,12 +78,14 @@ function RouteComponent() {
       STRETCH: new Vector3(0, offset, 0),
       DRAWER: new Vector3(offset, 0, 0),
       ROAM: new Vector3(0, 0, 0),
+      PANEL_CONTROLLER: new Vector3(0, 0, 0),
     };
     const cameraPositionOffset = {
       TOGGLE: new Vector3(offset, 0, 0),
       STRETCH: new Vector3(0, offset, 0),
       DRAWER: new Vector3(offset, offset, 0),
       ROAM: new Vector3(0, 0, 0),
+      PANEL_CONTROLLER: new Vector3(0, 0, 0),
     };
     const afafafaaafaf = gerToggleButtonGroup;
     const buttonGroup: CustomButtonListType = {
@@ -103,6 +106,11 @@ function RouteComponent() {
           speed: 2,
         },
         listGroup: generateRoamButtonGroup(),
+      },
+      panelControllerButtonGroup: {
+        name: "面板按钮组",
+        type: "PANEL_CONTROLLER",
+        listGroup: generatePanelControllerButtonGroup(),
       },
     };
     getScene().userData.customButtonList = buttonGroup;

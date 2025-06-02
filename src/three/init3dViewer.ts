@@ -1,36 +1,34 @@
 import {
-  ACESFilmicToneMapping,
+  // ACESFilmicToneMapping,
   Object3D,
   Object3DEventMap,
-  PCFSoftShadowMap,
+  //PCFSoftShadowMap,
   PerspectiveCamera,
   Scene,
   Vector2,
   WebGLRenderer,
 } from "three";
-
-import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
+//import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
 import { OutlinePass } from "three/addons/postprocessing/OutlinePass.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
-
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
-
-import { FXAAShader } from "three/addons/shaders/FXAAShader.js";
-
+//import { FXAAShader } from "three/addons/shaders/FXAAShader.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
-
+//import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
 import {
   createConfigRenderer,
   createDirectionalLight,
   createPerspectiveCamera,
   createRenderer,
   createScene,
+  createUnrealBloomPass,
 } from "./factory3d";
 
-import { extra3d as extra, parameters, userData } from "./config3d";
+import { extra3d as extra, parameters } from "./config3d";
 import { AnimateProps, commonAnimate } from "./common3d";
-import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
+
+import { SceneUserData } from "../app/type";
 
 let scene: Scene,
   camera: PerspectiveCamera,
@@ -39,9 +37,10 @@ let scene: Scene,
   divElement: HTMLDivElement,
   extra3d = extra,
   composer: EffectComposer,
-  effectFXAA: ShaderPass,
+  //effectFXAA: ShaderPass,
   outlinePass: OutlinePass;
-const selectedObjects: Object3D<Object3DEventMap>[] = [];
+
+//export const _selectedObjects: Object3D<Object3DEventMap>[] = [];
 
 const parameters3d = { ...parameters, flag: "3d" };
 function animate() {
@@ -102,46 +101,36 @@ export function initPostProcessing() {
     camera
   );
 
-  outlinePass.selectedObjects = selectedObjects; // 设置选中对象
   composer.addPass(outlinePass);
+
   //设置颜色
-  outlinePass.edgeStrength = 6; // 边缘强度
+  outlinePass.edgeStrength = 1; // 边缘强度
   outlinePass.edgeGlow = 0.4; // 边缘发光
   outlinePass.edgeThickness = 1; // 边缘厚度
   outlinePass.pulsePeriod = 1.16; // 脉冲周期
 
-  const color = scene.userData.userStyle.modelHighlightColor;
+  const userData = scene.userData as SceneUserData;
+  const color = userData.userStyle?.modelHighlightColor || "#0000ff";
+  setOutLinePassColor(color);
 
-  outlinePass.visibleEdgeColor.set(color); // 可见边缘颜色
-  outlinePass.hiddenEdgeColor.set(color); // 不可见边缘颜色
+  // renderer.shadowMap.enabled = true;
+  // renderer.shadowMap.type = PCFSoftShadowMap;
+  // renderer.shadowMap.autoUpdate = true;
+  // renderer.shadowMap.needsUpdate = true; // 增大阴影贴图尺寸以提高阴影质量
 
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = PCFSoftShadowMap;
-  renderer.shadowMap.autoUpdate = true;
-  renderer.shadowMap.needsUpdate = true; // 增大阴影贴图尺寸以提高阴影质量
+  // renderer.toneMapping = ACESFilmicToneMapping; // 使用枚举值替代数字
+  // renderer.toneMappingExposure = 1.16; // 调整曝光度;
 
-  renderer.toneMapping = ACESFilmicToneMapping; // 使用枚举值替代数字
-  renderer.toneMappingExposure = 1;
+  composer.addPass(createUnrealBloomPass(divElement));
 
-  const bloomPass = new UnrealBloomPass(
-    new Vector2(offsetWidth, offsetHeight),
-    1.5,
-    4.4,
-    0.85
-  );
-  bloomPass.threshold = 1.4;
-  bloomPass.strength = 0.4;
-  bloomPass.radius = 0.4;
-  composer.addPass(bloomPass);
+  //调整 FXAAShader 的抗锯齿质量参数
+  // effectFXAA = new ShaderPass(FXAAShader);
 
-  // 调整 FXAAShader 的抗锯齿质量参数
-  effectFXAA = new ShaderPass(FXAAShader);
-
-  effectFXAA.uniforms["resolution"].value.set(
-    1 / offsetWidth,
-    1 / offsetHeight
-  );
-  composer.addPass(effectFXAA);
+  // effectFXAA.uniforms["resolution"].value.set(
+  //   1 / offsetWidth,
+  //   1 / offsetHeight
+  // );
+  //composer.addPass(effectFXAA);
 
   const outputPass = new OutputPass();
   composer.addPass(outputPass);
@@ -150,12 +139,12 @@ export function getControls() {
   return controls;
 }
 export function getSelectedObjects() {
-  return selectedObjects;
+  return outlinePass.selectedObjects;
 }
-// export function setOutLinePassColor(color: string) {
-//   outlinePass.visibleEdgeColor.set(color); // 可见边缘颜色
-//   outlinePass.hiddenEdgeColor.set(color); // 不可见边缘颜色
-// }
+export function setOutLinePassColor(color: string) {
+  outlinePass.visibleEdgeColor.set(color); // 可见边缘颜色
+  outlinePass.hiddenEdgeColor.set(color); // 不可见边缘颜色
+}
 
 export function getLabelRenderer() {
   return extra.labelRenderer2d;
@@ -177,10 +166,11 @@ export function getAll() {
     divElement,
     extra3d,
     parameters3d,
+    getSelectedObjects,
   };
 }
-export function getUserData(): typeof userData {
-  return scene.userData as typeof userData;
+export function getUserData(): SceneUserData {
+  return scene.userData as SceneUserData;
 }
 export function getCamera() {
   return camera;

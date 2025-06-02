@@ -21,6 +21,7 @@ import { getButtonColor, getThemeByScene } from "../../app/utils";
 
 import { getScene } from "../../three/init3dEditor";
 import { SceneUserData, UserStyles } from "../../app/type";
+import { userStyle } from "../../three/config3d";
 
 export const Route = createLazyFileRoute("/editor3d/effects")({
   component: RouteComponent,
@@ -32,11 +33,14 @@ function RouteComponent() {
   const buttonColor = getButtonColor(themeColor);
   const [show, setShow] = useState(false);
 
-  const userDataStyles: UserStyles = scene.payload.userData.userStyle;
-
+  const userData = scene.payload.userData as SceneUserData;
+  let userDataStyles = userData.userStyle;
   useEffect(() => {
     setShow(true);
   }, []);
+  if (userDataStyles === undefined) {
+    userDataStyles = userStyle;
+  }
 
   if (scene.payload.userData.projectId === -1) {
     return <AlertBase text={"到左上脚3d中加载场景！"} />;
@@ -130,6 +134,7 @@ function RouteComponent() {
 
     return `#${hexR}${hexG}${hexB}`;
   }
+
   const defaultImage3dUrl = new URL(
     "/public/static/images/box.png",
     import.meta.url
@@ -232,7 +237,7 @@ function RouteComponent() {
                     />
                   </div>
                   <div
-                    className="mark-label mark-label-div"
+                    className="mark-label mark-label-controller-panel"
                     style={{
                       position: "absolute",
                       top:

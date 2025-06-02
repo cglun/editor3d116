@@ -1,0 +1,77 @@
+{
+  "toggleButtonGroup": {
+    "name": "切换按钮组",
+    "type": "TOGGLE",
+    "userSetting": {
+      "cameraOffset": {
+        "x": 21,
+        "y": 0,
+        "z": 0
+      },
+      "modelOffset": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "animationTime": 300
+    },
+    "listGroup": [
+      {
+        "showName": "全景",
+        "NAME_ID": "MODEL_GROUP",
+        "showButton": true,
+        "isClick": false,
+        "groupCanBeRaycast": false
+      },
+      {
+        "showName": "货架1",
+        "NAME_ID": "huojia",
+        "showButton": true,
+        "isClick": false,
+        "groupCanBeRaycast": false
+      },
+      {
+        "showName": "货架2",
+        "NAME_ID": "huojia",
+        "showButton": true,
+        "isClick": false,
+        "groupCanBeRaycast": false
+      },
+      {
+        "showName": "货架3",
+        "NAME_ID": "huojia",
+        "showButton": true,
+        "isClick": false,
+        "groupCanBeRaycast": false
+      }
+    ]
+  },
+  "roamButtonGroup": {
+    "name": "漫游按钮组",
+    "type": "ROAM",
+    "userSetting": {
+      "speed": 2
+    },
+    "listGroup": []
+  },
+  "panelControllerButtonGroup": {
+    "name": "面板按钮组",
+    "type": "PANEL_CONTROLLER",
+    "listGroup": [
+      {
+        "showName": "+",
+        "NAME_ID": "expandLabelInfo",
+        "showButton": true,
+        "isClick": false,
+        "groupCanBeRaycast": false
+      },
+      {
+        "showName": "-",
+        "NAME_ID": "foldLabelInfo",
+        "showButton": true,
+        "isClick": false,
+        "groupCanBeRaycast": false
+      }
+    ]
+  }
+}

@@ -39,9 +39,12 @@ import { raycasterSelect } from "../three/common3d";
 
 import InfoPanel from "./InfoPanel";
 import {
+  getPanelControllerButtonGroup,
   getRoamListByRoamButtonMap,
   getToggleButtonGroup,
+  setPanelController,
 } from "./buttonList/buttonGroup";
+import { LabelInfoPanelController } from "./label/LabelInfoPanelController";
 
 /**
  * 其他应用可以调用此组件，
@@ -95,6 +98,12 @@ export default function Viewer3d({
       getUserData,
       getToggleButtonGroup,
       getRoamListByRoamButtonMap,
+      getPanelControllerButtonGroup,
+      labelInfoPanelController: new LabelInfoPanelController(
+        dispatchTourWindow
+      ),
+      dispatchTourWindow,
+      setPanelController,
     };
 
     getProjectData(item.id)

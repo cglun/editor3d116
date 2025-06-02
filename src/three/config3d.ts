@@ -30,6 +30,22 @@ export const config3d: Config3d = {
   FPS: 30, //帧率
   useComposer: true,
 };
+export const userStyle: UserStyles = {
+  cardWidth: 116,
+  cardHeight: 116,
+  cardRadius: 0.8,
+  cardBackgroundColor: "#d85555",
+  cardBackgroundUrl: "/editor3d/public/static/images/defaultImage3d.png",
+  headerFontSize: 18,
+  headerColor: "#fe2ffe",
+  bodyFontSize: 14,
+  bodyColor: "#fee1e1",
+  modelHighlightColor: "#aaffaa",
+  offsetX: 116 / 2,
+  offsetY: 116 / 2,
+  cardSize: 0.04,
+  cardBackgroundAlpha: 0,
+};
 export const sceneUserData = {
   isSelected: false,
   fixedCameraPosition: new Vector3(-5, 5, 8),
@@ -47,21 +63,7 @@ export const sceneUserData = {
     iconFill: "",
     sceneCanSave: false,
   },
-  userStyle: {
-    cardWidth: 116,
-    cardHeight: 116,
-    cardRadius: 0.8,
-    cardBackgroundColor: "#d85555",
-    cardBackgroundUrl: "/editor3d/public/static/images/defaultImage3d.png",
-    headerFontSize: 18,
-    headerColor: "#fe2ffe",
-    bodyFontSize: 14,
-    bodyColor: "#fee1e1",
-    modelHighlightColor: "#aaffaa",
-    offsetX: 116 / 2,
-    offsetY: 116 / 2,
-    cardSize: 0.04, // 标签大小
-  } as UserStyles,
+  userStyle,
 };
 
 export interface Parameters3d {

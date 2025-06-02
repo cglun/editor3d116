@@ -11,7 +11,13 @@ import {
   VectorKeyframeTrack,
   WebGLRenderer,
 } from "three";
-import { Context116, GlbModel, RecordItem, UserDataType } from "../app/type";
+import {
+  Context116,
+  GlbModel,
+  RecordItem,
+  SceneUserData,
+  UserDataType,
+} from "../app/type";
 import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
 import { CSS2DRenderer } from "three/addons/renderers/CSS2DRenderer.js";
 import { GLTF, GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
@@ -23,7 +29,6 @@ import {
   enableScreenshot,
   Parameters3d,
   setEnableScreenshot,
-  userData,
 } from "./config3d";
 import { runScript } from "./scriptDev";
 import { GLOBAL_CONSTANT } from "./GLOBAL_CONSTANT";
@@ -119,8 +124,8 @@ export function setLabel(
   MARK_LABEL_GROUP.children = labelList;
 }
 //删除之前的标签
-export function clearOldLabel() {
-  const labelDiv = document.querySelectorAll(".mark-label");
+export function clearOldLabel(labelGroupName?: string) {
+  const labelDiv = document.querySelectorAll(labelGroupName || ".mark-label");
   if (labelDiv.length > 0) {
     labelDiv.forEach((element) => {
       element.parentNode?.removeChild(element);
@@ -259,7 +264,7 @@ function getModelGroup(
   }
 
   const scene = gltf.scene;
-  const { config3d } = context.userData as typeof userData;
+  const { config3d } = context.userData as SceneUserData;
   if (config3d.useKeyframe) {
     const mixer = new AnimationMixer(scene);
 
@@ -377,8 +382,7 @@ export function finishLoadExecute(
 
   callBack?: (context: Context116) => void
 ) {
-  const { javascript, config3d } = context.getScene()
-    .userData as typeof userData;
+  const { javascript, config3d } = context.getScene().userData as SceneUserData;
   if (enableScreenshot.enable) {
     setEnableScreenshot(true);
   }
@@ -394,10 +398,11 @@ export function finishLoadExecute(
     getScene();
     getControls();
     getCamera();
-    eval(javascript);
+
     if (callBack) {
       callBack(context);
     }
+    eval(javascript);
   }
   if (import.meta.env.MODE === "development") {
     runScript(context);
