@@ -57,7 +57,6 @@ function RouteComponent() {
   }
   function cardNumber(
     key: keyof UserStyles,
-    value: UserStyles,
     placeholder: string,
     tips?: string,
     step?: number
@@ -67,7 +66,7 @@ function RouteComponent() {
         tips={tips}
         step={step}
         placeholder={placeholder}
-        value={Number(value[key as keyof UserStyles])}
+        value={Number(userStyle[key as keyof UserStyles])}
         getValue={function (val: number) {
           const _userData = getScene().userData as SceneUserData;
 
@@ -79,15 +78,18 @@ function RouteComponent() {
   }
   function cardText(
     key: keyof UserStyles,
-    value: UserStyles,
     placeholder: string,
     type: "color" | "text",
     tips?: string
   ) {
-    let displayValue = value[key];
+    let displayValue = userDataStyles[key];
     if (type === "color" && typeof displayValue === "string") {
       displayValue = rgbaToHex(displayValue);
     }
+    // if (displayValue.toString().includes("/file/view/")) {
+    //   displayValue = location.origin + displayValue;
+    //   displayValue.toString().includes("/file/view/")? location.origin: '';
+    // }
 
     return (
       <DsssssString
@@ -139,6 +141,9 @@ function RouteComponent() {
     "/public/static/images/box.png",
     import.meta.url
   ).href;
+  const { cardBackgroundUrl } = userDataStyles;
+  // const aaaaa = userDataStyles.cardBackgroundUrl.includes("/file/view/");
+  const backgroundImage = `url(${cardBackgroundUrl.includes("/file/view/") && location.origin + cardBackgroundUrl})`;
 
   return (
     <ListGroup>
@@ -165,16 +170,14 @@ function RouteComponent() {
                 <ListGroup horizontal className="d-flex flex-wrap">
                   {cardText(
                     "modelHighlightColor",
-                    userDataStyles,
                     "模型高亮边框颜色",
                     "color",
                     "保存后看预览效果"
                   )}
-                  {/* {cardNumber("cardWidth", userDataStyles, "卡片宽度")}
-                  {cardNumber("cardHeight", userDataStyles, "卡片高度")} */}
+                  {cardNumber("cardWidth", "卡片宽度")}
+                  {cardNumber("cardHeight", "卡片高度")}
                   {cardNumber(
                     "cardSize",
-                    userDataStyles,
                     "卡片尺寸",
                     "真实效果要到预览中查看",
                     0.01
@@ -182,39 +185,27 @@ function RouteComponent() {
 
                   {cardNumber(
                     "offsetX",
-                    userDataStyles,
                     "卡片X轴偏移",
                     "真实效果要到预览中查看"
                   )}
                   {cardNumber(
                     "offsetY",
-                    userDataStyles,
                     "卡片Y轴偏移",
                     "真实效果要到预览中查看"
                   )}
-                  {cardNumber("cardRadius", userDataStyles, "卡片圆角")}
+                  {cardNumber("cardRadius", "卡片圆角")}
+
                   {cardText(
                     "cardBackgroundColor",
-                    userDataStyles,
                     "卡片背景颜色",
                     "color",
                     "背景图URL将清空"
                   )}
-                  {cardText(
-                    "cardBackgroundUrl",
-                    userDataStyles,
-                    "卡片背景图URL地址",
-                    "text"
-                  )}
-
-                  {cardNumber("headerFontSize", userDataStyles, "标题字体大小")}
-                  {cardNumber("bodyFontSize", userDataStyles, "内容字体大小")}
-                  {cardText(
-                    "bodyColor",
-                    userDataStyles,
-                    "内容字体颜色",
-                    "color"
-                  )}
+                  {cardText("cardBackgroundUrl", "卡片背景图URL地址", "text")}
+                  {cardText("headerColor", "标题颜色", "color")}
+                  {cardNumber("headerFontSize", "标题字体大小")}
+                  {cardNumber("bodyFontSize", "内容字体大小")}
+                  {cardText("bodyColor", "内容字体颜色", "color")}
                 </ListGroup>
                 <div
                   className="d-flex flex-column align-items-center justify-content-center position-relative   "
@@ -240,19 +231,11 @@ function RouteComponent() {
                     className="mark-label mark-label-controller-panel"
                     style={{
                       position: "absolute",
-                      top:
-                        230 -
-                        userDataStyles.cardWidth / 2 +
-                        userDataStyles.offsetY +
-                        "px",
-                      left:
-                        300 -
-                        userDataStyles.cardHeight / 2 +
-                        userDataStyles.offsetX +
-                        "px",
-                      // width: userDataStyles.cardWidth + "px", height: userDataStyles.cardHeight + "px",
-                      height: "130px",
-                      width: "130px",
+                      top: 165 + userDataStyles.offsetY + "px",
+                      left: 400 + userDataStyles.offsetX + "px",
+                      width: userDataStyles.cardWidth + "px",
+                      height: userDataStyles.cardHeight + "px",
+
                       borderRadius: userDataStyles.cardRadius + "px",
                       // 使用 rgba 格式设置背景色，结合十六进制颜色和透明度
                       backgroundColor: `rgba(${parseInt(userDataStyles.cardBackgroundColor.slice(1, 3), 16)}, ${parseInt(
@@ -261,7 +244,7 @@ function RouteComponent() {
                       )}, ${parseInt(userDataStyles.cardBackgroundColor.slice(5, 7), 16)}, ${
                         userDataStyles.cardBackgroundAlpha || 1
                       })`,
-                      backgroundImage: `url(${userDataStyles.cardBackgroundUrl})`,
+                      backgroundImage,
                       backgroundRepeat: "no-repeat",
                       backgroundPosition: "center center",
                       backgroundSize: "cover",

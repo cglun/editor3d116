@@ -175,7 +175,7 @@ export default function EditorTop() {
         }
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
         Toast3d("error", error, APP_COLOR.Danger);
       });
   }, [showScene]);

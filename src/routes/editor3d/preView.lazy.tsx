@@ -46,7 +46,7 @@ function RouteComponent() {
   const [listScene, setListScene] = useState<RecordItem[]>([]);
   const [toggleButtonList, setToggleButtonList] = useState<ActionItemMap[]>();
   const [roamButtonList, setRoamButtonList] = useState<ActionItemMap[]>([]);
-  const [panelControllerButtonGroup, setPanelControllerButtonGroup] = useState<
+  const [panelControllerButtonList, setPanelControllerButtonList] = useState<
     ActionItemMap[]
   >([]);
   const [controller, setController] = useState<LabelInfoPanelController>();
@@ -97,7 +97,7 @@ function RouteComponent() {
     // 检查 getToggleButtonGroup 方法是否存在
     setToggleButtonList(instance.getToggleButtonGroup || []);
     setRoamButtonList(instance.getRoamListByRoamButtonMap || []);
-    setPanelControllerButtonGroup(instance.getPanelControllerButtonGroup || []);
+    setPanelControllerButtonList(instance.getPanelControllerButtonGroup || []);
     setController(instance.labelInfoPanelController);
   }
 
@@ -255,6 +255,7 @@ function RouteComponent() {
                             return prevItem;
                           });
                         });
+                        setShowControllerButton(false);
                       }
                     }}
                   >
@@ -305,24 +306,41 @@ function RouteComponent() {
                 查找标签测试
               </Button>
 
-              {panelControllerButtonGroup.map(
-                (item: ActionItemMap, index: number) => {
-                  return (
-                    <Button
-                      variant={buttonColor}
-                      disabled={!showControllerButton}
-                      key={index}
-                      onClick={() => {
-                        if (item.handler) {
-                          item.handler();
-                        }
-                      }}
-                    >
-                      {item.showName}
-                    </Button>
-                  );
-                }
-              )}
+              {showControllerButton &&
+                panelControllerButtonList.map(
+                  (item: ActionItemMap, index: number) => {
+                    return (
+                      <Button
+                        variant={buttonColor}
+                        disabled={!showControllerButton}
+                        key={index}
+                        onClick={() => {
+                          if (item.handler) {
+                            item.handler();
+                            // 点击按钮后，将其他按钮的 isClick 置为 false
+                            setPanelControllerButtonList((prevList) => {
+                              return prevList.map((prevItem) => {
+                                if (prevItem.NAME_ID === item.NAME_ID) {
+                                  return {
+                                    ...prevItem,
+                                    isClick: true,
+                                  };
+                                }
+                                return {
+                                  ...prevItem,
+                                  isClick: false,
+                                };
+                              });
+                            });
+                          }
+                        }}
+                      >
+                        {/* {item.showName} */}
+                        {item.isClick ? "√" : "x"}
+                      </Button>
+                    );
+                  }
+                )}
             </ButtonGroup>
           </Modal.Footer>
         </Modal>

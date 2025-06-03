@@ -34,7 +34,7 @@ export function InputUserDataText({
               const _value = JSON.parse(value);
               selected3d.userData = _value;
             } catch (error) {
-              console.log(error);
+              console.error(error);
               Toast3d("数据格式错误", "错误", APP_COLOR.Danger, DELAY.LONG);
             }
           }}

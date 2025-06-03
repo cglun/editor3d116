@@ -1,7 +1,7 @@
 import { AnimationAction, AnimationMixer, Clock, Vector3 } from "three";
 import { CSS2DRenderer } from "three/addons/renderers/CSS2DRenderer.js";
 import { CSS3DRenderer } from "three/addons/renderers/CSS3DRenderer.js";
-import { APP_COLOR, UserStyles } from "../app/type";
+import { APP_COLOR, CustomButtonListType, UserStyles } from "../app/type";
 
 export const enableScreenshot = {
   enable: false,
@@ -33,7 +33,7 @@ export const config3d: Config3d = {
 export const userStyle: UserStyles = {
   cardWidth: 116,
   cardHeight: 116,
-  cardRadius: 0.8,
+  cardRadius: 5,
   cardBackgroundColor: "#d85555",
   cardBackgroundUrl: "/editor3d/public/static/images/defaultImage3d.png",
   headerFontSize: 18,
@@ -41,8 +41,8 @@ export const userStyle: UserStyles = {
   bodyFontSize: 14,
   bodyColor: "#fee1e1",
   modelHighlightColor: "#aaffaa",
-  offsetX: 116 / 2,
-  offsetY: 116 / 2,
+  offsetX: 0,
+  offsetY: 0,
   cardSize: 0.04,
   cardBackgroundAlpha: 0,
 };
@@ -57,7 +57,7 @@ export const sceneUserData = {
   },
   javascript: `//const scene = getScene(); 
   console.log("116");`,
-  customButtonList: {},
+  customButtonList: {} as CustomButtonListType,
   APP_THEME: {
     themeColor: APP_COLOR.Dark,
     iconFill: "",

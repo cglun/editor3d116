@@ -52,7 +52,7 @@ const header = {
   try {
     decryptToken = JSON.parse(decrypt(__localStorage!));
   } catch (error) {
-    console.log(error);
+    console.error(error);
     alert("TOKEN错误或者过期。");
     localStorage.removeItem(key);
     location.reload();

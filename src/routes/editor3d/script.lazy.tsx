@@ -16,6 +16,7 @@ import {
   APP_COLOR,
   CustomButtonListType,
   CustomButtonType,
+  SceneUserData,
 } from "../../app/type";
 import { getButtonColor, getThemeByScene } from "../../app/utils";
 
@@ -40,18 +41,15 @@ function RouteComponent() {
   const { scene, updateScene } = useUpdateScene(); // const [javaScriptCode, setJavaScriptCode] = useState<string>(javascript);
   const [showJavaScript, setShowJavaScript] = useState(false); // 是否为调试场景[调试场景不允许修改代码]
   const [show, setShow] = useState(false); // 使用可选属性和类型断言
-  const {
-    javascript,
-    projectId,
-    customButtonList = {} as CustomButtonListType,
-  } = scene.payload.userData as {
-    javascript: string;
-    projectId: number;
-    customButtonList?: CustomButtonListType;
-  };
+  const [showAllConfig, setShowAllConfig] = useState(false); // 使用可选属性和类型断言
+
+  const ud = scene.payload.userData as SceneUserData;
+  const userData = JSON.stringify(ud, null, 3);
+
+  const { javascript, projectId, customButtonList } = ud;
   const buttonList = JSON.stringify(customButtonList, null, 5);
   const [buttonType, setButtonType] = useState<CustomButtonType>(
-    customButtonList.toggleButtonGroup?.type || "TOGGLE"
+    customButtonList?.toggleButtonGroup?.type || "TOGGLE"
   );
 
   if (scene.payload.userData === undefined) {
@@ -87,7 +85,7 @@ function RouteComponent() {
       ROAM: new Vector3(0, 0, 0),
       PANEL_CONTROLLER: new Vector3(0, 0, 0),
     };
-    const afafafaaafaf = gerToggleButtonGroup;
+
     const buttonGroup: CustomButtonListType = {
       toggleButtonGroup: {
         name: "切换按钮组",
@@ -97,7 +95,7 @@ function RouteComponent() {
           modelOffset: modelPositionOffset[buttonType],
           animationTime: 300,
         },
-        listGroup: afafafaaafaf,
+        listGroup: gerToggleButtonGroup,
       },
       roamButtonGroup: {
         name: "漫游按钮组",
@@ -141,7 +139,8 @@ function RouteComponent() {
                   setShowJavaScript(true);
                 }}
               >
-                <Icon iconName="pencil" /> 代码
+                <Icon iconName="pencil" gap={1} />
+                代码
               </Button>
               <Button
                 variant={buttonColor}
@@ -150,8 +149,18 @@ function RouteComponent() {
                   setShow(true);
                 }}
               >
-                <Icon iconName="pencil" />
+                <Icon iconName="pencil" gap={1} />
                 按钮
+              </Button>
+              <Button
+                variant={buttonColor}
+                style={{ borderColor: styleBody.color }}
+                onClick={() => {
+                  setShowAllConfig(true);
+                }}
+              >
+                <Icon iconName="building-gear" gap={1} />
+                一键配置
               </Button>
             </ButtonGroup>
             <CodeEditor
@@ -248,6 +257,19 @@ function RouteComponent() {
                 )}
               </ButtonGroup>
             </CodeEditor>
+            <CodeEditor
+              tipsTitle="一键配置"
+              language="json"
+              code={userData}
+              isValidate={true}
+              show={showAllConfig}
+              setShow={setShowAllConfig}
+              callback={function (value): void {
+                getScene().userData = JSON.parse(value);
+                getScene().userData.projectId = projectId; // 防止项目id丢失
+                updateScene(getScene());
+              }}
+            />
           </ListGroup.Item>
         )}
       </ListGroup>

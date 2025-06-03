@@ -186,12 +186,12 @@ export default function Viewer3d({
           },
 
           (error: unknown) => {
-            console.log(error);
+            console.error(error);
           }
         );
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
         Toast3d(error, "提示", APP_COLOR.Danger);
       });
   }

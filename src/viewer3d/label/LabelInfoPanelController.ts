@@ -57,19 +57,16 @@ export class LabelInfoPanelController {
   }
   //显示标签信息为小圆圈
   showSmallCircle() {
-    console.log("showSmallCircle");
     this.panelStatus = 1;
     this.show([true, false, false]);
   }
   //显示标签信息标签
   showLabel() {
-    console.log("showLabel");
     this.panelStatus = 2;
     this.show([true, true, false]);
   }
   //显示标签信息面板
   showPanel() {
-    console.log("showPanel");
     this.panelStatus = 3;
     this.show([true, true, true]);
   }
@@ -162,10 +159,6 @@ export class LabelInfoPanelController {
         const isOk = this.boxName + "-" + css3DSprite === item;
         if (isOk) {
           this.canBeShowLabelInfo.push(_item);
-          console.log(
-            "找到标签信息面板" + this.boxName,
-            _item.css3DSprite.name
-          );
         }
       });
     });
