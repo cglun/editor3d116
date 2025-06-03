@@ -45,6 +45,8 @@ export const userStyle: UserStyles = {
   offsetY: 0,
   cardSize: 0.04,
   cardBackgroundAlpha: 0,
+  headerMarginTop: 0,
+  headerMarginLeft: 0,
 };
 export const sceneUserData = {
   isSelected: false,

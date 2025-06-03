@@ -6,6 +6,7 @@ import { createGroupIfNotExist } from "../../three/utils";
 import { LabelInfo } from "./LabelInfo";
 
 import { Scene } from "three";
+import { UserStyles } from "../../app/type";
 
 // 标签信息面板控制器
 export class LabelInfoPanelController {
@@ -17,6 +18,8 @@ export class LabelInfoPanelController {
   boxName = "";
   modelName = "";
   showPanelTest1 = ["C_F1"];
+
+  userDataStyles: UserStyles;
 
   // 使用箭头函数确保 this 指向正确
   private showList = [
@@ -32,6 +35,7 @@ export class LabelInfoPanelController {
     // dispatchTourWindow: React.Dispatch<TourWindow>
     // this.scene = scene;
     this.dispatchTourWindow = dispatchTourWindow;
+    this.userDataStyles = getScene().userData.userStyle as UserStyles;
     // this.createLabelInfoPanelByModelGroupName(modelName);
   }
   setScene(scene: Scene) {
@@ -39,6 +43,10 @@ export class LabelInfoPanelController {
   }
   setModelName(modelName: string) {
     this.modelName = modelName;
+  }
+  //加载完成后初始化
+  setUserDataStyles() {
+    this.userDataStyles = getScene().userData.userStyle as UserStyles;
   }
   setIsShow(isShow: boolean) {
     this.isShow = isShow;
@@ -84,7 +92,20 @@ export class LabelInfoPanelController {
         const headerTitle = labelHeader.children[1] as HTMLElement;
 
         const labelBody = labelDiv.children[1] as HTMLElement;
-
+        const { cardWidth, cardHeight, headerMarginTop, headerMarginLeft } =
+          this.userDataStyles;
+        if (this.panelStatus < 3) {
+          labelDiv.style.width = "auto";
+          labelDiv.style.height = "auto";
+          labelDiv.style.padding = `5px ${headerMarginLeft}px`;
+        } else {
+          labelDiv.style.width = cardWidth + "px";
+          labelDiv.style.height = cardHeight + "px";
+          labelDiv.style.height = cardHeight + "px";
+          labelDiv.style.padding = `${headerMarginTop}px ${headerMarginLeft}px`;
+          //  labelHeader.style.marginLeft = headerMarginLeft + "px";
+          // labelBody.style.padding = `0px ${headerMarginLeft}px`;
+        }
         headerEye.style.display = showAreYou[0] ? "block" : "none";
         headerTitle.style.display = showAreYou[1] ? "block" : "none";
         labelBody.style.display = showAreYou[2] ? "block" : "none";
@@ -126,12 +147,12 @@ export class LabelInfoPanelController {
 
     if (group) {
       const { children } = group;
-
       if (children) {
         for (let i = 0; i < children.length; i++) {
           const child = children[i];
           const label = new LabelInfo(child, this.dispatchTourWindow!);
           label.css3DSprite.visible = false;
+
           this.scene.add(label.css3DSprite);
           this.allLabelInfo.push(label);
         }
@@ -162,8 +183,6 @@ export class LabelInfoPanelController {
         }
       });
     });
-    this.showLabel();
-    this.highlightLabelInfoPanel();
   }
 
   //高亮标签信息面板

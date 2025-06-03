@@ -300,6 +300,8 @@ function RouteComponent() {
                     controller.findLabelInfoByModelBoxName(modelNameList);
                     const isShow = controller.canBeShowLabelInfo.length > 0;
                     setShowControllerButton(isShow);
+                    controller.showSmallCircle();
+                    controller.highlightLabelInfoPanel();
                   }
                 }}
               >

@@ -408,3 +408,7 @@ export function finishLoadExecute(
     runScript(context);
   }
 }
+
+export function getCardBackgroundUrl(cardBackgroundUrl: string) {
+  return `url(${cardBackgroundUrl.includes("/file/view/") && location.origin + cardBackgroundUrl})`;
+}

@@ -1,7 +1,11 @@
 import { CatmullRomCurve3, Object3D, Object3DEventMap, Vector3 } from "three";
 import { TourWindow } from "../../app/MyContext";
 import { setClassName } from "../../app/utils";
-import { getObjectNameByName, getTourSrc } from "../../three/utils";
+import {
+  getCardBackgroundUrl,
+  getObjectNameByName,
+  getTourSrc,
+} from "../../three/utils";
 import { CSS3DSprite } from "three/examples/jsm/renderers/CSS3DRenderer.js";
 
 import { getObjectWorldPosition } from "../viewer3dUtils";
@@ -12,7 +16,7 @@ import {
   LineMaterial,
 } from "three/examples/jsm/Addons.js";
 
-import { SceneUserData } from "../../app/type";
+import { SceneUserData, UserStyles } from "../../app/type";
 
 export class LabelInfo {
   mesh;
@@ -30,14 +34,16 @@ export class LabelInfo {
     modelHighlightColor: "#aaffaa",
     offsetX: 116 / 2,
     offsetY: 116 / 2,
-  };
+    headerMarginTop: 0,
+    headerMarginLeft: 0,
+    cardSize: 0.04,
+  } as UserStyles;
   name = "";
   tourObject = {
     id: "id",
     title: "title",
   };
 
-  size = 0.04;
   css3DSprite = new CSS3DSprite(this.div);
   dispatchTourWindow: React.Dispatch<TourWindow>;
 
@@ -51,7 +57,7 @@ export class LabelInfo {
 
     const _userData = getScene().userData as SceneUserData;
     this.userDataStyles = _userData.userStyle;
-    this.size = _userData.userStyle.cardSize;
+    // this.size = _userData.userStyle.cardSize;
     this.init();
   }
   init() {
@@ -64,7 +70,8 @@ export class LabelInfo {
     css3DSprite.name = "SPRITE-" + this.tourObject.title;
     const { x, y, z } = getObjectWorldPosition(this.mesh);
     css3DSprite.position.set(x, y, z);
-    css3DSprite.scale.set(this.size, this.size, this.size);
+    const { cardSize } = this.userDataStyles;
+    css3DSprite.scale.set(cardSize, cardSize, cardSize);
 
     this.css3DSprite = css3DSprite;
   }
@@ -79,23 +86,29 @@ export class LabelInfo {
       cardBackgroundUrl,
       bodyFontSize,
       headerColor,
-
+      cardHeight,
+      cardWidth,
+      headerMarginTop,
+      headerMarginLeft,
+      offsetX,
       offsetY,
     } = this.userDataStyles;
-    labelStyle.width = "auto";
-    labelStyle.height = "auto"; // cardHeight + "px";
+
+    labelStyle.width = cardWidth + "px";
+    labelStyle.height = cardHeight + "px";
+    labelStyle.padding = headerMarginTop + "px " + headerMarginLeft + "px";
     labelStyle.borderRadius = cardRadius + "px";
     labelStyle.backgroundColor = cardBackgroundColor;
-    labelStyle.backgroundImage = `url(${cardBackgroundUrl})`;
+    labelStyle.backgroundImage = getCardBackgroundUrl(cardBackgroundUrl);
     labelStyle.backgroundRepeat = "no-repeat";
     labelStyle.backgroundPosition = "center center";
     labelStyle.backgroundSize = "cover";
     labelStyle.fontSize = bodyFontSize + "px";
     labelStyle.color = headerColor;
     //const { x, y, z } = getObjectWorldPosition(this.mesh);
-
+    labelStyle.top = offsetY + "px";
+    labelStyle.left = offsetX + "px";
     // labelStyle.left = offsetX * this.size + "px";
-    labelStyle.top = -(offsetY + offsetY / 2) * this.size + "px";
 
     // labelStyle.zIndex = "9999"; // 确保标签在最上层
     // labelStyle.pointerEvents = "auto"; // 确保标签可以被点击
@@ -129,6 +142,8 @@ export class LabelInfo {
     header.className = "mark-label-header";
     header.style.fontSize = headerFontSize + "px";
     header.style.color = headerColor;
+    // header.style.marginTop = headerMarginTop + "px";
+    // header.style.marginLeft = headerMarginLeft + "px";
 
     const eye = document.createElement("i");
 
@@ -161,6 +176,7 @@ export class LabelInfo {
     const body = document.createElement("div");
     body.className = "mark-label-body";
     body.style.fontSize = this.userDataStyles.bodyFontSize + "px";
+    // body.style.marginLeft = headerMarginLeft + "px";
     body.style.color = this.userDataStyles.bodyColor;
     const p1 = document.createElement("p");
     p1.textContent = "档案号：116";
@@ -182,7 +198,7 @@ export class LabelInfo {
     // const a=new Vector3(this., 0, 0);
     const { x, y, z } = getObjectWorldPosition(this.mesh);
 
-    const size = this.size;
+    const size = this.userDataStyles.cardSize;
     const start = new Vector3(x, y, z);
     const end = new Vector3(x, y - this.userDataStyles.offsetY * size, z);
 

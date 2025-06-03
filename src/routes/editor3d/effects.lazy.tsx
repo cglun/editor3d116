@@ -21,7 +21,7 @@ import { getButtonColor, getThemeByScene } from "../../app/utils";
 
 import { getScene } from "../../three/init3dEditor";
 import { SceneUserData, UserStyles } from "../../app/type";
-import { userStyle } from "../../three/config3d";
+import { getCardBackgroundUrl } from "../../three/utils";
 
 export const Route = createLazyFileRoute("/editor3d/effects")({
   component: RouteComponent,
@@ -34,21 +34,40 @@ function RouteComponent() {
   const [show, setShow] = useState(false);
 
   const userData = scene.payload.userData as SceneUserData;
-  let userDataStyles = userData.userStyle;
+  const userDataStyles = userData.userStyle;
   useEffect(() => {
     setShow(true);
   }, []);
-  if (userDataStyles === undefined) {
-    userDataStyles = userStyle;
-  }
 
-  if (scene.payload.userData.projectId === -1) {
+  if (userData.projectId === -1) {
     return <AlertBase text={"到左上脚3d中加载场景！"} />;
   }
 
-  if (!scene.payload.userData.config3d?.useComposer) {
+  if (!userData.config3d?.useComposer) {
     return <AlertBase text={"请到设置中开启合成"} />;
   }
+  if (userDataStyles === undefined) {
+    // userDataStyles = userStyle;
+    return;
+  }
+
+  // return (
+  //   <div>
+  //     <input
+  //       type="text"
+  //       value={scene.payload.userData.projectId}
+  //       onChange={(e) => {
+  //         const u = getScene().userData as SceneUserData;
+  //         if (u) {
+  //           u.projectId = parseInt(e.target.value);
+  //           console.log(cardSize);
+
+  //           updateScene(getScene());
+  //         }
+  //       }}
+  //     />
+  //   </div>
+  // );
 
   function handleClose() {
     const _userData = getScene().userData as SceneUserData;
@@ -66,11 +85,12 @@ function RouteComponent() {
         tips={tips}
         step={step}
         placeholder={placeholder}
-        value={Number(userStyle[key as keyof UserStyles])}
+        value={Number(userDataStyles[key])}
         getValue={function (val: number) {
           const _userData = getScene().userData as SceneUserData;
 
           (_userData.userStyle as any)[key] = val;
+          console.log(val);
           updateScene(getScene());
         }}
       />
@@ -82,26 +102,21 @@ function RouteComponent() {
     type: "color" | "text",
     tips?: string
   ) {
-    let displayValue = userDataStyles[key];
+    let displayValue = userDataStyles[key] as string;
     if (type === "color" && typeof displayValue === "string") {
       displayValue = rgbaToHex(displayValue);
     }
-    // if (displayValue.toString().includes("/file/view/")) {
-    //   displayValue = location.origin + displayValue;
-    //   displayValue.toString().includes("/file/view/")? location.origin: '';
-    // }
 
     return (
       <DsssssString
         tips={tips}
         type={type}
         placeholder={placeholder}
-        value={displayValue as string}
+        value={displayValue}
         getValue={function (val: string) {
           const _userData = getScene().userData as SceneUserData;
           if (key === "cardBackgroundColor") {
             _userData.userStyle.cardBackgroundUrl = "";
-            //  updateScene(getScene());
           }
 
           (_userData.userStyle as any)[key] = val;
@@ -110,7 +125,7 @@ function RouteComponent() {
       />
     );
   }
-  // 添加 rgba 转十六进制颜色的函数
+
   // 修改 rgba 转十六进制颜色的函数，始终返回 #rrggbb 格式
   function rgbaToHex(rgba: string): string {
     if (rgba === undefined || rgba === null) {
@@ -141,9 +156,23 @@ function RouteComponent() {
     "/public/static/images/box.png",
     import.meta.url
   ).href;
-  const { cardBackgroundUrl } = userDataStyles;
-  // const aaaaa = userDataStyles.cardBackgroundUrl.includes("/file/view/");
-  const backgroundImage = `url(${cardBackgroundUrl.includes("/file/view/") && location.origin + cardBackgroundUrl})`;
+  const {
+    cardWidth,
+    cardHeight,
+    cardRadius,
+    cardBackgroundColor,
+    cardBackgroundUrl,
+    headerFontSize,
+    headerColor,
+    bodyFontSize,
+    bodyColor,
+    modelHighlightColor,
+    offsetX,
+    offsetY,
+    cardBackgroundAlpha,
+    headerMarginTop,
+    headerMarginLeft,
+  } = userDataStyles;
 
   return (
     <ListGroup>
@@ -203,12 +232,14 @@ function RouteComponent() {
                   )}
                   {cardText("cardBackgroundUrl", "卡片背景图URL地址", "text")}
                   {cardText("headerColor", "标题颜色", "color")}
+                  {cardNumber("headerMarginTop", "标题上边距")}
+                  {cardNumber("headerMarginLeft", "标题左边距")}
                   {cardNumber("headerFontSize", "标题字体大小")}
                   {cardNumber("bodyFontSize", "内容字体大小")}
                   {cardText("bodyColor", "内容字体颜色", "color")}
                 </ListGroup>
                 <div
-                  className="d-flex flex-column align-items-center justify-content-center position-relative   "
+                  className="d-flex flex-column align-items-center justify-content-center position-relative"
                   style={{
                     width: "600px",
                     height: "460px",
@@ -221,9 +252,7 @@ function RouteComponent() {
                       style={{
                         width: "130px",
                         height: "130px",
-                        backgroundColor: rgbaToHex(
-                          userDataStyles.modelHighlightColor
-                        ),
+                        backgroundColor: rgbaToHex(modelHighlightColor),
                       }}
                     />
                   </div>
@@ -231,33 +260,33 @@ function RouteComponent() {
                     className="mark-label mark-label-controller-panel"
                     style={{
                       position: "absolute",
-                      top: 165 + userDataStyles.offsetY + "px",
-                      left: 400 + userDataStyles.offsetX + "px",
-                      width: userDataStyles.cardWidth + "px",
-                      height: userDataStyles.cardHeight + "px",
+                      top: 165 + offsetY + "px",
+                      left: 400 + offsetX + "px",
+                      width: cardWidth + "px",
+                      height: cardHeight + "px",
 
-                      borderRadius: userDataStyles.cardRadius + "px",
+                      borderRadius: cardRadius + "px",
                       // 使用 rgba 格式设置背景色，结合十六进制颜色和透明度
-                      backgroundColor: `rgba(${parseInt(userDataStyles.cardBackgroundColor.slice(1, 3), 16)}, ${parseInt(
-                        userDataStyles.cardBackgroundColor.slice(3, 5),
+                      backgroundColor: `rgba(${parseInt(cardBackgroundColor.slice(1, 3), 16)}, ${parseInt(
+                        cardBackgroundColor.slice(3, 5),
                         16
-                      )}, ${parseInt(userDataStyles.cardBackgroundColor.slice(5, 7), 16)}, ${
-                        userDataStyles.cardBackgroundAlpha || 1
+                      )}, ${parseInt(cardBackgroundColor.slice(5, 7), 16)}, ${
+                        cardBackgroundAlpha || 1
                       })`,
-                      backgroundImage,
+                      backgroundImage: getCardBackgroundUrl(cardBackgroundUrl),
                       backgroundRepeat: "no-repeat",
                       backgroundPosition: "center center",
                       backgroundSize: "cover",
-
-                      fontSize: userDataStyles.bodyFontSize + "px",
-                      color: userDataStyles.bodyColor,
+                      padding: `${headerMarginTop}px ${headerMarginLeft}px  `,
+                      fontSize: bodyFontSize + "px",
+                      color: bodyColor,
                     }}
                   >
                     <div
                       className="mark-label-header"
                       style={{
-                        fontSize: userDataStyles.headerFontSize + "px",
-                        color: userDataStyles.headerColor,
+                        fontSize: headerFontSize + "px",
+                        color: headerColor,
                       }}
                     >
                       <i className="bi bi-eye"></i>
@@ -266,8 +295,9 @@ function RouteComponent() {
                     <div
                       className="mark-label-body"
                       style={{
-                        fontSize: userDataStyles.bodyFontSize + "px",
-                        color: userDataStyles.bodyColor,
+                        fontSize: bodyFontSize + "px",
+                        color: bodyColor,
+                        marginLeft: headerMarginLeft + "px",
                       }}
                     >
                       <p>编号：116</p>

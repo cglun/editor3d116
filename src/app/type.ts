@@ -208,6 +208,8 @@ export interface UserStyles {
   cardBackgroundAlpha: number;
   headerFontSize: number;
   headerColor: string;
+  headerMarginTop: number;
+  headerMarginLeft: number;
   bodyFontSize: number;
   bodyColor: string;
   modelHighlightColor: string;
