@@ -12,8 +12,8 @@ import {
   APP_COLOR,
   CustomButtonListType,
   CustomButtonType,
-} from "../../../app/type";
-import Icon from "../Icon";
+} from "../../../../app/type";
+import Icon from "../../Icon";
 
 export default function UiButtonEditor({
   value,

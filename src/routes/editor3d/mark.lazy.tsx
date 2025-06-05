@@ -16,14 +16,15 @@ import { clearOldLabel, createGroupIfNotExist } from "../../three/utils";
 import { getScene } from "../../three/init3dEditor";
 import { CSS2DObject, CSS3DSprite } from "three/examples/jsm/Addons.js";
 import Toast3d from "../../component/common/Toast3d";
-import { APP_COLOR, TourItem } from "../../app/type";
+import { APP_COLOR, SceneUserData, TourItem } from "../../app/type";
 import { useUpdateScene } from "../../app/hooks";
 import { ConfigCheck } from "../../component/common/ConfigCheck";
 import _axios from "../../app/http";
 
 import { MyContext } from "../../app/MyContext";
-import { createCss2dLabel, createCss3dLabel } from "../../three/factory3d";
+import { createCss3dLabel } from "../../three/factory3d";
 import { GLOBAL_CONSTANT } from "../../three/GLOBAL_CONSTANT";
+import { MarkLabel } from "../../viewer3d/label/MarkLabel";
 
 export const Route = createLazyFileRoute("/editor3d/mark")({
   component: RouteComponent,
@@ -31,14 +32,26 @@ export const Route = createLazyFileRoute("/editor3d/mark")({
 
 function RouteComponent() {
   const [markName, setMarkName] = useState("mark");
-  const [logo, setLogo] = useState<string>("geo-alt");
+  const [logo, setLogo] = useState("geo-alt");
   const [listTour, setListTour] = useState([]);
   const { dispatchTourWindow } = useContext(MyContext);
   const { scene, updateScene } = useUpdateScene();
   const { themeColor } = getThemeByScene(scene);
-  if (scene.payload.userData.config3d === undefined) {
-    return;
-  }
+  const userData = scene.payload.userData as SceneUserData;
+
+  const { config3d } = userData as SceneUserData;
+  useEffect(() => {
+    _axios.get("/pano/page?size=1000").then((res) => {
+      if (res.data.code === 200) {
+        const { records } = res.data.result;
+        setListTour(records);
+      } else {
+        Toast3d(res.data.message, "提示", APP_COLOR.Danger);
+      }
+    });
+  }, []);
+
+  if (!config3d) return;
 
   function addMark(label: CSS3DSprite | CSS2DObject) {
     const scene = getScene();
@@ -52,31 +65,19 @@ function RouteComponent() {
     MARK_LABEL_GROUP.add(label);
     scene.add(MARK_LABEL_GROUP);
   }
-  useEffect(() => {
-    _axios.get("/pano/page?size=1000").then((res) => {
-      if (res.data.code === 200) {
-        const { records } = res.data.result;
-        setListTour(records);
-      } else {
-        Toast3d(res.data.message, "提示", APP_COLOR.Danger);
-      }
-    });
-  }, []);
-
-  const { config3d } = scene.payload.userData;
 
   return (
     <Container fluid className="ms-2 mt-2">
       <Row>
         <Col xl={12}>
           <ListGroup horizontal>
-            <ListGroup.Item>
+            {/* <ListGroup.Item>
               <ConfigCheck
                 label="2D标签"
                 configKey="css2d"
                 callBack={clearOldLabel}
               />
-            </ListGroup.Item>
+            </ListGroup.Item> */}
             <ListGroup.Item>
               <ConfigCheck
                 label="3D标签"
@@ -117,7 +118,7 @@ function RouteComponent() {
               }}
             />
             <ButtonGroup size="sm">
-              <Button
+              {/* <Button
                 variant={getButtonColor(themeColor)}
                 disabled={!config3d.css2d}
                 onClick={() => {
@@ -135,18 +136,25 @@ function RouteComponent() {
                 }}
               >
                 一键2d标记
-              </Button>
+              </Button> */}
               <Button
                 variant={getButtonColor(themeColor)}
                 disabled={!config3d.css3d}
                 onClick={() => {
-                  addMark(createCss3dLabel(markName, logo));
+                  //addMark(createCss3dLabel(markName, logo));
+                  const label = new MarkLabel(
+                    dispatchTourWindow,
+                    markName,
+                    logo
+                  );
+                  addMark(label.css3DSprite);
+
                   updateScene(getScene());
                 }}
               >
                 添加3d标记
               </Button>
-              <Button
+              {/* <Button
                 variant={getButtonColor(themeColor)}
                 disabled={!config3d.css3d}
                 onClick={() => {
@@ -154,7 +162,7 @@ function RouteComponent() {
                 }}
               >
                 一键3d标记
-              </Button>
+              </Button> */}
             </ButtonGroup>
           </InputGroup>
         </Col>

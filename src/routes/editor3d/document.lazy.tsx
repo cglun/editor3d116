@@ -1,5 +1,5 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import CodeEditor from "../../component/common/CodeEditor";
+import CodeEditor from "../../component/common/routes/script/CodeEditor";
 import { Button, ButtonGroup, ListGroup, ListGroupItem } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { useUpdateScene } from "../../app/hooks";

@@ -8,7 +8,7 @@ import {
 } from "react-bootstrap";
 import { createLazyFileRoute } from "@tanstack/react-router";
 
-import CodeEditor from "../../component/common/CodeEditor";
+import CodeEditor from "../../component/common/routes/script/CodeEditor";
 import { getScene } from "../../three/init3dEditor";
 import { useUpdateScene } from "../../app/hooks";
 import AlertBase from "../../component/common/AlertBase";

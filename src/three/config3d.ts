@@ -44,7 +44,7 @@ export const userStyle: UserStyles = {
   offsetX: 0,
   offsetY: 0,
   cardSize: 0.04,
-  cardBackgroundAlpha: 0,
+  opacity: 1,
   headerMarginTop: 0,
   headerMarginLeft: 0,
 };
@@ -66,6 +66,7 @@ export const sceneUserData = {
     sceneCanSave: false,
   },
   userStyle,
+  userStyleMark: { ...userStyle },
 };
 
 export interface Parameters3d {

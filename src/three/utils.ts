@@ -33,6 +33,7 @@ import {
 import { runScript } from "./scriptDev";
 import { GLOBAL_CONSTANT } from "./GLOBAL_CONSTANT";
 import { initPostProcessing } from "./init3dViewer";
+import { MarkLabel } from "../viewer3d/label/MarkLabel";
 
 export function getObjectNameByName(object3D: Object3D): string {
   return object3D.name.trim() === "" ? object3D.type : object3D.name;
@@ -83,6 +84,43 @@ export function onWindowResize(
 }
 
 export function setLabel(
+  scene: Scene,
+  dispatchTourWindow: React.Dispatch<TourWindow>
+) {
+  clearOldLabel();
+
+  const MARK_LABEL_GROUP = createGroupIfNotExist(
+    scene,
+    GLOBAL_CONSTANT.MARK_LABEL_GROUP
+  );
+  if (!MARK_LABEL_GROUP) {
+    return;
+  }
+
+  const children = MARK_LABEL_GROUP.children;
+  children.forEach((item) => {
+    const mark = new MarkLabel(
+      dispatchTourWindow,
+      item.name,
+      item.userData.labelLogo
+    );
+    let label = mark.css3DSprite;
+
+    const { x, y, z } = item.position;
+    label.position.set(x, y, z);
+    item.userData.needDelete = true;
+    MARK_LABEL_GROUP.add(label);
+  });
+
+  const labelList = children.filter((item) => {
+    if (!item.userData.needDelete) {
+      return item;
+    }
+  });
+
+  MARK_LABEL_GROUP.children = labelList;
+}
+export function setLabel2(
   scene: Scene,
   dispatchTourWindow?: React.Dispatch<TourWindow>
 ) {
@@ -410,5 +448,9 @@ export function finishLoadExecute(
 }
 
 export function getCardBackgroundUrl(cardBackgroundUrl: string) {
-  return `url(${cardBackgroundUrl.includes("/file/view/") && location.origin + cardBackgroundUrl})`;
+  if (cardBackgroundUrl.includes("/file/view/")) {
+    return `url(${cardBackgroundUrl.includes("/file/view/") && location.origin + cardBackgroundUrl})`;
+  }
+
+  return `url(${cardBackgroundUrl})`;
 }

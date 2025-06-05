@@ -198,14 +198,15 @@ declare global {
     getCurrentActionItemMap: (item: ActionItemMap) => void;
   }
 }
+
 export interface UserStyles {
   cardWidth: number;
   cardHeight: number;
-  cardSize: 0.04;
+  cardSize: number;
   cardRadius: number;
   cardBackgroundColor: string;
   cardBackgroundUrl: string;
-  cardBackgroundAlpha: number;
+
   headerFontSize: number;
   headerColor: string;
   headerMarginTop: number;
@@ -215,5 +216,7 @@ export interface UserStyles {
   modelHighlightColor: string;
   offsetX: number;
   offsetY: number;
+  opacity: number;
 }
+
 export type SceneUserData = typeof sceneUserData;

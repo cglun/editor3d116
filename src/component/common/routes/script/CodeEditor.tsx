@@ -1,16 +1,16 @@
 import Editor from "@monaco-editor/react";
 import React, { useState, useEffect } from "react";
 import { Button, ButtonGroup, Modal, Tab, Tabs } from "react-bootstrap";
-import ModalConfirm3d from "./ModalConfirm3d";
-import { useUpdateScene } from "../../app/hooks";
-import { getThemeByScene } from "../../app/utils";
-import { APP_COLOR, CustomButtonListType } from "../../app/type";
-import UiButtonEditor from "./routes/UiButtonEditor";
+import ModalConfirm3d from "../../ModalConfirm3d";
+import { useUpdateScene } from "../../../../app/hooks";
+import { getThemeByScene } from "../../../../app/utils";
+import { APP_COLOR, CustomButtonListType } from "../../../../app/type";
+import UiButtonEditor from "./UiButtonEditor";
 
 import { monaco } from "react-monaco-editor";
-import { getScene } from "../../three/init3dEditor";
-import Toast3d from "./Toast3d";
-import Icon from "./Icon";
+import { getScene } from "../../../../three/init3dEditor";
+import Toast3d from "../../Toast3d";
+import Icon from "../../Icon";
 
 interface CodeEditorProps {
   language?: string;
